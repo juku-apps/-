@@ -1,0 +1,1076 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>漢コト8-9｜予習シリーズ</title>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;700;900&family=Kaisei+HarunoUmi:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0e1117;
+  --surface: #161b27;
+  --card: #1e2535;
+  --border: rgba(255,255,255,0.08);
+  --accent: #f0c040;
+  --accent2: #e05a2b;
+  --green: #3dd68c;
+  --red: #f05a5a;
+  --blue: #4a9eff;
+  --text: #e8eaf0;
+  --muted: rgba(232,234,240,0.45);
+  --radius: 16px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+body {
+  font-family: 'Zen Kaku Gothic New', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* 背景装飾 */
+body::before {
+  content: '';
+  position: fixed;
+  top: -200px; right: -200px;
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(240,192,64,0.07) 0%, transparent 70%);
+  pointer-events: none;
+}
+body::after {
+  content: '';
+  position: fixed;
+  bottom: -150px; left: -150px;
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(224,90,43,0.06) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.app {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 0 16px 60px;
+  position: relative;
+  z-index: 1;
+}
+
+/* ヘッダー */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 0 16px;
+}
+
+.header-title {
+  font-family: 'Kaisei HarunoUmi', serif;
+  font-size: 1.3rem;
+  color: var(--accent);
+  letter-spacing: 0.05em;
+}
+
+.header-sub {
+  font-size: 0.68rem;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+.reset-btn {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 6px 12px;
+  color: var(--muted);
+  font-size: 0.7rem;
+  cursor: pointer;
+  font-family: 'Zen Kaku Gothic New', sans-serif;
+  transition: all 0.2s;
+}
+.reset-btn:hover { border-color: var(--red); color: var(--red); }
+
+/* ホーム画面 */
+#home-screen { display: block; }
+
+/* 習熟度サマリー */
+.summary-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-bottom: 16px;
+}
+
+.summary-label {
+  font-size: 0.7rem;
+  color: var(--muted);
+  letter-spacing: 0.12em;
+  margin-bottom: 12px;
+}
+
+.mastery-bar-wrap {
+  height: 8px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+.mastery-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent2), var(--accent));
+  border-radius: 4px;
+  transition: width 0.6s cubic-bezier(.4,0,.2,1);
+}
+
+.mastery-stats {
+  display: flex;
+  gap: 20px;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.stat-num {
+  font-family: 'Kaisei HarunoUmi', serif;
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.stat-num.gold { color: var(--accent); }
+.stat-num.green { color: var(--green); }
+.stat-num.muted { color: var(--muted); }
+
+.stat-label { font-size: 0.65rem; color: var(--muted); }
+
+/* 問題リスト */
+.section-label {
+  font-size: 0.7rem;
+  color: var(--muted);
+  letter-spacing: 0.12em;
+  margin: 20px 0 10px;
+}
+
+.question-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 20px;
+}
+
+.q-item {
+  display: flex;
+  align-items: center;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px 16px;
+  gap: 12px;
+}
+
+.q-status {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: 900;
+  flex-shrink: 0;
+}
+
+.q-status.mastered { background: rgba(61,214,140,0.15); color: var(--green); border: 1.5px solid var(--green); }
+.q-status.learning { background: rgba(240,192,64,0.12); color: var(--accent); border: 1.5px solid rgba(240,192,64,0.4); }
+.q-status.new { background: rgba(255,255,255,0.04); color: var(--muted); border: 1.5px solid var(--border); }
+
+.q-info { flex: 1; min-width: 0; }
+.q-answer { font-size: 1rem; font-weight: 700; }
+.q-reading { font-size: 0.7rem; color: var(--muted); margin-top: 1px; }
+
+.q-count {
+  font-size: 0.68rem;
+  color: var(--muted);
+  text-align: right;
+  flex-shrink: 0;
+}
+
+/* スタートボタン */
+.start-section {
+  position: sticky;
+  bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.start-btn {
+  width: 100%;
+  background: linear-gradient(135deg, var(--accent2), #c04420);
+  border: none;
+  border-radius: 14px;
+  padding: 18px;
+  color: white;
+  font-family: 'Zen Kaku Gothic New', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: 0.05em;
+  transition: all 0.2s;
+  box-shadow: 0 4px 20px rgba(224,90,43,0.35);
+}
+.start-btn:active { transform: scale(0.98); }
+
+.weak-btn {
+  width: 100%;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px;
+  color: var(--text);
+  font-family: 'Zen Kaku Gothic New', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.weak-btn:hover { border-color: var(--accent); }
+.weak-btn:disabled { opacity: 0.35; cursor: default; }
+
+/* クイズ画面 */
+#quiz-screen { display: none; }
+
+.quiz-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 0 12px;
+}
+
+.back-icon {
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 4px 8px 4px 0;
+}
+
+.quiz-progress-text {
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+.quiz-progress-bar {
+  flex: 1;
+  height: 4px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.quiz-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent2), var(--accent));
+  border-radius: 2px;
+  transition: width 0.4s ease;
+}
+
+.mode-tag {
+  display: inline-block;
+  font-size: 0.62rem;
+  background: rgba(240,192,64,0.12);
+  color: var(--accent);
+  border: 1px solid rgba(240,192,64,0.25);
+  padding: 3px 10px;
+  border-radius: 20px;
+  letter-spacing: 0.1em;
+  margin-bottom: 14px;
+  font-weight: 700;
+}
+
+.quiz-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 24px 20px;
+  margin-bottom: 16px;
+}
+
+.quiz-q {
+  font-size: 1rem;
+  line-height: 1.85;
+  font-weight: 500;
+  white-space: pre-wrap;
+}
+
+.quiz-hint {
+  font-size: 0.72rem;
+  color: var(--muted);
+  margin-top: 10px;
+}
+
+/* 選択肢 */
+.choices {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.choice-btn {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 10px;
+  color: var(--text);
+  font-family: 'Zen Kaku Gothic New', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.15s;
+}
+.choice-btn:hover:not(:disabled) {
+  border-color: var(--accent);
+  background: rgba(240,192,64,0.07);
+}
+.choice-btn.correct {
+  background: rgba(61,214,140,0.12);
+  border-color: var(--green);
+  color: var(--green);
+}
+.choice-btn.wrong {
+  background: rgba(240,90,90,0.1);
+  border-color: var(--red);
+  color: var(--red);
+}
+.choice-btn:disabled { cursor: default; }
+
+/* 入力 */
+.input-area { margin-bottom: 12px; }
+
+.kanji-input {
+  width: 100%;
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: 14px;
+  padding: 18px;
+  color: white;
+  font-size: 1.5rem;
+  font-family: 'Kaisei HarunoUmi', serif;
+  font-weight: 700;
+  text-align: center;
+  outline: none;
+  transition: border-color 0.2s;
+  letter-spacing: 0.15em;
+  margin-bottom: 8px;
+}
+.kanji-input:focus { border-color: var(--accent); }
+.kanji-input.correct { border-color: var(--green); }
+.kanji-input.wrong { border-color: var(--red); }
+
+.submit-btn {
+  width: 100%;
+  background: linear-gradient(135deg, var(--accent), #c89a20);
+  border: none;
+  border-radius: 12px;
+  padding: 14px;
+  color: var(--bg);
+  font-family: 'Zen Kaku Gothic New', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 900;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.submit-btn:active { transform: scale(0.98); }
+
+/* フィードバック */
+.feedback {
+  border-radius: 14px;
+  padding: 14px 18px;
+  margin-bottom: 12px;
+  font-size: 0.85rem;
+  line-height: 1.75;
+  display: none;
+}
+.feedback.show { display: block; }
+.feedback.ok { background: rgba(61,214,140,0.1); border: 1px solid rgba(61,214,140,0.3); }
+.feedback.ng { background: rgba(240,90,90,0.08); border: 1px solid rgba(240,90,90,0.25); }
+.fb-title { font-weight: 700; font-size: 0.95rem; margin-bottom: 4px; }
+.feedback.ok .fb-title { color: var(--green); }
+.feedback.ng .fb-title { color: var(--red); }
+
+/* 習熟バッジ */
+.mastery-badge {
+  display: inline-block;
+  font-size: 0.65rem;
+  padding: 2px 8px;
+  border-radius: 10px;
+  margin-left: 8px;
+  vertical-align: middle;
+  font-weight: 700;
+}
+.badge-new { background: rgba(74,158,255,0.15); color: var(--blue); }
+.badge-learning { background: rgba(240,192,64,0.15); color: var(--accent); }
+.badge-mastered { background: rgba(61,214,140,0.15); color: var(--green); }
+
+/* 次へボタン */
+.next-btn {
+  width: 100%;
+  background: var(--accent2);
+  border: none;
+  border-radius: 14px;
+  padding: 16px;
+  color: white;
+  font-family: 'Zen Kaku Gothic New', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: none;
+  transition: all 0.15s;
+}
+.next-btn.show { display: block; }
+.next-btn:active { transform: scale(0.98); }
+
+/* 結果画面 */
+#result-screen { display: none; }
+
+.result-wrap {
+  padding: 20px 0;
+}
+
+.result-top {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 24px;
+  margin-bottom: 16px;
+}
+
+.result-circle {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  border: 3px solid var(--accent);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: rgba(240,192,64,0.06);
+}
+
+.result-num {
+  font-family: 'Kaisei HarunoUmi', serif;
+  font-size: 2rem;
+  color: var(--accent);
+  line-height: 1;
+}
+.result-denom { font-size: 0.7rem; color: var(--muted); }
+
+.result-msg { font-size: 1rem; font-weight: 700; line-height: 1.6; }
+.result-sub { font-size: 0.8rem; color: var(--muted); margin-top: 6px; line-height: 1.6; }
+
+/* 更新された習熟度 */
+.updated-section {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+.updated-title {
+  font-size: 0.7rem;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+  margin-bottom: 10px;
+}
+.updated-list { display: flex; flex-direction: column; gap: 6px; }
+.updated-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.85rem;
+}
+.updated-arrow { color: var(--muted); font-size: 0.7rem; }
+.updated-new { color: var(--green); font-weight: 700; }
+
+.review-section {
+  background: var(--card);
+  border: 1px solid rgba(240,90,90,0.2);
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 20px;
+}
+.review-title {
+  font-size: 0.7rem;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+  margin-bottom: 10px;
+}
+.review-item {
+  border-bottom: 1px solid var(--border);
+  padding: 8px 0;
+  font-size: 0.82rem;
+  line-height: 1.7;
+}
+.review-item:last-child { border-bottom: none; }
+.review-answer { font-weight: 700; color: var(--accent); }
+
+.result-btns { display: flex; flex-direction: column; gap: 8px; }
+
+.retry-btn {
+  width: 100%;
+  background: linear-gradient(135deg, var(--accent2), #c04420);
+  border: none;
+  border-radius: 14px;
+  padding: 16px;
+  color: white;
+  font-family: 'Zen Kaku Gothic New', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(224,90,43,0.3);
+}
+
+.home-btn {
+  width: 100%;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px;
+  color: var(--muted);
+  font-family: 'Zen Kaku Gothic New', sans-serif;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ホーム画面 -->
+  <div id="home-screen">
+    <div class="header">
+      <div>
+        <div class="header-title">漢コト 8-9</div>
+        <div class="header-sub">予習シリーズ ｜ 同音異字・同訓異字</div>
+      </div>
+      <button class="reset-btn" onclick="confirmReset()">リセット</button>
+    </div>
+
+    <div class="summary-card">
+      <div class="summary-label">OVERALL MASTERY</div>
+      <div class="mastery-bar-wrap">
+        <div class="mastery-bar-fill" id="home-bar" style="width:0%"></div>
+      </div>
+      <div class="mastery-stats">
+        <div class="stat-item">
+          <div class="stat-num gold" id="stat-mastered">0</div>
+          <div class="stat-label">習得済み ✓✓✓</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num" style="color:var(--accent)" id="stat-learning">0</div>
+          <div class="stat-label">練習中</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num muted" id="stat-new">0</div>
+          <div class="stat-label">未挑戦</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num" style="color:var(--text)" id="stat-total">0</div>
+          <div class="stat-label">合計</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label">問題リスト（3回正解で習得）</div>
+    <div class="question-list" id="question-list"></div>
+
+    <div class="start-section">
+      <button class="start-btn" onclick="startQuiz('all')">📚 全問チャレンジ</button>
+      <button class="weak-btn" id="weak-btn" onclick="startQuiz('weak')">⚡ 未習得だけ集中練習</button>
+    </div>
+  </div>
+
+  <!-- クイズ画面 -->
+  <div id="quiz-screen">
+    <div class="quiz-header">
+      <button class="back-icon" onclick="goHome()">←</button>
+      <div class="quiz-progress-bar">
+        <div class="quiz-progress-fill" id="qp-fill" style="width:0%"></div>
+      </div>
+      <div class="quiz-progress-text" id="qp-text">1/10</div>
+    </div>
+
+    <div class="mode-tag" id="mode-tag">同音異字</div>
+    <div class="quiz-card">
+      <div class="quiz-q" id="quiz-q"></div>
+      <div class="quiz-hint" id="quiz-hint"></div>
+    </div>
+
+    <div id="choice-area" class="choices"></div>
+
+    <div id="input-area" class="input-area" style="display:none">
+      <input class="kanji-input" id="kanji-input" type="text" placeholder="漢字を入力" maxlength="5" autocomplete="off">
+      <button class="submit-btn" onclick="checkInput()">決定する</button>
+    </div>
+
+    <div class="feedback" id="feedback">
+      <div class="fb-title" id="fb-title"></div>
+      <div id="fb-body"></div>
+    </div>
+    <button class="next-btn" id="next-btn" onclick="nextQ()">次の問題 →</button>
+  </div>
+
+  <!-- 結果画面 -->
+  <div id="result-screen">
+    <div class="result-wrap">
+      <div class="quiz-header" style="padding-top:16px">
+        <button class="back-icon" onclick="goHome()">←</button>
+        <span style="font-size:0.85rem;color:var(--muted)">結果</span>
+      </div>
+      <div class="result-top">
+        <div class="result-circle">
+          <div class="result-num" id="r-score">0</div>
+          <div class="result-denom" id="r-total">/0問</div>
+        </div>
+        <div>
+          <div class="result-msg" id="r-msg"></div>
+          <div class="result-sub" id="r-sub"></div>
+        </div>
+      </div>
+      <div class="updated-section" id="updated-section"></div>
+      <div class="review-section" id="review-section" style="display:none"></div>
+      <div class="result-btns">
+        <button class="retry-btn" id="retry-btn">もう一度</button>
+        <button class="home-btn" onclick="goHome()">ホームに戻る</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ============================================================
+// 問題データ
+// ============================================================
+const ALL_QUESTIONS = [
+  // === 同音異字 ===
+  { id:'q01', type:'同音異字', answer:'運行', reading:'うんこう',
+    q:'「列車や交通機関が決まったコースを進むこと」', choices:['運行','運航','永世','過程'],
+    explain:'「運行」は列車・バスが決まった路線を走ること。「運航」は船・飛行機が航路を進むこと。' },
+  { id:'q02', type:'同音異字', answer:'運航', reading:'うんこう',
+    q:'「航路にそって、船や飛行機が進むこと」', choices:['運行','運航','衛星','課程'],
+    explain:'「運航」は船・飛行機のこと。「運行」は列車・バスなど陸上の乗り物のこと。' },
+  { id:'q03', type:'同音異字', answer:'衛生', reading:'えいせい',
+    q:'「体の健康に注意し、病気の予防をすること」\n（公衆___）', choices:['衛生','衛星','永世','永生'],
+    explain:'「衛生」は健康・病気予防のこと。「衛星」は惑星の周りを回る星（人工衛星）。' },
+  { id:'q04', type:'同音異字', answer:'衛星', reading:'えいせい',
+    q:'「惑星のまわりを回る星。周辺にあって中心に従属するもの」\n（人工___・___都市）', choices:['衛生','衛星','永世','衛政'],
+    explain:'「衛星」は惑星を回る星。「人工衛星」「衛星都市」のように使う。' },
+  { id:'q05', type:'同音異字', answer:'永世', reading:'えいせい',
+    q:'「かぎりなく続く世の中・年月」\n（___中立国）', choices:['衛生','衛星','永世','永生'],
+    explain:'「永世」はかぎりなく続く世のこと。「永世中立国」（スイスなど）のように使う。' },
+  { id:'q06', type:'同音異字', answer:'課程', reading:'かてい',
+    q:'「学校などで、一定期間に勉強するように決められた学習内容」\n（博士___）', choices:['課程','過程','仮定','家庭'],
+    explain:'「課程」は学習の内容・段階（博士課程）。「過程」は経過。「仮定」は仮にそうだとすること。' },
+  { id:'q07', type:'同音異字', answer:'過程', reading:'かてい',
+    q:'「ものごとが始まってから終わるまでのあいだ」\n（進化の___）', choices:['課程','過程','仮定','家庭'],
+    explain:'「過程」はものごとの経過。「進化の過程」のように使う。「課程」は学習内容。' },
+  { id:'q08', type:'同音異字', answer:'仮定', reading:'かてい',
+    q:'「仮にそうだと考えておくこと」\n（___の上に立って物を言う）', choices:['課程','過程','仮定','家定'],
+    explain:'「仮定」は「仮にそうだとすると」という意味。「課程」「過程」も同じ読み方。' },
+  { id:'q09', type:'同音異字', answer:'観光', reading:'かんこう',
+    q:'「その土地の景色や風物・名所などを見物してまわること」\n（___旅行）', choices:['観光','刊行','感光','完工'],
+    explain:'「観光」は旅行・見物のこと。「刊行」は本を出版すること。' },
+  { id:'q10', type:'同音異字', answer:'刊行', reading:'かんこう',
+    q:'「書物や雑誌を印刷して出版すること」\n（雑誌を___する）', choices:['観光','刊行','感光','完工'],
+    explain:'「刊行」は本・雑誌を出版すること。「観光」は旅行のこと。' },
+  { id:'q11', type:'同音異字', answer:'間接', reading:'かんせつ',
+    q:'「人を通じて依頼すること。あいだに何かをはさむこと」\n（___に依頼する）', choices:['間接','関節','感染','観戦'],
+    explain:'「間接」はあいだをとおして行うこと。「関節」は骨と骨のつなぎめ。' },
+  { id:'q12', type:'同音異字', answer:'関節', reading:'かんせつ',
+    q:'「手首・ひじ・ひざなど、骨と骨のつなぎめにあたるところ」', choices:['間接','関節','感染','観戦'],
+    explain:'「関節」は骨と骨のつなぎめ（大腿骨と骨盤の関節）。「間接」はあいだをとおすこと。' },
+  { id:'q13', type:'同音異字', answer:'感染', reading:'かんせん',
+    q:'「病気がうつること」\n（結核に___する）', choices:['観戦','感染','幹線','間線'],
+    explain:'「感染」は病気がうつること。「観戦」は試合を観ること。「幹線」は主要な路線。' },
+  { id:'q14', type:'同音異字', answer:'観戦', reading:'かんせん',
+    q:'「試合などを見物すること」\n（野球を___する）', choices:['観戦','感染','幹線','完全'],
+    explain:'「観戦」は試合を観ること。「感染」は病気がうつること。' },
+  { id:'q15', type:'同音異字', answer:'幹線', reading:'かんせん',
+    q:'「鉄道や道路などで、いくつかの主要地点をむすぶ路線」\n（新___・___道路）', choices:['観戦','感染','幹線','完全'],
+    explain:'「幹線」は主要な路線。「新幹線」はその代表例。' },
+  { id:'q16', type:'同音異字', answer:'感知', reading:'かんち',
+    q:'「まわりのようすから感じとること」\n（地震を___する装置）', choices:['感知','関知','監知','完治'],
+    explain:'「感知」は感じとること（地震感知センサー）。「関知」は「私生活には関知しない」などのこと。' },
+
+  // === 同訓異字 ===
+  { id:'q17', type:'同訓異字', answer:'易しい', reading:'やさしい',
+    q:'「簡単である・たやすい」\n（今日のテストはとても___）', choices:['易しい','優しい','良しい','安しい'],
+    explain:'「易しい」は簡単なこと。「優しい」は気持ちや態度がおだやかで親切なこと。' },
+  { id:'q18', type:'同訓異字', answer:'優しい', reading:'やさしい',
+    q:'「気持ちや態度がおだやかで、他人に親切」\n（ぼくの姉はとても___）', choices:['易しい','優しい','良しい','安しい'],
+    explain:'「優しい」は親切でおだやかなこと。「易しい」は簡単・たやすいこと。' },
+  { id:'q19', type:'同訓異字', answer:'因る', reading:'よる',
+    q:'「あることが原因となる」\n（それが原因___発熱）', choices:['因る','寄る','依る','由る'],
+    explain:'「因る」は原因になること。「寄る」はそばに近づくこと。「依る」は基づくこと。' },
+  { id:'q20', type:'同訓異字', answer:'寄る', reading:'よる',
+    q:'「場所をたずねる・そばに近づく」\n（立ち___ ・ ___り道）', choices:['因る','寄る','依る','由る'],
+    explain:'「寄る」はそばに近づくこと。「寄り道」「立ち寄る」のように使う。' },
+  { id:'q21', type:'同訓異字', answer:'技', reading:'わざ',
+    q:'「技術・技能。理論を応用したやり方」\n（___をみがく）', choices:['技','業','芸','術'],
+    explain:'「技」は技術・技能。「業」は一つの目的のためにつとめる行い（至難の業）。' },
+  { id:'q22', type:'同訓異字', answer:'業', reading:'わざ',
+    q:'「一つの目的のためにつとめる行い・仕事」\n（至難の___）', choices:['技','業','芸','術'],
+    explain:'「業」は「至難の業」など。「技」は技術・技能のこと。' },
+  { id:'q23', type:'同訓異字', answer:'作る', reading:'つくる',
+    q:'「新しいものを生み出す。野菜や果物を生産する」\n（料理を___）', choices:['作る','造る','務る','創る'],
+    explain:'「作る」は日用品・料理・農作物など身近なもの。「造る」は船・家など大きなもの。' },
+  { id:'q24', type:'同訓異字', answer:'造る', reading:'つくる',
+    q:'「大きなものや機械を使って製作する」\n（船を___・家を___）', choices:['作る','造る','務る','創る'],
+    explain:'「造る」は大きなもの（船・家・機械）を作ること。「作る」は比較的小さなもの。' },
+  { id:'q25', type:'同訓異字', answer:'努める', reading:'つとめる',
+    q:'「力をつくして頑張る」\n（体力向上に___）', choices:['努める','務める','勤める','働める'],
+    explain:'「努める」は努力すること。「務める」は役目を果たすこと。「勤める」は職場に通うこと。' },
+  { id:'q26', type:'同訓異字', answer:'務める', reading:'つとめる',
+    q:'「ある役目・任務を引き受けて果たす」\n（主役を___・議長を___）', choices:['努める','務める','勤める','働める'],
+    explain:'「務める」は役目を担うこと。「努める」は努力すること。「勤める」は職場に通うこと。' },
+  { id:'q27', type:'同訓異字', answer:'勤める', reading:'つとめる',
+    q:'「会社・官庁などに通って仕事をする」\n（会社に___）', choices:['努める','務める','勤める','動める'],
+    explain:'「勤める」は職場に通って働くこと。「務める」は役を担うこと。「努める」は努力すること。' },
+  { id:'q28', type:'同訓異字', answer:'備える', reading:'そなえる',
+    q:'「これからのことに対応できるようにととのえておく」\n（地震に___）', choices:['備える','供える','設える','整える'],
+    explain:'「備える」は準備しておくこと。「供える」は神仏・墓前などに物をさしあげること。' },
+  { id:'q29', type:'同訓異字', answer:'供える', reading:'そなえる',
+    q:'「神仏や霊前・貴人に物をさしあげる」\n（霊前に花を___）', choices:['備える','供える','設える','整える'],
+    explain:'「供える」は神仏・墓前などに物をさしあげること。「備える」は準備すること。' },
+  { id:'q30', type:'同訓異字', answer:'温かい', reading:'あたたかい',
+    q:'「物の温度が冷たくなく、ほどよい熱さ」\n（___スープ・___家庭）', choices:['温かい','暖かい','熱かい','湯かい'],
+    explain:'「温かい」は物の温度がほどよいこと（スープ・お風呂）。「暖かい」は気温・季節・経済的ゆとり。' },
+  { id:'q31', type:'同訓異字', answer:'暖かい', reading:'あたたかい',
+    q:'「気温や気候が寒くない。経済的にゆとりがある」\n（春の___日・___家庭）', choices:['温かい','暖かい','熱かい','陽かい'],
+    explain:'「暖かい」は気温・季節・経済的なゆとりに使う。「温かい」は物の温度のこと。' },
+  { id:'q32', type:'同訓異字', answer:'誤る', reading:'あやまる',
+    q:'「よくない結果にみちびく。適切でないやり方をする」\n（後人を___）', choices:['誤る','謝る','過る','間る'],
+    explain:'「誤る」は間違いをすること（操作を誤る）。「謝る」は自分の過ちを認めて許しを求めること。' },
+  { id:'q33', type:'同訓異字', answer:'謝る', reading:'あやまる',
+    q:'「自分が悪かったことを認めて許してもらおうとする」\n（頭を下げて___）', choices:['誤る','謝る','過る','間る'],
+    explain:'「謝る」は「ごめんなさい」と詫びること。「誤る」は間違いをすること。' },
+  { id:'q34', type:'同訓異字', answer:'著す', reading:'あらわす',
+    q:'「書物を書いて世の中に発表する」\n（小説を___）', choices:['著す','現す','表す','現わす'],
+    explain:'「著す」は本を書くこと。「現す」は隠れていたものを見えるようにすること。「表す」は感情などを外に出すこと。' },
+  { id:'q35', type:'同訓異字', answer:'現す', reading:'あらわす',
+    q:'「いままで見えなかったものをはっきり表面に出す」\n（正体を___・姿を___）', choices:['著す','現す','表す','顕す'],
+    explain:'「現す」は隠れていたものを見えるようにすること。「著す」は本を書くこと。' },
+  { id:'q36', type:'同訓異字', answer:'表す', reading:'あらわす',
+    q:'「考えや気持ちなどを外に出してわかるようにする」\n（喜びを顔に___）', choices:['著す','現す','表す','顕す'],
+    explain:'「表す」は感情・考えなどを外に出すこと。「現す」は正体・姿を見せること。' },
+];
+
+// ============================================================
+// ストレージ（習熟度管理）
+// ============================================================
+const STORE_KEY = 'kankoto8-9-mastery';
+const MASTERY_THRESHOLD = 3; // 3回正解で習得
+
+function loadData() {
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    return raw ? JSON.parse(raw) : {};
+  } catch(e) { return {}; }
+}
+
+function saveData(data) {
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(data)); } catch(e) {}
+}
+
+function getMastery(id) {
+  const d = loadData();
+  return d[id] || { correct: 0, attempt: 0 };
+}
+
+function recordResult(id, isCorrect) {
+  const d = loadData();
+  if (!d[id]) d[id] = { correct: 0, attempt: 0 };
+  d[id].attempt++;
+  if (isCorrect) d[id].correct++;
+  saveData(d);
+}
+
+function getMasteryLevel(id) {
+  const m = getMastery(id);
+  if (m.correct >= MASTERY_THRESHOLD) return 'mastered';
+  if (m.attempt > 0) return 'learning';
+  return 'new';
+}
+
+function confirmReset() {
+  if (confirm('習熟度をすべてリセットしますか？')) {
+    localStorage.removeItem(STORE_KEY);
+    buildHome();
+  }
+}
+
+// ============================================================
+// ホーム画面
+// ============================================================
+function buildHome() {
+  const data = loadData();
+  let mastered = 0, learning = 0, newQ = 0;
+  const total = ALL_QUESTIONS.length;
+
+  ALL_QUESTIONS.forEach(q => {
+    const lv = getMasteryLevel(q.id);
+    if (lv === 'mastered') mastered++;
+    else if (lv === 'learning') learning++;
+    else newQ++;
+  });
+
+  document.getElementById('stat-mastered').textContent = mastered;
+  document.getElementById('stat-learning').textContent = learning;
+  document.getElementById('stat-new').textContent = newQ;
+  document.getElementById('stat-total').textContent = total;
+  document.getElementById('home-bar').style.width = `${Math.round((mastered / total) * 100)}%`;
+
+  // 未習得ボタン
+  const weakBtn = document.getElementById('weak-btn');
+  const unmastered = ALL_QUESTIONS.filter(q => getMasteryLevel(q.id) !== 'mastered');
+  weakBtn.disabled = unmastered.length === 0;
+  weakBtn.textContent = `⚡ 未習得だけ集中練習（${unmastered.length}問）`;
+
+  // 問題リスト
+  const list = document.getElementById('question-list');
+  list.innerHTML = '';
+  ALL_QUESTIONS.forEach(q => {
+    const lv = getMasteryLevel(q.id);
+    const m = getMastery(q.id);
+    const icon = lv === 'mastered' ? '✓' : lv === 'learning' ? `${m.correct}` : '○';
+    const div = document.createElement('div');
+    div.className = 'q-item';
+    div.innerHTML = `
+      <div class="q-status ${lv}">${icon}</div>
+      <div class="q-info">
+        <div class="q-answer">${q.answer}<span class="mastery-badge badge-${lv}">${lv === 'mastered' ? '習得済' : lv === 'learning' ? '練習中' : '未挑戦'}</span></div>
+        <div class="q-reading">${q.reading} ／ ${q.type}</div>
+      </div>
+      <div class="q-count">${m.correct}/${MASTERY_THRESHOLD}回</div>
+    `;
+    list.appendChild(div);
+  });
+}
+
+// ============================================================
+// クイズロジック
+// ============================================================
+let quizQueue = [];
+let quizIndex = 0;
+let quizScore = 0;
+let quizAnswered = false;
+let quizMode = 'all';
+let sessionResults = []; // {id, wasCorrect, prevLevel, newLevel}
+
+function shuffle(arr) { return [...arr].sort(() => Math.random() - 0.5); }
+
+function startQuiz(mode) {
+  quizMode = mode;
+  if (mode === 'all') {
+    quizQueue = shuffle(ALL_QUESTIONS);
+  } else {
+    const unmastered = ALL_QUESTIONS.filter(q => getMasteryLevel(q.id) !== 'mastered');
+    quizQueue = shuffle(unmastered);
+  }
+  quizIndex = 0;
+  quizScore = 0;
+  quizAnswered = false;
+  sessionResults = [];
+  showScreen('quiz-screen');
+  renderQ();
+}
+
+function renderQ() {
+  const q = quizQueue[quizIndex];
+  const total = quizQueue.length;
+  document.getElementById('qp-fill').style.width = `${(quizIndex / total) * 100}%`;
+  document.getElementById('qp-text').textContent = `${quizIndex + 1}/${total}`;
+  document.getElementById('mode-tag').textContent = q.type;
+  document.getElementById('quiz-q').textContent = q.q;
+
+  const m = getMastery(q.id);
+  const lv = getMasteryLevel(q.id);
+  document.getElementById('quiz-hint').textContent = `よみ：${q.reading}　　正解回数：${m.correct}／${MASTERY_THRESHOLD}回`;
+
+  document.getElementById('feedback').className = 'feedback';
+  document.getElementById('next-btn').className = 'next-btn';
+  quizAnswered = false;
+
+  // 全問選択式
+  const ca = document.getElementById('choice-area');
+  const ia = document.getElementById('input-area');
+  ca.style.display = 'grid';
+  ia.style.display = 'none';
+  buildChoices(q);
+}
+
+function buildChoices(q) {
+  const area = document.getElementById('choice-area');
+  area.innerHTML = '';
+  const opts = shuffle(q.choices);
+  opts.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 'choice-btn';
+    btn.textContent = opt;
+    btn.onclick = () => selectChoice(btn, opt, q);
+    area.appendChild(btn);
+  });
+}
+
+function selectChoice(btn, opt, q) {
+  if (quizAnswered) return;
+  quizAnswered = true;
+  const prevLevel = getMasteryLevel(q.id);
+  const isCorrect = opt === q.answer;
+  recordResult(q.id, isCorrect);
+  const newLevel = getMasteryLevel(q.id);
+  sessionResults.push({ q, wasCorrect: isCorrect, prevLevel, newLevel });
+
+  if (isCorrect) {
+    quizScore++;
+    btn.classList.add('correct');
+  } else {
+    btn.classList.add('wrong');
+    document.querySelectorAll('.choice-btn').forEach(b => {
+      if (b.textContent === q.answer) b.classList.add('correct');
+    });
+  }
+  document.querySelectorAll('.choice-btn').forEach(b => b.disabled = true);
+  showFeedback(isCorrect, q, newLevel);
+}
+
+function checkInput() {
+  if (quizAnswered) return;
+  const input = document.getElementById('kanji-input');
+  const val = input.value.trim();
+  if (!val) return;
+  const q = quizQueue[quizIndex];
+  const norm = s => s.replace(/[ぁ-ん]/g, '');
+  const isCorrect = val === q.answer || norm(val) === norm(q.answer);
+  quizAnswered = true;
+  input.disabled = true;
+  input.className = 'kanji-input ' + (isCorrect ? 'correct' : 'wrong');
+  const prevLevel = getMasteryLevel(q.id);
+  recordResult(q.id, isCorrect);
+  const newLevel = getMasteryLevel(q.id);
+  sessionResults.push({ q, wasCorrect: isCorrect, prevLevel, newLevel });
+  if (isCorrect) quizScore++;
+  showFeedback(isCorrect, q, newLevel);
+}
+
+function showFeedback(isCorrect, q, newLevel) {
+  const fb = document.getElementById('feedback');
+  const title = document.getElementById('fb-title');
+  const body = document.getElementById('fb-body');
+  let masteryNote = '';
+  if (newLevel === 'mastered') masteryNote = '　🎉 習得達成！';
+
+  if (isCorrect) {
+    fb.className = 'feedback show ok';
+    title.textContent = '✓ 正解！' + masteryNote;
+  } else {
+    fb.className = 'feedback show ng';
+    title.textContent = `✗ 不正解　正解：${q.answer}`;
+  }
+  body.textContent = q.explain || '';
+  document.getElementById('next-btn').className = 'next-btn show';
+}
+
+function nextQ() {
+  quizIndex++;
+  if (quizIndex >= quizQueue.length) {
+    showResult();
+  } else {
+    renderQ();
+  }
+}
+
+// ============================================================
+// 結果画面
+// ============================================================
+function showResult() {
+  showScreen('result-screen');
+  const total = quizQueue.length;
+  const pct = Math.round((quizScore / total) * 100);
+
+  document.getElementById('r-score').textContent = quizScore;
+  document.getElementById('r-total').textContent = `/${total}問`;
+
+  let msg, sub;
+  if (pct === 100) { msg = '🎉 パーフェクト！'; sub = '全問正解！すごい！'; }
+  else if (pct >= 80) { msg = '👏 よくできました！'; sub = `${total - quizScore}問ミス。復習してみよう。`; }
+  else if (pct >= 60) { msg = '🙆 まずまず！'; sub = `間違いを確認してもう一度チャレンジ！`; }
+  else { msg = '💪 もう一度！'; sub = `まずは間違えた問題を復習しよう。`; }
+  document.getElementById('r-msg').textContent = msg;
+  document.getElementById('r-sub').textContent = sub;
+
+  // 習熟度アップしたもの
+  const upgraded = sessionResults.filter(r => r.wasCorrect && r.prevLevel !== r.newLevel);
+  const updSec = document.getElementById('updated-section');
+  if (upgraded.length > 0) {
+    const levelLabel = { new:'未挑戦', learning:'練習中', mastered:'習得済み✓' };
+    updSec.style.display = 'block';
+    updSec.innerHTML = `<div class="updated-title">▲ 習熟度アップ！</div><div class="updated-list">` +
+      upgraded.map(r => `<div class="updated-item">
+        <span>${r.q.answer}</span>
+        <span class="updated-arrow">→</span>
+        <span class="updated-new">${levelLabel[r.newLevel]}</span>
+      </div>`).join('') + `</div>`;
+  } else {
+    updSec.style.display = 'none';
+  }
+
+  // 間違えたもの
+  const wrong = sessionResults.filter(r => !r.wasCorrect);
+  const revSec = document.getElementById('review-section');
+  if (wrong.length > 0) {
+    revSec.style.display = 'block';
+    revSec.innerHTML = `<div class="review-title">▼ 間違えた問題</div>` +
+      wrong.map(r => `<div class="review-item">
+        <span class="review-answer">正解：${r.q.answer}（${r.q.reading}）</span><br>${r.q.q}
+      </div>`).join('');
+  } else {
+    revSec.style.display = 'none';
+  }
+
+  document.getElementById('retry-btn').onclick = () => startQuiz(quizMode);
+}
+
+// ============================================================
+// 画面切り替え
+// ============================================================
+function showScreen(id) {
+  ['home-screen','quiz-screen','result-screen'].forEach(s => {
+    document.getElementById(s).style.display = s === id ? 'block' : 'none';
+  });
+}
+
+function goHome() {
+  buildHome();
+  showScreen('home-screen');
+}
+
+// 初期化
+buildHome();
+showScreen('home-screen');
+</script>
+</body>
+</html>
