@@ -66,7 +66,9 @@ body::after { content: ''; position: fixed; bottom: -150px; left: -150px; width:
 .mode-tag { display: inline-block; font-size: 0.62rem; background: rgba(58,134,200,0.15); color: var(--blue); border: 1px solid rgba(58,134,200,0.3); padding: 3px 10px; border-radius: 20px; letter-spacing: 0.1em; margin-bottom: 14px; font-weight: 700; }
 .quiz-card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 24px 20px; margin-bottom: 16px; }
 .quiz-q { font-size: 1rem; line-height: 1.85; font-weight: 500; white-space: pre-wrap; }
-.quiz-hint { font-size: 0.72rem; color: var(--muted); margin-top: 10px; }
+.hint-btn { background: none; border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; padding: 5px 14px; color: var(--muted); font-size: 0.72rem; cursor: pointer; margin-top: 12px; font-family: 'Zen Kaku Gothic New', sans-serif; transition: all 0.2s; }
+.hint-btn:hover { border-color: var(--accent); color: var(--accent); }
+.quiz-hint { font-size: 0.72rem; color: var(--accent); margin-top: 8px; display: none; }
 .choices { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
 .choice-btn { background: var(--surface); border: 1.5px solid var(--border); border-radius: 12px; padding: 16px 10px; color: var(--text); font-family: 'Zen Kaku Gothic New', sans-serif; font-size: 0.95rem; font-weight: 700; cursor: pointer; text-align: center; transition: all 0.15s; }
 .choice-btn:hover:not(:disabled) { border-color: var(--accent); background: rgba(240,192,64,0.07); }
@@ -150,6 +152,7 @@ body::after { content: ''; position: fixed; bottom: -150px; left: -150px; width:
     <div class="mode-tag" id="mode-tag">和語</div>
     <div class="quiz-card">
       <div class="quiz-q" id="quiz-q"></div>
+      <button class="hint-btn" id="hint-btn" onclick="showHint()">💡 よみのヒントを見る</button>
       <div class="quiz-hint" id="quiz-hint"></div>
     </div>
     <div id="choice-area" class="choices"></div>
@@ -449,7 +452,9 @@ function renderQ() {
   document.getElementById('mode-tag').textContent = q.type;
   document.getElementById('quiz-q').textContent = q.q;
   const m = getMastery(q.id);
-  document.getElementById('quiz-hint').textContent = `正解回数：${m.correct}／${MASTERY_THRESHOLD}回`;
+  document.getElementById('quiz-hint').textContent = `よみ：${q.reading}　　正解回数：${m.correct}／${MASTERY_THRESHOLD}回`;
+  document.getElementById('quiz-hint').style.display = 'none';
+  document.getElementById('hint-btn').style.display = 'inline-block';
   document.getElementById('feedback').className = 'feedback';
   document.getElementById('next-btn').className = 'next-btn';
   quizAnswered = false;
@@ -463,6 +468,11 @@ function buildChoices(q) {
     const btn = document.createElement('button'); btn.className = 'choice-btn'; btn.textContent = opt;
     btn.onclick = () => selectChoice(btn, opt, q); area.appendChild(btn);
   });
+}
+
+function showHint() {
+  document.getElementById('quiz-hint').style.display = 'block';
+  document.getElementById('hint-btn').style.display = 'none';
 }
 
 function selectChoice(btn, opt, q) {

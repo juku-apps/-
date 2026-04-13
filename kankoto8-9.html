@@ -309,10 +309,24 @@ body::after {
   white-space: pre-wrap;
 }
 
+.hint-btn {
+  background: none;
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 8px;
+  padding: 5px 14px;
+  color: var(--muted);
+  font-size: 0.72rem;
+  cursor: pointer;
+  margin-top: 12px;
+  font-family: 'Zen Kaku Gothic New', sans-serif;
+  transition: all 0.2s;
+}
+.hint-btn:hover { border-color: var(--accent); color: var(--accent); }
 .quiz-hint {
   font-size: 0.72rem;
-  color: var(--muted);
-  margin-top: 10px;
+  color: var(--accent);
+  margin-top: 8px;
+  display: none;
 }
 
 /* 選択肢 */
@@ -615,6 +629,7 @@ body::after {
     <div class="mode-tag" id="mode-tag">同音異字</div>
     <div class="quiz-card">
       <div class="quiz-q" id="quiz-q"></div>
+      <button class="hint-btn" id="hint-btn" onclick="showHint()">💡 よみのヒントを見る</button>
       <div class="quiz-hint" id="quiz-hint"></div>
     </div>
 
@@ -907,8 +922,9 @@ function renderQ() {
   document.getElementById('quiz-q').textContent = q.q;
 
   const m = getMastery(q.id);
-  const lv = getMasteryLevel(q.id);
   document.getElementById('quiz-hint').textContent = `よみ：${q.reading}　　正解回数：${m.correct}／${MASTERY_THRESHOLD}回`;
+  document.getElementById('quiz-hint').style.display = 'none';
+  document.getElementById('hint-btn').style.display = 'inline-block';
 
   document.getElementById('feedback').className = 'feedback';
   document.getElementById('next-btn').className = 'next-btn';
@@ -933,6 +949,11 @@ function buildChoices(q) {
     btn.onclick = () => selectChoice(btn, opt, q);
     area.appendChild(btn);
   });
+}
+
+function showHint() {
+  document.getElementById('quiz-hint').style.display = 'block';
+  document.getElementById('hint-btn').style.display = 'none';
 }
 
 function selectChoice(btn, opt, q) {
