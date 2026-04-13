@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>読解トレーニング｜予習シリーズ</title>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;700&family=Zen+Kaku+Gothic+New:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #faf8f3;
+  --surface: #ffffff;
+  --card: #f5f2ea;
+  --border: rgba(0,0,0,0.08);
+  --accent: #2c5f8a;
+  --accent2: #c0392b;
+  --green: #1e7e4a;
+  --red: #c0392b;
+  --text: #1a1a2e;
+  --muted: rgba(26,26,46,0.45);
+  --gold: #8b6914;
+  --radius: 14px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+body {
+  font-family: 'Zen Kaku Gothic New', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+}
+
+.app { max-width: 640px; margin: 0 auto; padding: 0 16px 60px; }
+
+/* ヘッダー */
+.header {
+  padding: 24px 0 20px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 24px;
+}
+
+.header-title {
+  font-family: 'Shippori Mincho', serif;
+  font-size: 1.4rem;
+  color: var(--accent);
+  letter-spacing: 0.08em;
+}
+
+.header-sub {
+  font-size: 0.7rem;
+  color: var(--muted);
+  margin-top: 4px;
+  letter-spacing: 0.1em;
+}
+
+/* ホーム画面 */
+.home-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+
+.home-card h2 {
+  font-family: 'Shippori Mincho', serif;
+  font-size: 1.1rem;
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+
+.set-structure {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.set-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.85rem;
+  padding: 10px 14px;
+  background: var(--card);
+  border-radius: 10px;
+}
+
+.set-tag {
+  display: inline-block;
+  font-size: 0.62rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 10px;
+  flex-shrink: 0;
+  letter-spacing: 0.05em;
+}
+
+.tag-setsumeibun { background: rgba(44,95,138,0.12); color: var(--accent); }
+.tag-monogatari { background: rgba(192,57,43,0.1); color: var(--accent2); }
+.tag-zuihitsu { background: rgba(139,105,20,0.12); color: var(--gold); }
+
+.stats-row {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.stat-box {
+  flex: 1;
+  text-align: center;
+  background: var(--card);
+  border-radius: 10px;
+  padding: 12px 8px;
+}
+
+.stat-n {
+  font-family: 'Shippori Mincho', serif;
+  font-size: 1.8rem;
+  color: var(--accent);
+  line-height: 1;
+}
+
+.stat-l { font-size: 0.65rem; color: var(--muted); margin-top: 4px; }
+
+.start-btn {
+  width: 100%;
+  background: var(--accent);
+  border: none;
+  border-radius: var(--radius);
+  padding: 18px;
+  color: white;
+  font-family: 'Zen Kaku Gothic New', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: 0.05em;
+  transition: all 0.2s;
+  box-shadow: 0 4px 16px rgba(44,95,138,0.3);
+}
+.start-btn:active { transform: scale(0.98); }
+
+/* ローディング */
+#loading-screen {
+  display: none;
+  text-align: center;
+  padding: 60px 0;
+}
+
+.loading-icon {
+  font-size: 2.5rem;
+  margin-bottom: 16px;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(0.95); }
+}
+
+.loading-text {
+  font-size: 0.9rem;
+  color: var(--muted);
+  line-height: 1.8;
+}
+
+/* クイズ画面 */
+#quiz-screen { display: none; }
+
+.quiz-nav {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 0 12px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 20px;
+}
+
+.nav-back {
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 4px 8px 4px 0;
+}
+
+.quiz-progress-bar {
+  flex: 1;
+  height: 4px;
+  background: rgba(0,0,0,0.08);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.quiz-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  border-radius: 2px;
+  transition: width 0.4s ease;
+}
+
+.quiz-progress-text { font-size: 0.75rem; color: var(--muted); }
+
+/* 文章カード */
+.passage-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.passage-tag {
+  display: inline-block;
+  font-size: 0.62rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 20px;
+  letter-spacing: 0.08em;
+  margin-bottom: 14px;
+}
+
+.passage-title {
+  font-family: 'Shippori Mincho', serif;
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: var(--text);
+}
+
+.passage-text {
+  font-family: 'Shippori Mincho', serif;
+  font-size: 0.92rem;
+  line-height: 2;
+  color: var(--text);
+}
+
+.passage-text .blank {
+  display: inline-block;
+  background: var(--accent);
+  color: white;
+  padding: 0 4px;
+  border-radius: 4px;
+  font-weight: 700;
+  min-width: 24px;
+  text-align: center;
+}
+
+/* 問題 */
+.question-section {
+  margin-bottom: 16px;
+}
+
+.question-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.q-num {
+  width: 26px;
+  height: 26px;
+  background: var(--accent);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.q-num.sekisan { background: var(--accent2); }
+.q-num.zuihitsu { background: var(--gold); }
+
+.q-text {
+  font-size: 0.9rem;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.choices {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.choice-btn {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  color: var(--text);
+  font-family: 'Zen Kaku Gothic New', sans-serif;
+  font-size: 0.88rem;
+  cursor: pointer;
+  text-align: left;
+  line-height: 1.6;
+  transition: all 0.15s;
+}
+
+.choice-btn:hover:not(:disabled) {
+  border-color: var(--accent);
+  background: rgba(44,95,138,0.04);
+}
+
+.choice-btn.correct {
+  background: rgba(30,126,74,0.08);
+  border-color: var(--green);
+  color: var(--green);
+}
+
+.choice-btn.wrong {
+  background: rgba(192,57,43,0.06);
+  border-color: var(--red);
+  color: var(--red);
+}
+
+.choice-btn:disabled { cursor: default; }
+
+/* フィードバック */
+.feedback {
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-top: 12px;
+  font-size: 0.85rem;
+  line-height: 1.75;
+  display: none;
+}
+
+.feedback.show { display: block; }
+.feedback.ok { background: rgba(30,126,74,0.08); border: 1px solid rgba(30,126,74,0.25); }
+.feedback.ng { background: rgba(192,57,43,0.06); border: 1px solid rgba(192,57,43,0.2); }
+
+.fb-title { font-weight: 700; font-size: 0.9rem; margin-bottom: 6px; }
+.feedback.ok .fb-title { color: var(--green); }
+.feedback.ng .fb-title { color: var(--red); }
+
+/* 次へボタン */
+.next-btn {
+  width: 100%;
+  background: var(--accent);
+  border: none;
+  border-radius: var(--radius);
+  padding: 16px;
+  color: white;
+  font-family: 'Zen Kaku Gothic New', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 16px;
+  display: none;
+  transition: all 0.15s;
+}
+.next-btn.show { display: block; }
+.next-btn:active { transform: scale(0.98); }
+
+/* 結果画面 */
+#result-screen { display: none; }
+
+.result-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin: 20px 0 16px;
+  text-align: center;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+
+.result-circle {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  border: 3px solid var(--accent);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+  background: rgba(44,95,138,0.05);
+}
+
+.result-num {
+  font-family: 'Shippori Mincho', serif;
+  font-size: 2.2rem;
+  color: var(--accent);
+  line-height: 1;
+}
+
+.result-denom { font-size: 0.7rem; color: var(--muted); }
+.result-msg { font-size: 1.1rem; font-weight: 700; margin-bottom: 8px; }
+.result-sub { font-size: 0.82rem; color: var(--muted); line-height: 1.7; }
+
+.review-card {
+  background: var(--surface);
+  border: 1px solid rgba(192,57,43,0.2);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.review-title { font-size: 0.7rem; color: var(--muted); letter-spacing: 0.1em; margin-bottom: 12px; }
+
+.review-item {
+  border-bottom: 1px solid var(--border);
+  padding: 10px 0;
+  font-size: 0.82rem;
+  line-height: 1.75;
+}
+.review-item:last-child { border-bottom: none; }
+.review-q { color: var(--muted); margin-bottom: 4px; }
+.review-a { color: var(--green); font-weight: 700; }
+
+.result-btns { display: flex; flex-direction: column; gap: 8px; }
+
+.retry-btn {
+  width: 100%;
+  background: var(--accent);
+  border: none;
+  border-radius: var(--radius);
+  padding: 16px;
+  color: white;
+  font-family: 'Zen Kaku Gothic New', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(44,95,138,0.25);
+}
+
+.home-btn {
+  width: 100%;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px;
+  color: var(--muted);
+  font-family: 'Zen Kaku Gothic New', sans-serif;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+/* セット間区切り */
+.section-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 24px 0 20px;
+}
+.divider-line { flex: 1; height: 1px; background: var(--border); }
+.divider-label {
+  font-size: 0.7rem;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ホーム画面 -->
+  <div id="home-screen">
+    <div class="header">
+      <div class="header-title">読解トレーニング</div>
+      <div class="header-sub">予習シリーズ ｜ 中学受験対応</div>
+    </div>
+
+    <div class="home-card">
+      <h2>1セットの構成</h2>
+      <div class="set-structure">
+        <div class="set-row">
+          <span class="set-tag tag-setsumeibun">説明文</span>
+          <span>要約問題 ＋ 接続詞問題</span>
+        </div>
+        <div class="set-row">
+          <span class="set-tag tag-monogatari">物語文</span>
+          <span>要約問題 ＋ 接続詞問題</span>
+        </div>
+        <div class="set-row">
+          <span class="set-tag tag-zuihitsu">随筆文</span>
+          <span>要約問題 ＋ 接続詞問題</span>
+        </div>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-box">
+          <div class="stat-n" id="stat-sets">0</div>
+          <div class="stat-l">累計セット数</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-n" id="stat-correct">0</div>
+          <div class="stat-l">累計正解数</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-n" id="stat-pct">—</div>
+          <div class="stat-l">正答率</div>
+        </div>
+      </div>
+
+      <button class="start-btn" onclick="startSession()">📖 新しいセットを始める</button>
+    </div>
+
+    <div style="font-size:0.72rem;color:var(--muted);text-align:center;line-height:1.8;">
+      AIが毎回新しい文章と問題を生成します。<br>ネット接続が必要です。
+    </div>
+  </div>
+
+  <!-- ローディング画面 -->
+  <div id="loading-screen">
+    <div class="header">
+      <div class="header-title">読解トレーニング</div>
+    </div>
+    <div class="loading-icon">📚</div>
+    <div class="loading-text">
+      AIが問題を生成しています...<br>
+      少々お待ちください
+    </div>
+  </div>
+
+  <!-- クイズ画面 -->
+  <div id="quiz-screen">
+    <div class="quiz-nav">
+      <button class="nav-back" onclick="confirmBack()">←</button>
+      <div class="quiz-progress-bar">
+        <div class="quiz-progress-fill" id="qp-fill" style="width:0%"></div>
+      </div>
+      <div class="quiz-progress-text" id="qp-text">1/6</div>
+    </div>
+    <div id="quiz-content"></div>
+  </div>
+
+  <!-- 結果画面 -->
+  <div id="result-screen">
+    <div class="header">
+      <div class="header-title">読解トレーニング</div>
+    </div>
+    <div class="result-card">
+      <div class="result-circle">
+        <div class="result-num" id="r-score">0</div>
+        <div class="result-denom" id="r-total">/6問</div>
+      </div>
+      <div class="result-msg" id="r-msg"></div>
+      <div class="result-sub" id="r-sub"></div>
+    </div>
+    <div class="review-card" id="review-card" style="display:none">
+      <div class="review-title">▼ 間違えた問題</div>
+      <div id="review-list"></div>
+    </div>
+    <div class="result-btns">
+      <button class="retry-btn" onclick="startSession()">📖 もう一セット</button>
+      <button class="home-btn" onclick="goHome()">ホームに戻る</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ============================================================
+// 統計管理
+// ============================================================
+const STATS_KEY = 'dokkai-stats';
+
+function loadStats() {
+  try { const r = localStorage.getItem(STATS_KEY); return r ? JSON.parse(r) : { sets: 0, correct: 0, total: 0 }; } catch(e) { return { sets: 0, correct: 0, total: 0 }; }
+}
+
+function saveStats(s) {
+  try { localStorage.setItem(STATS_KEY, JSON.stringify(s)); } catch(e) {}
+}
+
+function updateStatsDisplay() {
+  const s = loadStats();
+  document.getElementById('stat-sets').textContent = s.sets;
+  document.getElementById('stat-correct').textContent = s.correct;
+  document.getElementById('stat-pct').textContent = s.total > 0 ? Math.round((s.correct / s.total) * 100) + '%' : '—';
+}
+
+// ============================================================
+// セッション変数
+// ============================================================
+let sessionData = null;   // AIが生成した問題データ
+let currentQ = 0;         // 現在の問題インデックス（0〜5）
+let sessionScore = 0;
+let sessionResults = [];
+let answered = false;
+
+// ============================================================
+// AI問題生成
+// ============================================================
+async function generateQuestions() {
+  const prompt = `あなたは中学受験国語の問題作成の専門家です。
+以下の仕様で1セット分の読解問題を作成してください。
+
+【仕様】
+- 説明文・物語文・随筆文の3つの文章を作成
+- 各文章は200〜280字程度
+- 難易度は中学受験（偏差値55〜65レベル）
+- 各文章に以下の2問を作成：
+  1. 要約問題（この文章の内容として最も適切なものを選べ）
+  2. 接続詞穴埋め問題（文中の___に入る接続詞を選べ）
+- 要約問題の誤答は「文章に書いていないことを想像で選ばせる罠」「一部だけ正しい」「言いすぎ・逆」のパターンを含める
+- 接続詞の選択肢は「しかし・だから・また・つまり・ところが・なぜなら・そして・ただし」などから適切なものを4つ選ぶ
+
+【出力形式】
+以下のJSON形式のみで出力してください。前置き・説明・マークダウンは不要です。
+
+{
+  "passages": [
+    {
+      "type": "説明文",
+      "title": "タイトル",
+      "text": "本文（___で接続詞の空欄を示す）",
+      "questions": [
+        {
+          "type": "要約",
+          "question": "この文章の内容として最も適切なものを次の中から選びなさい。",
+          "choices": ["選択肢ア", "選択肢イ", "選択肢ウ", "選択肢エ"],
+          "answer": 0,
+          "explanation": "解説文"
+        },
+        {
+          "type": "接続詞",
+          "question": "文中の___に入る言葉として最も適切なものを次の中から選びなさい。",
+          "choices": ["接続詞1", "接続詞2", "接続詞3", "接続詞4"],
+          "answer": 0,
+          "explanation": "解説文"
+        }
+      ]
+    },
+    {
+      "type": "物語文",
+      "title": "タイトル",
+      "text": "本文",
+      "questions": [同上]
+    },
+    {
+      "type": "随筆文",
+      "title": "タイトル",
+      "text": "本文",
+      "questions": [同上]
+    }
+  ]
+}`;
+
+  const response = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 4000,
+      messages: [{ role: 'user', content: prompt }]
+    })
+  });
+
+  const data = await response.json();
+  const text = data.content.map(i => i.text || '').join('');
+  const clean = text.replace(/```json|```/g, '').trim();
+  return JSON.parse(clean);
+}
+
+// ============================================================
+// セッション開始
+// ============================================================
+async function startSession() {
+  showScreen('loading-screen');
+  try {
+    sessionData = await generateQuestions();
+    currentQ = 0;
+    sessionScore = 0;
+    sessionResults = [];
+    answered = false;
+    showScreen('quiz-screen');
+    renderQuestion();
+  } catch(e) {
+    alert('問題の生成に失敗しました。ネット接続を確認してもう一度お試しください。');
+    showScreen('home-screen');
+  }
+}
+
+// ============================================================
+// 問題表示
+// ============================================================
+function renderQuestion() {
+  // currentQ: 0,1 = passage[0]のq[0],q[1]、2,3 = passage[1]...
+  const passageIdx = Math.floor(currentQ / 2);
+  const qIdx = currentQ % 2;
+  const passage = sessionData.passages[passageIdx];
+  const q = passage.questions[qIdx];
+  const total = 6;
+
+  document.getElementById('qp-fill').style.width = `${(currentQ / total) * 100}%`;
+  document.getElementById('qp-text').textContent = `${currentQ + 1}/${total}`;
+
+  answered = false;
+
+  const typeColors = {
+    '説明文': 'tag-setsumeibun',
+    '物語文': 'tag-monogatari',
+    '随筆文': 'tag-zuihitsu'
+  };
+
+  const numColors = {
+    '説明文': '',
+    '物語文': 'sekisan',
+    '随筆文': 'zuihitsu'
+  };
+
+  // 文章テキストの___をハイライト（接続詞問題のとき）
+  let passageHtml = passage.text;
+  if (q.type === '接続詞') {
+    passageHtml = passage.text.replace(/___/g, '<span class="blank">　　</span>');
+  }
+
+  const choiceLabels = ['ア', 'イ', 'ウ', 'エ'];
+
+  const html = `
+    ${qIdx === 0 ? `
+    <div class="passage-card">
+      <span class="passage-tag ${typeColors[passage.type]}">${passage.type}</span>
+      <div class="passage-title">『${passage.title}』</div>
+      <div class="passage-text">${passageHtml}</div>
+    </div>
+    ` : `
+    <div class="passage-card" style="background:var(--card);border-style:dashed;">
+      <span class="passage-tag ${typeColors[passage.type]}">${passage.type}（続き）</span>
+      <div class="passage-text">${passageHtml}</div>
+    </div>
+    `}
+
+    <div class="question-section">
+      <div class="question-label">
+        <div class="q-num ${numColors[passage.type]}">${currentQ + 1}</div>
+        <div class="q-text">${q.question}</div>
+      </div>
+      <div class="choices" id="choices">
+        ${q.choices.map((c, i) => `
+          <button class="choice-btn" onclick="selectAnswer(${i})" data-idx="${i}">
+            <strong>${choiceLabels[i]}</strong>　${c}
+          </button>
+        `).join('')}
+      </div>
+      <div class="feedback" id="feedback">
+        <div class="fb-title" id="fb-title"></div>
+        <div id="fb-body"></div>
+      </div>
+      <button class="next-btn" id="next-btn" onclick="nextQuestion()">
+        ${currentQ < 5 ? '次の問題 →' : '結果を見る'}
+      </button>
+    </div>
+  `;
+
+  document.getElementById('quiz-content').innerHTML = html;
+}
+
+function selectAnswer(idx) {
+  if (answered) return;
+  answered = true;
+
+  const passageIdx = Math.floor(currentQ / 2);
+  const qIdx = currentQ % 2;
+  const q = sessionData.passages[passageIdx].questions[qIdx];
+  const isCorrect = idx === q.answer;
+  const choiceLabels = ['ア', 'イ', 'ウ', 'エ'];
+
+  if (isCorrect) sessionScore++;
+
+  sessionResults.push({
+    passageType: sessionData.passages[passageIdx].type,
+    qType: q.type,
+    question: q.question,
+    correctAnswer: choiceLabels[q.answer] + '　' + q.choices[q.answer],
+    isCorrect,
+    explanation: q.explanation
+  });
+
+  // ボタン着色
+  document.querySelectorAll('.choice-btn').forEach((btn, i) => {
+    btn.disabled = true;
+    if (i === q.answer) btn.classList.add('correct');
+    else if (i === idx && !isCorrect) btn.classList.add('wrong');
+  });
+
+  // フィードバック
+  const fb = document.getElementById('feedback');
+  const title = document.getElementById('fb-title');
+  const body = document.getElementById('fb-body');
+
+  if (isCorrect) {
+    fb.className = 'feedback show ok';
+    title.textContent = '✓ 正解！';
+  } else {
+    fb.className = 'feedback show ng';
+    title.textContent = `✗ 不正解　正解：${choiceLabels[q.answer]}`;
+  }
+  body.textContent = q.explanation;
+
+  document.getElementById('next-btn').className = 'next-btn show';
+}
+
+function nextQuestion() {
+  currentQ++;
+  if (currentQ >= 6) {
+    showResult();
+  } else {
+    renderQuestion();
+    window.scrollTo(0, 0);
+  }
+}
+
+// ============================================================
+// 結果表示
+// ============================================================
+function showResult() {
+  showScreen('result-screen');
+
+  const pct = Math.round((sessionScore / 6) * 100);
+  document.getElementById('r-score').textContent = sessionScore;
+  document.getElementById('r-total').textContent = '/6問';
+
+  let msg, sub;
+  if (pct === 100) { msg = '🎉 パーフェクト！'; sub = '全問正解！素晴らしい読解力です。'; }
+  else if (pct >= 83) { msg = '👏 よくできました！'; sub = '1問ミス。もう少しで完璧です。'; }
+  else if (pct >= 67) { msg = '🙆 まずまず！'; sub = '間違えた問題の解説をよく読んで復習しましょう。'; }
+  else { msg = '💪 もう一セット！'; sub = '要約問題は「文章に書いていないことは選ばない」を意識して。'; }
+
+  document.getElementById('r-msg').textContent = msg;
+  document.getElementById('r-sub').textContent = sub;
+
+  // 統計更新
+  const stats = loadStats();
+  stats.sets++;
+  stats.correct += sessionScore;
+  stats.total += 6;
+  saveStats(stats);
+
+  // 間違えた問題
+  const wrong = sessionResults.filter(r => !r.isCorrect);
+  const rc = document.getElementById('review-card');
+  if (wrong.length > 0) {
+    rc.style.display = 'block';
+    document.getElementById('review-list').innerHTML = wrong.map(r => `
+      <div class="review-item">
+        <div class="review-q">[${r.passageType}・${r.qType}] ${r.question.substring(0, 30)}...</div>
+        <div class="review-a">正解：${r.correctAnswer}</div>
+        <div style="font-size:0.8rem;color:var(--muted);margin-top:4px;">${r.explanation}</div>
+      </div>
+    `).join('');
+  } else {
+    rc.style.display = 'none';
+  }
+}
+
+// ============================================================
+// 画面切り替え
+// ============================================================
+function showScreen(id) {
+  ['home-screen','loading-screen','quiz-screen','result-screen'].forEach(s => {
+    document.getElementById(s).style.display = s === id ? 'block' : 'none';
+  });
+}
+
+function goHome() {
+  updateStatsDisplay();
+  showScreen('home-screen');
+}
+
+function confirmBack() {
+  if (confirm('ホームに戻りますか？（進捗は失われます）')) goHome();
+}
+
+// 初期化
+updateStatsDisplay();
+showScreen('home-screen');
+</script>
+</body>
+</html>
