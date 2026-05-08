@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>言語知識テスト 練習アプリ</title>
+<style>
+:root {
+  --bg: #0f172a;
+  --surface: rgba(255,255,255,0.05);
+  --border: rgba(255,255,255,0.1);
+  --blue: #3b82f6;
+  --blue-light: #60a5fa;
+  --green: #22c55e;
+  --red: #ef4444;
+  --text: #f1f5f9;
+  --muted: #94a3b8;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+body {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 60%, #0f3460 100%);
+  min-height: 100vh;
+  font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
+  color: var(--text);
+  padding: 16px;
+}
+.wrap { max-width: 600px; margin: 0 auto; }
+
+/* HOME */
+.home-title { text-align: center; padding: 40px 0 32px; }
+.home-title-main { font-size: 40px; font-weight: 900; letter-spacing: 0.1em; text-shadow: 0 0 40px rgba(96,165,250,0.7); }
+.home-title-sub { font-size: 14px; color: #93c5fd; margin-top: 6px; }
+.mode-btn {
+  display: flex; align-items: center; gap: 16px;
+  width: 100%; padding: 24px 20px; border-radius: 18px;
+  border: 1px solid var(--border); cursor: pointer;
+  margin-bottom: 14px; text-align: left; color: var(--text);
+}
+.mode-btn-blue { background: linear-gradient(135deg,#1e3a5f,#1e40af); box-shadow: 0 8px 32px rgba(59,130,246,0.25); }
+.mode-btn-green { background: linear-gradient(135deg,#14432a,#166534); box-shadow: 0 8px 32px rgba(34,197,94,0.2); }
+.mode-icon { font-size: 36px; }
+.mode-name { font-size: 20px; font-weight: 800; margin-bottom: 4px; }
+.mode-note { font-size: 13px; color: var(--muted); }
+
+/* SELECT */
+.back-btn { background: none; border: none; color: var(--blue-light); font-size: 15px; cursor: pointer; margin-bottom: 20px; padding: 4px 0; }
+.select-title { font-size: 20px; font-weight: 800; margin-bottom: 20px; }
+.select-btn {
+  display: flex; justify-content: space-between; align-items: center;
+  width: 100%; padding: 18px 20px; margin-bottom: 10px;
+  border-radius: 14px; border: 1px solid var(--border);
+  background: var(--surface); cursor: pointer; color: var(--text);
+}
+.select-name { font-size: 17px; font-weight: 700; }
+.select-count { font-size: 13px; color: var(--blue-light); background: rgba(96,165,250,0.15); padding: 3px 10px; border-radius: 99px; }
+
+/* QUIZ */
+.prog-bar { height: 6px; background: rgba(255,255,255,0.1); border-radius: 99px; margin-bottom: 16px; overflow: hidden; }
+.prog-fill { height: 100%; background: linear-gradient(90deg,#3b82f6,#60a5fa); border-radius: 99px; transition: width 0.3s; }
+.quiz-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.badge { font-size: 12px; font-weight: 700; color: var(--blue-light); background: rgba(96,165,250,0.15); padding: 3px 10px; border-radius: 99px; }
+.counter { font-size: 13px; color: #64748b; }
+.q-box { background: var(--surface); border-radius: 16px; padding: 20px; margin-bottom: 16px; border: 1px solid var(--border); }
+.q-text { font-size: 17px; line-height: 1.8; font-weight: 600; }
+.opt-btn {
+  display: flex; align-items: center; gap: 12px;
+  width: 100%; padding: 13px 16px; margin-bottom: 10px;
+  border-radius: 12px; border: 1px solid var(--border);
+  background: rgba(255,255,255,0.04); cursor: pointer;
+  color: var(--text); text-align: left;
+  font-size: 15px; font-weight: 600;
+  transition: background 0.1s;
+}
+.opt-btn:disabled { cursor: default; }
+.opt-kana {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: rgba(255,255,255,0.1); display: flex;
+  align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700; flex-shrink: 0; color: var(--blue-light);
+  min-width: 28px;
+}
+.opt-ok { border-color: var(--green) !important; background: rgba(34,197,94,0.15) !important; color: #86efac; }
+.opt-ng { border-color: var(--red) !important; background: rgba(239,68,68,0.15) !important; color: #fca5a5; }
+.opt-dim { opacity: 0.35; }
+
+.exp-box { background: var(--surface); border-radius: 16px; padding: 20px; border: 1px solid var(--border); margin-top: 4px; }
+.result-tag { font-size: 16px; font-weight: 800; margin-bottom: 10px; }
+.exp-text { font-size: 14px; color: var(--muted); line-height: 1.8; margin-bottom: 12px; }
+.ai-hint { background: rgba(96,165,250,0.08); border: 1px solid rgba(96,165,250,0.2); border-radius: 10px; padding: 10px 14px; font-size: 14px; color: #bfdbfe; line-height: 1.7; margin-bottom: 14px; }
+.ai-hint-label { font-size: 11px; font-weight: 700; color: var(--blue-light); display: block; margin-bottom: 4px; }
+.next-btn {
+  width: 100%; padding: 14px; border-radius: 12px;
+  background: linear-gradient(135deg,#2563eb,#1d4ed8);
+  color: #fff; font-weight: 800; font-size: 16px; border: none; cursor: pointer;
+}
+
+/* RESULT */
+.score-box { text-align: center; background: var(--surface); border-radius: 20px; padding: 32px 24px; border: 1px solid var(--border); margin-bottom: 28px; }
+.score-num { font-size: 64px; font-weight: 900; line-height: 1; margin-bottom: 8px; }
+.score-total { font-size: 28px; color: var(--muted); }
+.score-msg { font-size: 18px; color: var(--blue-light); font-weight: 700; }
+.res-item { padding: 12px 14px; margin-bottom: 10px; border-radius: 12px; background: var(--surface); border-left: 4px solid transparent; }
+.res-q { font-size: 13px; color: var(--muted); margin-bottom: 4px; line-height: 1.6; }
+.res-a { font-size: 15px; font-weight: 700; }
+.res-wrong { color: #f87171; font-weight: 400; }
+.result-actions { display: flex; gap: 12px; margin-bottom: 32px; }
+.retry-btn { flex: 1; padding: 14px; border-radius: 12px; background: linear-gradient(135deg,#2563eb,#1d4ed8); color: #fff; font-weight: 800; font-size: 16px; border: none; cursor: pointer; }
+.home-btn { flex: 1; padding: 14px; border-radius: 12px; background: rgba(255,255,255,0.08); color: #fff; font-weight: 800; font-size: 16px; border: 1px solid var(--border); cursor: pointer; }
+
+.hidden { display: none !important; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- HOME -->
+  <div id="screen-home">
+    <div class="home-title">
+      <div class="home-title-main">言語知識</div>
+      <div class="home-title-sub">練習アプリ　第6〜9回</div>
+    </div>
+    <button class="mode-btn mode-btn-blue" onclick="showThemeSelect()">
+      <span class="mode-icon">📚</span>
+      <div><div class="mode-name">テーマ別で練習</div><div class="mode-note">助動詞・助詞・語彙など分野ごとに学ぶ</div></div>
+    </button>
+    <button class="mode-btn mode-btn-green" onclick="showRoundSelect()">
+      <span class="mode-icon">📝</span>
+      <div><div class="mode-name">回数別で確認</div><div class="mode-note">第6〜9回をテスト形式で解く</div></div>
+    </button>
+  </div>
+
+  <!-- THEME SELECT -->
+  <div id="screen-theme" class="hidden">
+    <button class="back-btn" onclick="showHome()">← もどる</button>
+    <div class="select-title">テーマを選んでください</div>
+    <div id="theme-list"></div>
+  </div>
+
+  <!-- ROUND SELECT -->
+  <div id="screen-round" class="hidden">
+    <button class="back-btn" onclick="showHome()">← もどる</button>
+    <div class="select-title">回を選んでください</div>
+    <div id="round-list"></div>
+  </div>
+
+  <!-- QUIZ -->
+  <div id="screen-quiz" class="hidden">
+    <div class="prog-bar"><div class="prog-fill" id="prog-fill"></div></div>
+    <div class="quiz-meta">
+      <span class="badge" id="q-theme"></span>
+      <span class="counter" id="q-counter"></span>
+    </div>
+    <div class="q-box"><p class="q-text" id="q-text"></p></div>
+    <div id="options"></div>
+    <div id="exp-area" class="hidden">
+      <div class="exp-box">
+        <div class="result-tag" id="result-tag"></div>
+        <div class="exp-text" id="exp-text"></div>
+        <div class="ai-hint hidden" id="ai-hint-box">
+          <span class="ai-hint-label">💡 ポイント</span>
+          <span id="ai-hint-text"></span>
+        </div>
+        <button class="next-btn" id="next-btn" onclick="nextQuestion()">次の問題 →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULT -->
+  <div id="screen-result" class="hidden">
+    <div class="score-box">
+      <div class="score-num" id="score-num"></div>
+      <div class="score-msg" id="score-msg"></div>
+    </div>
+    <div id="answer-list"></div>
+    <div class="result-actions">
+      <button class="retry-btn" onclick="retryQuiz()">もう一度</button>
+      <button class="home-btn" onclick="showHome()">トップへ</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const ALL_QUESTIONS = [
+  // ===== 第6回 =====
+  {id:"q6-1-1",round:6,theme:"助動詞",question:'「校長先生が教室に来られる」の「られる」の用法は？',options:["受け身","可能","自発","尊敬"],answer:3,explanation:"「先生が〜られる」は目上の人の動作を敬う表現。「られる」が尊敬になるのは主語が敬うべき人物の場合。受け身なら「〜に来られる」と動作主が必要。"},
+  {id:"q6-1-2",round:6,theme:"助動詞",question:'「十分で行かれるよ」の「かれる」の用法は？',options:["受け身","可能","自発","尊敬"],answer:1,explanation:"「十分で行ける」＝可能の意味。主語が自分たちで、能力・可能性を表している点がポイント。"},
+  {id:"q6-1-3",round:6,theme:"助動詞",question:'「風があたたかく感じられた」の「られた」の用法は？',options:["受け身","可能","自発","尊敬"],answer:2,explanation:"自分の意志ではなく自然に起こる感情に「られる」がつくと自発になる。「感じられる」は自然とそう感じてしまう表現。"},
+  {id:"q6-1-4",round:6,theme:"助動詞",question:'「突然、犬にかみつかれた」の「られた」の用法は？',options:["受け身","可能","自発","尊敬"],answer:0,explanation:"「犬に」という動作主がいて、その動作を受けている＝受け身。「〜に〜される」の形が受け身のサイン。"},
+  {id:"q6-2-1",round:6,theme:"助動詞",question:'「さあ、一緒に食べよう」の「よう」の用法は？',options:["推量","意志","勧誘"],answer:2,explanation:"「さあ、〜しよう」は相手を誘う勧誘。「さあ」という呼びかけが誘いの気持ちを表している。"},
+  {id:"q6-2-2",round:6,theme:"助動詞",question:'「駅まで五キロはあろう」の「ろう」の用法は？',options:["推量","意志","勧誘"],answer:0,explanation:"「〜あろう」は「〜あるだろう」と同じ推量の用法。はっきりしないことを推測している。"},
+  {id:"q6-2-3",round:6,theme:"助動詞",question:'「よし、いい作品を書こう」の「こう」の用法は？',options:["推量","意志","勧誘"],answer:1,explanation:"「よし、〜しよう」は自分の決意を表す意志の用法。「よし」という言葉が決意のサイン。"},
+  {id:"q6-3-1",round:6,theme:"助動詞",question:'「ともに学んだ友が旅立つ」の「た」の用法は？',options:["過去","完了","状態"],answer:0,explanation:"「学んだ」は過去に学んだという事実を表す過去の用法。"},
+  {id:"q6-3-2",round:6,theme:"助動詞",question:'「宿題が今終わったところだ」の「た」の用法は？',options:["過去","完了","状態"],answer:1,explanation:"「〜たところだ」は動作がちょうど終わった直後を表す完了。「今」と「〜たところ」の組み合わせが完了のサイン。"},
+  {id:"q6-3-3",round:6,theme:"助動詞",question:'「帽子をかぶった少年が来る」の「た」の用法は？',options:["過去","完了","状態"],answer:2,explanation:"「帽子をかぶった」は今もその状態が続いている状態の用法。名詞「少年」を修飾している点がポイント。"},
+  {id:"q6-4-1",round:6,theme:"助動詞",question:'「太郎はちっとも練習しない」の「ない」の品詞は？',options:["助動詞","形容詞","その他"],answer:0,explanation:"「練習し＋ない」と動詞につく形で否定を表す助動詞。"},
+  {id:"q6-4-2",round:6,theme:"助動詞",question:'「つまらない話ばかりだ」の「ない」の品詞は？',options:["助動詞","形容詞","その他"],answer:1,explanation:"「つまらない」は一語の形容詞。「つまら＋ない」と分解できず、全体で「退屈だ」という意味を持つ。"},
+  {id:"q6-4-3",round:6,theme:"助動詞",question:'「練習は少しも苦しくない」の「ない」の品詞は？',options:["助動詞","形容詞","その他"],answer:1,explanation:"「苦しく＋ない」の「ない」は形容詞。「苦しくある」→「苦しくない」という構造。"},
+  {id:"q6-5-1",round:6,theme:"語彙・慣用句",question:'「基本をおろそかにしていると伸びなやむ」の「おろそか」の意味は？',options:["いいかげんなさま","事を行う","物事の筋道","思いのほか"],answer:0,explanation:"「おろそか」は物事をいいかげんにする・なおざりにするという意味。「おろそかにする」＝「ないがしろにする」。"},
+  {id:"q6-5-2",round:6,theme:"語彙・慣用句",question:'「ことのほか美味しかった」の「ことのほか」の意味は？',options:["いいかげんなさま","事を行う","物事の筋道","思いのほか"],answer:3,explanation:"「ことのほか」は「思っていた以上に」「予想外に」という意味。"},
+  {id:"q6-5-3",round:6,theme:"語彙・慣用句",question:'「つじつまが合わない」の「つじつま」の意味は？',options:["いいかげんなさま","事を行う","物事の筋道","思いのほか"],answer:2,explanation:"「つじつま」は話や物事の前後の筋道・つながりのこと。「合わない」で矛盾がある意味になる。"},
+  {id:"q6-5-4",round:6,theme:"語彙・慣用句",question:'「手のほどこしようがない」の「ほどこす」の意味は？',options:["いいかげんなさま","事を行う","物事の筋道","思いのほか"],answer:1,explanation:"「ほどこす」は「処置する・実施する」という意味。「なす術がない」という意味になる。"},
+  {id:"q6-6-1",round:6,theme:"語彙・慣用句",question:'「警察をあざわらう」の「あざわらう」の意味は？',options:["失笑","嘲笑","微笑"],answer:1,explanation:"「あざわらう」は相手をばかにして笑うこと＝嘲笑。失笑は思わず笑うこと、微笑はほほえむこと。"},
+  {id:"q6-6-2",round:6,theme:"語彙・慣用句",question:'「他人の成功をねたむ」の「ねたむ」の意味は？',options:["嫉妬する","願う","奪う"],answer:0,explanation:"「ねたむ」は他人が優れていることを悔しく思う気持ち＝嫉妬する。"},
+  {id:"q6-6-3",round:6,theme:"語彙・慣用句",question:'「私語をすると集中している人のさまたげになる」の「さまたげ」の意味は？',options:["困難","刺激","邪魔"],answer:2,explanation:"「さまたげ」は「妨げ」と書き、邪魔・障害になること。"},
+  // ===== 第7回 =====
+  {id:"q7-1-1",round:7,theme:"助動詞",question:'「今にも雨が降りそうだ」の「そうだ」の用法は？',options:["様態","伝聞"],answer:0,explanation:"自分が直接見て感じているので様態。様態の「そうだ」は動詞の連用形につく（降り＋そうだ）。"},
+  {id:"q7-1-2",round:7,theme:"助動詞",question:'「三時には来るそうだ」の「そうだ」の用法は？',options:["様態","伝聞"],answer:1,explanation:"誰かから聞いた情報を伝えているので伝聞。伝聞の「そうだ」は終止形につく（来る＋そうだ）。"},
+  {id:"q7-1-3",round:7,theme:"助動詞",question:'「波はおだやかだそうだ」の「そうだ」の用法は？',options:["様態","伝聞"],answer:1,explanation:"形容動詞の終止形「おだやかだ」に接続しているので伝聞。様態なら「おだやかそうだ」という形になる。"},
+  {id:"q7-2-1",round:7,theme:"助動詞",question:'「湖面はまるで鏡のようだ」の「ようだ」の用法は？',options:["不確かな断定（推定）","比喩（たとえ）","例示"],answer:1,explanation:"「まるで〜のようだ」は比喩の定型表現。「まるで」という言葉が比喩のサイン。"},
+  {id:"q7-2-2",round:7,theme:"助動詞",question:'「今度は成功するように思う」の「ように」の用法は？',options:["不確かな断定（推定）","比喩（たとえ）","例示"],answer:0,explanation:"「〜ように思う」は確信のない推定の表現。断言ではなく不確かな判断を表している。"},
+  {id:"q7-2-3",round:7,theme:"助動詞",question:'「彼のように真剣にやれ」の「ように」の用法は？',options:["不確かな断定（推定）","比喩（たとえ）","例示"],answer:2,explanation:"「彼のように」は彼を具体例として挙げる例示の用法。"},
+  {id:"q7-2-4",round:7,theme:"助動詞",question:'「雪のように白い肌だ」の「ように」の用法は？',options:["不確かな断定（推定）","比喩（たとえ）","例示"],answer:1,explanation:"「雪のように白い」は白さを雪にたとえた比喩。例示との違いは、実際には雪でなく「白さ」を強調するたとえである点。"},
+  {id:"q7-3-1",round:7,theme:"助動詞",question:'「あいつが犯人の男らしい」の「らしい」は？',options:["推定の助動詞","形容詞をつくる接尾語","その他"],answer:0,explanation:"「犯人の男であるらしい」という推定。「らしい」が文末にあり不確かな推測を表している。"},
+  {id:"q7-3-2",round:7,theme:"助動詞",question:'「いかにも太郎らしい発言だ」の「らしい」は？',options:["推定の助動詞","形容詞をつくる接尾語","その他"],answer:1,explanation:"「太郎らしい」は名詞について形容詞をつくる接尾語。「いかにも」がその人らしさを強調している。"},
+  {id:"q7-3-3",round:7,theme:"助動詞",question:'「雨らしい雨が降らない」の「らしい」は？',options:["推定の助動詞","形容詞をつくる接尾語","その他"],answer:1,explanation:"「雨らしい」が「雨」を修飾する形容詞をつくっている接尾語。「本当の雨という感じがする雨」という意味。"},
+  {id:"q7-3-4",round:7,theme:"助動詞",question:'「次郎が来るとはめずらしい」の「らしい」は？',options:["推定の助動詞","形容詞をつくる接尾語","その他"],answer:2,explanation:"「めずらしい」は一語の形容詞で「らしい」は独立した意味を持たない。「珍し＋らしい」と分解できないためその他。"},
+  {id:"q7-4-1",round:7,theme:"語彙・慣用句",question:'「祖母は筆が上に達筆」→「筆が上（　）」にあてはまる語は？（ア投げる　イにごす　ウ外す　エ立つ）',options:["投げる","にごす","外す","立つ"],answer:3,explanation:"「筆が立つ」で「文章や書道が上手だ」という意味の慣用句。「腕が立つ」と同じ構造。"},
+  {id:"q7-4-2",round:7,theme:"語彙・慣用句",question:'「さじを（　）しかなかった」にあてはまる語は？（ア投げる　イにごす　ウ外す　エ立つ）',options:["投げる","にごす","外す","立つ"],answer:0,explanation:"「さじを投げる」で「もうどうにもできないとあきらめる」意味。医者がさじを投げ出すイメージから。"},
+  {id:"q7-4-3",round:7,theme:"語彙・慣用句",question:'「羽目を（　）くらいは大目にみる」にあてはまる語は？（ア投げる　イにごす　ウ外す　エ立つ）',options:["投げる","にごす","外す","立つ"],answer:2,explanation:"「羽目を外す」で「度を超えた行動をする」という意味。"},
+  {id:"q7-4-4",round:7,theme:"語彙・慣用句",question:'「お茶を（　）ようなことばっかり言っていて」にあてはまる語は？（ア投げる　イにごす　ウ外す　エ立つ）',options:["投げる","にごす","外す","立つ"],answer:1,explanation:"「お茶をにごす」で「いいかげんなことを言ってごまかす」意味の慣用句。"},
+  {id:"q7-5-1",round:7,theme:"語彙・慣用句",question:'「スタートで出遅れてしまうのが（　）だ」にあてはまる慣用句は？（ア水の泡　イ水と油　ウ玉にきず　エ火の車　オ水入らず）',options:["水の泡","水と油","玉にきず","火の車","水入らず"],answer:2,explanation:"「玉にきず」は「ほぼ完璧だが一つだけ欠点がある」こと。素晴らしい脚力なのにスタートだけ遅れる状況にぴったり。"},
+  {id:"q7-5-2",round:7,theme:"語彙・慣用句",question:'「会社からの電話で夫が（　）でかけてしまって腹が立つ」にあてはまる慣用句は？',options:["水の泡","水と油","玉にきず","火の車","水入らず"],answer:4,explanation:"「水入らず」は「家族だけの・他人が入らない」という意味。「家族水入らず」の状況を壊してしまった文脈。"},
+  {id:"q7-5-3",round:7,theme:"語彙・慣用句",question:'「あの二人は性格的には（　）で、いつもいがみ合っているのに」にあてはまる慣用句は？',options:["水の泡","水と油","玉にきず","火の車","水入らず"],answer:1,explanation:"「水と油」は「性質が違いすぎて混じり合わない」こと。"},
+  {id:"q7-5-4",round:7,theme:"語彙・慣用句",question:'「頑張って暗記した知識が（　）だ」にあてはまる慣用句は？',options:["水の泡","水と油","玉にきず","火の車","水入らず"],answer:0,explanation:"「水の泡」は「努力や成果が無駄になる」こと。"},
+  {id:"q7-5-5",round:7,theme:"語彙・慣用句",question:'「家の事業が（　）だなどと子供の私にはわかるはずもなかった」にあてはまる慣用句は？',options:["水の泡","水と油","玉にきず","火の車","水入らず"],answer:3,explanation:"「火の車」は「家計や経営が非常に苦しい状態」のこと。"},
+  // ===== 第8回 =====
+  {id:"q8-1-1",round:8,theme:"助詞",question:'「犬のほえる声が聞こえた」の「の」の用法は？',options:["修飾語","主語","体言化・名詞化","同格"],answer:1,explanation:"「犬のほえる」の「の」は「犬が」と言い換えられる主語の用法。連体修飾節の中で「が」の代わりに使われる。"},
+  {id:"q8-1-2",round:8,theme:"助詞",question:'「算数のテストを受ける」の「の」の用法は？',options:["修飾語","主語","体言化・名詞化","同格"],answer:0,explanation:"「算数の」が「テスト」を修飾している修飾語の用法。「〜の＋名詞」の最も基本的な使い方。"},
+  {id:"q8-1-3",round:8,theme:"助詞",question:'「部品を新しいのに交換する」の「の」の用法は？',options:["修飾語","主語","体言化・名詞化","同格"],answer:2,explanation:"「新しいの」の「の」は「新しいもの」という意味で形容詞を名詞化している。「の＝もの」と言い換えられるのが特徴。"},
+  {id:"q8-1-4",round:8,theme:"助詞",question:'「雪の降る夜は静かだ」の「の」の用法は？',options:["修飾語","主語","体言化・名詞化","同格"],answer:1,explanation:"「雪の降る」の「の」は「雪が降る」と言い換えられる主語の用法。①と同じく「が」の代わりに使われている。"},
+  {id:"q8-2-1",round:8,theme:"助詞",question:'「努力したが、失敗した」の「が」の用法は？',options:["主語","対象語","確定の逆接","並立","単純な接続","仮定の逆接"],answer:2,explanation:"前の事柄と逆の結果が起きた確定の逆接。実際に起きた出来事をつないでいる点がポイント。"},
+  {id:"q8-2-2",round:8,theme:"助詞",question:'「犬が庭をかけまわる」の「が」の用法は？',options:["主語","対象語","確定の逆接","並立","単純な接続","仮定の逆接"],answer:0,explanation:"「犬が」は動作をしている主体＝主語。「が」の最も基本的な用法。"},
+  {id:"q8-2-3",round:8,theme:"助詞",question:'「わたしは国語が得意だ」の「が」の用法は？',options:["主語","対象語","確定の逆接","並立","単純な接続","仮定の逆接"],answer:1,explanation:"「得意・好き・苦手・わかる」などの前の「が」は対象語。感情・能力を表す語とセットになる。"},
+  {id:"q8-2-4",round:8,theme:"助詞",question:'「海もよいが、山も好きだ」の「が」の用法は？',options:["主語","対象語","確定の逆接","並立","単純な接続","仮定の逆接"],answer:3,explanation:"どちらかが否定されているわけではなく、両方を並べて述べている並立の用法。"},
+  {id:"q8-2-5",round:8,theme:"助詞",question:'「誰が止めようが、やるぞ」の「が」の用法は？',options:["主語","対象語","確定の逆接","並立","単純な接続","仮定の逆接"],answer:5,explanation:"「〜しようが」は「たとえ〜しても」という仮定の逆接。どんな条件でも変わらない意志を示す。"},
+  {id:"q8-2-6",round:8,theme:"助詞",question:'「例の話だが、結論は出たか」の「が」の用法は？',options:["主語","対象語","確定の逆接","並立","単純な接続","仮定の逆接"],answer:4,explanation:"話題を切り出すための単純な接続。前置きとして次の話につなげる用法。"},
+  {id:"q8-3-1",round:8,theme:"助詞",question:'「ひらがなさえまともに読めないそうだ」の「さえ」の用法は？',options:["一例から類推","添加","仮定成立"],answer:0,explanation:"「ひらがなという最も基本的なものでさえ」という意味。これを例として挙げることで「他はなおさら」と類推させる。"},
+  {id:"q8-3-2",round:8,theme:"助詞",question:'「元気でさえいてくれればいいんだ」の「さえ」の用法は？',options:["一例から類推","添加","仮定成立"],answer:2,explanation:"「元気でいるという条件さえ満たされれば」という仮定成立の用法。「〜さえ〜ば」の形が特徴。"},
+  {id:"q8-3-3",round:8,theme:"助詞",question:'「気温が低いうえに、雪さえ降りはじめた」の「さえ」の用法は？',options:["一例から類推","添加","仮定成立"],answer:1,explanation:"「気温が低い」に「雪まで降り始めた」という悪条件を付け加える添加の用法。「おまけに〜まで」という意味。"},
+  {id:"q8-4-1a",round:8,theme:"同音異義語",question:'「カンコウ旅行をする」の「カンコウ」を漢字で書くと？',options:["観光","刊行","感光","歓迎"],answer:0,explanation:"名所や景色を見て楽しむこと＝「観光」。見る（観）＋光景（光）のイメージ。"},
+  {id:"q8-4-1b",round:8,theme:"同音異義語",question:'「雑誌をカンコウする」の「カンコウ」を漢字で書くと？',options:["観光","刊行","感光","歓迎"],answer:1,explanation:"本や雑誌を出版すること＝「刊行」。刊（印刷）＋行（世に出す）のイメージ。"},
+  {id:"q8-4-2a",round:8,theme:"同音異義語",question:'「カンセン道路を建設する」の「カンセン」を漢字で書くと？',options:["幹線","感染","観戦","完成"],answer:0,explanation:"主要な交通路＝「幹線」。木の幹（中心）のように交通網の中心となる路線。"},
+  {id:"q8-4-2b",round:8,theme:"同音異義語",question:'「はしかにカンセンする」の「カンセン」を漢字で書くと？',options:["幹線","感染","観戦","完成"],answer:1,explanation:"病気がうつること＝「感染」。病原体に触れ（感）、広がる（染）イメージ。"},
+  {id:"q8-4-3a",round:8,theme:"同音異義語",question:'「コウキの目で見る」の「コウキ」を漢字で書くと？',options:["好奇","好機","後期","光輝"],answer:0,explanation:"珍しいものを知りたがる気持ち＝「好奇（心）」。「好奇心旺盛」のように使う。"},
+  {id:"q8-4-3b",round:8,theme:"同音異義語",question:'「コウキをのがす」の「コウキ」を漢字で書くと？',options:["好奇","好機","後期","光輝"],answer:1,explanation:"良いチャンス＝「好機」。好（よい）＋機（タイミング）のイメージ。"},
+  {id:"q8-4-4a",round:8,theme:"同音異義語",question:'「学校のホケン室」の「ホケン」を漢字で書くと？',options:["保健","保険","補間","補元"],answer:0,explanation:"健康を守るための活動・施設＝「保健」。保（守る）＋健（健康）のイメージ。"},
+  {id:"q8-4-4b",round:8,theme:"同音異義語",question:'「生命ホケンをかける」の「ホケン」を漢字で書くと？',options:["保健","保険","補間","補元"],answer:1,explanation:"万一に備えてお金を積み立てる制度＝「保険」。保（守る）＋険（リスク）のイメージ。"},
+  {id:"q8-4-5a",round:8,theme:"同音異義語",question:'「温暖なキコウ」の「キコウ」を漢字で書くと？',options:["気候","紀行","機構","帰港"],answer:0,explanation:"ある地域の長期的な気象状態＝「気候」。「気候変動」などで使う。"},
+  {id:"q8-4-5b",round:8,theme:"同音異義語",question:'「キコウ文を書く」の「キコウ」を漢字で書くと？',options:["気候","紀行","機構","帰港"],answer:1,explanation:"旅行の体験や見聞を書いた文章＝「紀行（文）」。旅（紀）を行く（行）記録のイメージ。"},
+  {id:"q8-4-6a",round:8,theme:"同音異義語",question:'「コウセイな裁判」の「コウセイ」を漢字で書くと？',options:["公正","構成","更生","厚生"],answer:0,explanation:"かたよりがなく正しいこと＝「公正」。「公正な判断・公正取引」などで使う。"},
+  {id:"q8-4-6b",round:8,theme:"同音異義語",question:'「文章のコウセイを考える」の「コウセイ」を漢字で書くと？',options:["公正","構成","更生","厚生"],answer:1,explanation:"物事の組み立て・まとまり方＝「構成」。「文章の構成・物語の構成」などで使う。"},
+  // ===== 第9回 =====
+  {id:"q9-1-1",round:9,theme:"助詞",question:'「父と将棋をした」の「と」の用法は？',options:["対象","共同（いっしょ）","結果","比較","内容・引用","並立","行われ方"],answer:1,explanation:"「父と（一緒に）将棋をした」で、一緒に行動する相手を表す共同の用法。「〜と一緒に」と言い換えられるかがポイント。"},
+  {id:"q9-1-2",round:9,theme:"助詞",question:'「禁煙と大きく書かれていた」の「と」の用法は？',options:["対象","共同（いっしょ）","結果","比較","内容・引用","並立","行われ方"],answer:4,explanation:"「禁煙と書かれていた」の「と」は言葉の内容を引用する用法。「〜という内容で書かれた」と言い換えられる。"},
+  {id:"q9-1-3",round:9,theme:"助詞",question:'「国語と算数のテストがある」の「と」の用法は？',options:["対象","共同（いっしょ）","結果","比較","内容・引用","並立","行われ方"],answer:5,explanation:"「国語と算数」はAとBを並べている並立の用法。「AとB」の形で複数のものを列挙する。"},
+  {id:"q9-1-4",round:9,theme:"助詞",question:'「花と散るような一生だった」の「と」の用法は？',options:["対象","共同（いっしょ）","結果","比較","内容・引用","並立","行われ方"],answer:6,explanation:"「花と散る」は「花のように散る」という動作の様子・行われ方を表す用法。"},
+  {id:"q9-1-5",round:9,theme:"助詞",question:'「祖父と似た性格だ」の「と」の用法は？',options:["対象","共同（いっしょ）","結果","比較","内容・引用","並立","行われ方"],answer:3,explanation:"「祖父と似ている」は祖父を基準にして比べている比較の用法。「似る・違う・同じだ」などとセットになる。"},
+  {id:"q9-1-6",round:9,theme:"助詞",question:'「君と会うために来た」の「と」の用法は？',options:["対象","共同（いっしょ）","結果","比較","内容・引用","並立","行われ方"],answer:0,explanation:"「君と会う」の「と」は行為の相手（対象）を表す用法。「〜と話す・会う・争う」などとセットになる。"},
+  {id:"q9-1-7",round:9,theme:"助詞",question:'「春に私は中学生となった」の「と」の用法は？',options:["対象","共同（いっしょ）","結果","比較","内容・引用","並立","行われ方"],answer:2,explanation:"「中学生となった」は変化の結果を表す用法。「〜になった」と言い換えられる。"},
+  {id:"q9-2-1",round:9,theme:"助詞",question:'「今出発すると、最終列車に間に合うだろう」の「と」の用法は？',options:["順接の仮定条件","順接の一般条件","その時・その場合","仮定の逆接"],answer:0,explanation:"「出発する」という仮定の条件から「間に合う」という結果を導く順接の仮定条件。まだ実際には出発していない。"},
+  {id:"q9-2-2",round:9,theme:"助詞",question:'「宿題をしていると四谷君が遊びに来た」の「と」の用法は？',options:["順接の仮定条件","順接の一般条件","その時・その場合","仮定の逆接"],answer:2,explanation:"「宿題をしていた時に四谷君が来た」という意味。ある動作をしていた時に別のことが起きた「その時・その場合」の用法。"},
+  {id:"q9-2-3",round:9,theme:"助詞",question:'「雪が降ろうと降るまいと、とにかく出発するよ」の「と」の用法は？',options:["順接の仮定条件","順接の一般条件","その時・その場合","仮定の逆接"],answer:3,explanation:"「雪が降っても降らなくても出発する」という意味。どんな条件でも変わらない仮定の逆接。「〜ろうと〜まいと」の形が特徴。"},
+  {id:"q9-2-4",round:9,theme:"助詞",question:'「梅雨時になると、かびが生えやすくなる」の「と」の用法は？',options:["順接の仮定条件","順接の一般条件","その時・その場合","仮定の逆接"],answer:1,explanation:"「梅雨時になれば（いつも）かびが生える」という自然の法則を表す順接の一般条件。毎年繰り返される事実がポイント。"},
+  {id:"q9-3-1",round:9,theme:"助詞",question:'「宿題はあと一時間で終わる」の「で」の用法は？',options:["場所","期限・限度","手段・方法","原因・理由","状態","団体・組織"],answer:1,explanation:"「一時間で」は「一時間以内に」という期限・限度を表す用法。「〜で終わる」の形が特徴。"},
+  {id:"q9-3-2",round:9,theme:"助詞",question:'「駅前で交通事故があった」の「で」の用法は？',options:["場所","期限・限度","手段・方法","原因・理由","状態","団体・組織"],answer:0,explanation:"「駅前で」は出来事が起きた場所を表す用法。「〜で（何かが）起きた・行われた」という形。"},
+  {id:"q9-3-3",round:9,theme:"助詞",question:'「不安な気持ちで待った」の「で」の用法は？',options:["場所","期限・限度","手段・方法","原因・理由","状態","団体・組織"],answer:4,explanation:"「不安な気持ちで」は「不安な気持ちの状態で」という状態を表す用法。"},
+  {id:"q9-3-4",round:9,theme:"助詞",question:'「怪我で欠場する」の「で」の用法は？',options:["場所","期限・限度","手段・方法","原因・理由","状態","団体・組織"],answer:3,explanation:"「怪我で（欠場する）」は怪我が欠場の原因・理由を表す用法。「〜が原因で」と言い換えられる。"},
+  {id:"q9-3-5",round:9,theme:"助詞",question:'「職員会議で決定した」の「で」の用法は？',options:["場所","期限・限度","手段・方法","原因・理由","状態","団体・組織"],answer:5,explanation:"「職員会議で」は「職員会議という組織の中で」という団体・組織を表す用法。"},
+  {id:"q9-3-6",round:9,theme:"助詞",question:'「タンカーで原油を運ぶ」の「で」の用法は？',options:["場所","期限・限度","手段・方法","原因・理由","状態","団体・組織"],answer:2,explanation:"「タンカーで」は運ぶための手段・方法を表す用法。「〜を使って」と言い換えられる。"},
+  {id:"q9-4-1a",round:9,theme:"同音異義語",question:'「大事件をオこす」の「オこす」を漢字で書くと？',options:["起こす","興す","怒こす","押こす"],answer:0,explanation:"事件が発生する・引き起こす＝「起こす」。「事件を起こす・問題を起こす」のように使う。"},
+  {id:"q9-4-1b",round:9,theme:"同音異義語",question:'「新しい会社をオコす」の「オコす」を漢字で書くと？',options:["起こす","興す","怒こす","押こす"],answer:1,explanation:"新しく事業や組織をつくること＝「興す」。「産業を興す・国を興す」のように使う。"},
+  {id:"q9-4-2a",round:9,theme:"同音異義語",question:'「台風にソナえる」の「ソナえる」を漢字で書くと？',options:["備える","供える","準える","揃える"],answer:0,explanation:"将来の事態に準備する＝「備える」。「台風に備える・老後に備える」のように使う。"},
+  {id:"q9-4-2b",round:9,theme:"同音異義語",question:'「墓前に花をソナえる」の「ソナえる」を漢字で書くと？',options:["備える","供える","準える","揃える"],answer:1,explanation:"神仏や霊前にものを捧げる＝「供える」。「お墓に花を供える」のように使う。"},
+  {id:"q9-4-3a",round:9,theme:"同音異義語",question:'「ヤサしい問題を解く」の「ヤサしい」を漢字で書くと？',options:["易しい","優しい","安しい","柔しい"],answer:0,explanation:"難しくないこと＝「易しい」。「容易」の「易」と同じ字。"},
+  {id:"q9-4-3b",round:9,theme:"同音異義語",question:'「ヤサしい性格の人だ」の「ヤサしい」を漢字で書くと？',options:["易しい","優しい","安しい","柔しい"],answer:1,explanation:"思いやりがあること＝「優しい」。「優秀」の「優」と同じ字。"},
+  {id:"q9-4-4a",round:9,theme:"同音異義語",question:'「遠くに富士山をノゾむ」の「ノゾむ」を漢字で書くと？',options:["望む","臨む","覗む","眺む"],answer:0,explanation:"遠くを見渡す・遠くに見える＝「望む」。「希望」の「望」と同じ字。"},
+  {id:"q9-4-4b",round:9,theme:"同音異義語",question:'「海にノゾむ家に住む」の「ノゾむ」を漢字で書くと？',options:["望む","臨む","覗む","眺む"],answer:1,explanation:"面している・接している＝「臨む」。「海に臨む（海に面した）家」「試合に臨む」のように使う。"},
+];
+
+const THEMES = ["助動詞","助詞","語彙・慣用句","同音異義語"];
+const ROUNDS = [6,7,8,9];
+const KANA = ["ア","イ","ウ","エ","オ","カ","キ"];
+
+let questions = [], idx = 0, score = 0, answers = [];
+let lastFilter = null, lastMode = null;
+
+function shuffle(arr) { return [...arr].sort(()=>Math.random()-0.5); }
+
+function showScreen(id) {
+  ['home','theme','round','quiz','result'].forEach(s => {
+    document.getElementById('screen-'+s).classList.add('hidden');
+  });
+  document.getElementById('screen-'+id).classList.remove('hidden');
+}
+
+function showHome() { showScreen('home'); }
+
+function showThemeSelect() {
+  const el = document.getElementById('theme-list');
+  el.innerHTML = THEMES.map(t => {
+    const cnt = ALL_QUESTIONS.filter(q=>q.theme===t).length;
+    return `<button class="select-btn" onclick="startQuiz('${t}','theme')">
+      <span class="select-name">${t}</span>
+      <span class="select-count">${cnt}問</span>
+    </button>`;
+  }).join('');
+  showScreen('theme');
+}
+
+function showRoundSelect() {
+  const el = document.getElementById('round-list');
+  el.innerHTML = ROUNDS.map(r => {
+    const cnt = ALL_QUESTIONS.filter(q=>q.round===r).length;
+    return `<button class="select-btn" onclick="startQuiz(${r},'round')">
+      <span class="select-name">第${r}回</span>
+      <span class="select-count">${cnt}問</span>
+    </button>`;
+  }).join('');
+  showScreen('round');
+}
+
+function startQuiz(filter, mode) {
+  lastFilter = filter; lastMode = mode;
+  questions = shuffle(ALL_QUESTIONS.filter(q => mode==='theme' ? q.theme===filter : q.round===filter));
+  idx = 0; score = 0; answers = [];
+  renderQuestion();
+  showScreen('quiz');
+}
+
+function renderQuestion() {
+  const q = questions[idx];
+  const total = questions.length;
+  const pct = ((idx) / total) * 100;
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('q-theme').textContent = q.theme;
+  document.getElementById('q-counter').textContent = `${idx+1} / ${total}`;
+  document.getElementById('q-text').textContent = q.question;
+  document.getElementById('exp-area').classList.add('hidden');
+  document.getElementById('ai-hint-box').classList.add('hidden');
+  document.getElementById('ai-hint-text').textContent = '';
+
+  const opts = document.getElementById('options');
+  opts.innerHTML = q.options.map((opt,i) =>
+    `<button class="opt-btn" id="opt-${i}" onclick="selectAnswer(${i})">
+      <span class="opt-kana">${KANA[i]}</span>${opt}
+    </button>`
+  ).join('');
+  document.getElementById('next-btn').textContent = (idx+1 >= total) ? '結果を見る →' : '次の問題 →';
+}
+
+function selectAnswer(i) {
+  const q = questions[idx];
+  const correct = i === q.answer;
+  if (correct) score++;
+  answers.push({question:q, userAnswer:i, correct});
+
+  // ボタン色変更
+  q.options.forEach((_,j) => {
+    const btn = document.getElementById('opt-'+j);
+    btn.disabled = true;
+    if (j === q.answer) btn.classList.add('opt-ok');
+    else if (j === i) btn.classList.add('opt-ng');
+    else btn.classList.add('opt-dim');
+  });
+
+  document.getElementById('result-tag').textContent = correct ? '✅ 正解！' : `❌ 不正解　正解：${q.options[q.answer]}`;
+  document.getElementById('exp-text').textContent = q.explanation;
+  document.getElementById('exp-area').classList.remove('hidden');
+
+  // AI補足
+  fetchAiHint(q);
+
+  // プログレス更新
+  const pct = ((idx+1) / questions.length) * 100;
+  document.getElementById('prog-fill').style.width = pct + '%';
+}
+
+async function fetchAiHint(q) {
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 200,
+        messages: [{
+          role: 'user',
+          content: `小学5年生向け国語の解説です。以下の解説をもとに、子どもにわかりやすく30〜50字で「覚え方のポイント」を一言添えてください。解説：${q.explanation}`
+        }]
+      })
+    });
+    const data = await res.json();
+    const hint = data.content?.[0]?.text;
+    if (hint) {
+      document.getElementById('ai-hint-text').textContent = hint;
+      document.getElementById('ai-hint-box').classList.remove('hidden');
+    }
+  } catch(e) {}
+}
+
+function nextQuestion() {
+  if (idx+1 >= questions.length) {
+    showResult(); return;
+  }
+  idx++;
+  renderQuestion();
+}
+
+function showResult() {
+  document.getElementById('score-num').innerHTML = `${score}<span class="score-total">/${questions.length}</span>`;
+  const pct = score/questions.length;
+  document.getElementById('score-msg').textContent =
+    score===questions.length ? '🎉 満点！すばらしい！' :
+    pct>=0.8 ? '👏 よくできました！' :
+    pct>=0.6 ? '😊 もう少し！' : '📖 もう一度挑戦しよう';
+
+  document.getElementById('answer-list').innerHTML = answers.map(a =>
+    `<div class="res-item" style="border-left-color:${a.correct?'#22c55e':'#ef4444'}">
+      <div class="res-q">${a.question.question}</div>
+      <div class="res-a">${a.correct?'✅':'❌'} ${a.question.options[a.question.answer]}
+        ${!a.correct ? `<span class="res-wrong">（あなた：${a.question.options[a.userAnswer]}）</span>` : ''}
+      </div>
+    </div>`
+  ).join('');
+
+  showScreen('result');
+}
+
+function retryQuiz() { startQuiz(lastFilter, lastMode); }
+
+// 初期表示
+showHome();
+</script>
+</body>
+</html>
