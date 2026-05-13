@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>漢字11回｜予習シリーズ</title>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;700;900&family=Kaisei+HarunoUmi:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0e1117;--surface:#161b27;--card:#1e2535;--border:rgba(255,255,255,0.08);--accent:#c084fc;--accent2:#7c3aed;--green:#3dd68c;--red:#f05a5a;--blue:#4a9eff;--text:#e8eaf0;--muted:rgba(232,234,240,0.45);--radius:16px;}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+.app{max-width:600px;margin:0 auto;padding:0 16px 60px;}
+.header{display:flex;align-items:center;justify-content:space-between;padding:20px 0 16px;}
+.header-title{font-family:'Kaisei HarunoUmi',serif;font-size:1.3rem;color:var(--accent);}
+.header-sub{font-size:0.68rem;color:var(--muted);margin-top:2px;}
+.reset-btn{background:none;border:1px solid var(--border);border-radius:8px;padding:6px 12px;color:var(--muted);font-size:0.7rem;cursor:pointer;font-family:'Zen Kaku Gothic New',sans-serif;}
+.reset-btn:hover{border-color:var(--red);color:var(--red);}
+.tab-bar{display:flex;gap:8px;margin-bottom:20px;}
+.tab-btn{flex:1;padding:10px;border:1.5px solid var(--border);border-radius:12px;background:var(--surface);color:var(--muted);font-family:'Zen Kaku Gothic New',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;text-align:center;}
+.tab-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(192,132,252,0.08);}
+.summary-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px;}
+.summary-label{font-size:0.7rem;color:var(--muted);letter-spacing:0.12em;margin-bottom:12px;}
+.mastery-bar-wrap{height:8px;background:rgba(255,255,255,0.06);border-radius:4px;overflow:hidden;margin-bottom:10px;}
+.mastery-bar-fill{height:100%;background:linear-gradient(90deg,var(--accent2),var(--accent));border-radius:4px;transition:width 0.6s;}
+.mastery-stats{display:flex;gap:20px;}
+.stat-item{display:flex;flex-direction:column;gap:2px;}
+.stat-num{font-family:'Kaisei HarunoUmi',serif;font-size:1.5rem;line-height:1;color:var(--accent);}
+.stat-label{font-size:0.65rem;color:var(--muted);}
+.section-label{font-size:0.7rem;color:var(--muted);letter-spacing:0.12em;margin:20px 0 10px;}
+.question-list{display:flex;flex-direction:column;gap:6px;margin-bottom:100px;}
+.q-item{display:flex;align-items:center;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 16px;gap:12px;}
+.q-status{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:900;flex-shrink:0;}
+.q-status.mastered{background:rgba(61,214,140,0.15);color:var(--green);border:1.5px solid var(--green);}
+.q-status.learning{background:rgba(192,132,252,0.12);color:var(--accent);border:1.5px solid rgba(192,132,252,0.4);}
+.q-status.new{background:rgba(255,255,255,0.04);color:var(--muted);border:1.5px solid var(--border);}
+.q-info{flex:1;}
+.q-kanji{font-size:1.1rem;font-weight:700;}
+.q-reading{font-size:0.7rem;color:var(--muted);margin-top:1px;}
+.q-count{font-size:0.68rem;color:var(--muted);}
+.mastery-badge{display:inline-block;font-size:0.62rem;padding:2px 7px;border-radius:10px;margin-left:8px;vertical-align:middle;font-weight:700;}
+.badge-new{background:rgba(74,158,255,0.15);color:var(--blue);}
+.badge-learning{background:rgba(192,132,252,0.15);color:var(--accent);}
+.badge-mastered{background:rgba(61,214,140,0.15);color:var(--green);}
+.home-btns{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:600px;padding:12px 16px 20px;background:linear-gradient(to top,var(--bg) 80%,transparent);display:flex;flex-direction:column;gap:8px;}
+.study-btn{width:100%;background:linear-gradient(135deg,#2a1a4a,#1a0e30);border:1.5px solid var(--accent);border-radius:14px;padding:16px;color:white;font-family:'Zen Kaku Gothic New',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;}
+.study-btn:active{transform:scale(0.98);}
+.start-row{display:flex;gap:8px;}
+.start-btn{flex:1;background:linear-gradient(135deg,var(--accent2),#c04420);border:none;border-radius:14px;padding:14px;color:white;font-family:'Zen Kaku Gothic New',sans-serif;font-size:0.9rem;font-weight:700;cursor:pointer;}
+.start-btn:active{transform:scale(0.98);}
+.weak-btn{flex:1;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;color:var(--text);font-family:'Zen Kaku Gothic New',sans-serif;font-size:0.82rem;font-weight:700;cursor:pointer;}
+.weak-btn:disabled{opacity:0.35;cursor:default;}
+#study-screen{display:none;}
+.study-nav{display:flex;align-items:center;gap:12px;padding:16px 0 12px;}
+.back-icon{background:none;border:none;color:var(--muted);font-size:1.2rem;cursor:pointer;padding:4px 8px 4px 0;}
+.study-progress-bar{flex:1;height:4px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden;}
+.study-progress-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--accent));border-radius:2px;transition:width 0.4s;}
+.study-progress-text{font-size:0.75rem;color:var(--muted);}
+.kanji-card{background:var(--card);border:1px solid var(--border);border-radius:24px;padding:28px 24px;margin-bottom:16px;position:relative;overflow:hidden;}
+.kanji-card::before{content:'';position:absolute;top:-40px;right:-40px;width:160px;height:160px;background:radial-gradient(circle,rgba(240,192,64,0.06),transparent 70%);pointer-events:none;}
+.kanji-big{font-family:'Kaisei HarunoUmi',serif;font-size:5rem;color:var(--accent);text-align:center;line-height:1;margin-bottom:16px;text-shadow:0 0 40px rgba(240,192,64,0.3);}
+.kanji-readings{display:flex;gap:12px;justify-content:center;margin-bottom:20px;flex-wrap:wrap;}
+.reading-badge{background:rgba(240,192,64,0.1);border:1px solid rgba(240,192,64,0.25);border-radius:20px;padding:4px 14px;font-size:0.78rem;}
+.reading-label{font-size:0.6rem;color:var(--muted);margin-right:4px;}
+.reading-val{color:var(--accent);font-weight:700;}
+.kanji-meanings{margin-bottom:20px;}
+.meaning-title{font-size:0.68rem;color:var(--muted);letter-spacing:0.1em;margin-bottom:8px;}
+.meaning-item{background:rgba(255,255,255,0.04);border-radius:10px;padding:10px 14px;margin-bottom:6px;font-size:0.88rem;line-height:1.6;}
+.kanji-examples{margin-bottom:8px;}
+.example-title{font-size:0.68rem;color:var(--muted);letter-spacing:0.1em;margin-bottom:8px;}
+.example-list{display:flex;flex-direction:column;gap:6px;}
+.example-item{display:flex;align-items:baseline;gap:8px;font-size:0.85rem;}
+.example-word{font-weight:700;color:var(--text);min-width:90px;}
+.example-meaning{color:var(--muted);font-size:0.8rem;line-height:1.5;}
+.card-nav-row{display:flex;gap:10px;align-items:center;}
+.prev-btn{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 20px;color:var(--muted);font-family:'Zen Kaku Gothic New',sans-serif;font-size:0.9rem;cursor:pointer;}
+.next-card-btn{flex:1;background:linear-gradient(135deg,var(--blue),#2a5fa8);border:none;border-radius:12px;padding:16px;color:white;font-family:'Zen Kaku Gothic New',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;}
+.next-card-btn:active{transform:scale(0.98);}
+.study-complete{background:var(--card);border:1px solid rgba(61,214,140,0.3);border-radius:16px;padding:20px;text-align:center;margin-bottom:16px;}
+.complete-icon{font-size:2.5rem;margin-bottom:8px;}
+.complete-msg{font-size:1rem;font-weight:700;color:var(--green);margin-bottom:4px;}
+.complete-sub{font-size:0.8rem;color:var(--muted);}
+.goto-quiz-row{display:flex;gap:8px;margin-top:16px;}
+.goto-btn{flex:1;border:none;border-radius:14px;padding:16px;color:white;font-family:'Zen Kaku Gothic New',sans-serif;font-size:0.9rem;font-weight:700;cursor:pointer;}
+.goto-renshu{background:linear-gradient(135deg,var(--accent2),#c04420);}
+.goto-kakunin{background:linear-gradient(135deg,#3a6aaa,#2a4a8a);}
+#quiz-screen{display:none;}
+.quiz-header{display:flex;align-items:center;gap:12px;padding:16px 0 12px;}
+.quiz-progress-bar{flex:1;height:4px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden;}
+.quiz-progress-fill{height:100%;background:linear-gradient(90deg,var(--accent2),var(--accent));border-radius:2px;transition:width 0.4s;}
+.quiz-progress-text{font-size:0.75rem;color:var(--muted);}
+.mode-tag{display:inline-block;font-size:0.62rem;background:rgba(192,132,252,0.12);color:var(--accent);border:1px solid rgba(240,192,64,0.25);padding:3px 10px;border-radius:20px;letter-spacing:0.1em;margin-bottom:14px;font-weight:700;}
+.quiz-card-q{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:24px 20px;margin-bottom:16px;}
+.quiz-q{font-size:1rem;line-height:1.85;font-weight:500;white-space:pre-wrap;}
+.hint-btn{background:none;border:1px solid rgba(255,255,255,0.15);border-radius:8px;padding:5px 14px;color:var(--muted);font-size:0.72rem;cursor:pointer;margin-top:12px;font-family:'Zen Kaku Gothic New',sans-serif;}
+.hint-btn:hover{border-color:var(--accent);color:var(--accent);}
+.quiz-hint{font-size:0.72rem;color:var(--accent);margin-top:8px;display:none;}
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
+.choice-btn{background:var(--surface);border:1.5px solid var(--border);border-radius:12px;padding:16px 10px;color:var(--text);font-family:'Zen Kaku Gothic New',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;text-align:center;transition:all 0.15s;}
+.choice-btn:hover:not(:disabled){border-color:var(--accent);background:rgba(240,192,64,0.07);}
+.choice-btn.correct{background:rgba(61,214,140,0.12);border-color:var(--green);color:var(--green);}
+.choice-btn.wrong{background:rgba(240,90,90,0.1);border-color:var(--red);color:var(--red);}
+.choice-btn:disabled{cursor:default;}
+.input-area{margin-bottom:12px;}
+.kanji-input{width:100%;background:var(--surface);border:2px solid var(--border);border-radius:14px;padding:18px;color:white;font-size:1.5rem;font-family:'Kaisei HarunoUmi',serif;font-weight:700;text-align:center;outline:none;transition:border-color 0.2s;letter-spacing:0.15em;margin-bottom:8px;}
+.kanji-input:focus{border-color:var(--accent);}
+.kanji-input.correct{border-color:var(--green);}
+.kanji-input.wrong{border-color:var(--red);}
+.submit-btn{width:100%;background:linear-gradient(135deg,var(--accent),#c89a20);border:none;border-radius:12px;padding:14px;color:var(--bg);font-family:'Zen Kaku Gothic New',sans-serif;font-size:0.95rem;font-weight:900;cursor:pointer;}
+.feedback{border-radius:14px;padding:14px 18px;margin-bottom:12px;font-size:0.85rem;line-height:1.75;display:none;}
+.feedback.show{display:block;}
+.feedback.ok{background:rgba(61,214,140,0.1);border:1px solid rgba(61,214,140,0.3);}
+.feedback.ng{background:rgba(240,90,90,0.08);border:1px solid rgba(240,90,90,0.25);}
+.fb-title{font-weight:700;font-size:0.95rem;margin-bottom:4px;}
+.feedback.ok .fb-title{color:var(--green);}
+.feedback.ng .fb-title{color:var(--red);}
+.next-btn{width:100%;background:var(--accent2);border:none;border-radius:14px;padding:16px;color:white;font-family:'Zen Kaku Gothic New',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;display:none;}
+.next-btn.show{display:block;}
+#result-screen{display:none;}
+.result-wrap{padding:20px 0;}
+.result-top{display:flex;align-items:center;gap:20px;background:var(--card);border:1px solid var(--border);border-radius:20px;padding:24px;margin-bottom:16px;}
+.result-circle{width:90px;height:90px;border-radius:50%;border:3px solid var(--accent);display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;background:rgba(240,192,64,0.06);}
+.result-num{font-family:'Kaisei HarunoUmi',serif;font-size:2rem;color:var(--accent);line-height:1;}
+.result-denom{font-size:0.7rem;color:var(--muted);}
+.result-msg{font-size:1rem;font-weight:700;line-height:1.6;}
+.result-sub{font-size:0.8rem;color:var(--muted);margin-top:6px;line-height:1.6;}
+.updated-section{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;margin-bottom:16px;}
+.updated-title{font-size:0.7rem;color:var(--muted);letter-spacing:0.1em;margin-bottom:10px;}
+.updated-list{display:flex;flex-direction:column;gap:6px;}
+.updated-item{display:flex;align-items:center;gap:10px;font-size:0.85rem;}
+.updated-arrow{color:var(--muted);font-size:0.7rem;}
+.updated-new{color:var(--green);font-weight:700;}
+.review-section{background:var(--card);border:1px solid rgba(240,90,90,0.2);border-radius:16px;padding:16px;margin-bottom:20px;}
+.review-title{font-size:0.7rem;color:var(--muted);letter-spacing:0.1em;margin-bottom:10px;}
+.review-item{border-bottom:1px solid var(--border);padding:8px 0;font-size:0.82rem;line-height:1.7;}
+.review-item:last-child{border-bottom:none;}
+.review-answer{font-weight:700;color:var(--accent);}
+.result-btns{display:flex;flex-direction:column;gap:8px;}
+.retry-btn{width:100%;background:linear-gradient(135deg,var(--accent2),#c04420);border:none;border-radius:14px;padding:16px;color:white;font-family:'Zen Kaku Gothic New',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;}
+.home-btn-r{width:100%;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;color:var(--muted);font-family:'Zen Kaku Gothic New',sans-serif;font-size:0.9rem;cursor:pointer;}
+</style>
+</head>
+<body>
+<div class="app">
+<div id="home-screen">
+  <div class="header">
+    <div><div class="header-title">漢字 第11回</div><div class="header-sub">予習シリーズ ｜ 容・略・留・領・歴・胃・異・遺・域・宇</div></div>
+    <button class="reset-btn" onclick="confirmReset()">リセット</button>
+  </div>
+  <div class="tab-bar">
+    <button class="tab-btn active" id="tab-renshu" onclick="switchTab('renshu')">練習問題<br><small>選択式</small></button>
+    <button class="tab-btn" id="tab-kakunin" onclick="switchTab('kakunin')">確認問題<br><small>入力式</small></button>
+  </div>
+  <div class="summary-card">
+    <div class="summary-label">OVERALL MASTERY</div>
+    <div class="mastery-bar-wrap"><div class="mastery-bar-fill" id="home-bar" style="width:0%"></div></div>
+    <div class="mastery-stats">
+      <div class="stat-item"><div class="stat-num" id="stat-mastered">0</div><div class="stat-label">習得済み</div></div>
+      <div class="stat-item"><div class="stat-num" style="color:var(--muted)" id="stat-learning">0</div><div class="stat-label">練習中</div></div>
+      <div class="stat-item"><div class="stat-num" style="color:var(--muted)" id="stat-new">0</div><div class="stat-label">未挑戦</div></div>
+      <div class="stat-item"><div class="stat-num" style="color:var(--text)" id="stat-total">0</div><div class="stat-label">合計</div></div>
+    </div>
+  </div>
+  <div class="section-label">問題リスト（3回正解で習得）</div>
+  <div class="question-list" id="question-list"></div>
+  <div class="home-btns">
+    <button class="study-btn" onclick="startStudy()">📖 まず漢字を学習する（10字カード）</button>
+    <div class="start-row">
+      <button class="start-btn" onclick="startQuiz('all')">📝 全問チャレンジ</button>
+      <button class="weak-btn" id="weak-btn" onclick="startQuiz('weak')">⚡ 未習得のみ</button>
+    </div>
+  </div>
+</div>
+
+<div id="study-screen">
+  <div class="study-nav">
+    <button class="back-icon" onclick="goHome()">←</button>
+    <div class="study-progress-bar"><div class="study-progress-fill" id="sp-fill" style="width:0%"></div></div>
+    <div class="study-progress-text" id="sp-text">1 / 10</div>
+  </div>
+  <div id="kanji-card-area"></div>
+  <div id="card-nav"></div>
+</div>
+
+<div id="quiz-screen">
+  <div class="quiz-header">
+    <button class="back-icon" onclick="goHome()">←</button>
+    <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="qp-fill" style="width:0%"></div></div>
+    <div class="quiz-progress-text" id="qp-text">1/20</div>
+  </div>
+  <div class="mode-tag" id="mode-tag">練習問題</div>
+  <div class="quiz-card-q">
+    <div class="quiz-q" id="quiz-q"></div>
+    <button class="hint-btn" id="hint-btn" onclick="showHint()">💡 読みのヒントを見る</button>
+    <div class="quiz-hint" id="quiz-hint"></div>
+  </div>
+  <div id="choice-area" class="choices"></div>
+  <div id="input-area" class="input-area" style="display:none">
+    <input class="kanji-input" id="kanji-input" type="text" placeholder="漢字を入力" maxlength="6" autocomplete="off">
+    <button class="submit-btn" onclick="checkInput()">決定する</button>
+  </div>
+  <div class="feedback" id="feedback"><div class="fb-title" id="fb-title"></div><div id="fb-body"></div></div>
+  <button class="next-btn" id="next-btn" onclick="nextQ()">次の問題 →</button>
+</div>
+
+<div id="result-screen">
+  <div class="result-wrap">
+    <div class="quiz-header" style="padding-top:16px">
+      <button class="back-icon" onclick="goHome()">←</button>
+      <span style="font-size:0.85rem;color:var(--muted)">結果</span>
+    </div>
+    <div class="result-top">
+      <div class="result-circle"><div class="result-num" id="r-score">0</div><div class="result-denom" id="r-total">/0問</div></div>
+      <div><div class="result-msg" id="r-msg"></div><div class="result-sub" id="r-sub"></div></div>
+    </div>
+    <div class="updated-section" id="updated-section"></div>
+    <div class="review-section" id="review-section" style="display:none"></div>
+    <div class="result-btns">
+      <button class="retry-btn" id="retry-btn">もう一度</button>
+      <button class="home-btn-r" onclick="goHome()">ホームに戻る</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+const KANJI_DATA=[
+{kanji:'容',on:'ヨウ',kun:'—',
+ meanings:[{text:'中に入れる。うつわ。入れ物。'},{text:'容積…容器がいっぱいになる分量。'},{text:'美容…美しく見えるようにすること。'}],
+ examples:[{word:'容器',reading:'ようき',meaning:'入れ物'},{word:'容積',reading:'ようせき',meaning:'容器がいっぱいになる分量'},{word:'内容',reading:'ないよう',meaning:'中身'},{word:'収容',reading:'しゅうよう',meaning:'一定の場所に入れること'}]},
+{kanji:'略',on:'リャク',kun:'—',
+ meanings:[{text:'はかりごと。自分の計画をなしとげるための方法。'},{text:'省略…大事でない部分を省いて簡単にすること。'},{text:'侵略…他の国の領土へ侵入すること。'}],
+ examples:[{word:'省略',reading:'しょうりゃく',meaning:'省いて簡単にすること'},{word:'略図',reading:'りゃくず',meaning:'簡略化した図'},{word:'戦略',reading:'せんりゃく',meaning:'勝つための計略'},{word:'侵略',reading:'しんりゃく',meaning:'他の国の領土へ侵入すること'}]},
+{kanji:'留',on:'リュウ・ル',kun:'とめる・とまる',
+ meanings:[{text:'一つの所にとどまる。とまる。とめる。注意をする。'},{text:'留学…外国で一定期間、勉強すること。'},{text:'留守…外出して家にいないこと。'}],
+ examples:[{word:'留学',reading:'りゅうがく',meaning:'外国で勉強すること'},{word:'留守',reading:'るす',meaning:'家を空けること'},{word:'留意',reading:'りゅうい',meaning:'注意すること'},{word:'保留',reading:'ほりゅう',meaning:'その場で決めずとっておくこと'}]},
+{kanji:'領',on:'リョウ',kun:'—',
+ meanings:[{text:'かしら。命令を出す人。国民に選ばれた国の代表。'},{text:'大統領…ある国で国民に選ばれた国の代表。'},{text:'本領…その人の持ち前の能力。'}],
+ examples:[{word:'大統領',reading:'だいとうりょう',meaning:'国民に選ばれた国の代表'},{word:'領土',reading:'りょうど',meaning:'国が支配する土地'},{word:'領海',reading:'りょうかい',meaning:'国が支配する海'},{word:'本領',reading:'ほんりょう',meaning:'その人の持ち前の能力'}]},
+{kanji:'歴',on:'レキ',kun:'—',
+ meanings:[{text:'時が過ぎてきたあと。順序よく次々と加わったこと。'},{text:'歴史…昔から現在までのものごとのうつりかわり。'},{text:'歴然…はっきりしている様子。'}],
+ examples:[{word:'歴史',reading:'れきし',meaning:'昔から現在までのうつりかわり'},{word:'歴代',reading:'れきだい',meaning:'次々と続いてきたこと'},{word:'歴然',reading:'れきぜん',meaning:'はっきりしている様子'},{word:'学歴',reading:'がくれき',meaning:'学校で学んだ経歴'}]},
+{kanji:'胃',on:'イ',kun:'—',
+ meanings:[{text:'消化器の一つ。食物をこなすところ。'},{text:'胃炎…胃の粘膜に炎症を起こす病気。'},{text:'胃腸…胃と腸。消化器。'}],
+ examples:[{word:'胃腸',reading:'いちょう',meaning:'胃と腸'},{word:'胃炎',reading:'いえん',meaning:'胃に炎症が起きた状態'},{word:'胃液',reading:'いえき',meaning:'胃の中で分泌される消化液'},{word:'胃弱',reading:'いじゃく',meaning:'胃の働きが悪い状態'}]},
+{kanji:'異',on:'イ',kun:'こと',
+ meanings:[{text:'ことなる。同じでない。よその国。'},{text:'異国…外国。よその国。'},{text:'異常…ふつうとはちがう様子。'}],
+ examples:[{word:'異国',reading:'いこく',meaning:'外国・よその国'},{word:'異常',reading:'いじょう',meaning:'ふつうとちがう様子'},{word:'異様',reading:'いよう',meaning:'ふつうとちがう様子'},{word:'異色',reading:'いしょく',meaning:'ふつうとちがう特色'}]},
+{kanji:'遺',on:'イ・ユイ',kun:'—',
+ meanings:[{text:'あとに残す。死んだ人が残していったもの。'},{text:'遺産…死んだ人が残した財産。'},{text:'遺言…人が死ぬ前に言い残すこと。'}],
+ examples:[{word:'遺産',reading:'いさん',meaning:'死んだ人が残した財産'},{word:'遺言',reading:'ゆいごん',meaning:'死ぬ前に言い残すこと'},{word:'遺伝',reading:'いでん',meaning:'親の形質が子孫に伝わること'},{word:'遺失物',reading:'いしつぶつ',meaning:'落とし物・忘れ物'}]},
+{kanji:'域',on:'イキ',kun:'—',
+ meanings:[{text:'くぎられた土地。限られた場所。範囲。'},{text:'地域…一定の範囲の土地。'},{text:'区域…ある決まりでくぎられた場所。'}],
+ examples:[{word:'地域',reading:'ちいき',meaning:'一定の範囲の土地'},{word:'区域',reading:'くいき',meaning:'くぎられた場所'},{word:'領域',reading:'りょういき',meaning:'ある分野・範囲'},{word:'流域',reading:'りゅういき',meaning:'川の流れにそった土地'}]},
+{kanji:'宇',on:'ウ',kun:'—',
+ meanings:[{text:'空。天地。天体をふくむ広がり。地球・太陽・星など。'},{text:'宇宙…天地のすべての物をふくむ空間。'},{text:'堂宇…大きな建物。'}],
+ examples:[{word:'宇宙',reading:'うちゅう',meaning:'天地すべてをふくむ空間'},{word:'宇宙船',reading:'うちゅうせん',meaning:'宇宙を飛ぶ乗り物'},{word:'宇宙人',reading:'うちゅうじん',meaning:'宇宙に住む生き物'},{word:'宇宙飛行士',reading:'うちゅうひこうし',meaning:'宇宙を飛ぶ人'}]}
+];
+const RENSHU=[
+{id:'r01',kanji:'容',reading:'ヨウ',q:'「荷物をヨウキに入れる」\n漢字に直しなさい。',answer:'容器',choices:['容器','用器','容気','庸器'],hint:'ヨウ（容）＋キ',explain:'「容器」は物を入れる器のこと。'},
+{id:'r02',kanji:'容',reading:'ヨウ',q:'「コンテナのヨウセキを計算する」\n漢字に直しなさい。',answer:'容積',choices:['容積','容席','用積','陽積'],hint:'ヨウ（容）＋セキ',explain:'「容積」は容器がいっぱいになる分量。'},
+{id:'r03',kanji:'略',reading:'リャク',q:'「式次第をリャクシキにする」\n漢字に直しなさい。',answer:'略式',choices:['略式','略色','略識','略飾'],hint:'リャク（略）＋シキ',explain:'「略式」は正式でなく簡単なやり方。'},
+{id:'r04',kanji:'略',reading:'リャク',q:'「敵国をシンリャクする」\n漢字に直しなさい。',answer:'侵略',choices:['侵略','浸略','真略','新略'],hint:'シン＋リャク（略）',explain:'「侵略」は他の国の領土へ侵入すること。'},
+{id:'r05',kanji:'留',reading:'リュウ・ル',q:'「スイスにリュウガクする」\n漢字に直しなさい。',answer:'留学',choices:['留学','流学','溜学','瑠学'],hint:'リュウ（留）＋ガク',explain:'「留学」は外国で一定期間勉強すること。'},
+{id:'r06',kanji:'留',reading:'リュウ・ル',q:'「旅行で家をルスにする」\n漢字に直しなさい。',answer:'留守',choices:['留守','流守','溜守','瑠守'],hint:'ル（留）＋ス',explain:'「留守」は家を空けること。'},
+{id:'r07',kanji:'領',reading:'リョウ',q:'「ダイトウリョウを選挙する」\n漢字に直しなさい。',answer:'大統領',choices:['大統領','大当領','大答領','大投領'],hint:'ダイ＋トウ＋リョウ（領）',explain:'「大統領」は国民に選ばれた国の代表。'},
+{id:'r08',kanji:'領',reading:'リョウ',q:'「代金をジュリョウする」\n漢字に直しなさい。',answer:'受領',choices:['受領','受量','受良','受料'],hint:'ジュ＋リョウ（領）',explain:'「受領」はお金や品物を受け取ること。'},
+{id:'r09',kanji:'歴',reading:'レキ',q:'「レキダイの大統領の名前を覚える」\n漢字に直しなさい。',answer:'歴代',choices:['歴代','暦代','礫代','轢代'],hint:'レキ（歴）＋ダイ',explain:'「歴代」は次々と続いてきたこと。'},
+{id:'r10',kanji:'歴',reading:'レキ',q:'「レキシを学ぶ」\n漢字に直しなさい。',answer:'歴史',choices:['歴史','暦史','礫史','轢史'],hint:'レキ（歴）＋シ',explain:'「歴史」は昔から現在までのうつりかわり。'},
+{id:'r11',kanji:'胃',reading:'イ',q:'「食後にイサンを飲む」\n漢字に直しなさい。',answer:'胃散',choices:['胃散','意散','医散','胃産'],hint:'イ（胃）＋サン',explain:'「胃散」は胃の病気のための粉薬。'},
+{id:'r12',kanji:'胃',reading:'イ',q:'「生来のイジャクに悩む」\n漢字に直しなさい。',answer:'胃弱',choices:['胃弱','意弱','医弱','胃若'],hint:'イ（胃）＋ジャク',explain:'「胃弱」は胃の働きが悪い状態。'},
+{id:'r13',kanji:'異',reading:'イ・こと',q:'「イコクの文化にふれる旅」\n漢字に直しなさい。',answer:'異国',choices:['異国','移国','医国','遺国'],hint:'イ（異）＋コク',explain:'「異国」は外国・よその国のこと。'},
+{id:'r14',kanji:'異',reading:'イ・こと',q:'「イジョウな事態が発生した」\n漢字に直しなさい。',answer:'異常',choices:['異常','以上','医常','遺常'],hint:'イ（異）＋ジョウ',explain:'「異常」はふつうとはちがう様子。'},
+{id:'r15',kanji:'遺',reading:'イ・ユイ',q:'「亡き父のユイゴンを守る」\n漢字に直しなさい。',answer:'遺言',choices:['遺言','以言','医言','移言'],hint:'ユイ（遺）＋ゴン',explain:'「遺言」は人が死ぬ前に言い残すこと。'},
+{id:'r16',kanji:'遺',reading:'イ・ユイ',q:'「車内のイシツブツを探す」\n漢字に直しなさい。',answer:'遺失物',choices:['遺失物','移失物','以失物','医失物'],hint:'イ（遺）＋シツ＋ブツ',explain:'「遺失物」は落とし物・忘れ物のこと。'},
+{id:'r17',kanji:'域',reading:'イキ',q:'「チイキの住民の協力を得る」\n漢字に直しなさい。',answer:'地域',choices:['地域','地異','地意','知域'],hint:'チ＋イキ（域）',explain:'「地域」は一定の範囲の土地。'},
+{id:'r18',kanji:'域',reading:'イキ',q:'「遊泳禁止クイキを設ける」\n漢字に直しなさい。',answer:'区域',choices:['区域','区意','区異','句域'],hint:'ク＋イキ（域）',explain:'「区域」はくぎられた場所。'},
+{id:'r19',kanji:'宇',reading:'ウ',q:'「ウチュウ飛行士になりたい」\n漢字に直しなさい。',answer:'宇宙',choices:['宇宙','雨宙','羽宙','迂宙'],hint:'ウ（宇）＋チュウ',explain:'「宇宙」は天地すべてをふくむ空間。'},
+{id:'r20',kanji:'域',reading:'イキ',q:'「利根川リュウイキの生物調査」\n漢字に直しなさい。',answer:'流域',choices:['流域','流意','流異','留域'],hint:'リュウ＋イキ（域）',explain:'「流域」は川の流れにそったまとまった土地。'},
+];
+const KAKUNIN=[
+{id:'k01',kanji:'歴',reading:'レキ',q:'「製鉄技術のレキシについて学ぶ」\nカタカナを漢字に。',answer:'歴史',hint:'レキ（歴）＋シ',explain:'昔から現在までのうつりかわり。'},
+{id:'k02',kanji:'略',reading:'リャク',q:'「相手チームのケイリャクを練る」\nカタカナを漢字に。',answer:'計略',hint:'ケイ＋リャク（略）',explain:'計画をなしとげるための方法。'},
+{id:'k03',kanji:'胃',reading:'イ',q:'「父はすぐにお腹がイタくなる体質（イ）」\nカタカナを漢字に。',answer:'胃',hint:'い＝胃',explain:'食物を消化する器官。'},
+{id:'k04',kanji:'宇',reading:'ウ',q:'「いつかウチュウ旅行をしてみたい」\nカタカナを漢字に。',answer:'宇宙',hint:'ウ（宇）＋チュウ',explain:'天地すべてをふくむ空間。'},
+{id:'k05',kanji:'留',reading:'リュウ・ル',q:'「細かい点にリュウイして決める」\nカタカナを漢字に。',answer:'留意',hint:'リュウ（留）＋イ',explain:'気をつけること・注意すること。'},
+{id:'k06',kanji:'異',reading:'イ・こと',q:'「神戸や横浜はイコク情緒あふれる港町」\nカタカナを漢字に。',answer:'異国',hint:'イ（異）＋コク',explain:'外国・よその国のこと。'},
+{id:'k07',kanji:'遺',reading:'イ・ユイ',q:'「大切な家族を失ったイゾクの悲しみ」\nカタカナを漢字に。',answer:'遺族',hint:'イ（遺）＋ゾク',explain:'死んだ人が残してきた家族。'},
+{id:'k08',kanji:'容',reading:'ヨウ',q:'「丸いヨウキにいっぱいお湯を注ぐ」\nカタカナを漢字に。',answer:'容器',hint:'ヨウ（容）＋キ',explain:'物を入れる器のこと。'},
+{id:'k09',kanji:'域',reading:'イキ',q:'「彼は幅広いオンイキの声が出せる」\nカタカナを漢字に。',answer:'音域',hint:'オン＋イキ（域）',explain:'声や楽器が出せる音の範囲。'},
+{id:'k10',kanji:'領',reading:'リョウ',q:'「アメリカのダイトウリョウと日本の首相の会議」\nカタカナを漢字に。',answer:'大統領',hint:'ダイ＋トウ＋リョウ（領）',explain:'国民に選ばれた国の代表。'},
+{id:'k11',kanji:'遺',reading:'イ・ユイ',q:'「駅のイシツブツ係に問い合わせる」\nカタカナを漢字に。',answer:'遺失物',hint:'イ（遺）＋シツ＋ブツ',explain:'落とし物・忘れ物のこと。'},
+{id:'k12',kanji:'域',reading:'イキ',q:'「立入禁止クイキに黄色いテープがはられている」\nカタカナを漢字に。',answer:'区域',hint:'ク＋イキ（域）',explain:'くぎられた場所。'},
+{id:'k13',kanji:'領',reading:'リョウ',q:'「日本のリョウドを地図で確認する」\nカタカナを漢字に。',answer:'領土',hint:'リョウ（領）＋ド',explain:'国が支配する土地。'},
+{id:'k14',kanji:'異',reading:'イ・こと',q:'「機械にイジョウがないか点検する」\nカタカナを漢字に。',answer:'異常',hint:'イ（異）＋ジョウ',explain:'ふつうとはちがう様子。'},
+{id:'k15',kanji:'胃',reading:'イ',q:'「イチョウが弱いものを食べよう」\nカタカナを漢字に。',answer:'胃腸',hint:'イ（胃）＋チョウ',explain:'胃と腸のこと。消化器。'},
+{id:'k16',kanji:'留',reading:'リュウ・ル',q:'「オーストラリアに交換リュウガクに行く」\nカタカナを漢字に。',answer:'留学',hint:'リュウ（留）＋ガク',explain:'外国で一定期間勉強すること。'},
+{id:'k17',kanji:'容',reading:'ヨウ',q:'「ラベルでペットボトルのヨウリョウを確かめる」\nカタカナを漢字に。',answer:'容量',hint:'ヨウ（容）＋リョウ',explain:'容器に入れられる分量。'},
+{id:'k18',kanji:'胃',reading:'イ',q:'「夏目漱石はイジャクだと言われている」\nカタカナを漢字に。',answer:'胃弱',hint:'イ（胃）＋ジャク',explain:'胃の働きが悪い状態。'},
+{id:'k19',kanji:'略',reading:'リャク',q:'「外交交渉をセンリャク的にすすめる」\nカタカナを漢字に。',answer:'戦略',hint:'セン＋リャク（略）',explain:'戦いや競争に勝つための計略。'},
+{id:'k20',kanji:'略',reading:'リャク',q:'「三ページの説明はショウリャクします」\nカタカナを漢字に。',answer:'省略',hint:'ショウ＋リャク（略）',explain:'省いて簡単にすること。'},
+{id:'k21',kanji:'遺',reading:'イ・ユイ',q:'「祖父がユイゴン状をしたためた」\nカタカナを漢字に。',answer:'遺言',hint:'ユイ（遺）＋ゴン',explain:'人が死ぬ前に言い残すこと。'},
+{id:'k22',kanji:'域',reading:'イキ',q:'「このチイキには鉄道駅が一つもない」\nカタカナを漢字に。',answer:'地域',hint:'チ＋イキ（域）',explain:'一定の範囲の土地。'},
+{id:'k23',kanji:'略',reading:'リャク',q:'「日本地図のリャクズを用意する」\nカタカナを漢字に。',answer:'略図',hint:'リャク（略）＋ズ',explain:'細かいことは省いた図。'},
+{id:'k24',kanji:'留',reading:'リュウ・ル',q:'「大学生の兄とルスバンをする」\nカタカナを漢字に。',answer:'留守番',hint:'ル（留）＋ス＋バン',explain:'家を留守にするとき残って番をすること。'},
+{id:'k25',kanji:'異',reading:'イ・こと',q:'「同じ政党でも意見をことにすることがある」\nカタカナを漢字に。',answer:'異に',hint:'こと（異）',explain:'「異にする」はちがうものにすること。'},
+{id:'k26',kanji:'遺',reading:'イ・ユイ',q:'「亡き父のイサンをめぐって争いが起きた」\nカタカナを漢字に。',answer:'遺産',hint:'イ（遺）＋サン',explain:'死んだ人が残した財産。'},
+{id:'k27',kanji:'領',reading:'リョウ',q:'「宅配便のリョウシュウ印を押す」\nカタカナを漢字に。',answer:'領収',hint:'リョウ（領）＋シュウ',explain:'お金や品物を受け取ること。'},
+{id:'k28',kanji:'胃',reading:'イ',q:'「腸が弱っているのでイチョウ薬を飲む」\nカタカナを漢字に。',answer:'胃腸',hint:'イ（胃）＋チョウ',explain:'胃と腸のこと。'},
+{id:'k29',kanji:'歴',reading:'レキ',q:'「江戸幕府のレキダイの将軍の名前をおぼえる」\nカタカナを漢字に。',answer:'歴代',hint:'レキ（歴）＋ダイ',explain:'次々と続いてきたこと。'},
+{id:'k30',kanji:'容',reading:'ヨウ',q:'「ラッシュアワーでシュウヨウ人数をこえた状態」\nカタカナを漢字に。',answer:'収容',hint:'シュウ＋ヨウ（容）',explain:'人や物を一定の場所に入れること。'},
+{id:'k31',kanji:'歴',reading:'レキ',q:'「二人の実力にはレキゼンとした差がある」\nカタカナを漢字に。',answer:'歴然',hint:'レキ（歴）＋ゼン',explain:'はっきりしている様子。'},
+{id:'k32',kanji:'域',reading:'イキ',q:'「ライン川のリュウイキで大規模な洪水が起こった」\nカタカナを漢字に。',answer:'流域',hint:'リュウ＋イキ（域）',explain:'川の流れにそったまとまった土地。'},
+{id:'k33',kanji:'領',reading:'リョウ',q:'「最も得意なポジションでホンリョウを発揮する」\nカタカナを漢字に。',answer:'本領',hint:'ホン＋リョウ（領）',explain:'その人の持ち前の能力。'},
+{id:'k34',kanji:'胃',reading:'イ',q:'「腸の引き出しをたんすにしまう（イチョウ）」\nカタカナを漢字に（胃腸）。',answer:'胃腸',hint:'イ（胃）＋チョウ',explain:'胃と腸のこと。消化器。'},
+{id:'k35',kanji:'遺',reading:'イ・ユイ',q:'「芸術の才能は親から子へイデンする」\nカタカナを漢字に。',answer:'遺伝',hint:'イ（遺）＋デン',explain:'生物の形質が子孫に伝わること。'},
+{id:'k36',kanji:'留',reading:'リュウ・ル',q:'「話し合いがまとまらないのでホリュウにした」\nカタカナを漢字に。',answer:'保留',hint:'ホ（保）＋リュウ（留）',explain:'その場で決めないでとっておくこと。'},
+{id:'k37',kanji:'異',reading:'イ・こと',q:'「夜の学校にはイヨウな雰囲気がただよっていた」\nカタカナを漢字に。',answer:'異様',hint:'イ（異）＋ヨウ',explain:'ふつうとはちがう様子。'},
+{id:'k38',kanji:'異',reading:'イ・こと',q:'「イジョウ気象が世界各地で起こっている」\nカタカナを漢字に。',answer:'異常',hint:'イ（異）＋ジョウ',explain:'ふつうとはちがう様子。'},
+{id:'k39',kanji:'略',reading:'リャク',q:'「センリャク的な外交交渉をすすめる」\nカタカナを漢字に。',answer:'戦略',hint:'セン＋リャク（略）',explain:'戦いや競争に勝つための計略。'},
+{id:'k40',kanji:'宇',reading:'ウ',q:'「ウチュウ飛行士として宇宙ステーションに滞在する」\nカタカナを漢字に。',answer:'宇宙',hint:'ウ（宇）＋チュウ',explain:'天地すべてをふくむ空間。'},
+];
+const SK_R='kanji11-renshu',SK_K='kanji11-kakunin',MASTERY=3;
+function lD(k){try{const r=localStorage.getItem(k);return r?JSON.parse(r):{};}catch(e){return{};}}
+function sD(k,d){try{localStorage.setItem(k,JSON.stringify(d));}catch(e){}}
+function getM(k,id){const d=lD(k);return d[id]||{correct:0,attempt:0};}
+function recR(k,id,ok){const d=lD(k);if(!d[id])d[id]={correct:0,attempt:0};d[id].attempt++;if(ok)d[id].correct++;sD(k,d);}
+function getLv(k,id){const m=getM(k,id);if(m.correct>=MASTERY)return'mastered';if(m.attempt>0)return'learning';return'new';}
+let currentTab='renshu',quizQueue=[],quizIndex=0,quizScore=0,quizAnswered=false,quizMode='all',sessionResults=[],studyIndex=0;
+function getCK(){return currentTab==='renshu'?SK_R:SK_K;}
+function getCQ(){return currentTab==='renshu'?RENSHU:KAKUNIN;}
+function switchTab(tab){currentTab=tab;document.getElementById('tab-renshu').className='tab-btn'+(tab==='renshu'?' active':'');document.getElementById('tab-kakunin').className='tab-btn'+(tab==='kakunin'?' active':'');buildHome();}
+function buildHome(){
+  const key=getCK(),qs=getCQ();let mastered=0,learning=0,newQ=0;
+  qs.forEach(q=>{const lv=getLv(key,q.id);if(lv==='mastered')mastered++;else if(lv==='learning')learning++;else newQ++;});
+  const total=qs.length;
+  document.getElementById('stat-mastered').textContent=mastered;document.getElementById('stat-learning').textContent=learning;document.getElementById('stat-new').textContent=newQ;document.getElementById('stat-total').textContent=total;
+  document.getElementById('home-bar').style.width=`${Math.round(mastered/total*100)}%`;
+  const unmastered=qs.filter(q=>getLv(key,q.id)!=='mastered');
+  const wb=document.getElementById('weak-btn');wb.disabled=unmastered.length===0;wb.textContent=`⚡ 未習得（${unmastered.length}）`;
+  const list=document.getElementById('question-list');list.innerHTML='';
+  qs.forEach(q=>{const lv=getLv(key,q.id),m=getM(key,q.id);const div=document.createElement('div');div.className='q-item';
+    div.innerHTML=`<div class="q-status ${lv}">${lv==='mastered'?'✓':m.correct}</div><div class="q-info"><div class="q-kanji">${q.kanji}<span class="mastery-badge badge-${lv}">${lv==='mastered'?'習得済':lv==='learning'?'練習中':'未挑戦'}</span></div><div class="q-reading">${q.reading}</div></div><div class="q-count">${m.correct}/${MASTERY}</div>`;
+    list.appendChild(div);});
+}
+function confirmReset(){if(confirm('習熟度をリセットしますか？')){localStorage.removeItem(SK_R);localStorage.removeItem(SK_K);buildHome();}}
+function startStudy(){studyIndex=0;showScreen('study-screen');renderCard();}
+function renderCard(){
+  const k=KANJI_DATA[studyIndex],total=KANJI_DATA.length;
+  document.getElementById('sp-fill').style.width=`${studyIndex/total*100}%`;document.getElementById('sp-text').textContent=`${studyIndex+1} / ${total}`;
+  const mHtml=k.meanings.map(m=>`<div class="meaning-item">● ${m.text}</div>`).join('');
+  const eHtml=k.examples.map(e=>`<div class="example-item"><span class="example-word">${e.word}（${e.reading}）</span><span class="example-meaning">${e.meaning}</span></div>`).join('');
+  document.getElementById('kanji-card-area').innerHTML=`<div class="kanji-card"><div class="kanji-big">${k.kanji}</div><div class="kanji-readings"><div class="reading-badge"><span class="reading-label">音</span><span class="reading-val">${k.on}</span></div><div class="reading-badge"><span class="reading-label">訓</span><span class="reading-val">${k.kun}</span></div></div><div class="kanji-meanings"><div class="meaning-title">意　味</div>${mHtml}</div><div class="kanji-examples"><div class="example-title">用　例</div><div class="example-list">${eHtml}</div></div></div>`;
+  const isLast=studyIndex===total-1;
+  document.getElementById('card-nav').innerHTML=isLast?`<div class="study-complete"><div class="complete-icon">🎉</div><div class="complete-msg">10字の学習完了！</div><div class="complete-sub">次は問題にチャレンジしよう</div><div class="goto-quiz-row"><button class="goto-btn goto-renshu" onclick="startFromStudy('renshu')">📝 練習問題へ</button><button class="goto-btn goto-kakunin" onclick="startFromStudy('kakunin')">✏️ 確認問題へ</button></div></div><div class="card-nav-row">${studyIndex>0?'<button class="prev-btn" onclick="prevCard()">← 前へ</button>':'<div></div>'}<button class="next-card-btn" style="background:var(--card);border:1px solid var(--border);color:var(--muted);" disabled>最後のカードです</button></div>`:
+    `<div class="card-nav-row">${studyIndex>0?'<button class="prev-btn" onclick="prevCard()">← 前へ</button>':'<div></div>'}<button class="next-card-btn" onclick="nextCard()">次のカード →</button></div>`;
+  window.scrollTo(0,0);
+}
+function nextCard(){if(studyIndex<KANJI_DATA.length-1){studyIndex++;renderCard();}}
+function prevCard(){if(studyIndex>0){studyIndex--;renderCard();}}
+function startFromStudy(tab){currentTab=tab;document.getElementById('tab-renshu').className='tab-btn'+(tab==='renshu'?' active':'');document.getElementById('tab-kakunin').className='tab-btn'+(tab==='kakunin'?' active':'');startQuiz('all');}
+function shuffle(arr){return[...arr].sort(()=>Math.random()-0.5);}
+function startQuiz(mode){quizMode=mode;const key=getCK(),qs=getCQ();quizQueue=mode==='all'?shuffle(qs):shuffle(qs.filter(q=>getLv(key,q.id)!=='mastered'));quizIndex=0;quizScore=0;quizAnswered=false;sessionResults=[];showScreen('quiz-screen');renderQ();}
+function renderQ(){
+  const q=quizQueue[quizIndex],total=quizQueue.length;
+  document.getElementById('qp-fill').style.width=`${quizIndex/total*100}%`;document.getElementById('qp-text').textContent=`${quizIndex+1}/${total}`;
+  document.getElementById('mode-tag').textContent=currentTab==='renshu'?'練習問題（選択式）':'確認問題（入力式）';
+  document.getElementById('quiz-q').textContent=q.q;document.getElementById('quiz-hint').textContent=`ヒント：${q.hint}`;
+  document.getElementById('quiz-hint').style.display='none';document.getElementById('hint-btn').style.display='inline-block';
+  document.getElementById('feedback').className='feedback';document.getElementById('next-btn').className='next-btn';quizAnswered=false;
+  if(currentTab==='renshu'){document.getElementById('choice-area').style.display='grid';document.getElementById('input-area').style.display='none';
+    const area=document.getElementById('choice-area');area.innerHTML='';shuffle(q.choices).forEach(opt=>{const btn=document.createElement('button');btn.className='choice-btn';btn.textContent=opt;btn.onclick=()=>selC(btn,opt,q);area.appendChild(btn);});}
+  else{document.getElementById('choice-area').style.display='none';document.getElementById('input-area').style.display='block';const inp=document.getElementById('kanji-input');inp.value='';inp.className='kanji-input';inp.disabled=false;setTimeout(()=>inp.focus(),100);}
+}
+function selC(btn,opt,q){if(quizAnswered)return;quizAnswered=true;const key=getCK(),prev=getLv(key,q.id),ok=opt===q.answer;recR(key,q.id,ok);const newLv=getLv(key,q.id);sessionResults.push({q,wasCorrect:ok,prevLv:prev,newLv});if(ok){quizScore++;btn.classList.add('correct');}else{btn.classList.add('wrong');document.querySelectorAll('.choice-btn').forEach(b=>{if(b.textContent===q.answer)b.classList.add('correct');});}document.querySelectorAll('.choice-btn').forEach(b=>b.disabled=true);showFB(ok,q,newLv);}
+function checkInput(){if(quizAnswered)return;const inp=document.getElementById('kanji-input'),val=inp.value.trim();if(!val)return;const q=quizQueue[quizIndex];const norm=s=>s.replace(/[ぁ-んァ-ン]/g,'');const ok=val===q.answer||norm(val)===norm(q.answer);quizAnswered=true;inp.disabled=true;const key=getCK(),prev=getLv(key,q.id);recR(key,q.id,ok);const newLv=getLv(key,q.id);sessionResults.push({q,wasCorrect:ok,prevLv:prev,newLv});inp.className='kanji-input '+(ok?'correct':'wrong');if(ok)quizScore++;showFB(ok,q,newLv);}
+function showHint(){document.getElementById('quiz-hint').style.display='block';document.getElementById('hint-btn').style.display='none';}
+function showFB(ok,q,newLv){const fb=document.getElementById('feedback');document.getElementById('fb-title').textContent=ok?'✓ 正解！'+(newLv==='mastered'?'　🎉 習得達成！':''):`✗ 不正解　正解：${q.answer}`;document.getElementById('fb-body').textContent=q.explain||'';fb.className='feedback show '+(ok?'ok':'ng');document.getElementById('next-btn').className='next-btn show';}
+function nextQ(){quizIndex++;if(quizIndex>=quizQueue.length)showResult();else{renderQ();window.scrollTo(0,0);}}
+function showResult(){showScreen('result-screen');const total=quizQueue.length,pct=Math.round(quizScore/total*100);document.getElementById('r-score').textContent=quizScore;document.getElementById('r-total').textContent=`/${total}問`;const[msg,sub]=pct===100?['🎉 パーフェクト！','全問正解！すごい！']:pct>=80?['👏 よくできました！',`${total-quizScore}問ミス。復習しよう。`]:pct>=60?['🙆 まずまず！','間違いを確認してもう一度！']:['💪 もう一度！','間違えた問題を復習しよう。'];document.getElementById('r-msg').textContent=msg;document.getElementById('r-sub').textContent=sub;
+  const upgraded=sessionResults.filter(r=>r.wasCorrect&&r.prevLv!==r.newLv);const us=document.getElementById('updated-section');if(upgraded.length>0){const ll={new:'未挑戦',learning:'練習中',mastered:'習得済み✓'};us.style.display='block';us.innerHTML=`<div class="updated-title">▲ 習熟度アップ！</div><div class="updated-list">`+upgraded.map(r=>`<div class="updated-item"><span>${r.q.answer}</span><span class="updated-arrow">→</span><span class="updated-new">${ll[r.newLv]}</span></div>`).join('')+'</div>';}else{us.style.display='none';}
+  const wrong=sessionResults.filter(r=>!r.wasCorrect);const rs=document.getElementById('review-section');if(wrong.length>0){rs.style.display='block';rs.innerHTML=`<div class="review-title">▼ 間違えた問題</div>`+wrong.map(r=>`<div class="review-item"><span class="review-answer">正解：${r.q.answer}</span>（${r.q.hint}）<br>${r.q.q}</div>`).join('');}else{rs.style.display='none';}
+  document.getElementById('retry-btn').onclick=()=>startQuiz(quizMode);}
+function showScreen(id){['home-screen','study-screen','quiz-screen','result-screen'].forEach(s=>{document.getElementById(s).style.display=s===id?'block':'none';});}
+function goHome(){buildHome();showScreen('home-screen');}
+document.getElementById('kanji-input').addEventListener('keydown',e=>{if(e.key==='Enter')checkInput();});
+buildHome();showScreen('home-screen');
+</script>
+</body>
+</html>
