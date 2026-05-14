@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>言語知識テスト 練習アプリ 11・12回</title>
+<style>
+:root {
+  --bg: #0f172a; --surface: rgba(255,255,255,0.05); --border: rgba(255,255,255,0.1);
+  --blue: #3b82f6; --blue-light: #60a5fa; --green: #22c55e; --red: #ef4444;
+  --text: #f1f5f9; --muted: #94a3b8;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+body { background: linear-gradient(135deg,#0f172a 0%,#1e293b 60%,#0f3460 100%); min-height: 100vh; font-family: 'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif; color: var(--text); padding: 16px; }
+.wrap { max-width: 600px; margin: 0 auto; }
+.home-title { text-align: center; padding: 40px 0 32px; }
+.home-title-main { font-size: 38px; font-weight: 900; letter-spacing: 0.1em; text-shadow: 0 0 40px rgba(96,165,250,0.7); }
+.home-title-sub { font-size: 14px; color: #93c5fd; margin-top: 6px; }
+.mode-btn { display: flex; align-items: center; gap: 16px; width: 100%; padding: 24px 20px; border-radius: 18px; border: 1px solid var(--border); cursor: pointer; margin-bottom: 14px; text-align: left; color: var(--text); }
+.mode-btn-blue { background: linear-gradient(135deg,#1e3a5f,#1e40af); box-shadow: 0 8px 32px rgba(59,130,246,0.25); }
+.mode-btn-green { background: linear-gradient(135deg,#14432a,#166534); box-shadow: 0 8px 32px rgba(34,197,94,0.2); }
+.mode-btn-fav { background: linear-gradient(135deg,#4a1d6e,#6d28d9); box-shadow: 0 8px 32px rgba(139,92,246,0.25); }
+.mode-icon { font-size: 36px; }
+.mode-name { font-size: 20px; font-weight: 800; margin-bottom: 4px; }
+.mode-note { font-size: 13px; color: var(--muted); }
+.fav-count { font-size: 12px; color: #c4b5fd; background: rgba(139,92,246,0.2); padding: 2px 8px; border-radius: 99px; margin-left: 8px; }
+.back-btn { background: none; border: none; color: var(--blue-light); font-size: 15px; cursor: pointer; margin-bottom: 20px; padding: 4px 0; }
+.select-title { font-size: 20px; font-weight: 800; margin-bottom: 20px; }
+.select-btn { display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 18px 20px; margin-bottom: 10px; border-radius: 14px; border: 1px solid var(--border); background: var(--surface); cursor: pointer; color: var(--text); }
+.select-name { font-size: 17px; font-weight: 700; }
+.select-count { font-size: 13px; color: var(--blue-light); background: rgba(96,165,250,0.15); padding: 3px 10px; border-radius: 99px; }
+.prog-bar { height: 6px; background: rgba(255,255,255,0.1); border-radius: 99px; margin-bottom: 16px; overflow: hidden; }
+.prog-fill { height: 100%; background: linear-gradient(90deg,#3b82f6,#60a5fa); border-radius: 99px; transition: width 0.3s; }
+.quiz-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.badge { font-size: 12px; font-weight: 700; color: var(--blue-light); background: rgba(96,165,250,0.15); padding: 3px 10px; border-radius: 99px; }
+.counter { font-size: 13px; color: #64748b; }
+.q-box { background: var(--surface); border-radius: 16px; padding: 18px; margin-bottom: 14px; border: 1px solid var(--border); }
+.q-text { font-size: 15px; line-height: 1.9; font-weight: 600; white-space: pre-wrap; }
+.opt-btn { display: flex; align-items: center; gap: 10px; width: 100%; padding: 12px 14px; margin-bottom: 8px; border-radius: 12px; border: 1px solid var(--border); background: rgba(255,255,255,0.04); cursor: pointer; color: var(--text); text-align: left; font-size: 14px; font-weight: 600; font-family: inherit; }
+.opt-btn:disabled { cursor: default; }
+.opt-num { width: 26px; height: 26px; border-radius: 50%; background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; color: var(--blue-light); min-width: 26px; }
+.opt-ok { border-color: var(--green)!important; background: rgba(34,197,94,0.15)!important; color: #86efac; }
+.opt-ng { border-color: var(--red)!important; background: rgba(239,68,68,0.15)!important; color: #fca5a5; }
+.opt-dim { opacity: 0.35; }
+.exp-box { background: var(--surface); border-radius: 16px; padding: 18px; border: 1px solid var(--border); margin-top: 4px; }
+.result-tag { font-size: 15px; font-weight: 800; margin-bottom: 8px; }
+.exp-text { font-size: 13px; color: var(--muted); line-height: 1.8; margin-bottom: 12px; }
+.ai-hint { background: rgba(96,165,250,0.08); border: 1px solid rgba(96,165,250,0.2); border-radius: 10px; padding: 10px 14px; font-size: 13px; color: #bfdbfe; line-height: 1.7; margin-bottom: 14px; }
+.ai-hint-label { font-size: 11px; font-weight: 700; color: var(--blue-light); display: block; margin-bottom: 4px; }
+.next-btn { width: 100%; padding: 14px; border-radius: 12px; background: linear-gradient(135deg,#2563eb,#1d4ed8); color: #fff; font-weight: 800; font-size: 16px; border: none; cursor: pointer; }
+.score-box { text-align: center; background: var(--surface); border-radius: 20px; padding: 32px 24px; border: 1px solid var(--border); margin-bottom: 28px; }
+.score-num { font-size: 64px; font-weight: 900; line-height: 1; margin-bottom: 8px; }
+.score-total { font-size: 28px; color: var(--muted); }
+.score-msg { font-size: 18px; color: var(--blue-light); font-weight: 700; }
+.res-item { padding: 12px 14px; margin-bottom: 10px; border-radius: 12px; background: var(--surface); border-left: 4px solid transparent; }
+.res-q { font-size: 12px; color: var(--muted); margin-bottom: 4px; line-height: 1.5; }
+.res-a { font-size: 14px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.res-wrong { color: #f87171; font-weight: 400; font-size: 12px; }
+.fav-btn { background: none; border: none; font-size: 20px; cursor: pointer; padding: 2px 6px; line-height: 1; flex-shrink: 0; }
+.result-actions { display: flex; gap: 12px; margin-bottom: 32px; }
+.retry-btn { flex: 1; padding: 14px; border-radius: 12px; background: linear-gradient(135deg,#2563eb,#1d4ed8); color: #fff; font-weight: 800; font-size: 16px; border: none; cursor: pointer; }
+.home-btn { flex: 1; padding: 14px; border-radius: 12px; background: rgba(255,255,255,0.08); color: #fff; font-weight: 800; font-size: 16px; border: 1px solid var(--border); cursor: pointer; }
+.hidden { display: none!important; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div id="screen-home">
+    <div class="home-title">
+      <div class="home-title-main">言語知識</div>
+      <div class="home-title-sub">練習アプリ　第11・12回</div>
+    </div>
+    <button class="mode-btn mode-btn-blue" onclick="showThemeSelect()">
+      <span class="mode-icon">📚</span>
+      <div><div class="mode-name">テーマ別で練習</div><div class="mode-note">主語述語・修飾語・語彙など分野ごとに学ぶ</div></div>
+    </button>
+    <button class="mode-btn mode-btn-green" onclick="showRoundSelect()">
+      <span class="mode-icon">📝</span>
+      <div><div class="mode-name">回数別で確認</div><div class="mode-note">第11・12回をテスト形式で解く</div></div>
+    </button>
+    <button class="mode-btn mode-btn-fav" id="fav-home-btn" onclick="startFavQuiz()" style="display:none">
+      <span class="mode-icon">⭐</span>
+      <div><div class="mode-name">お気に入り復習 <span class="fav-count" id="fav-home-count"></span></div><div class="mode-note">登録した問題をまとめて復習する</div></div>
+    </button>
+  </div>
+  <div id="screen-theme" class="hidden">
+    <button class="back-btn" onclick="showHome()">← もどる</button>
+    <div class="select-title">テーマを選んでください</div>
+    <div id="theme-list"></div>
+  </div>
+  <div id="screen-round" class="hidden">
+    <button class="back-btn" onclick="showHome()">← もどる</button>
+    <div class="select-title">回を選んでください</div>
+    <div id="round-list"></div>
+  </div>
+  <div id="screen-quiz" class="hidden">
+    <div class="prog-bar"><div class="prog-fill" id="prog-fill"></div></div>
+    <div class="quiz-meta">
+      <span class="badge" id="q-theme"></span>
+      <span class="counter" id="q-counter"></span>
+    </div>
+    <div class="q-box"><p class="q-text" id="q-text"></p></div>
+    <div id="options"></div>
+    <div id="exp-area" class="hidden">
+      <div class="exp-box">
+        <div class="result-tag" id="result-tag"></div>
+        <div class="exp-text" id="exp-text"></div>
+        <div class="ai-hint hidden" id="ai-hint-box"><span class="ai-hint-label">💡 ポイント</span><span id="ai-hint-text"></span></div>
+        <button class="next-btn" id="next-btn" onclick="nextQuestion()">次の問題 →</button>
+      </div>
+    </div>
+  </div>
+  <div id="screen-result" class="hidden">
+    <div class="score-box">
+      <div class="score-num" id="score-num"></div>
+      <div class="score-msg" id="score-msg"></div>
+    </div>
+    <div id="answer-list"></div>
+    <div class="result-actions">
+      <button class="retry-btn" onclick="retryQuiz()">もう一度</button>
+      <button class="home-btn" onclick="showHome()">トップへ</button>
+    </div>
+  </div>
+</div>
+<script>
+const Q = [
+  // ===== 第11回 主語・述語 =====
+  {id:'11-1-1',round:11,theme:'主語・述語',
+   question:'次の文の「主語」はどれですか？\n\n山から／おりてきた／山嵐は／腹を／すかしていた',
+   options:['山から','おりてきた','山嵐は','腹を','すかしていた'],
+   answer:2,
+   explanation:'「山嵐は」が主語。「は」がついた文節が主語になることが多い。「山嵐は＋すかしていた」が主述関係。'},
+  {id:'11-1-2',round:11,theme:'主語・述語',
+   question:'次の文の「述語」はどれですか？\n\n山から／おりてきた／山嵐は／腹を／すかしていた',
+   options:['山から','おりてきた','山嵐は','腹を','すかしていた'],
+   answer:4,
+   explanation:'「すかしていた」が述語。文末の動詞が述語になる。「山嵐は（主語）＋すかしていた（述語）」。'},
+  {id:'11-1-3',round:11,theme:'主語・述語',
+   question:'次の文の「主語」はどれですか？\n（省略されている場合は「省略」を選んでください）\n\n今日は／一日中／運動を／していたので／とても／疲れた',
+   options:['今日は','一日中','運動を','していたので','とても','疲れた','省略'],
+   answer:6,
+   explanation:'この文の主語（「私が」など）は省略されている。「今日は」は時を表す修飾語であり主語ではない。日本語では主語が省略されることが多い。'},
+  {id:'11-1-4',round:11,theme:'主語・述語',
+   question:'次の文の「述語」はどれですか？\n\n今日は／一日中／運動を／していたので／とても／疲れた',
+   options:['今日は','一日中','運動を','していたので','とても','疲れた'],
+   answer:5,
+   explanation:'「疲れた」が文末の述語。「〜ので」は理由を表す接続助詞で述語ではない。'},
+  {id:'11-1-5',round:11,theme:'主語・述語',
+   question:'次の文の「主語（文全体）」はどれですか？\n\n夕暮れが／迫る／境内には／小僧たちの／影法師だけが／ひっそりと／いびつな／穴のように／残されていた',
+   options:['夕暮れが','迫る','境内には','小僧たちの','影法師だけが','ひっそりと','いびつな','穴のように','残されていた'],
+   answer:4,
+   explanation:'文全体の主語は「影法師だけが」。「が」がついた文節が主語のサイン。「境内には」は場所の修飾語。'},
+  {id:'11-1-6',round:11,theme:'主語・述語',
+   question:'次の文の「述語（文全体）」はどれですか？\n\n夕暮れが／迫る／境内には／小僧たちの／影法師だけが／ひっそりと／いびつな／穴のように／残されていた',
+   options:['夕暮れが','迫る','境内には','小僧たちの','影法師だけが','ひっそりと','いびつな','穴のように','残されていた'],
+   answer:8,
+   explanation:'「残されていた」が文末の述語。「影法師だけが（主語）＋残されていた（述語）」が文全体の主述関係。'},
+  {id:'11-1-7',round:11,theme:'主語・述語',
+   question:'この文には文全体の主述関係以外にも主述関係がある。その「主語」はどれですか？\n\n夕暮れが／迫る／境内には／影法師だけが／残されていた',
+   options:['夕暮れが','迫る','境内には','影法師だけが','残されていた'],
+   answer:0,
+   explanation:'「夕暮れが（主語）迫る（述語）境内」という連体修飾節が埋め込まれている。「夕暮れが迫る境内」という構造で、「夕暮れが」が連体修飾節の主語。'},
+  {id:'11-1-8',round:11,theme:'主語・述語',
+   question:'この文には文全体の主述関係以外にも主述関係がある。その「述語」はどれですか？\n\n夕暮れが／迫る／境内には／影法師だけが／残されていた',
+   options:['夕暮れが','迫る','境内には','影法師だけが','残されていた'],
+   answer:1,
+   explanation:'「夕暮れが（主語）＋迫る（述語）」が連体修飾節の主述関係。「迫る」が述語で「境内」を修飾している。'},
+  {id:'11-1-9',round:11,theme:'主語・述語',
+   question:'次の文の「主語（文全体）」はどれですか？\n\n村人たちが／目撃したという／青い／空から／降ってきた／白雪姫の／毒リンゴは／いったい／誰の／手に',
+   options:['村人たちが','目撃したという','青い','空から','降ってきた','白雪姫の','毒リンゴは','いったい','誰の','手に'],
+   answer:6,
+   explanation:'文全体の主語は「毒リンゴは」。「は」がついた文節が主語。この文の述語は省略されている。'},
+  {id:'11-1-10',round:11,theme:'主語・述語',
+   question:'次の文の「述語（文全体）」はどれですか？\n（省略されている場合は「省略」を選んでください）\n\n村人たちが／目撃したという／毒リンゴは／いったい／誰の／手に',
+   options:['村人たちが','目撃したという','毒リンゴは','いったい','誰の','手に','省略'],
+   answer:6,
+   explanation:'「毒リンゴはいったい誰の手に（落ちたのか）」という文で述語は省略されている。問いかけの形で述語が省略されるケース。'},
+  {id:'11-1-11',round:11,theme:'主語・述語',
+   question:'この文には文全体の主述関係以外にも主述関係がある。その「主語」はどれですか？\n\n村人たちが／目撃したという／毒リンゴは／誰の／手に',
+   options:['村人たちが','目撃したという','毒リンゴは','誰の','手に'],
+   answer:0,
+   explanation:'「村人たちが（主語）目撃したという（述語）」という連体修飾節が埋め込まれている。「村人たちが目撃したという毒リンゴ」という構造。'},
+  {id:'11-1-12',round:11,theme:'主語・述語',
+   question:'この文には文全体の主述関係以外にも主述関係がある。その「述語」はどれですか？\n\n村人たちが／目撃したという／毒リンゴは／誰の／手に',
+   options:['村人たちが','目撃したという','毒リンゴは','誰の','手に'],
+   answer:1,
+   explanation:'「村人たちが（主語）＋目撃したという（述語）」の述語は「目撃したという」。後ろの「毒リンゴ」を修飾する連体修飾節の述語。'},
+  {id:'11-1-13',round:11,theme:'主語・述語',
+   question:'次の文の「主語」はどれですか？\n\nいつもは／おとなしい／長太郎だって／もう／だまっては／いないだろう',
+   options:['いつもは','おとなしい','長太郎だって','もう','だまっては','いないだろう'],
+   answer:2,
+   explanation:'「長太郎だって」が主語。「だって」は「も」と同じ意味で主語を示す助詞。「長太郎だって＋いないだろう」が主述関係。'},
+  {id:'11-1-14',round:11,theme:'主語・述語',
+   question:'次の文の「述語」はどれですか？\n\nいつもは／おとなしい／長太郎だって／もう／だまっては／いないだろう',
+   options:['いつもは','おとなしい','長太郎だって','もう','だまっては','いないだろう'],
+   answer:5,
+   explanation:'「いないだろう」が述語。「〜だろう」は推量を表す述語。「長太郎だって（主語）＋いないだろう（述語）」。'},
+
+  // ===== 第11回 修飾語 =====
+  {id:'11-2-1',round:11,theme:'修飾語',
+   question:'「きらきらと」はどの文節を修飾していますか？\n\nきらきらと／高い／夜空に／輝く／無数の／星は／美しかった',
+   options:['高い','夜空に','輝く','無数の','星は','美しかった'],
+   answer:2,
+   explanation:'「きらきらと輝く」がひとまとまり。副詞「きらきらと」は動詞「輝く」を修飾している。副詞は主に動詞・形容詞を修飾する。'},
+  {id:'11-2-2',round:11,theme:'修飾語',
+   question:'「高い」はどの文節を修飾していますか？\n\nきらきらと／高い／夜空に／輝く／無数の／星は／美しかった',
+   options:['きらきらと','夜空に','輝く','無数の','星は','美しかった'],
+   answer:1,
+   explanation:'「高い夜空」がひとまとまり。形容詞「高い」は直後の名詞「夜空に」を修飾している。'},
+  {id:'11-2-3',round:11,theme:'修飾語',
+   question:'「うっすらと」はどの文節を修飾していますか？\n\nやがて／山の／ふもとは／うっすらと／薄い／緑に／染まり／村人たちに／春の／訪れを／知らせるだろう',
+   options:['山の','ふもとは','薄い','緑に','染まり','村人たちに','訪れを','知らせるだろう'],
+   answer:4,
+   explanation:'「うっすらと染まり」がひとまとまり。副詞「うっすらと」は動詞「染まり」を修飾している。'},
+  {id:'11-2-4',round:11,theme:'修飾語',
+   question:'「間もなく」はどの文節を修飾していますか？\n\nこの／さびしい／村にも／間もなく／巡礼の／人々が／訪れ／神の／降臨を／告げるだろう',
+   options:['さびしい','村にも','巡礼の','人々が','訪れ','神の','告げるだろう'],
+   answer:4,
+   explanation:'「間もなく訪れ」がひとまとまり。副詞「間もなく」は動詞「訪れ」を修飾している。'},
+
+  // ===== 第11回 文の組み立て =====
+  {id:'11-3-1',round:11,theme:'文の組み立て',
+   question:'「早くおしゃべりせずに問題を解きなさい」\nこの文の問題点はどれですか？',
+   options:[
+     'ア：主語と述語の表現が対応していない（主述のねじれ）',
+     'イ：否定の言葉が二つあるのでわかりにくい',
+     'ウ：副詞の位置が不適切なため、文の意味がとりにくい'
+   ],
+   answer:2,
+   explanation:'「早く」が「おしゃべりせずに」と「問題を解きなさい」のどちらにかかるかわかりにくい。副詞の位置が問題。正しくは「おしゃべりせずに早く問題を解きなさい」。'},
+  {id:'11-3-2',round:11,theme:'文の組み立て',
+   question:'「ぼくの希望は、社会に出たら人々のためにつくすことのできる職業に就こうと思っています」\nこの文の問題点はどれですか？',
+   options:[
+     'ア：主語と述語の表現が対応していない（主述のねじれ）',
+     'イ：否定の言葉が二つあるのでわかりにくい',
+     'ウ：副詞の位置が不適切なため、文の意味がとりにくい'
+   ],
+   answer:0,
+   explanation:'主語「ぼくの希望は」に対して述語は「〜職業です」が正しい。「〜思っています」では主述がねじれている。正しくは「ぼくの希望は〜職業に就くことです」。'},
+
+  // ===== 第11回 語彙 =====
+  {id:'11-4-1',round:11,theme:'語彙',
+   question:'「この映画は展開がありきたりでつまらない」\n「ありきたり」の意味はどれですか？',
+   options:['ある気分や状態を引き起こす','ずうずうしいさま','気力を完全になくす','うれしくて動作がはずむさま','ありふれていること','物事の関係がぎこちないさま','見つけるのが早い'],
+   answer:4,
+   explanation:'「ありきたり」は「よくある・平凡だ・目新しさがない」という意味。「元からあること」が語源。「ありきたりな展開」のように使う。'},
+  {id:'11-4-2',round:11,theme:'語彙',
+   question:'「絶望にうちひしがれている」\n「うちひしがれる」の意味はどれですか？',
+   options:['ある気分や状態を引き起こす','ずうずうしいさま','気力を完全になくす','うれしくて動作がはずむさま','ありふれていること','物事の関係がぎこちないさま','見つけるのが早い'],
+   answer:2,
+   explanation:'「うちひしがれる」は打ち砕かれて気力を完全になくすこと。「絶望にうちひしがれる」で「絶望のあまり立ち直れなくなる」という意味。'},
+  {id:'11-4-3',round:11,theme:'語彙',
+   question:'「四谷君はいそいそと帰宅した」\n「いそいそ」の意味はどれですか？',
+   options:['ある気分や状態を引き起こす','ずうずうしいさま','気力を完全になくす','うれしくて動作がはずむさま','ありふれていること','物事の関係がぎこちないさま','見つけるのが早い'],
+   answer:3,
+   explanation:'「いそいそ」はうれしいことがあって動作が弾んでいる様子。父親が帰ってくるのがうれしくて動作がはずんでいる状態を表す。'},
+  {id:'11-4-4',round:11,theme:'語彙',
+   question:'「冷蔵庫のプリンを妹にめざとく見つけられてしまった」\n「めざとく」の意味はどれですか？',
+   options:['ある気分や状態を引き起こす','ずうずうしいさま','気力を完全になくす','うれしくて動作がはずむさま','ありふれていること','物事の関係がぎこちないさま','見つけるのが早い'],
+   answer:6,
+   explanation:'「めざとい」は目が鋭くてすぐに見つけること。「めざとく見つける」で「すぐに見つけてしまう」という意味。'},
+  {id:'11-4-5',round:11,theme:'語彙',
+   question:'「開き直るなんてふてぶてしいやつだ」\n「ふてぶてしい」の意味はどれですか？',
+   options:['ある気分や状態を引き起こす','ずうずうしいさま','気力を完全になくす','うれしくて動作がはずむさま','ありふれていること','物事の関係がぎこちないさま','見つけるのが早い'],
+   answer:1,
+   explanation:'「ふてぶてしい」は図々しく反省のないさま。注意されても開き直るような態度を表す。'},
+  {id:'11-4-6',round:11,theme:'語彙',
+   question:'「彼とはぎくしゃくした関係が続いている」\n「ぎくしゃく」の意味はどれですか？',
+   options:['ある気分や状態を引き起こす','ずうずうしいさま','気力を完全になくす','うれしくて動作がはずむさま','ありふれていること','物事の関係がぎこちないさま','見つけるのが早い'],
+   answer:5,
+   explanation:'「ぎくしゃく」は物事の関係や動きがうまくいかずぎこちないさま。大喧嘩した後の人間関係がうまくいっていない状況に使う。'},
+  {id:'11-4-7',round:11,theme:'語彙',
+   question:'「吐き気をもよおした」\n「もよおす」の意味はどれですか？',
+   options:['ある気分や状態を引き起こす','ずうずうしいさま','気力を完全になくす','うれしくて動作がはずむさま','ありふれていること','物事の関係がぎこちないさま','見つけるのが早い'],
+   answer:0,
+   explanation:'「もよおす」は「ある気分や状態を引き起こす」という意味。「吐き気をもよおす」で「吐き気が起きてくる」。行事を「もよおす（催す）」も同じ語。'},
+  {id:'11-5-1',round:11,theme:'語彙',
+   question:'「目上の人にはへりくだった態度をとらなくてはならない」\n「へりくだる」の意味はどれですか？',
+   options:['軽蔑した','謙遜した','従順な','強気な'],
+   answer:1,
+   explanation:'「へりくだる」は自分を低くして相手を立てること＝謙遜する。「へりくだった態度」で「謙虚で丁寧な態度」という意味。'},
+  {id:'11-5-2',round:11,theme:'語彙',
+   question:'「国民は不自由な生活を強いられた」\n「強いられた」の意味はどれですか？',
+   options:['強制された','与えられた','奪われた','受け入れた'],
+   answer:0,
+   explanation:'「強いる」は無理やりやらせること。「強いられた」で「強制された・無理やりさせられた」という意味。'},
+  {id:'11-5-3',round:11,theme:'語彙',
+   question:'「ぬかりなく準備をする」\n「ぬかりなく」の意味はどれですか？',
+   options:['不満がない','時間的余裕がない','不備がない','他人に頼らない'],
+   answer:2,
+   explanation:'「ぬかり」は手抜かり・手落ちのこと。「ぬかりなく」で「手落ちなく・完璧に」という意味。'},
+
+  // ===== 第12回 主語・述語 =====
+  {id:'12-1-1',round:12,theme:'主語・述語',
+   question:'次の文の「文全体の主語」はどれですか？\n\n夕暮れが／迫る／境内には／小僧たちの／影法師だけが／ひっそりと／いびつな／穴のように／残されていた',
+   options:['夕暮れが','迫る','境内には','小僧たちの','影法師だけが','ひっそりと','いびつな','穴のように','残されていた'],
+   answer:4,
+   explanation:'文全体の主語は「影法師だけが」。「が」がついた文節が主語のサイン。「夕暮れが迫る」は連体修飾節の中の主述関係で文全体の主語ではない。'},
+  {id:'12-1-2',round:12,theme:'主語・述語',
+   question:'次の文の「文全体の述語」はどれですか？\n\n夕暮れが／迫る／境内には／小僧たちの／影法師だけが／ひっそりと／いびつな／穴のように／残されていた',
+   options:['夕暮れが','迫る','境内には','小僧たちの','影法師だけが','ひっそりと','いびつな','穴のように','残されていた'],
+   answer:8,
+   explanation:'「残されていた」が文末の述語。「影法師だけが（主語）＋残されていた（述語）」が文全体の主述関係。'},
+  {id:'12-1-3',round:12,theme:'主語・述語',
+   question:'この文の「文全体以外の主述関係」の主語はどれですか？\n\n夕暮れが／迫る／境内には／影法師だけが／残されていた',
+   options:['夕暮れが','迫る','境内には','影法師だけが','残されていた'],
+   answer:0,
+   explanation:'「夕暮れが（主語）迫る（述語）境内」という連体修飾節が埋め込まれている。「夕暮れが」が連体修飾節の主語。'},
+  {id:'12-1-4',round:12,theme:'主語・述語',
+   question:'この文の「文全体以外の主述関係」の述語はどれですか？\n\n夕暮れが／迫る／境内には／影法師だけが／残されていた',
+   options:['夕暮れが','迫る','境内には','影法師だけが','残されていた'],
+   answer:1,
+   explanation:'「夕暮れが（主語）＋迫る（述語）」が連体修飾節の主述関係。「迫る」が述語で「境内」を修飾している。'},
+  {id:'12-1-5',round:12,theme:'主語・述語',
+   question:'「夕暮れが迫る境内には〜残されていた」を三つの意味のまとまりに分けると？\n\nＡ：アイ／ウエオカ／キクケ\nＢ：アイウ／エオカ／キクケ\nＣ：アイウ／エオ／カキクケ\nＤ：アイウエ／オカキ／クケ\n\nア夕暮れが　イ迫る　ウ境内には\nエ小僧たちの　オ影法師だけが　カひっそりと\nキいびつな　ク穴のように　ケ残されていた',
+   options:['Ａ','Ｂ','Ｃ','Ｄ'],
+   answer:1,
+   explanation:'「アイウ（夕暮れが迫る境内には）」「エオカ（小僧たちの影法師だけがひっそりと）」「キクケ（いびつな穴のように残されていた）」の三まとまりがＢ。'},
+  {id:'12-2-1',round:12,theme:'主語・述語',
+   question:'次の文の「文全体の主語」はどれですか？\n\n村人たちが／目撃したという／青い／空から／降ってきた／白雪姫の／毒リンゴは／いったい／誰の／手に',
+   options:['村人たちが','目撃したという','青い','空から','降ってきた','白雪姫の','毒リンゴは','いったい','誰の','手に'],
+   answer:6,
+   explanation:'文全体の主語は「毒リンゴは」。「は」がついた文節が主語。この文の述語は省略されている。'},
+  {id:'12-2-2',round:12,theme:'主語・述語',
+   question:'次の文の「文全体の述語」はどれですか？\n（省略されている場合は「省略」を選んでください）\n\n村人たちが／目撃したという／毒リンゴは／いったい／誰の／手に',
+   options:['村人たちが','目撃したという','毒リンゴは','いったい','誰の','手に','省略'],
+   answer:6,
+   explanation:'「毒リンゴはいったい誰の手に（落ちたのか）」という文で述語は省略されている。問いかけの形で述語が省略されるケース。'},
+  {id:'12-2-3',round:12,theme:'主語・述語',
+   question:'この文の「文全体以外の主述関係」の主語はどれですか？\n\n村人たちが／目撃したという／毒リンゴは／誰の／手に',
+   options:['村人たちが','目撃したという','毒リンゴは','誰の','手に'],
+   answer:0,
+   explanation:'「村人たちが（主語）目撃したという（述語）」という連体修飾節が埋め込まれている。「村人たちが目撃したという毒リンゴ」という構造。'},
+  {id:'12-2-4',round:12,theme:'主語・述語',
+   question:'この文の「文全体以外の主述関係」の述語はどれですか？\n\n村人たちが／目撃したという／毒リンゴは／誰の／手に',
+   options:['村人たちが','目撃したという','毒リンゴは','誰の','手に'],
+   answer:1,
+   explanation:'「村人たちが（主語）＋目撃したという（述語）」の述語は「目撃したという」。後ろの「毒リンゴ」を修飾する連体修飾節の述語。'},
+  {id:'12-2-5',round:12,theme:'主語・述語',
+   question:'「多くの村人たちが〜毒リンゴは〜誰の手に」を四つの意味のまとまりに分けると？\n\nＡ：アイ／ウエオカキ／クケ／コサ\nＢ：アイウ／エオカ／キク／ケコサ\nＣ：アイウ／エオカキ／ク／ケコサ\nＤ：アイウエオ／カキ／クケ／コサ\n\nア多くの　イ村人たちが　ウ目撃したという\nエ青い　オ空から　カ降ってきた\nキ白雪姫の　ク毒リンゴは　ケいったい　コ誰の　サ手に',
+   options:['Ａ','Ｂ','Ｃ','Ｄ'],
+   answer:1,
+   explanation:'「アイウ（多くの村人たちが目撃したという）」「エオカ（青い空から降ってきた）」「キク（白雪姫の毒リンゴは）」「ケコサ（いったい誰の手に）」の四まとまりがＢ。'},
+
+  // ===== 第12回 語彙・慣用句 =====
+  {id:'12-3-1',round:12,theme:'語彙・慣用句',
+   question:'次の二文に共通してあてはまる言葉はどれですか？\n\n・効果は□が知れているのだから、やめておこう\n・□をくくっていると、後で痛い目を見るよ',
+   options:['色','高','図','間','恩'],
+   answer:1,
+   explanation:'「高が知れている」＝たいしたことはない。「高をくくる」＝たいしたことないと甘く見る。両方に「高」が入る。'},
+  {id:'12-3-2',round:12,theme:'語彙・慣用句',
+   question:'次の二文に共通してあてはまる言葉はどれですか？\n\n・今のうちにあいつに□を売っておけば後で役に立つだろう\n・あの人は何かと□に着せるような態度を取ってくる',
+   options:['色','高','図','間','恩'],
+   answer:4,
+   explanation:'「恩を売る」＝後で見返りを期待して親切にする。「恩に着せる」＝してあげたことを押しつける。両方に「恩」が入る。'},
+  {id:'12-3-3',round:12,theme:'語彙・慣用句',
+   question:'次の二文に共通してあてはまる言葉はどれですか？\n\n・いつも□が抜けたタイミングで発言してしまう\n・彼の発言はとにかく□が悪いんだが、よく聞くと本質を突いている',
+   options:['色','高','図','間','恩'],
+   answer:3,
+   explanation:'「間が抜ける」＝ぼんやりしていてタイミングがずれている。「間が悪い」＝タイミングが悪い。両方に「間」が入る。'},
+  {id:'12-4-1',round:12,theme:'語彙・慣用句',
+   question:'「野良猫に餌をあげてたら裏庭をトイレにされた。まさに□ってやつだよ」\n□にあてはまる慣用句はどれですか？',
+   options:['後の祭り','けがの功名','三日坊主','うつつを抜かす','つぶぞろい','恩を仇で返す'],
+   answer:5,
+   explanation:'「恩を仇で返す」は親切にしてもらったのに逆に害を与えること。餌をあげた（恩）のに庭を汚された（仇）という状況にぴったり。'},
+  {id:'12-4-2',round:12,theme:'語彙・慣用句',
+   question:'「君がゲームに□時間に、周りの子は勉強してるんだろうね」\n□にあてはまる慣用句はどれですか？',
+   options:['後の祭り','けがの功名','三日坊主','うつつを抜かす','つぶぞろい','恩を仇で返す'],
+   answer:3,
+   explanation:'「うつつを抜かす」は夢中になって他のことを忘れること。「ゲームにうつつを抜かす時間に」で「ゲームに夢中になっている間に」という意味。'},
+  {id:'12-4-3',round:12,theme:'語彙・慣用句',
+   question:'「新入部員は全員剣道経験者で体力もある。□だな、君たちより強そうだぜ」\n□にあてはまる慣用句はどれですか？',
+   options:['後の祭り','けがの功名','三日坊主','うつつを抜かす','つぶぞろい','恩を仇で返す'],
+   answer:4,
+   explanation:'「つぶぞろい」は粒が均一にそろっていること、転じてメンバー全員が優秀なこと。'},
+  {id:'12-4-4',round:12,theme:'語彙・慣用句',
+   question:'「大口叩いて日記を始めたのに二日で終わるんじゃ、□にもなりゃしないじゃないか」\n□にあてはまる慣用句はどれですか？',
+   options:['後の祭り','けがの功名','三日坊主','うつつを抜かす','つぶぞろい','恩を仇で返す'],
+   answer:2,
+   explanation:'「三日坊主」は何事も長続きしないこと。二日しか続かなかったという状況にぴったり。'},
+  {id:'12-4-5',round:12,theme:'語彙・慣用句',
+   question:'「試合後に強がってみても、□だよ」\n□にあてはまる慣用句はどれですか？',
+   options:['後の祭り','けがの功名','三日坊主','うつつを抜かす','つぶぞろい','恩を仇で返す'],
+   answer:0,
+   explanation:'「後の祭り」はもう手遅れで何をしても無駄なこと。試合が終わった後に強がっても意味がない状況にぴったり。'},
+];
+
+const THEMES = ['主語・述語','修飾語','文の組み立て','語彙','語彙・慣用句'];
+const ROUNDS = [11,12];
+const STORAGE_KEY = 'gengo11_favorites';
+let questions=[], idx=0, score=0, answers=[], lastFilter=null, lastMode=null;
+
+function loadFavs(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');}catch{return[];}}
+function saveFavs(ids){localStorage.setItem(STORAGE_KEY,JSON.stringify(ids));}
+function isFav(id){return loadFavs().includes(id);}
+function toggleFav(id){
+  let f=loadFavs();
+  f=f.includes(id)?f.filter(x=>x!==id):[...f,id];
+  saveFavs(f); updateFavHomeBtn(); return f.includes(id);
+}
+function updateFavHomeBtn(){
+  const f=loadFavs(), btn=document.getElementById('fav-home-btn'), cnt=document.getElementById('fav-home-count');
+  if(f.length>0){btn.style.display='flex';cnt.textContent=f.length+'問';}else{btn.style.display='none';}
+}
+function startFavQuiz(){
+  const f=loadFavs();
+  if(!f.length){alert('お気に入りがまだありません');return;}
+  lastFilter='fav';lastMode='fav';
+  questions=shuffle(Q.filter(q=>f.includes(q.id)));
+  idx=0;score=0;answers=[];renderQ();showScreen('quiz');
+}
+function shuffle(a){return[...a].sort(()=>Math.random()-.5);}
+function showScreen(id){
+  ['home','theme','round','quiz','result'].forEach(s=>document.getElementById('screen-'+s).classList.add('hidden'));
+  document.getElementById('screen-'+id).classList.remove('hidden');
+}
+function showHome(){updateFavHomeBtn();showScreen('home');}
+function showThemeSelect(){
+  document.getElementById('theme-list').innerHTML=THEMES.map(t=>{
+    const c=Q.filter(q=>q.theme===t).length;
+    return`<button class="select-btn" onclick="startQuiz('${t}','theme')"><span class="select-name">${t}</span><span class="select-count">${c}問</span></button>`;
+  }).join('');showScreen('theme');
+}
+function showRoundSelect(){
+  document.getElementById('round-list').innerHTML=ROUNDS.map(r=>{
+    const c=Q.filter(q=>q.round===r).length;
+    return`<button class="select-btn" onclick="startQuiz(${r},'round')"><span class="select-name">第${r}回</span><span class="select-count">${c}問</span></button>`;
+  }).join('');showScreen('round');
+}
+function startQuiz(filter,mode){
+  lastFilter=filter;lastMode=mode;
+  questions=shuffle(Q.filter(q=>mode==='theme'?q.theme===filter:q.round===filter));
+  idx=0;score=0;answers=[];renderQ();showScreen('quiz');
+}
+function renderQ(){
+  const q=questions[idx];
+  document.getElementById('prog-fill').style.width=(idx/questions.length*100)+'%';
+  document.getElementById('q-theme').textContent=q.theme;
+  document.getElementById('q-counter').textContent=(idx+1)+' / '+questions.length;
+  document.getElementById('q-text').textContent=q.question;
+  document.getElementById('exp-area').classList.add('hidden');
+  document.getElementById('ai-hint-box').classList.add('hidden');
+  document.getElementById('ai-hint-text').textContent='';
+  document.getElementById('options').innerHTML=q.options.map((o,i)=>
+    `<button class="opt-btn" id="opt-${i}" onclick="selectAns(${i})"><span class="opt-num">${i+1}</span>${o}</button>`
+  ).join('');
+  document.getElementById('next-btn').textContent=(idx+1>=questions.length)?'結果を見る →':'次の問題 →';
+}
+function selectAns(i){
+  const q=questions[idx], ok=i===q.answer;
+  if(ok)score++;
+  answers.push({question:q,userAnswer:i,correct:ok});
+  q.options.forEach((_,j)=>{
+    const b=document.getElementById('opt-'+j);b.disabled=true;
+    if(j===q.answer)b.classList.add('opt-ok');
+    else if(j===i)b.classList.add('opt-ng');
+    else b.classList.add('opt-dim');
+  });
+  document.getElementById('result-tag').textContent=ok?'✅ 正解！':'❌ 不正解　正解：'+q.options[q.answer];
+  document.getElementById('exp-text').textContent=q.explanation;
+  document.getElementById('exp-area').classList.remove('hidden');
+  document.getElementById('prog-fill').style.width=((idx+1)/questions.length*100)+'%';
+  fetchHint(q);
+}
+async function fetchHint(q){
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:200,
+        messages:[{role:'user',content:`小学5年生向け国語の解説です。以下の解説をもとに、子どもにわかりやすく30〜50字で「覚え方のポイント」を一言添えてください。解説：${q.explanation}`}]})});
+    const d=await r.json(), h=d.content?.[0]?.text;
+    if(h){document.getElementById('ai-hint-text').textContent=h;document.getElementById('ai-hint-box').classList.remove('hidden');}
+  }catch(e){}
+}
+function nextQuestion(){
+  if(idx+1>=questions.length){showResult();return;}
+  idx++;renderQ();
+}
+function showResult(){
+  document.getElementById('score-num').innerHTML=score+'<span class="score-total">/'+questions.length+'</span>';
+  const p=score/questions.length;
+  document.getElementById('score-msg').textContent=
+    score===questions.length?'🎉 満点！すばらしい！':p>=0.8?'👏 よくできました！':p>=0.6?'😊 もう少し！':'📖 もう一度挑戦しよう';
+  document.getElementById('answer-list').innerHTML=answers.map(a=>{
+    const f=isFav(a.question.id);
+    const w=!a.correct?'<span class="res-wrong">（あなた：'+a.question.options[a.userAnswer]+'）</span>':'';
+    return`<div class="res-item" style="border-left-color:${a.correct?'#22c55e':'#ef4444'}">
+      <div class="res-q">${a.question.question.split('\n')[0]}</div>
+      <div class="res-a"><span>${a.correct?'✅':'❌'} ${a.question.options[a.question.answer]}${w}</span>
+      <button class="fav-btn" id="fav-${a.question.id}" onclick="handleFav('${a.question.id}')">${f?'⭐':'☆'}</button></div></div>`;
+  }).join('');
+  updateFavHomeBtn();showScreen('result');
+}
+function handleFav(id){
+  const n=toggleFav(id);
+  const b=document.getElementById('fav-'+id);if(b)b.textContent=n?'⭐':'☆';
+}
+function retryQuiz(){startQuiz(lastFilter,lastMode);}
+updateFavHomeBtn();showHome();
+</script>
+</body>
+</html>
