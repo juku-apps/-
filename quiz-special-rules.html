@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>算数スペシャルルール クイズ</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Kaisei+Decol:wght@400;700&family=M+PLUS+Rounded+1c:wght@400;500;700;800&display=swap');
+
+  :root {
+    --teal: #00b4c8;
+    --teal-dark: #0090a0;
+    --teal-light: #e0f7fa;
+    --coral: #ff6b6b;
+    --coral-dark: #e04a4a;
+    --green: #4caf87;
+    --green-dark: #3a9970;
+    --gray-light: #f4f8f9;
+    --text: #1a3a3a;
+    --shadow: 0 4px 20px rgba(0,180,200,0.15);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'M PLUS Rounded 1c', sans-serif;
+    background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 50%, #e8f5e9 100%);
+    min-height: 100vh;
+    color: var(--text);
+    overflow-x: hidden;
+  }
+
+  .header {
+    background: var(--teal);
+    padding: 16px 20px;
+    text-align: center;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.15);
+    position: relative;
+  }
+  .header h1 {
+    font-family: 'Kaisei Decol', serif;
+    font-size: 1.4rem; color: white;
+    letter-spacing: 0.05em;
+    text-shadow: 1px 2px 0 rgba(0,0,0,0.15);
+  }
+  .header .subtitle { font-size: 0.75rem; color: rgba(255,255,255,0.85); margin-top: 2px; }
+  .stars-bg { position: absolute; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none; overflow: hidden; }
+  .star { position: absolute; width: 6px; height: 6px; background: rgba(255,255,255,0.3); border-radius: 50%; animation: twinkle 3s infinite; }
+  @keyframes twinkle { 0%,100%{opacity:0.2;transform:scale(1)} 50%{opacity:0.8;transform:scale(1.3)} }
+
+  .screen { display: none; padding: 20px 16px 32px; max-width: 600px; margin: 0 auto; }
+  .screen.active { display: block; animation: fadeIn 0.35s ease; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+
+  .score-bar { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 16px; }
+  .score-badge {
+    background: white; border-radius: 20px; padding: 6px 16px;
+    font-size: 0.85rem; font-weight: 700; box-shadow: var(--shadow);
+    display: flex; align-items: center; gap: 6px;
+  }
+  .score-badge.correct { color: var(--green-dark); border: 2px solid var(--green); }
+  .score-badge.wrong { color: var(--coral-dark); border: 2px solid var(--coral); }
+  .score-badge.retry { color: var(--teal-dark); border: 2px solid var(--teal); }
+
+  .section-title {
+    font-size: 1.1rem; font-weight: 800; color: var(--teal-dark);
+    text-align: center; margin-bottom: 16px;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .theme-grid { display: flex; flex-direction: column; gap: 12px; }
+  .theme-card {
+    background: white; border-radius: 16px; padding: 16px 20px;
+    box-shadow: var(--shadow); cursor: pointer;
+    border: 3px solid transparent; transition: all 0.2s;
+    display: flex; align-items: center; gap: 14px;
+    position: relative; overflow: hidden;
+  }
+  .theme-card:hover { transform: translateY(-2px); border-color: var(--teal); box-shadow: 0 8px 28px rgba(0,180,200,0.25); }
+  .theme-card:active { transform: scale(0.98); }
+  .theme-card .icon { font-size: 2rem; flex-shrink: 0; }
+  .theme-card .info { flex: 1; }
+  .theme-card .name { font-size: 1rem; font-weight: 800; color: var(--text); }
+  .theme-card .desc { font-size: 0.75rem; color: #666; margin-top: 2px; }
+  .theme-card .rule-badge { background: var(--teal); color: white; border-radius: 10px; padding: 2px 10px; font-size: 0.7rem; font-weight: 700; }
+  .theme-card .count-badge { background: var(--teal-light); color: var(--teal-dark); border-radius: 10px; padding: 2px 10px; font-size: 0.7rem; font-weight: 700; margin-top: 4px; display: inline-block; }
+  .theme-card.has-retry { border-color: #ffa726; }
+  .theme-card.has-retry .retry-dot {
+    position: absolute; top: 10px; right: 10px;
+    width: 10px; height: 10px; background: #ffa726; border-radius: 50%;
+    animation: pulse 1.5s infinite;
+  }
+  @keyframes pulse { 0%,100%{transform:scale(1);opacity:1} 50%{transform:scale(1.4);opacity:0.7} }
+
+  .btn-retry-all {
+    width: 100%; padding: 14px;
+    background: linear-gradient(135deg, #ffa726, #ff7043);
+    border: none; border-radius: 14px;
+    color: white; font-family: inherit; font-size: 1rem; font-weight: 800;
+    cursor: pointer; box-shadow: 0 4px 16px rgba(255,112,67,0.4);
+    transition: all 0.2s; margin-top: 4px;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .btn-retry-all:hover { transform: translateY(-2px); }
+  .btn-retry-all:active { transform: scale(0.97); }
+
+  .quiz-header { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+  .btn-back {
+    background: white; border: 2px solid var(--teal);
+    border-radius: 10px; padding: 6px 12px;
+    color: var(--teal-dark); font-family: inherit; font-size: 0.85rem; font-weight: 700;
+    cursor: pointer; transition: all 0.2s; flex-shrink: 0;
+  }
+  .btn-back:hover { background: var(--teal); color: white; }
+  .progress-wrap { flex: 1; }
+  .progress-label { font-size: 0.75rem; color: #666; margin-bottom: 4px; display: flex; justify-content: space-between; }
+  .progress-bar { height: 8px; background: #ddd; border-radius: 4px; overflow: hidden; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--teal), var(--teal-dark)); border-radius: 4px; transition: width 0.4s ease; }
+
+  .theme-label {
+    background: var(--teal); color: white;
+    border-radius: 10px; padding: 4px 14px;
+    font-size: 0.8rem; font-weight: 700;
+    text-align: center; margin-bottom: 16px; display: inline-block;
+  }
+
+  .question-card {
+    background: white; border-radius: 20px;
+    padding: 24px 20px; box-shadow: 0 6px 28px rgba(0,0,0,0.1);
+    margin-bottom: 16px; border-top: 5px solid var(--teal);
+  }
+  .question-number { font-size: 0.75rem; color: var(--teal); font-weight: 700; margin-bottom: 8px; }
+  .question-text { font-size: 1.15rem; font-weight: 700; line-height: 1.7; color: var(--text); }
+
+  /* 選択式 */
+  .choices { display: flex; flex-direction: column; gap: 10px; }
+  .choice-btn {
+    background: var(--gray-light);
+    border: 3px solid transparent;
+    border-radius: 14px; padding: 14px 18px;
+    font-family: inherit; font-size: 1rem; font-weight: 700;
+    color: var(--text); cursor: pointer; transition: all 0.18s; text-align: left;
+  }
+  .choice-btn:hover:not(:disabled) { border-color: var(--teal); background: var(--teal-light); }
+  .choice-btn:active:not(:disabled) { transform: scale(0.98); }
+  .choice-btn.correct { background: #e8f5e9; border-color: var(--green); color: var(--green-dark); }
+  .choice-btn.wrong { background: #ffebee; border-color: var(--coral); color: var(--coral-dark); }
+  .choice-btn.reveal { background: #e8f5e9; border-color: var(--green); color: var(--green-dark); }
+  .choice-btn:disabled { cursor: default; }
+
+  /* 数字入力式 */
+  .input-area { display: flex; flex-direction: column; gap: 10px; }
+  .input-row { display: flex; gap: 10px; align-items: stretch; }
+  .answer-input {
+    flex: 1; padding: 14px 16px;
+    font-family: inherit; font-size: 1.4rem; font-weight: 800;
+    border: 3px solid #ddd; border-radius: 14px;
+    color: var(--text); background: white;
+    transition: border-color 0.2s; outline: none;
+    text-align: center; min-width: 0;
+    -webkit-appearance: none; appearance: none;
+  }
+  .answer-input:focus { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(0,180,200,0.15); }
+  .answer-input.correct { border-color: var(--green); background: #e8f5e9; color: var(--green-dark); }
+  .answer-input.wrong { border-color: var(--coral); background: #ffebee; color: var(--coral-dark); }
+  .answer-input:disabled { cursor: default; }
+
+  .btn-submit {
+    padding: 14px 20px;
+    background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+    border: none; border-radius: 14px;
+    color: white; font-family: inherit; font-size: 1rem; font-weight: 800;
+    cursor: pointer; transition: all 0.2s;
+    box-shadow: 0 4px 14px rgba(0,180,200,0.35);
+    white-space: nowrap; flex-shrink: 0;
+  }
+  .btn-submit:hover { transform: translateY(-1px); }
+  .btn-submit:active { transform: scale(0.97); }
+  .btn-submit:disabled { opacity: 0.4; cursor: default; transform: none; box-shadow: none; }
+
+  .correct-answer-box {
+    background: #fff3e0; border: 2px solid #ffa726;
+    border-radius: 12px; padding: 10px 16px;
+    font-size: 0.95rem; font-weight: 700; color: #bf360c;
+    display: none;
+  }
+
+  .feedback-box {
+    border-radius: 14px; padding: 14px 18px;
+    font-size: 0.9rem; font-weight: 700; line-height: 1.6;
+    margin-top: 12px; display: none;
+    animation: popIn 0.25s ease;
+  }
+  @keyframes popIn { from{transform:scale(0.9);opacity:0} to{transform:scale(1);opacity:1} }
+  .feedback-box.correct { background: #e8f5e9; color: var(--green-dark); border: 2px solid var(--green); }
+  .feedback-box.wrong { background: #ffebee; color: var(--coral-dark); border: 2px solid var(--coral); }
+
+  .btn-next {
+    width: 100%; padding: 14px;
+    background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+    border: none; border-radius: 14px;
+    color: white; font-family: inherit; font-size: 1rem; font-weight: 800;
+    cursor: pointer; box-shadow: 0 4px 16px rgba(0,180,200,0.4);
+    transition: all 0.2s; margin-top: 14px; display: none;
+  }
+  .btn-next:hover { transform: translateY(-2px); }
+
+  .result-card {
+    background: white; border-radius: 24px;
+    padding: 28px 24px; box-shadow: var(--shadow);
+    text-align: center; margin-bottom: 20px;
+  }
+  .result-emoji { font-size: 4rem; margin-bottom: 12px; }
+  .result-title { font-family: 'Kaisei Decol', serif; font-size: 1.6rem; font-weight: 700; color: var(--teal-dark); margin-bottom: 8px; }
+  .result-score { font-size: 2.5rem; font-weight: 800; color: var(--teal); margin: 8px 0; }
+  .result-sub { font-size: 0.9rem; color: #666; }
+  .result-detail { margin-top: 16px; display: flex; gap: 12px; justify-content: center; }
+  .pill { border-radius: 20px; padding: 6px 18px; font-size: 0.85rem; font-weight: 700; }
+  .pill.c { background: #e8f5e9; color: var(--green-dark); }
+  .pill.w { background: #ffebee; color: var(--coral-dark); }
+
+  .retry-list h3 { font-size: 0.95rem; font-weight: 800; color: var(--coral-dark); margin-bottom: 10px; }
+  .retry-item {
+    background: #fff8f8; border-radius: 12px; padding: 10px 14px;
+    margin-bottom: 8px; font-size: 0.85rem; border-left: 4px solid var(--coral); line-height: 1.6;
+  }
+  .retry-item .q { color: #666; }
+  .retry-item .a { color: var(--coral-dark); font-weight: 700; margin-top: 2px; }
+
+  .btn-group { display: flex; flex-direction: column; gap: 10px; }
+  .btn-primary {
+    width: 100%; padding: 14px;
+    background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+    border: none; border-radius: 14px;
+    color: white; font-family: inherit; font-size: 1rem; font-weight: 800;
+    cursor: pointer; box-shadow: 0 4px 16px rgba(0,180,200,0.35); transition: all 0.2s;
+  }
+  .btn-primary:hover { transform: translateY(-2px); }
+  .btn-secondary {
+    width: 100%; padding: 12px;
+    background: white; border: 3px solid var(--teal);
+    border-radius: 14px;
+    color: var(--teal-dark); font-family: inherit; font-size: 0.95rem; font-weight: 800;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .btn-secondary:hover { background: var(--teal-light); }
+
+  .confetti-container { position: fixed; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none; z-index: 9999; overflow: hidden; }
+  .confetti-piece { position: absolute; top: -20px; border-radius: 2px; animation: fall linear forwards; }
+  @keyframes fall { to { transform: translateY(110vh) rotate(720deg); opacity: 0; } }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="stars-bg" id="starsContainer"></div>
+  <h1>🏆 算数スペシャルルール クイズ</h1>
+  <div class="subtitle">テーマを選んで力だめし！</div>
+</div>
+
+<!-- THEME SELECT -->
+<div class="screen active" id="screenSelect">
+  <div class="score-bar" id="globalScoreBar" style="display:none">
+    <div class="score-badge correct">✅ 正解 <span id="totalCorrect">0</span></div>
+    <div class="score-badge wrong">❌ 不正解 <span id="totalWrong">0</span></div>
+    <div class="score-badge retry">🔁 解き直し <span id="totalRetry">0</span></div>
+  </div>
+  <div class="section-title">📚 テーマを選ぼう</div>
+  <div class="theme-grid" id="themeGrid"></div>
+</div>
+
+<!-- QUIZ -->
+<div class="screen" id="screenQuiz">
+  <div class="quiz-header">
+    <button class="btn-back" onclick="goToSelect()">← もどる</button>
+    <div class="progress-wrap">
+      <div class="progress-label">
+        <span id="progressText">1 / 10</span>
+        <span id="progressPercent">0%</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    </div>
+  </div>
+  <div class="theme-label" id="quizThemeLabel"></div>
+  <div class="question-card">
+    <div class="question-number" id="questionNumber">問題 1</div>
+    <div class="question-text" id="questionText"></div>
+  </div>
+  <!-- 選択式 -->
+  <div class="choices" id="choicesContainer" style="display:none"></div>
+  <!-- 数字入力式 -->
+  <div class="input-area" id="inputArea" style="display:none">
+    <div class="input-row">
+      <input type="text" inputmode="decimal" class="answer-input" id="answerInput" placeholder="数字を入力" autocomplete="off" autocorrect="off" spellcheck="false">
+      <button class="btn-submit" id="btnSubmit" onclick="submitAnswer()">こたえる</button>
+    </div>
+    <div class="correct-answer-box" id="correctAnswerBox"></div>
+  </div>
+  <div class="feedback-box" id="feedbackBox"></div>
+  <button class="btn-next" id="btnNext" onclick="nextQuestion()">つぎへ →</button>
+</div>
+
+<!-- RESULT -->
+<div class="screen" id="screenResult">
+  <div class="result-card">
+    <div class="result-emoji" id="resultEmoji">🎉</div>
+    <div class="result-title" id="resultTitle">よくできました！</div>
+    <div class="result-score" id="resultScore">10 / 10</div>
+    <div class="result-sub" id="resultSub"></div>
+    <div class="result-detail">
+      <div class="pill c" id="resultCorrect">✅ 正解 0</div>
+      <div class="pill w" id="resultWrong">❌ 不正解 0</div>
+    </div>
+  </div>
+  <div id="retryListContainer" style="display:none; margin-bottom:20px;">
+    <div class="retry-list">
+      <h3>🔁 解き直し問題</h3>
+      <div id="retryListItems"></div>
+    </div>
+  </div>
+  <div class="btn-group">
+    <button class="btn-primary" id="btnRetryMistakes" style="display:none" onclick="startRetrySession()">🔁 間違いを解き直す</button>
+    <button class="btn-primary" onclick="restartTheme()">🔄 同じテーマをやり直す</button>
+    <button class="btn-secondary" onclick="goToSelect()">📚 テーマ選択にもどる</button>
+  </div>
+</div>
+
+<div class="confetti-container" id="confettiContainer"></div>
+
+<script>
+const themes = [
+  {
+    id: 'decimal_fraction',
+    name: 'よく出る小数と分数',
+    icon: '🔢', rules: 'ルール12',
+    desc: '小数⇔分数の変換をマスター',
+    questions: [
+      { type:'choice', q:'0.125 を分数にすると？', a:'1/8',  choices:['1/8','1/4','3/8','1/6'],   hint:'0.125 = 1÷8 = 1/8' },
+      { type:'choice', q:'0.25 を分数にすると？',  a:'1/4',  choices:['1/4','1/8','2/5','3/8'],   hint:'0.25 = 1÷4 = 1/4' },
+      { type:'choice', q:'0.375 を分数にすると？', a:'3/8',  choices:['3/8','3/4','2/5','1/3'],   hint:'0.375 = 3÷8 = 3/8' },
+      { type:'choice', q:'0.5 を分数にすると？',   a:'1/2',  choices:['1/2','1/4','2/3','3/4'],   hint:'0.5 = 1÷2 = 1/2' },
+      { type:'choice', q:'0.625 を分数にすると？', a:'5/8',  choices:['5/8','3/4','2/3','5/6'],   hint:'0.625 = 5÷8 = 5/8' },
+      { type:'choice', q:'0.75 を分数にすると？',  a:'3/4',  choices:['3/4','5/8','2/3','7/8'],   hint:'0.75 = 3÷4 = 3/4' },
+      { type:'choice', q:'0.875 を分数にすると？', a:'7/8',  choices:['7/8','3/4','5/6','6/7'],   hint:'0.875 = 7÷8 = 7/8' },
+      { type:'choice', q:'1/8 を小数にすると？',   a:'0.125',choices:['0.125','0.25','0.375','0.5'], hint:'1÷8 = 0.125' },
+      { type:'choice', q:'3/8 を小数にすると？',   a:'0.375',choices:['0.375','0.25','0.625','0.5'], hint:'3÷8 = 0.375' },
+      { type:'choice', q:'5/8 を小数にすると？',   a:'0.625',choices:['0.625','0.5','0.75','0.875'], hint:'5÷8 = 0.625' },
+    ]
+  },
+  {
+    id: 'square_numbers',
+    name: 'よく出る平方数',
+    icon: '⬛', rules: 'ルール13',
+    desc: '同じ数を2回かけた数を覚える',
+    questions: [
+      { type:'input', q:'11 × 11 = ？', a:'121', hint:'11×11=121' },
+      { type:'input', q:'12 × 12 = ？', a:'144', hint:'12×12=144' },
+      { type:'input', q:'13 × 13 = ？', a:'169', hint:'13×13=169' },
+      { type:'input', q:'14 × 14 = ？', a:'196', hint:'14×14=196' },
+      { type:'input', q:'15 × 15 = ？', a:'225', hint:'15×15=225' },
+      { type:'input', q:'16 × 16 = ？', a:'256', hint:'16×16=256' },
+      { type:'input', q:'17 × 17 = ？', a:'289', hint:'17×17=289' },
+      { type:'input', q:'18 × 18 = ？', a:'324', hint:'18×18=324' },
+      { type:'input', q:'19 × 19 = ？', a:'361', hint:'19×19=361' },
+      { type:'input', q:'25 × 25 = ？', a:'625', hint:'25×25=625' },
+    ]
+  },
+  {
+    id: 'pi_multiply',
+    name: '3.14のかけ算',
+    icon: '⭕', rules: 'ルール21',
+    desc: '図形問題に必須！3.14×1ケタ',
+    questions: [
+      { type:'input', q:'3.14 × 2 = ？',    a:'6.28',  hint:'3.14×2=6.28' },
+      { type:'input', q:'3.14 × 3 = ？',    a:'9.42',  hint:'3.14×3=9.42' },
+      { type:'input', q:'3.14 × 4 = ？',    a:'12.56', hint:'3.14×4=12.56' },
+      { type:'input', q:'3.14 × 5 = ？',    a:'15.7',  hint:'3.14×5=15.70（末尾の0は省略OK）' },
+      { type:'input', q:'3.14 × 6 = ？',    a:'18.84', hint:'3.14×6=18.84' },
+      { type:'input', q:'3.14 × 7 = ？',    a:'21.98', hint:'3.14×7=21.98' },
+      { type:'input', q:'3.14 × 8 = ？',    a:'25.12', hint:'3.14×8=25.12' },
+      { type:'input', q:'3.14 × 9 = ？',    a:'28.26', hint:'3.14×9=28.26' },
+      { type:'input', q:'21.98 ÷ 3.14 = ？',a:'7',     hint:'3.14×7=21.98なので7' },
+      { type:'input', q:'25.12 ÷ 3.14 = ？',a:'8',     hint:'3.14×8=25.12なので8' },
+    ]
+  },
+  {
+    id: 'unit_length',
+    name: '単位（長さ）',
+    icon: '📏', rules: 'ルール39',
+    desc: 'km・m・cm・mmの変換',
+    questions: [
+      { type:'input', q:'1 km = □ m',    a:'1000',   hint:'1km=1000m' },
+      { type:'input', q:'1 m = □ cm',    a:'100',    hint:'1m=100cm' },
+      { type:'input', q:'1 cm = □ mm',   a:'10',     hint:'1cm=10mm' },
+      { type:'input', q:'3 km = □ m',    a:'3000',   hint:'1km=1000mなので3×1000=3000m' },
+      { type:'input', q:'250 cm = □ m',  a:'2.5',    hint:'100cm=1mなので250÷100=2.5m' },
+      { type:'input', q:'5000 m = □ km', a:'5',      hint:'1000m=1kmなので5000÷1000=5km' },
+      { type:'input', q:'3 m = □ cm',    a:'300',    hint:'1m=100cmなので3×100=300cm' },
+      { type:'input', q:'1 km = □ cm',   a:'100000', hint:'1km=1000m、1m=100cmなので1000×100=100000cm' },
+      { type:'input', q:'45 mm = □ cm',  a:'4.5',    hint:'10mm=1cmなので45÷10=4.5cm' },
+      { type:'input', q:'2.5 km = □ m',  a:'2500',   hint:'1km=1000mなので2.5×1000=2500m' },
+    ]
+  },
+  {
+    id: 'unit_weight',
+    name: '単位（重さ）',
+    icon: '⚖️', rules: 'ルール40',
+    desc: 't・kg・g・mgの変換（全部1⇔1000）',
+    questions: [
+      { type:'input', q:'1 t = □ kg',      a:'1000',    hint:'1t=1000kg' },
+      { type:'input', q:'1 kg = □ g',      a:'1000',    hint:'1kg=1000g' },
+      { type:'input', q:'1 g = □ mg',      a:'1000',    hint:'1g=1000mg' },
+      { type:'input', q:'3500 g = □ kg',   a:'3.5',     hint:'1000g=1kgなので3500÷1000=3.5kg' },
+      { type:'input', q:'2.4 kg = □ g',    a:'2400',    hint:'1kg=1000gなので2.4×1000=2400g' },
+      { type:'input', q:'5000 kg = □ t',   a:'5',       hint:'1000kg=1tなので5000÷1000=5t' },
+      { type:'input', q:'3 t = □ kg',      a:'3000',    hint:'1t=1000kgなので3×1000=3000kg' },
+      { type:'input', q:'500 mg = □ g',    a:'0.5',     hint:'1000mg=1gなので500÷1000=0.5g' },
+      { type:'input', q:'1.5 t = □ g',     a:'1500000', hint:'1t=1000kg、1kg=1000gなので1.5×1000×1000=1500000g' },
+      { type:'input', q:'重さの変換はすべて「1⇔□」（□に入る数字は？）', a:'1000', hint:'t→kg→g→mgはすべて1⇔1000で変換できます' },
+    ]
+  },
+  {
+    id: 'unit_area',
+    name: '単位（面積）',
+    icon: '🟦', rules: 'ルール41〜43',
+    desc: 'cm²・m²・km²・a・haの変換',
+    questions: [
+      { type:'input',  q:'1 m² = □ cm²',             a:'10000',   hint:'1m=100cmなので1m²=100×100=10000cm²' },
+      { type:'input',  q:'1 km² = □ m²',             a:'1000000', hint:'1km=1000mなので1km²=1000×1000=1000000m²' },
+      { type:'input',  q:'1 a（アール）= □ m²',      a:'100',     hint:'1a=100m²（教室ぐらいの広さ）' },
+      { type:'input',  q:'1 ha（ヘクタール）= □ m²', a:'10000',   hint:'1ha=10000m²（運動場ぐらいの広さ）' },
+      { type:'input',  q:'50000 cm² = □ m²',         a:'5',       hint:'10000cm²=1m²なので50000÷10000=5m²' },
+      { type:'input',  q:'3 m² = □ cm²',             a:'30000',   hint:'1m²=10000cm²なので3×10000=30000cm²' },
+      { type:'input',  q:'2 km² = □ m²',             a:'2000000', hint:'1km²=1000000m²なので2×1000000=2000000m²' },
+      { type:'choice', q:'1a はどのくらいの広さ？',  a:'教室',   choices:['教室','運動場','体育館','公園'], hint:'1a（アール）は教室ぐらいの広さ' },
+      { type:'choice', q:'1ha はどのくらいの広さ？', a:'運動場', choices:['運動場','教室','体育館','公園'], hint:'1ha（ヘクタール）は運動場ぐらいの広さ' },
+      { type:'input',  q:'3 ha = □ m²',              a:'30000',   hint:'1ha=10000m²なので3×10000=30000m²' },
+    ]
+  },
+  {
+    id: 'unit_volume',
+    name: '単位（体積・容積）',
+    icon: '📦', rules: 'ルール44〜45',
+    desc: 'cm³・m³・mL・L・kLの変換',
+    questions: [
+      { type:'input', q:'1 cm³ = □ mL',  a:'1',       hint:'1cm³=1mL=1cc（小サイズ）' },
+      { type:'input', q:'1 L = □ mL',    a:'1000',    hint:'1L=1000mL' },
+      { type:'input', q:'1 L = □ dL',    a:'10',      hint:'1L=10dL' },
+      { type:'input', q:'1 L = □ cm³',   a:'1000',    hint:'1L=1000cm³（10cmの立方体）' },
+      { type:'input', q:'1 dL = □ cm³',  a:'100',     hint:'1dL=100cm³' },
+      { type:'input', q:'1 m³ = □ kL',   a:'1',       hint:'1m³=1kL（大サイズ）' },
+      { type:'input', q:'1 m³ = □ L',    a:'1000',    hint:'1m³=1kL=1000L' },
+      { type:'input', q:'1 m³ = □ cm³',  a:'1000000', hint:'1m=100cmなので1m³=100×100×100=1000000cm³' },
+      { type:'input', q:'5000 mL = □ L', a:'5',       hint:'1000mL=1Lなので5000÷1000=5L' },
+      { type:'input', q:'2 kL = □ L',    a:'2000',    hint:'1kL=1000Lなので2×1000=2000L' },
+    ]
+  },
+];
+
+// ===== STATE =====
+let state = {
+  currentTheme: null,
+  currentQuestions: [],
+  currentIdx: 0,
+  sessionCorrect: 0,
+  sessionWrong: 0,
+  answered: false,
+  retryPool: [],
+  totalCorrect: 0,
+  totalWrong: 0,
+  isRetrySession: false,
+};
+
+function init() {
+  // stars
+  const c = document.getElementById('starsContainer');
+  for (let i = 0; i < 12; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    s.style.left = Math.random()*100+'%';
+    s.style.top = Math.random()*100+'%';
+    s.style.animationDelay = Math.random()*3+'s';
+    c.appendChild(s);
+  }
+  renderThemeGrid();
+}
+
+function renderThemeGrid() {
+  const grid = document.getElementById('themeGrid');
+  grid.innerHTML = '';
+
+  if (state.retryPool.length > 0) {
+    const btn = document.createElement('button');
+    btn.className = 'btn-retry-all';
+    btn.onclick = startRetrySession;
+    btn.innerHTML = `🔁 解き直し問題をまとめてやる（${state.retryPool.length}問）`;
+    grid.appendChild(btn);
+  }
+
+  themes.forEach(theme => {
+    const retryCount = state.retryPool.filter(r => r.themeId === theme.id).length;
+    const card = document.createElement('div');
+    card.className = 'theme-card' + (retryCount > 0 ? ' has-retry' : '');
+    card.onclick = () => startTheme(theme.id);
+    card.innerHTML = `
+      ${retryCount > 0 ? '<div class="retry-dot"></div>' : ''}
+      <div class="icon">${theme.icon}</div>
+      <div class="info">
+        <div class="name">${theme.name}</div>
+        <div class="desc">${theme.desc}</div>
+        <span class="rule-badge">${theme.rules}</span>
+        ${retryCount > 0 ? `<span class="count-badge">🔁 解き直し ${retryCount}問</span>` : ''}
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+
+  if (state.totalCorrect + state.totalWrong > 0) {
+    document.getElementById('globalScoreBar').style.display = 'flex';
+    document.getElementById('totalCorrect').textContent = state.totalCorrect;
+    document.getElementById('totalWrong').textContent = state.totalWrong;
+    document.getElementById('totalRetry').textContent = state.retryPool.length;
+  }
+}
+
+function startTheme(themeId) {
+  const theme = themes.find(t => t.id === themeId);
+  state.currentTheme = theme;
+  state.currentQuestions = shuffle([...theme.questions]);
+  state.currentIdx = 0;
+  state.sessionCorrect = 0;
+  state.sessionWrong = 0;
+  state.isRetrySession = false;
+  document.getElementById('quizThemeLabel').textContent = `${theme.icon} ${theme.name}（${theme.rules}）`;
+  showScreen('screenQuiz');
+  renderQuestion();
+}
+
+function startRetrySession() {
+  if (state.retryPool.length === 0) return;
+  const cnt = state.retryPool.length;
+  const retryQs = shuffle([...state.retryPool]).map(r => ({
+    type: r.type, q: r.q, a: r.a, choices: r.choices || [], hint: r.hint, _themeId: r.themeId
+  }));
+  state.currentTheme = { id: '__retry__', name: '解き直し', icon: '🔁' };
+  state.currentQuestions = retryQs;
+  state.currentIdx = 0;
+  state.sessionCorrect = 0;
+  state.sessionWrong = 0;
+  state.isRetrySession = true;
+  state.retryPool = [];
+  document.getElementById('quizThemeLabel').textContent = `🔁 解き直し（累積 ${cnt}問）`;
+  showScreen('screenQuiz');
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const q = state.currentQuestions[state.currentIdx];
+  const total = state.currentQuestions.length;
+  const idx = state.currentIdx;
+
+  const pct = Math.round((idx / total) * 100);
+  document.getElementById('progressText').textContent = `${idx + 1} / ${total}`;
+  document.getElementById('progressPercent').textContent = pct + '%';
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('questionNumber').textContent = `問題 ${idx + 1}`;
+  document.getElementById('questionText').textContent = q.q;
+  document.getElementById('feedbackBox').style.display = 'none';
+  document.getElementById('btnNext').style.display = 'none';
+  state.answered = false;
+
+  if (q.type === 'input') {
+    document.getElementById('choicesContainer').style.display = 'none';
+    document.getElementById('inputArea').style.display = 'flex';
+    const inp = document.getElementById('answerInput');
+    const box = document.getElementById('correctAnswerBox');
+    inp.value = '';
+    inp.className = 'answer-input';
+    inp.disabled = false;
+    box.style.display = 'none';
+    document.getElementById('btnSubmit').disabled = false;
+    inp.onkeydown = (e) => { if (e.key === 'Enter' && !state.answered) submitAnswer(); };
+    setTimeout(() => inp.focus(), 80);
+  } else {
+    document.getElementById('inputArea').style.display = 'none';
+    document.getElementById('choicesContainer').style.display = 'flex';
+    const container = document.getElementById('choicesContainer');
+    container.innerHTML = '';
+    shuffle([...q.choices]).forEach(choice => {
+      const btn = document.createElement('button');
+      btn.className = 'choice-btn';
+      btn.textContent = choice;
+      btn.onclick = () => checkChoiceAnswer(choice, q);
+      container.appendChild(btn);
+    });
+  }
+}
+
+function checkChoiceAnswer(selected, q) {
+  if (state.answered) return;
+  state.answered = true;
+  const isCorrect = selected === q.a;
+  document.querySelectorAll('.choice-btn').forEach(btn => {
+    btn.disabled = true;
+    if (btn.textContent === q.a) btn.classList.add('reveal');
+    if (btn.textContent === selected && !isCorrect) btn.classList.add('wrong');
+    if (btn.textContent === selected && isCorrect) btn.classList.add('correct');
+  });
+  showFeedback(isCorrect, q);
+}
+
+function submitAnswer() {
+  if (state.answered) return;
+  const q = state.currentQuestions[state.currentIdx];
+  const inp = document.getElementById('answerInput');
+  const raw = inp.value.trim();
+  if (!raw) return;
+
+  state.answered = true;
+  inp.disabled = true;
+  document.getElementById('btnSubmit').disabled = true;
+
+  const isCorrect = normalizeNum(raw) === normalizeNum(q.a);
+
+  if (isCorrect) {
+    inp.className = 'answer-input correct';
+  } else {
+    inp.className = 'answer-input wrong';
+    const box = document.getElementById('correctAnswerBox');
+    box.textContent = `✅ 正解は　${q.a}`;
+    box.style.display = 'block';
+  }
+  showFeedback(isCorrect, q);
+}
+
+function normalizeNum(v) {
+  const n = parseFloat(String(v).replace(/,/g, ''));
+  return isNaN(n) ? String(v).trim().toLowerCase() : String(n);
+}
+
+function showFeedback(isCorrect, q) {
+  const fb = document.getElementById('feedbackBox');
+  if (isCorrect) {
+    fb.className = 'feedback-box correct';
+    fb.innerHTML = `✅ <strong>正解！</strong>　${q.hint}`;
+    state.sessionCorrect++;
+    state.totalCorrect++;
+  } else {
+    fb.className = 'feedback-box wrong';
+    fb.innerHTML = `❌ <strong>不正解</strong>　💡 ${q.hint}`;
+    state.sessionWrong++;
+    state.totalWrong++;
+    const themeId = q._themeId || state.currentTheme.id;
+    if (!state.retryPool.some(r => r.q === q.q && r.themeId === themeId)) {
+      state.retryPool.push({ themeId, type: q.type, q: q.q, a: q.a, choices: q.choices || [], hint: q.hint });
+    }
+  }
+  fb.style.display = 'block';
+
+  const isLast = state.currentIdx === state.currentQuestions.length - 1;
+  const btnNext = document.getElementById('btnNext');
+  btnNext.style.display = 'block';
+  btnNext.textContent = isLast ? '結果を見る 🎯' : 'つぎへ →';
+}
+
+function nextQuestion() {
+  state.currentIdx++;
+  if (state.currentIdx >= state.currentQuestions.length) showResult();
+  else renderQuestion();
+}
+
+function showResult() {
+  const total = state.currentQuestions.length;
+  const correct = state.sessionCorrect;
+  const pct = Math.round((correct / total) * 100);
+
+  let emoji, title;
+  if (pct === 100) { emoji = '🥇'; title = '満点！完璧です！'; }
+  else if (pct >= 80) { emoji = '🎉'; title = 'よくできました！'; }
+  else if (pct >= 60) { emoji = '😊'; title = 'もう少し！'; }
+  else { emoji = '📖'; title = '復習しよう！'; }
+
+  document.getElementById('resultEmoji').textContent = emoji;
+  document.getElementById('resultTitle').textContent = title;
+  document.getElementById('resultScore').textContent = `${correct} / ${total}`;
+  document.getElementById('resultSub').textContent = `正解率 ${pct}%`;
+  document.getElementById('resultCorrect').textContent = `✅ 正解 ${correct}`;
+  document.getElementById('resultWrong').textContent = `❌ 不正解 ${state.sessionWrong}`;
+
+  const retryItems = document.getElementById('retryListItems');
+  retryItems.innerHTML = '';
+  if (state.retryPool.length > 0) {
+    state.retryPool.forEach(r => {
+      const div = document.createElement('div');
+      div.className = 'retry-item';
+      div.innerHTML = `<div class="q">❓ ${r.q}</div><div class="a">✅ 答え: ${r.a}</div>`;
+      retryItems.appendChild(div);
+    });
+    document.getElementById('retryListContainer').style.display = 'block';
+    document.getElementById('btnRetryMistakes').style.display = 'block';
+  } else {
+    document.getElementById('retryListContainer').style.display = 'none';
+    document.getElementById('btnRetryMistakes').style.display = 'none';
+  }
+
+  if (pct === 100) launchConfetti();
+  showScreen('screenResult');
+}
+
+function restartTheme() {
+  if (state.isRetrySession) startRetrySession();
+  else if (state.currentTheme) startTheme(state.currentTheme.id);
+}
+
+function goToSelect() {
+  showScreen('screenSelect');
+  renderThemeGrid();
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function launchConfetti() {
+  const colors = ['#00b4c8','#ffe066','#ff6b6b','#4caf87','#a78bfa'];
+  const container = document.getElementById('confettiContainer');
+  container.innerHTML = '';
+  for (let i = 0; i < 60; i++) {
+    const piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    piece.style.left = Math.random()*100+'%';
+    piece.style.background = colors[Math.floor(Math.random()*colors.length)];
+    piece.style.width = (Math.random()*8+4)+'px';
+    piece.style.height = (Math.random()*8+4)+'px';
+    piece.style.borderRadius = Math.random()>0.5 ? '50%' : '2px';
+    piece.style.animationDuration = (Math.random()*2+1.5)+'s';
+    piece.style.animationDelay = Math.random()*0.8+'s';
+    container.appendChild(piece);
+  }
+  setTimeout(() => container.innerHTML = '', 4000);
+}
+
+init();
+</script>
+</body>
+</html>
