@@ -3,562 +3,549 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>漢コト11-12｜予習シリーズ</title>
-<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;700;900&family=Kaisei+HarunoUmi:wght@400;700&display=swap" rel="stylesheet">
+<title>漢コト 11-12回</title>
 <style>
-:root{
-  --bg:#0e1117; --surface:#161b27; --card:#1e2535;
-  --border:rgba(255,255,255,0.08); --accent:#f472b6; --accent2:#be185d;
-  --green:#3dd68c; --red:#f05a5a; --gold:#f0c040; --blue:#4a9eff;
-  --text:#e8eaf0; --muted:rgba(232,234,240,0.45); --radius:16px;
+:root {
+  --bg: #0f172a; --surface: rgba(255,255,255,0.05); --border: rgba(255,255,255,0.1);
+  --accent: #f472b6; --accent2: #be185d; --green: #22c55e; --red: #ef4444;
+  --orange: #f97316; --text: #f1f5f9; --muted: #94a3b8;
 }
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
-body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
-.app{max-width:600px;margin:0 auto;padding:0 16px 60px;}
-.header{display:flex;align-items:center;justify-content:space-between;padding:20px 0 16px;}
-.header-title{font-family:'Kaisei HarunoUmi',serif;font-size:1.3rem;color:var(--accent);}
-.header-sub{font-size:0.68rem;color:var(--muted);margin-top:2px;}
-.reset-btn{background:none;border:1px solid var(--border);border-radius:8px;padding:6px 12px;color:var(--muted);font-size:0.7rem;cursor:pointer;}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+body { background: linear-gradient(135deg,#0f172a 0%,#1e293b 60%,#0f3460 100%); min-height: 100vh; font-family: 'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif; color: var(--text); padding: 16px; }
+.wrap { max-width: 600px; margin: 0 auto; }
 
 /* HOME */
-.home-hero{text-align:center;padding:32px 0 28px;}
-.home-hero-title{font-family:'Kaisei HarunoUmi',serif;font-size:2.2rem;font-weight:700;color:var(--accent);text-shadow:0 0 40px rgba(244,114,182,0.5);}
-.home-hero-sub{color:var(--muted);font-size:0.85rem;margin-top:6px;}
-.section-label{font-size:0.72rem;font-weight:700;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin:24px 0 10px;}
-.mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;}
-.mode-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px 14px;cursor:pointer;text-align:center;transition:transform .15s;}
-.mode-card:active{transform:scale(.97);}
-.mode-card-icon{font-size:1.8rem;margin-bottom:6px;}
-.mode-card-name{font-size:0.9rem;font-weight:700;color:var(--text);}
-.mode-card-desc{font-size:0.7rem;color:var(--muted);margin-top:3px;}
-.mode-card-full{grid-column:1/-1;}
-.progress-ring{position:relative;display:inline-flex;align-items:center;justify-content:center;}
-.mastery-bar{height:6px;background:rgba(255,255,255,0.08);border-radius:99px;margin-top:6px;overflow:hidden;}
-.mastery-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:99px;transition:width .4s;}
-.stats-row{display:flex;gap:8px;margin-bottom:20px;}
-.stat-box{flex:1;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px;text-align:center;}
-.stat-num{font-size:1.4rem;font-weight:900;color:var(--accent);}
-.stat-label{font-size:0.65rem;color:var(--muted);margin-top:2px;}
+.home-title { text-align: center; padding: 36px 0 28px; }
+.home-title-main { font-size: 36px; font-weight: 900; letter-spacing: 0.1em; color: var(--accent); text-shadow: 0 0 40px rgba(244,114,182,0.5); }
+.home-title-sub { font-size: 13px; color: var(--muted); margin-top: 6px; }
+.section-label { font-size: 11px; font-weight: 700; color: var(--muted); letter-spacing: .1em; margin: 20px 0 10px; }
+.home-btn { display: flex; align-items: center; gap: 14px; width: 100%; padding: 20px 18px; border-radius: 16px; border: 1px solid var(--border); cursor: pointer; margin-bottom: 12px; text-align: left; color: var(--text); }
+.home-btn-pink { background: linear-gradient(135deg,#4a1236,#9d174d); box-shadow: 0 6px 24px rgba(244,114,182,0.2); }
+.home-btn-purple { background: linear-gradient(135deg,#2e1065,#5b21b6); box-shadow: 0 6px 24px rgba(139,92,246,0.2); }
+.home-btn-orange { background: linear-gradient(135deg,#7c2d12,#c2410c); box-shadow: 0 6px 24px rgba(249,115,22,0.2); }
+.home-btn-gray { background: rgba(255,255,255,0.05); border: 1px solid var(--border); }
+.btn-icon { font-size: 30px; flex-shrink: 0; }
+.btn-name { font-size: 17px; font-weight: 800; margin-bottom: 3px; }
+.btn-note { font-size: 12px; color: var(--muted); }
+.redo-count { font-size: 11px; color: #fed7aa; background: rgba(249,115,22,0.2); padding: 2px 8px; border-radius: 99px; margin-left: 6px; }
+.reset-btn { width: 100%; padding: 10px; border-radius: 10px; background: none; border: 1px solid rgba(239,68,68,0.3); color: rgba(239,68,68,0.6); font-size: 12px; cursor: pointer; margin-top: 8px; }
 
-/* LIST */
-.list-header{display:flex;align-items:center;gap:10px;margin-bottom:16px;}
-.back-btn{background:none;border:none;color:var(--accent);font-size:1.1rem;cursor:pointer;padding:4px;}
-.list-title{font-size:1rem;font-weight:700;}
-.word-list{display:flex;flex-direction:column;gap:8px;}
-.word-item{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;}
-.word-item-left{}
-.word-item-word{font-size:1.1rem;font-weight:700;}
-.word-item-read{font-size:0.72rem;color:var(--muted);margin-top:2px;}
-.word-item-right{display:flex;align-items:center;gap:8px;}
-.mastery-dot{width:10px;height:10px;border-radius:50%;background:var(--border);}
-.mastery-dot.m1{background:#f0c040;}
-.mastery-dot.m2{background:#3dd68c;}
-.mastery-dot.m3{background:var(--accent);}
-
-/* CARD */
-.card-wrap{padding:16px 0;}
-.card-progress{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
-.card-counter{font-size:0.8rem;color:var(--muted);}
-.prog-bar{height:4px;background:rgba(255,255,255,0.08);border-radius:99px;flex:1;margin:0 12px;overflow:hidden;}
-.prog-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:99px;transition:width .3s;}
-.flashcard{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:36px 24px;text-align:center;min-height:220px;display:flex;flex-direction:column;align-items:center;justify-content:center;margin-bottom:20px;cursor:pointer;position:relative;}
-.flashcard-tag{position:absolute;top:14px;left:14px;font-size:0.65rem;font-weight:700;color:var(--accent);background:rgba(244,114,182,0.12);padding:3px 8px;border-radius:99px;}
-.flashcard-word{font-size:2.4rem;font-weight:900;letter-spacing:.05em;margin-bottom:8px;}
-.flashcard-read{font-size:0.85rem;color:var(--muted);}
-.flashcard-meaning{font-size:0.95rem;color:var(--text);line-height:1.7;margin-top:12px;display:none;}
-.flashcard-ex{font-size:0.82rem;color:var(--muted);line-height:1.6;margin-top:10px;display:none;border-top:1px solid var(--border);padding-top:10px;}
-.card-hint{font-size:0.72rem;color:var(--muted);text-align:center;margin-bottom:16px;}
-.card-actions{display:flex;gap:10px;}
-.card-btn{flex:1;padding:14px;border-radius:12px;border:none;font-weight:700;font-size:0.95rem;cursor:pointer;}
-.card-btn-ok{background:linear-gradient(135deg,#166534,#14532d);color:var(--green);}
-.card-btn-ng{background:linear-gradient(135deg,#7f1d1d,#991b1b);color:var(--red);}
-.card-btn-next{background:linear-gradient(135deg,var(--accent2),#9d174d);color:#fff;width:100%;}
+/* STUDY */
+.study-wrap { padding-top: 8px; }
+.back-btn { background: none; border: none; color: var(--accent); font-size: 14px; cursor: pointer; margin-bottom: 16px; padding: 4px 0; }
+.prog-bar { height: 5px; background: rgba(255,255,255,0.08); border-radius: 99px; margin-bottom: 14px; overflow: hidden; }
+.prog-fill { height: 100%; background: linear-gradient(90deg,var(--accent),var(--accent2)); border-radius: 99px; transition: width 0.3s; }
+.study-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+.study-badge { font-size: 11px; font-weight: 700; color: var(--accent); background: rgba(244,114,182,0.12); padding: 3px 10px; border-radius: 99px; }
+.study-counter { font-size: 12px; color: var(--muted); }
+.study-card { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 28px 22px; margin-bottom: 16px; }
+.study-word { font-size: 2rem; font-weight: 900; margin-bottom: 6px; letter-spacing: 0.05em; }
+.study-read { font-size: 0.8rem; color: var(--muted); margin-bottom: 16px; }
+.study-divider { height: 1px; background: var(--border); margin-bottom: 16px; }
+.study-meaning { font-size: 0.95rem; line-height: 1.8; color: var(--text); margin-bottom: 12px; }
+.study-ex { font-size: 0.82rem; color: var(--accent); line-height: 1.7; padding: 10px 14px; background: rgba(244,114,182,0.06); border-radius: 10px; border-left: 3px solid var(--accent2); }
+.study-next-btn { width: 100%; padding: 14px; border-radius: 12px; background: linear-gradient(135deg,var(--accent2),#9d174d); color: #fff; font-weight: 800; font-size: 16px; border: none; cursor: pointer; }
+.study-done { text-align: center; padding: 32px 0; }
+.study-done-title { font-size: 1.4rem; font-weight: 900; color: var(--accent); margin-bottom: 8px; }
+.study-done-sub { font-size: 0.85rem; color: var(--muted); margin-bottom: 24px; }
 
 /* QUIZ */
-.quiz-wrap{padding:16px 0;}
-.quiz-q-box{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px 20px;margin-bottom:16px;}
-.quiz-q-label{font-size:0.7rem;color:var(--accent);font-weight:700;margin-bottom:8px;}
-.quiz-q-text{font-size:1.05rem;line-height:1.7;font-weight:600;}
-.quiz-choices{display:flex;flex-direction:column;gap:10px;margin-bottom:16px;}
-.choice-btn{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 16px;text-align:left;color:var(--text);font-size:0.95rem;cursor:pointer;display:flex;align-items:center;gap:12px;font-family:inherit;}
-.choice-btn:disabled{cursor:default;}
-.choice-kana{width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;font-size:0.78rem;font-weight:700;flex-shrink:0;color:var(--accent);}
-.choice-ok{border-color:var(--green)!important;background:rgba(61,214,140,0.12)!important;color:var(--green);}
-.choice-ng{border-color:var(--red)!important;background:rgba(240,90,90,0.12)!important;color:var(--red);}
-.choice-dim{opacity:.35;}
-.quiz-result{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:18px 20px;margin-bottom:16px;}
-.quiz-result-tag{font-size:1rem;font-weight:800;margin-bottom:8px;}
-.quiz-result-exp{font-size:0.85rem;color:var(--muted);line-height:1.7;}
-.quiz-next-btn{width:100%;padding:14px;border-radius:12px;background:linear-gradient(135deg,var(--accent2),#9d174d);color:#fff;font-weight:800;font-size:1rem;border:none;cursor:pointer;}
+.quiz-wrap { padding-top: 8px; }
+.q-box { background: var(--surface); border-radius: 16px; padding: 18px; margin-bottom: 14px; border: 1px solid var(--border); }
+.q-label { font-size: 11px; font-weight: 700; color: var(--accent); margin-bottom: 8px; }
+.q-text { font-size: 1rem; line-height: 1.8; font-weight: 600; }
+.choices { display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
+.choice-btn { display: flex; align-items: center; gap: 10px; width: 100%; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--border); background: rgba(255,255,255,0.04); cursor: pointer; color: var(--text); text-align: left; font-size: 13px; font-weight: 600; font-family: inherit; }
+.choice-btn:disabled { cursor: default; }
+.choice-num { width: 24px; height: 24px; border-radius: 50%; background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; flex-shrink: 0; color: var(--accent); min-width: 24px; }
+.choice-ok { border-color: var(--green)!important; background: rgba(34,197,94,0.12)!important; color: #86efac; }
+.choice-ng { border-color: var(--red)!important; background: rgba(239,68,68,0.12)!important; color: #fca5a5; }
+.choice-dim { opacity: 0.35; }
+.exp-box { background: var(--surface); border-radius: 14px; padding: 16px; border: 1px solid var(--border); margin-top: 4px; }
+.exp-tag { font-size: 14px; font-weight: 800; margin-bottom: 8px; }
+.exp-text { font-size: 12px; color: var(--muted); line-height: 1.8; margin-bottom: 12px; }
+.ai-hint { background: rgba(96,165,250,0.07); border: 1px solid rgba(96,165,250,0.2); border-radius: 10px; padding: 10px 12px; font-size: 12px; color: #bfdbfe; line-height: 1.7; margin-bottom: 12px; }
+.ai-hint-label { font-size: 10px; font-weight: 700; color: #60a5fa; display: block; margin-bottom: 3px; }
+.next-btn { width: 100%; padding: 13px; border-radius: 12px; background: linear-gradient(135deg,#2563eb,#1d4ed8); color: #fff; font-weight: 800; font-size: 15px; border: none; cursor: pointer; }
+.quit-btn { width: 100%; padding: 10px; border-radius: 10px; background: none; border: 1px solid var(--border); color: var(--muted); font-size: 13px; cursor: pointer; margin-top: 8px; margin-bottom: 14px; }
 
 /* RESULT */
-.result-wrap{text-align:center;padding:32px 0;}
-.result-score{font-size:4rem;font-weight:900;color:var(--accent);}
-.result-total{font-size:1.4rem;color:var(--muted);}
-.result-msg{font-size:1.1rem;margin:12px 0 28px;color:var(--text);}
-.result-actions{display:flex;gap:10px;}
-.result-btn{flex:1;padding:14px;border-radius:12px;border:none;font-weight:700;font-size:0.95rem;cursor:pointer;}
-.result-btn-retry{background:linear-gradient(135deg,var(--accent2),#9d174d);color:#fff;}
-.result-btn-home{background:var(--card);border:1px solid var(--border);color:var(--text);}
+.result-score { text-align: center; background: var(--surface); border-radius: 18px; padding: 28px 20px; border: 1px solid var(--border); margin-bottom: 24px; }
+.score-num { font-size: 60px; font-weight: 900; line-height: 1; margin-bottom: 6px; }
+.score-total { font-size: 24px; color: var(--muted); }
+.score-msg { font-size: 16px; color: var(--accent); font-weight: 700; }
+.res-item { padding: 10px 12px; margin-bottom: 8px; border-radius: 10px; background: var(--surface); border-left: 4px solid transparent; }
+.res-q { font-size: 11px; color: var(--muted); margin-bottom: 3px; }
+.res-a { font-size: 13px; font-weight: 700; }
+.res-wrong { color: #f87171; font-weight: 400; font-size: 11px; }
+.result-actions { display: flex; gap: 10px; margin-bottom: 14px; }
+.again-btn { flex: 1; padding: 13px; border-radius: 12px; background: linear-gradient(135deg,#2563eb,#1d4ed8); color: #fff; font-weight: 800; font-size: 15px; border: none; cursor: pointer; }
+.top-btn { flex: 1; padding: 13px; border-radius: 12px; background: rgba(255,255,255,0.07); color: #fff; font-weight: 800; font-size: 15px; border: 1px solid var(--border); cursor: pointer; }
+.redo-result-btn { width: 100%; padding: 13px; border-radius: 12px; background: linear-gradient(135deg,#7c2d12,#c2410c); color: #fff; font-weight: 800; font-size: 15px; border: none; cursor: pointer; margin-bottom: 32px; }
 
-.hidden{display:none!important;}
+.hidden { display: none!important; }
 </style>
 </head>
 <body>
-<div class="app">
-  <div class="header">
-    <div>
-      <div class="header-title">漢コト 11-12回</div>
-      <div class="header-sub">和語③ · 慣用句③</div>
+<div class="wrap">
+
+  <!-- HOME -->
+  <div id="screen-home">
+    <div class="home-title">
+      <div class="home-title-main">漢コト 11-12</div>
+      <div class="home-title-sub">和語③ · 慣用句③</div>
     </div>
-    <button class="reset-btn" onclick="confirmReset()">リセット</button>
+
+    <div class="section-label">📖 学習</div>
+    <button class="home-btn home-btn-pink" onclick="startStudy('和語③')">
+      <span class="btn-icon">📖</span>
+      <div><div class="btn-name">和語③を学ぶ</div><div class="btn-note">21語 · 一語ずつ意味を確認</div></div>
+    </button>
+    <button class="home-btn home-btn-purple" onclick="startStudy('慣用句③')">
+      <span class="btn-icon">🗣️</span>
+      <div><div class="btn-name">慣用句③を学ぶ</div><div class="btn-note">38語 · 一語ずつ意味を確認</div></div>
+    </button>
+
+    <div class="section-label">📝 クイズ</div>
+    <button class="home-btn home-btn-pink" onclick="startQuiz('和語③')">
+      <span class="btn-icon">✏️</span>
+      <div><div class="btn-name">和語③ クイズ</div><div class="btn-note">全21問 · 意味を選ぶ</div></div>
+    </button>
+    <button class="home-btn home-btn-purple" onclick="startQuiz('慣用句③')">
+      <span class="btn-icon">✏️</span>
+      <div><div class="btn-name">慣用句③ クイズ</div><div class="btn-note">全38問 · 意味を選ぶ</div></div>
+    </button>
+
+    <div class="section-label">🔁 復習</div>
+    <button class="home-btn home-btn-orange" id="redo-home-btn" onclick="startRedoQuiz()" style="display:none">
+      <span class="btn-icon">🔁</span>
+      <div><div class="btn-name">解き直し <span class="redo-count" id="redo-home-count"></span></div><div class="btn-note">間違えた問題を累積復習</div></div>
+    </button>
+
+    <button class="reset-btn" id="reset-btn1" onclick="doReset()">🗑️ 全データをリセット（初期化）</button>
   </div>
 
-  <div id="screen-home"></div>
-  <div id="screen-list" class="hidden"></div>
-  <div id="screen-card" class="hidden"></div>
-  <div id="screen-quiz" class="hidden"></div>
-  <div id="screen-result" class="hidden"></div>
-</div>
+  <!-- STUDY -->
+  <div id="screen-study" class="hidden">
+    <div class="study-wrap">
+      <button class="back-btn" onclick="showHome()">← もどる</button>
+      <div class="prog-bar"><div class="prog-fill" id="study-prog"></div></div>
+      <div class="study-meta">
+        <span class="study-badge" id="study-badge"></span>
+        <span class="study-counter" id="study-counter"></span>
+      </div>
+      <div id="study-card-area"></div>
+      <button class="study-next-btn" id="study-next-btn" onclick="studyNext()">次へ →</button>
+    </div>
+  </div>
 
+  <!-- QUIZ -->
+  <div id="screen-quiz" class="hidden">
+    <div class="quiz-wrap">
+      <button class="back-btn" onclick="showHome()">← もどる</button>
+      <div class="prog-bar"><div class="prog-fill" id="quiz-prog"></div></div>
+      <div class="study-meta">
+        <span class="study-badge" id="quiz-badge"></span>
+        <span class="study-counter" id="quiz-counter"></span>
+      </div>
+      <div class="q-box">
+        <div class="q-label">意味を選んでください</div>
+        <div class="q-text" id="q-text"></div>
+      </div>
+      <div class="choices" id="choices"></div>
+      <button class="quit-btn" id="quit-btn" onclick="quitQuiz()">終了する →</button>
+      <div id="exp-area" class="hidden">
+        <div class="exp-box">
+          <div class="exp-tag" id="exp-tag"></div>
+          <div class="exp-text" id="exp-text"></div>
+          <div class="ai-hint hidden" id="ai-hint-box"><span class="ai-hint-label">💡 ポイント</span><span id="ai-hint-text"></span></div>
+          <button class="next-btn" id="next-btn" onclick="quizNext()">次の問題 →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULT -->
+  <div id="screen-result" class="hidden">
+    <button class="back-btn" onclick="showHome()">← もどる</button>
+    <div class="result-score">
+      <div class="score-num" id="score-num"></div>
+      <div class="score-msg" id="score-msg"></div>
+    </div>
+    <div id="answer-list"></div>
+    <div class="result-actions">
+      <button class="again-btn" onclick="retryQuiz()">もう一度</button>
+      <button class="top-btn" onclick="showHome()">トップへ</button>
+    </div>
+    <button class="redo-result-btn hidden" id="redo-result-btn" onclick="startRedoQuiz()">🔁 間違えた問題を解き直す</button>
+  </div>
+
+</div>
 <script>
-// ===================== データ =====================
+// ===== データ =====
 const WORDS = [
   // 和語③
-  {id:'w01', cat:'和語③', word:'ありきたり', read:'ありきたり',
+  {id:'w01',cat:'和語③',word:'ありきたり',read:'ありきたり',
    meaning:'元からあること。珍しくないこと。ありふれていること。',
    ex:'「ありきたりな意見ばかりでつまらない」'},
-  {id:'w02', cat:'和語③', word:'いそいそ', read:'いそいそ',
+  {id:'w02',cat:'和語③',word:'いそいそ',read:'いそいそ',
    meaning:'喜び勇んで、うれしいことがあって動作がはずむさま。',
    ex:'「兄はいそいそとデートに出かけていった」'},
-  {id:'w03', cat:'和語③', word:'うちひしがれる', read:'うちひしがれる',
-   meaning:'精神的な衝撃などで気力を完全になくす。悲しみにうちひしがれる。',
-   ex:'「長年飼っていた犬が死んでしまい、悲しみにうちひしがれた」'},
-  {id:'w04', cat:'和語③', word:'おおむね', read:'おおむね',
+  {id:'w03',cat:'和語③',word:'うちひしがれる',read:'うちひしがれる',
+   meaning:'精神的な衝撃などで気力を完全になくす。悲しみに沈む。',
+   ex:'「長年飼っていた犬が死んで、悲しみにうちひしがれた」'},
+  {id:'w04',cat:'和語③',word:'おおむね',read:'おおむね',
    meaning:'だいたいの趣旨。おおよそ。あらまし。',
    ex:'「四谷君の意見にはおおむね賛成です」'},
-  {id:'w05', cat:'和語③', word:'おずおず', read:'おずおず',
+  {id:'w05',cat:'和語③',word:'おずおず',read:'おずおず',
    meaning:'恐れてためらいながら。こわごわ。',
-   ex:'「自信はないが、おずおず、指名されたので先生の質問におず答える」'},
-  {id:'w06', cat:'和語③', word:'おもいあまる', read:'おもいあまる',
-   meaning:'どうしたらよいかわからない。自分だけでは答えが出せず、母に秘密を打ち明ける。',
-   ex:'「さんざん思い悩んで、おもいあまって母に秘密を打ち明けた」'},
-  {id:'w07', cat:'和語③', word:'ぎくしゃく', read:'ぎくしゃく',
+   ex:'「自信はないが、指名されたので先生の質問におずおず答える」'},
+  {id:'w06',cat:'和語③',word:'おもいあまる',read:'おもいあまる',
+   meaning:'どうしたらよいかわからない。自分だけでは答えが出せない状態。',
+   ex:'「さんざん悩んで、おもいあまって母に秘密を打ち明けた」'},
+  {id:'w07',cat:'和語③',word:'ぎくしゃく',read:'ぎくしゃく',
    meaning:'話し方や動作、また物事の関係などがなめらかでないさま。',
-   ex:'「緊張のためか、ぎくしゃくした身のこなしの新郎が入場してくる」'},
-  {id:'w08', cat:'和語③', word:'けおされる', read:'けおされる',
-   meaning:'相手の勢いに押される。相手の剣幕にけおされ、精神的に圧倒され思わず受け入れてしまった。',
-   ex:'「相手の勢いにけおされた」'},
-  {id:'w09', cat:'和語③', word:'しいる', read:'しいる',
+   ex:'「大喧嘩して以来、彼とはぎくしゃくした関係が続いている」'},
+  {id:'w08',cat:'和語③',word:'けおされる',read:'けおされる',
+   meaning:'相手の勢いに押される。相手の剣幕に精神的に圧倒されてしまう。',
+   ex:'「相手の勢いにけおされ、思わず受け入れてしまった」'},
+  {id:'w09',cat:'和語③',word:'しいる',read:'しいる',
    meaning:'相手の意向を無視して、むりにやらせる。強制する。',
    ex:'「優勝候補の選手が、予想外の苦戦をしいられている」'},
-  {id:'w10', cat:'和語③', word:'すねる', read:'すねる',
+  {id:'w10',cat:'和語③',word:'すねる',read:'すねる',
    meaning:'素直に人に従わないで、不平がましい態度をとる。',
    ex:'「弟は自分の思い通りにならないことがあるとすねる」'},
-  {id:'w11', cat:'和語③', word:'せとぎわ', read:'せとぎわ',
+  {id:'w11',cat:'和語③',word:'せとぎわ',read:'せとぎわ',
    meaning:'勝負・成否・生死などの分かれ目。',
    ex:'「勝つか負けるかのせとぎわに立っている」'},
-  {id:'w12', cat:'和語③', word:'つくづく', read:'つくづく',
-   meaning:'1 念を入れて観察したり、よく考えたりするさま。2 じっくり。',
+  {id:'w12',cat:'和語③',word:'つくづく',read:'つくづく',
+   meaning:'念を入れて観察したり、よく考えたりするさま。じっくり。',
    ex:'「会話をしている相手の顔をつくづくとながめる」'},
-  {id:'w13', cat:'和語③', word:'とりとめのない', read:'とりとめのない',
-   meaning:'まとまりがない。つかみどころがない。汚ない話を毎日聞かされて、うんざりしている。',
+  {id:'w13',cat:'和語③',word:'とりとめのない',read:'とりとめのない',
+   meaning:'まとまりがない。つかみどころがない。',
    ex:'「負けたからといって、とりとめのない言い訳ばかり言う」'},
-  {id:'w14', cat:'和語③', word:'ぬかりなく', read:'ぬかりなく',
-   meaning:'油断や手落ちがない。万事にぬかりなく進めています。',
+  {id:'w14',cat:'和語③',word:'ぬかりなく',read:'ぬかりなく',
+   meaning:'油断や手落ちがない。万事に手落ちなく進める。',
    ex:'「作戦は万事にぬかりなく進めています」'},
-  {id:'w15', cat:'和語③', word:'ひそめる', read:'ひそめる',
-   meaning:'1 身を隠す。2 音・声などを小さくする。3 静かにして目立たなくなる。4 不快や不満などのために眉のあたりにしわをよせる。',
+  {id:'w15',cat:'和語③',word:'ひそめる',read:'ひそめる',
+   meaning:'①身を隠す ②音・声などを小さくする ③目立たなくなる ④不快・不満で眉にしわをよせる',
    ex:'「電車内で大声を出す友人のマナーの悪さにまゆをひそめる」'},
-  {id:'w16', cat:'和語③', word:'ふてぶてしい', read:'ふてぶてしい',
-   meaning:'ずうずうしい。大胆不敵である。ふてぶてしい面構えの猫が大きな家の前で寝そべっている。',
-   ex:'「ふてぶてしいやつだ」'},
-  {id:'w17', cat:'和語③', word:'へりくだる', read:'へりくだる',
+  {id:'w16',cat:'和語③',word:'ふてぶてしい',read:'ふてぶてしい',
+   meaning:'ずうずうしい。大胆不敵である。反省のないさま。',
+   ex:'「先生に注意されたのに開き直るなんて、ふてぶてしいやつだ」'},
+  {id:'w17',cat:'和語③',word:'へりくだる',read:'へりくだる',
    meaning:'相手を敬って自分を低く扱い、控えめにする。謙遜する。',
-   ex:'「あまりにへりくだったものの言い方をすると、かって失礼な感じがする」'},
-  {id:'w18', cat:'和語③', word:'ほのめかす', read:'ほのめかす',
-   meaning:'それとなく言葉や態度に表して示す。においわせる。宝物の存在をほのめかす。',
-   ex:'「親がしまっておいたお菓子を見つけるのが早い。目がめざとい子どもだ」'},
-  {id:'w19', cat:'和語③', word:'めざとい', read:'めざとい',
-   meaning:'1 見つけるのが早い。目が覚めやすい。2 私はめざといたちで、夜中に目を覚ますことがよくある。',
+   ex:'「目上の人にはへりくだった態度をとらなくてはならない」'},
+  {id:'w18',cat:'和語③',word:'ほのめかす',read:'ほのめかす',
+   meaning:'それとなく言葉や態度に表して示す。においわせる。',
+   ex:'「宝物の存在をほのめかすような発言をした」'},
+  {id:'w19',cat:'和語③',word:'めざとい',read:'めざとい',
+   meaning:'見つけるのが早い。目が覚めやすい。',
    ex:'「冷蔵庫のプリンを妹にめざとく見つけられてしまった」'},
-  {id:'w20', cat:'和語③', word:'もよおす', read:'もよおす',
-   meaning:'1 人を集めて行事などを行う。開催する。2 さそう。引き起こす。',
-   ex:'「退屈で眠気をもよおす話」'},
-  {id:'w21', cat:'和語③', word:'ののしる', read:'ののしる',
+  {id:'w20',cat:'和語③',word:'もよおす',read:'もよおす',
+   meaning:'①人を集めて行事などを行う（催す） ②ある気分や状態を引き起こす',
+   ex:'「朝食を食べずに運動したら吐き気をもよおした」'},
+  {id:'w21',cat:'和語③',word:'ののしる',read:'ののしる',
    meaning:'ひどい言葉で悪口を言う。声高に非難する。罵倒する。',
-   ex:'「負けたからといって、ひどい言葉で相手をののしるのはみっともない」'},
+   ex:'「負けたからといって相手をののしるのはみっともない」'},
 
   // 慣用句③
-  {id:'k01', cat:'慣用句③', word:'後の祭り', read:'あとのまつり',
-   meaning:'時機遅れで、むだなこと。知識・経験・技能などが少し劣れていること。手遅れ。',
-   ex:'試合が終わった後に強がってみても後の祭りだよ。'},
-  {id:'k02', cat:'慣用句③', word:'相づちを打つ', read:'あいづちをうつ',
+  {id:'k01',cat:'慣用句③',word:'後の祭り',read:'あとのまつり',
+   meaning:'時機遅れで、もう手遅れなこと。何をしても無駄なこと。',
+   ex:'試合後に強がってみても後の祭りだよ。'},
+  {id:'k02',cat:'慣用句③',word:'相づちを打つ',read:'あいづちをうつ',
    meaning:'相手の話に調子を合わせて、受け答えをする。',
-   ex:'友達の話を聞きながら、相づちを打って聞いていた。'},
-  {id:'k03', cat:'慣用句③', word:'一日の長', read:'いちじつのちょう',
+   ex:'友達の話を聞きながら相づちを打った。'},
+  {id:'k03',cat:'慣用句③',word:'一日の長',read:'いちじつのちょう',
    meaning:'知識・経験・技能などが少しすぐれていること。',
-   ex:'あの人には一日の長があるから、教えてもらおう。'},
-  {id:'k04', cat:'慣用句③', word:'色をなす', read:'いろをなす',
+   ex:'あの人には一日の長があるから教えてもらおう。'},
+  {id:'k04',cat:'慣用句③',word:'色をなす',read:'いろをなす',
    meaning:'怒って顔色を変える。',
    ex:'批判されて色をなして反論した。'},
-  {id:'k05', cat:'慣用句③', word:'うつつを抜かす', read:'うつつをぬかす',
-   meaning:'ある事に夢中になり、心を奪われる。',
+  {id:'k05',cat:'慣用句③',word:'うつつを抜かす',read:'うつつをぬかす',
+   meaning:'ある事に夢中になり、心を奪われる。他のことを忘れる。',
    ex:'ゲームにうつつを抜かしている場合じゃない。'},
-  {id:'k06', cat:'慣用句③', word:'縁起でもない', read:'えんぎでもない',
+  {id:'k06',cat:'慣用句③',word:'縁起でもない',read:'えんぎでもない',
    meaning:'不吉で縁起が悪い。',
    ex:'そんな縁起でもないことを言うな。'},
-  {id:'k07', cat:'慣用句③', word:'縁起を担ぐ', read:'えんぎをかつぐ',
-   meaning:'ちょっとした物事に対して、よい前兆だとか悪い前兆だとかを気にする。',
+  {id:'k07',cat:'慣用句③',word:'縁起を担ぐ',read:'えんぎをかつぐ',
+   meaning:'物事に対して、よい前兆か悪い前兆かを気にする。',
    ex:'試合前に必ず同じものを食べる、縁起を担ぐタイプだ。'},
-  {id:'k08', cat:'慣用句③', word:'縁もゆかりもない', read:'えんもゆかりもない',
+  {id:'k08',cat:'慣用句③',word:'縁もゆかりもない',read:'えんもゆかりもない',
    meaning:'何のかかわりもない。類義の語を重ねて強調した表現。',
    ex:'縁もゆかりもない土地に引っ越した。'},
-  {id:'k09', cat:'慣用句③', word:'十八番', read:'おはこ',
-   meaning:'得意の芸。得意とする物事。じゅうはちばん。',
+  {id:'k09',cat:'慣用句③',word:'十八番',read:'おはこ',
+   meaning:'得意の芸。得意とする物事。（じゅうはちばん）',
    ex:'このものまねは彼の十八番だ。'},
-  {id:'k10', cat:'慣用句③', word:'思うつぼ', read:'おもうつぼ',
+  {id:'k10',cat:'慣用句③',word:'思うつぼ',read:'おもうつぼ',
    meaning:'意図した状態。たくらんだとおり。',
    ex:'罠にはまって、相手の思うつぼになってしまった。'},
-  {id:'k11', cat:'慣用句③', word:'恩をとる', read:'おんをとる',
-   meaning:'皆をまとめて手はずを整え、実現するように取り計ってゆく。',
-   ex:'みんなをまとめて恩をとる立場になった。'},
-  {id:'k12', cat:'慣用句③', word:'恩を売る', read:'おんをうる',
-   meaning:'相手からの感謝や見返りなどを期待して恩を施す。',
+  {id:'k11',cat:'慣用句③',word:'恩を売る',read:'おんをうる',
+   meaning:'後で見返りを期待して、相手に親切にする。',
    ex:'今のうちにあいつに恩を売っておけば、後で役に立つだろう。'},
-  {id:'k13', cat:'慣用句③', word:'恩に着せる', read:'おんにきせる',
-   meaning:'恩を施したことについて、恩人に害を与える。恩を施そうとする。',
-   ex:'あの人は何かと恩に着せるような態度を取ってきてうっとうしい。'},
-  {id:'k14', cat:'慣用句③', word:'恩を仇で返す', read:'おんをあだでかえす',
-   meaning:'恩返しをしないで、かえって恩人に害を与える。',
+  {id:'k12',cat:'慣用句③',word:'恩に着せる',read:'おんにきせる',
+   meaning:'してあげたことを恩着せがましく押しつける。',
+   ex:'あの人は何かと恩に着せるような態度を取ってくる。'},
+  {id:'k13',cat:'慣用句③',word:'恩を仇で返す',read:'おんをあだでかえす',
+   meaning:'親切にしてもらったのに、逆に害を与える。',
    ex:'助けてもらったのに恩を仇で返すとは何事だ。'},
-  {id:'k15', cat:'慣用句③', word:'けがの功名', read:'けがのこうみょう',
-   meaning:'過失と思われたこと、なにげなしにやったことが、意外によい結果になること。',
+  {id:'k14',cat:'慣用句③',word:'けがの功名',read:'けがのこうみょう',
+   meaning:'失敗や何気なくやったことが、意外によい結果になること。',
    ex:'迷子になったけがの功名で、素敵なお店を発見した。'},
-  {id:'k16', cat:'慣用句③', word:'座が白ける', read:'ざがしらける',
-   meaning:'盛り上がっていた一座の雰囲気がよそよそしくなること。',
+  {id:'k15',cat:'慣用句③',word:'座が白ける',read:'ざがしらける',
+   meaning:'盛り上がっていた場の雰囲気が冷めてよそよそしくなること。',
    ex:'空気を読まない発言で座が白けてしまった。'},
-  {id:'k17', cat:'慣用句③', word:'図に乗る', read:'ずにのる',
+  {id:'k16',cat:'慣用句③',word:'図に乗る',read:'ずにのる',
    meaning:'思いどおりになっていい気になる。つけあがる。',
    ex:'少し褒めたら図に乗って調子に乗り出した。'},
-  {id:'k18', cat:'慣用句③', word:'そりが合わない', read:'そりがあわない',
-   meaning:'考え方が一致せずどうしても協調できない。',
+  {id:'k17',cat:'慣用句③',word:'そりが合わない',read:'そりがあわない',
+   meaning:'考え方が合わずどうしても協調できない。',
    ex:'あの二人はどうもそりが合わないようだ。'},
-  {id:'k19', cat:'慣用句③', word:'高が知れる', read:'たかがしれる',
-   meaning:'たいしたことはない。',
+  {id:'k18',cat:'慣用句③',word:'高が知れる',read:'たかがしれる',
+   meaning:'たいしたことはない。たかをくくる。',
    ex:'今さら少し勉強しても高が知れている。'},
-  {id:'k20', cat:'慣用句③', word:'高飛車', read:'たかびしゃ',
+  {id:'k19',cat:'慣用句③',word:'高飛車',read:'たかびしゃ',
    meaning:'相手に対して高圧的な態度をとること。',
    ex:'高飛車な態度で交渉に臨んだ。'},
-  {id:'k21', cat:'慣用句③', word:'高みの見物', read:'たかみのけんぶつ',
-   meaning:'第三者の立場から、興味本位に物事の成り行きを傍観すること。',
-   ex:'争いを高みの見物をしていた。'},
-  {id:'k22', cat:'慣用句③', word:'高をくくる', read:'たかをくくる',
+  {id:'k20',cat:'慣用句③',word:'高みの見物',read:'たかみのけんぶつ',
+   meaning:'第三者の立場から興味本位に物事の成り行きを傍観すること。',
+   ex:'争いを高みの見物していた。'},
+  {id:'k21',cat:'慣用句③',word:'高をくくる',read:'たかをくくる',
    meaning:'どうせたいしたことはないと、軽くみる。',
    ex:'高をくくっていたら、思わぬ失敗をした。'},
-  {id:'k23', cat:'慣用句③', word:'竹馬の友', read:'ちくばのとも',
+  {id:'k22',cat:'慣用句③',word:'竹馬の友',read:'ちくばのとも',
    meaning:'ともに竹馬で遊んだような、幼い時からの友。',
    ex:'彼は幼少期からの竹馬の友だ。'},
-  {id:'k24', cat:'慣用句③', word:'断末魔', read:'だんまつま',
-   meaning:'息を引き取るまぎわ。臨終。',
-   ex:'断末魔の苦しみ。'},
-  {id:'k25', cat:'慣用句③', word:'つぶぞろい', read:'つぶぞろい',
-   meaning:'1 たくさんの中の粒の大きさや質が、良質でそろっていること。2 集まった人々の能力や質がましていないこと。',
+  {id:'k23',cat:'慣用句③',word:'断末魔',read:'だんまつま',
+   meaning:'息を引き取るまぎわ。臨終。最後の苦しみ。',
+   ex:'断末魔の叫び。'},
+  {id:'k24',cat:'慣用句③',word:'つぶぞろい',read:'つぶぞろい',
+   meaning:'メンバー全員の能力や質がそろっていてすぐれていること。',
    ex:'今年の新入部員はつぶぞろいだ。'},
-  {id:'k26', cat:'慣用句③', word:'堂に入る', read:'どうにいる',
-   meaning:'学問や技芸がすぐれて、深奥をきわめている。あわてたり、さわぐことなく、あわただしく立ち働くこと。',
+  {id:'k25',cat:'慣用句③',word:'堂に入る',read:'どうにいる',
+   meaning:'学問や技芸が深奥をきわめていて、非常にすぐれていること。',
    ex:'堂に入った演技を見せてくれた。'},
-  {id:'k27', cat:'慣用句③', word:'途方に暮れる', read:'とほうにくれる',
+  {id:'k26',cat:'慣用句③',word:'途方に暮れる',read:'とほうにくれる',
    meaning:'方法や手段が尽きて、どうしてよいかわからなくなる。',
    ex:'どうしたらいいか途方に暮れてしまった。'},
-  {id:'k28', cat:'慣用句③', word:'二の句がつげない', read:'にのくがつげない',
-   meaning:'次に言うべき言葉が出てこない。あきれたり驚いたりして次に言うべき言葉を失う。',
+  {id:'k27',cat:'慣用句③',word:'二の句がつげない',read:'にのくがつげない',
+   meaning:'あきれたり驚いたりして、次に言うべき言葉が出てこない。',
    ex:'あまりのことに二の句がつげなかった。'},
-  {id:'k29', cat:'慣用句③', word:'二の舞を演じる', read:'にのまいをえんじる',
+  {id:'k28',cat:'慣用句③',word:'二の舞を演じる',read:'にのまいをえんじる',
    meaning:'前の人と同じあやまちを繰り返す。',
    ex:'先輩の二の舞を演じないよう気をつけた。'},
-  {id:'k30', cat:'慣用句③', word:'抜き差しならない', read:'ぬきさしならない',
+  {id:'k29',cat:'慣用句③',word:'抜き差しならない',read:'ぬきさしならない',
    meaning:'動きがとれない。のっぴきならない。どうしようもない。',
    ex:'抜き差しならない状況に追い込まれた。'},
-  {id:'k31', cat:'慣用句③', word:'場数をふむ', read:'ばかずをふむ',
+  {id:'k30',cat:'慣用句③',word:'場数をふむ',read:'ばかずをふむ',
    meaning:'多くの経験を積む。',
-   ex:'場数をふんでこそ、本物の力がつく。'},
-  {id:'k32', cat:'慣用句③', word:'非の打ちどころがない', read:'ひのうちどころがない',
+   ex:'場数をふんでこそ本物の力がつく。'},
+  {id:'k31',cat:'慣用句③',word:'非の打ちどころがない',read:'ひのうちどころがない',
    meaning:'すぐれていて、少しも欠点がないこと。',
    ex:'彼女の仕事ぶりは非の打ちどころがない。'},
-  {id:'k33', cat:'慣用句③', word:'間が抜ける', read:'まがぬける',
-   meaning:'1 調子が外れる。きまりが悪い。ばつが悪い。2 大事なことが抜け落ちている。',
+  {id:'k32',cat:'慣用句③',word:'間が抜ける',read:'まがぬける',
+   meaning:'①調子が外れてきまりが悪い ②大事なことが抜け落ちている',
    ex:'間が抜けたタイミングで発言してしまった。'},
-  {id:'k34', cat:'慣用句③', word:'間が悪い', read:'まがわるい',
-   meaning:'1 きまりが悪い。ばつが悪い。2 運が悪い。折が悪い。',
+  {id:'k33',cat:'慣用句③',word:'間が悪い',read:'まがわるい',
+   meaning:'①きまりが悪い・ばつが悪い ②運が悪い・折が悪い',
    ex:'間が悪いことに、ちょうどその場に居合わせてしまった。'},
-  {id:'k35', cat:'慣用句③', word:'見得を切る', read:'みえをきる',
-   meaning:'ことさらに自分の力を誇示するような態度・言葉で無理をする。また、いい所を見せようと無理をする。',
+  {id:'k34',cat:'慣用句③',word:'見得を切る',read:'みえをきる',
+   meaning:'ことさらに自分の力を誇示するような態度・言葉をとる。',
    ex:'大勢の前で見得を切って宣言した。'},
-  {id:'k36', cat:'慣用句③', word:'神輿を担ぐ', read:'みこしをかつぐ',
-   meaning:'他人をおだて上げ、長続きしないこと。その人。',
-   ex:'みんなで神輿を担いで盛り上げた。'},
-  {id:'k37', cat:'慣用句③', word:'三日坊主', read:'みっかぼうず',
-   meaning:'物事に飽きやすく、長続きしないこと。また、その人。',
+  {id:'k35',cat:'慣用句③',word:'神輿を担ぐ',read:'みこしをかつぐ',
+   meaning:'人をおだて上げて、ある地位や役割につかせる。',
+   ex:'みんなで彼を神輿を担いで会長にした。'},
+  {id:'k36',cat:'慣用句③',word:'三日坊主',read:'みっかぼうず',
+   meaning:'物事に飽きやすく、長続きしないこと。またその人。',
    ex:'また三日坊主で終わってしまった。'},
-  {id:'k38', cat:'慣用句③', word:'武者ぶるい', read:'むしゃぶるい',
-   meaning:'戦いや重大な場面に臨んで、興奮のためにからだが震えること。',
+  {id:'k37',cat:'慣用句③',word:'武者ぶるい',read:'むしゃぶるい',
+   meaning:'戦いや重大な場面に臨んで興奮のためにからだが震えること。',
    ex:'試合前の武者ぶるいが止まらない。'},
-  {id:'k39', cat:'慣用句③', word:'もっけの幸い', read:'もっけのさいわい',
-   meaning:'思いがけない幸運。だしぬけ。唐突。',
+  {id:'k38',cat:'慣用句③',word:'もっけの幸い',read:'もっけのさいわい',
+   meaning:'思いがけない幸運。だしぬけに得られたよいこと。',
    ex:'財布を拾ったのはもっけの幸いだった。'},
-  {id:'k40', cat:'慣用句③', word:'やぶから棒', read:'やぶからぼう',
-   meaning:'突然に物事を行うさま。だしぬけ。唐突。',
-   ex:'やぶから棒に何を言い出すんだ。'},
-  {id:'k41', cat:'慣用句③', word:'らちがあかない', read:'らちがあかない',
-   meaning:'物事が解決しないこと。決着がつかないこと。',
-   ex:'話し合っても全然らちがあかない。'},
-  {id:'k42', cat:'慣用句③', word:'輪をかける', read:'わをかける',
-   meaning:'程度をさらにはなはだしくする。',
-   ex:'親以上に輪をかけたおしゃべりだ。'},
 ];
 
 const CATS = ['和語③','慣用句③'];
-const STORAGE_KEY = 'kankoto11_mastery';
-const KANA = ['ア','イ','ウ','エ','オ','カ','キ','ク'];
+const STORAGE_KEY = 'kankoto11_redo';
 
-// ===== 習熟度管理 =====
-function loadMastery(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}');}catch{return {};}}
-function saveMastery(m){localStorage.setItem(STORAGE_KEY,JSON.stringify(m));}
-function getMastery(id){return loadMastery()[id]||0;}
-function setMastery(id,v){const m=loadMastery();m[id]=v;saveMastery(m);}
+// ===== ローカルストレージ =====
+function loadRedo(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');}catch{return[];}}
+function saveRedo(ids){localStorage.setItem(STORAGE_KEY,JSON.stringify(ids));}
 
-// ===== 統計 =====
-function getStats(){
-  const m=loadMastery();
-  const total=WORDS.length;
-  const done=WORDS.filter(w=>m[w.id]>=1).length;
-  const mastered=WORDS.filter(w=>m[w.id]>=3).length;
-  return {total,done,mastered};
+function updateRedoBtn(){
+  const r=loadRedo(), btn=document.getElementById('redo-home-btn'), cnt=document.getElementById('redo-home-count');
+  if(r.length>0){btn.style.display='flex';cnt.textContent=r.length+'問';}
+  else{btn.style.display='none';}
 }
 
 // ===== 画面切替 =====
 function showScreen(id){
-  ['home','list','card','quiz','result'].forEach(s=>document.getElementById('screen-'+s).classList.add('hidden'));
+  ['home','study','quiz','result'].forEach(s=>document.getElementById('screen-'+s).classList.add('hidden'));
   document.getElementById('screen-'+id).classList.remove('hidden');
 }
+function showHome(){updateRedoBtn();showScreen('home');}
 
-// ===== ホーム =====
-function buildHome(){
-  const {total,done,mastered}=getStats();
-  const pct=Math.round(mastered/total*100);
-  document.getElementById('screen-home').innerHTML=`
-    <div class="home-hero">
-      <div class="home-hero-title">漢コト 11-12</div>
-      <div class="home-hero-sub">和語③ · 慣用句③ · ${total}語</div>
-    </div>
-    <div class="stats-row">
-      <div class="stat-box"><div class="stat-num">${total}</div><div class="stat-label">総語数</div></div>
-      <div class="stat-box"><div class="stat-num">${done}</div><div class="stat-label">学習済み</div></div>
-      <div class="stat-box"><div class="stat-num">${mastered}</div><div class="stat-label">習得済み</div></div>
-    </div>
-    <div class="mastery-bar" style="margin-bottom:24px"><div class="mastery-fill" style="width:${pct}%"></div></div>
-
-    <div class="section-label">カテゴリ別学習</div>
-    <div class="mode-grid">
-      ${CATS.map(c=>{
-        const ws=WORDS.filter(w=>w.cat===c);
-        const cm=WORDS.filter(w=>w.cat===c&&getMastery(w.id)>=3).length;
-        return `<div class="mode-card" onclick="showList('${c}')">
-          <div class="mode-card-icon">${c==='和語③'?'📖':'🗣️'}</div>
-          <div class="mode-card-name">${c}</div>
-          <div class="mode-card-desc">${ws.length}語 · 習得${cm}</div>
-          <div class="mastery-bar" style="margin-top:8px"><div class="mastery-fill" style="width:${Math.round(cm/ws.length*100)}%"></div></div>
-        </div>`;
-      }).join('')}
-    </div>
-
-    <div class="section-label">クイズ</div>
-    <div class="mode-grid">
-      <div class="mode-card" onclick="startQuiz('全体','normal')">
-        <div class="mode-card-icon">🎯</div>
-        <div class="mode-card-name">全体クイズ</div>
-        <div class="mode-card-desc">全${total}語からランダム出題</div>
-      </div>
-      <div class="mode-card" onclick="startQuiz('全体','weak')">
-        <div class="mode-card-icon">💪</div>
-        <div class="mode-card-name">苦手克服</div>
-        <div class="mode-card-desc">習熟度の低い語を優先</div>
-      </div>
-      ${CATS.map(c=>`
-      <div class="mode-card" onclick="startQuiz('${c}','normal')">
-        <div class="mode-card-icon">${c==='和語③'?'📝':'💬'}</div>
-        <div class="mode-card-name">${c}</div>
-        <div class="mode-card-desc">クイズ</div>
-      </div>`).join('')}
-    </div>
-  `;
+// ===== リセット =====
+function doReset(){
+  saveRedo([]);
+  updateRedoBtn();
+  const btn=document.getElementById('reset-btn1');
+  btn.textContent='✅ リセットしました';
+  setTimeout(()=>{btn.textContent='🗑️ 全データをリセット（初期化）';},2000);
 }
 
-// ===== 一覧 =====
-function showList(cat){
-  const ws=WORDS.filter(w=>w.cat===cat);
-  document.getElementById('screen-list').innerHTML=`
-    <div class="list-header">
-      <button class="back-btn" onclick="goHome()">←</button>
-      <div class="list-title">${cat}（${ws.length}語）</div>
-    </div>
-    <div class="word-list">
-      ${ws.map(w=>{
-        const lv=getMastery(w.id);
-        return `<div class="word-item" onclick="startCard('${cat}','${w.id}')">
-          <div class="word-item-left">
-            <div class="word-item-word">${w.word}</div>
-            <div class="word-item-read">${w.read}</div>
-          </div>
-          <div class="word-item-right">
-            <div class="mastery-dot ${lv>=1?'m1':''} ${lv>=2?'m2':''} ${lv>=3?'m3':''}"></div>
-          </div>
-        </div>`;
-      }).join('')}
-    </div>
-  `;
-  showScreen('list');
+// ===== 学習モード =====
+let studyWords=[], studyIdx=0, studyCat='';
+function startStudy(cat){
+  studyCat=cat; studyWords=WORDS.filter(w=>w.cat===cat); studyIdx=0;
+  renderStudy(); showScreen('study');
+}
+function renderStudy(){
+  const w=studyWords[studyIdx];
+  const pct=(studyIdx/studyWords.length*100);
+  document.getElementById('study-prog').style.width=pct+'%';
+  document.getElementById('study-badge').textContent=studyCat;
+  document.getElementById('study-counter').textContent=(studyIdx+1)+' / '+studyWords.length;
+  document.getElementById('study-card-area').innerHTML=`
+    <div class="study-card">
+      <div class="study-word">${w.word}</div>
+      <div class="study-read">${w.read}</div>
+      <div class="study-divider"></div>
+      <div class="study-meaning">${w.meaning}</div>
+      ${w.ex?`<div class="study-ex">${w.ex}</div>`:''}
+    </div>`;
+  const btn=document.getElementById('study-next-btn');
+  btn.textContent=studyIdx+1>=studyWords.length?'完了！ →':'次へ →';
+}
+function studyNext(){
+  if(studyIdx+1>=studyWords.length){showHome();return;}
+  studyIdx++; renderStudy();
 }
 
-// ===== カード =====
-let cardWords=[], cardIdx=0, cardCat='';
-function startCard(cat, startId){
-  cardCat=cat;
-  cardWords=WORDS.filter(w=>w.cat===cat);
-  cardIdx=startId?cardWords.findIndex(w=>w.id===startId):0;
-  if(cardIdx<0)cardIdx=0;
-  renderCard();
-  showScreen('card');
-}
-function renderCard(){
-  const w=cardWords[cardIdx];
-  const pct=((cardIdx+1)/cardWords.length*100);
-  document.getElementById('screen-card').innerHTML=`
-    <div class="card-wrap">
-      <div class="card-progress">
-        <span class="card-counter">${cardIdx+1}/${cardWords.length}</span>
-        <div class="prog-bar"><div class="prog-fill" style="width:${pct}%"></div></div>
-        <button class="back-btn" onclick="showList('${cardCat}')">✕</button>
-      </div>
-      <div class="flashcard" id="flashcard" onclick="toggleCard()">
-        <div class="flashcard-tag">${w.cat}</div>
-        <div class="flashcard-word">${w.word}</div>
-        <div class="flashcard-read">${w.read}</div>
-        <div class="flashcard-meaning" id="fc-meaning">${w.meaning}</div>
-        <div class="flashcard-ex" id="fc-ex">${w.ex}</div>
-      </div>
-      <div class="card-hint">タップして意味を確認</div>
-      <div class="card-actions">
-        <button class="card-btn card-btn-ng" onclick="cardNext(false)">もう一度</button>
-        <button class="card-btn card-btn-ok" onclick="cardNext(true)">わかった！</button>
-      </div>
-      ${cardIdx>0?`<div style="text-align:center;margin-top:12px"><button style="background:none;border:none;color:var(--muted);font-size:0.8rem;cursor:pointer" onclick="cardPrev()">← 前へ</button></div>`:''}
-    </div>
-  `;
-}
-function toggleCard(){
-  document.getElementById('fc-meaning').style.display='block';
-  document.getElementById('fc-ex').style.display='block';
-  document.querySelector('.card-hint').style.display='none';
-}
-function cardNext(ok){
-  const w=cardWords[cardIdx];
-  if(ok){const cur=getMastery(w.id);setMastery(w.id,Math.min(cur+1,3));}
-  if(cardIdx+1>=cardWords.length){goHome();return;}
-  cardIdx++;renderCard();
-}
-function cardPrev(){if(cardIdx>0){cardIdx--;renderCard();}}
+// ===== クイズモード =====
+let quizWords=[], quizIdx=0, quizScore=0, quizAnswers=[], quizCat='', isRedo=false;
+function shuffle(a){return[...a].sort(()=>Math.random()-.5);}
 
-// ===== クイズ =====
-let quizWords=[], quizIdx=0, quizScore=0, quizAnswers=[];
-function startQuiz(cat, mode){
-  let ws = cat==='全体' ? [...WORDS] : WORDS.filter(w=>w.cat===cat);
-  if(mode==='weak'){
-    ws.sort((a,b)=>getMastery(a.id)-getMastery(b.id));
-    ws=ws.slice(0,Math.min(20,ws.length));
-  }
-  quizWords=shuffle(ws).slice(0,Math.min(20,ws.length));
-  quizIdx=0;quizScore=0;quizAnswers=[];
-  renderQuiz();showScreen('quiz');
+function startQuiz(cat){
+  quizCat=cat; isRedo=false;
+  quizWords=shuffle(WORDS.filter(w=>w.cat===cat));
+  quizIdx=0; quizScore=0; quizAnswers=[];
+  renderQuiz(); showScreen('quiz');
 }
-function shuffle(arr){return [...arr].sort(()=>Math.random()-.5);}
+function startRedoQuiz(){
+  const r=loadRedo();
+  if(!r.length){alert('解き直しの問題がありません');return;}
+  quizCat='解き直し'; isRedo=true;
+  quizWords=shuffle(WORDS.filter(w=>r.includes(w.id)));
+  quizIdx=0; quizScore=0; quizAnswers=[];
+  renderQuiz(); showScreen('quiz');
+}
 function renderQuiz(){
   const q=quizWords[quizIdx];
-  const pct=((quizIdx)/quizWords.length*100);
-  // 選択肢生成
-  const others=shuffle(WORDS.filter(w=>w.id!==q.id)).slice(0,3);
+  const pct=(quizIdx/quizWords.length*100);
+  document.getElementById('quiz-prog').style.width=pct+'%';
+  document.getElementById('quiz-badge').textContent=quizCat;
+  document.getElementById('quiz-counter').textContent=(quizIdx+1)+' / '+quizWords.length;
+  document.getElementById('q-text').textContent='「'+q.word+'」（'+q.read+'）';
+  document.getElementById('exp-area').classList.add('hidden');
+  document.getElementById('ai-hint-box').classList.add('hidden');
+  document.getElementById('ai-hint-text').textContent='';
+  document.getElementById('quit-btn').style.display='block';
+
+  // 選択肢：同カテゴリから3つ + 正解1つ
+  const pool=WORDS.filter(w=>w.id!==q.id&&w.cat===q.cat);
+  const others=shuffle(pool).slice(0,3);
   const choices=shuffle([q,...others]);
-  document.getElementById('screen-quiz').innerHTML=`
-    <div class="quiz-wrap">
-      <div class="card-progress">
-        <span class="card-counter">${quizIdx+1}/${quizWords.length}</span>
-        <div class="prog-bar"><div class="prog-fill" style="width:${pct}%"></div></div>
-        <button class="back-btn" onclick="goHome()">✕</button>
-      </div>
-      <div class="quiz-q-box">
-        <div class="quiz-q-label">意味を選んでください</div>
-        <div class="quiz-q-text">「${q.word}」</div>
-      </div>
-      <div class="quiz-choices">
-        ${choices.map((c,i)=>`
-          <button class="choice-btn" id="choice-${i}" onclick="answerQuiz(${i},'${c.id}','${q.id}')">
-            <span class="choice-kana">${KANA[i]}</span>${c.meaning.slice(0,40)}${c.meaning.length>40?'…':''}
-          </button>`).join('')}
-      </div>
-    </div>
-  `;
-  window._quizChoices=choices;
+
+  document.getElementById('choices').innerHTML=choices.map((c,i)=>
+    `<button class="choice-btn" id="ch-${i}" onclick="answerQuiz(${i},'${c.id}','${q.id}')">
+      <span class="choice-num">${i+1}</span>${c.meaning.length>45?c.meaning.slice(0,45)+'…':c.meaning}
+    </button>`
+  ).join('');
+  document.getElementById('next-btn').textContent=(quizIdx+1>=quizWords.length)?'結果を見る →':'次の問題 →';
+  window._choices=choices;
 }
 function answerQuiz(i,choiceId,correctId){
-  const q=quizWords[quizIdx];
-  const correct=choiceId===correctId;
-  if(correct){quizScore++;setMastery(q.id,Math.min(getMastery(q.id)+1,3));}
-  else{setMastery(q.id,Math.max(getMastery(q.id)-1,0));}
-  quizAnswers.push({word:q,userIdx:i,correct});
-  // 色つけ
-  window._quizChoices.forEach((c,j)=>{
-    const btn=document.getElementById('choice-'+j);
-    btn.disabled=true;
-    if(c.id===correctId)btn.classList.add('choice-ok');
-    else if(j===i)btn.classList.add('choice-ng');
-    else btn.classList.add('choice-dim');
+  const q=quizWords[quizIdx], ok=choiceId===correctId;
+  if(ok)quizScore++;
+  quizAnswers.push({word:q,userIdx:i,correct:ok});
+  window._choices.forEach((c,j)=>{
+    const b=document.getElementById('ch-'+j); b.disabled=true;
+    if(c.id===correctId)b.classList.add('choice-ok');
+    else if(j===i)b.classList.add('choice-ng');
+    else b.classList.add('choice-dim');
   });
-  // 解説表示
-  const qbox=document.querySelector('.quiz-q-box');
-  const exp=document.createElement('div');
-  exp.className='quiz-result';
-  exp.innerHTML=`
-    <div class="quiz-result-tag">${correct?'✅ 正解！':'❌ 不正解'}</div>
-    <div class="quiz-result-exp"><b>${q.word}（${q.read}）</b><br>${q.meaning}<br><span style="color:var(--accent);font-size:0.8rem">${q.ex}</span></div>
-  `;
-  document.querySelector('.quiz-wrap').appendChild(exp);
-  const nb=document.createElement('button');
-  nb.className='quiz-next-btn';
-  nb.textContent=quizIdx+1>=quizWords.length?'結果を見る →':'次の問題 →';
-  nb.onclick=()=>{quizIdx++;quizIdx>=quizWords.length?showResultScreen():renderQuiz();};
-  document.querySelector('.quiz-wrap').appendChild(nb);
+  document.getElementById('exp-tag').textContent=ok?'✅ 正解！':'❌ 不正解';
+  document.getElementById('exp-text').innerHTML=`<b>${q.word}（${q.read}）</b><br>${q.meaning}<br><span style="color:var(--accent);font-size:0.8rem">${q.ex||''}</span>`;
+  document.getElementById('exp-area').classList.remove('hidden');
+  document.getElementById('quit-btn').style.display='none';
+  fetchHint(q);
 }
-function showResultScreen(){
-  const total=quizWords.length;
-  const pct=Math.round(quizScore/total*100);
-  document.getElementById('screen-result').innerHTML=`
-    <div class="result-wrap">
-      <div class="result-score">${quizScore}<span class="result-total">/${total}</span></div>
-      <div class="result-msg">${pct>=90?'🎉 完璧！':pct>=70?'👏 よくできました！':pct>=50?'😊 もう少し！':'📖 もう一度挑戦しよう'}</div>
-      <div class="result-actions">
-        <button class="result-btn result-btn-retry" onclick="startQuiz('全体','normal')">もう一度</button>
-        <button class="result-btn result-btn-home" onclick="goHome()">ホームへ</button>
-      </div>
-    </div>
-  `;
-  showScreen('result');
+async function fetchHint(q){
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:200,
+        messages:[{role:'user',content:`小学5年生向け国語の解説です。以下の解説をもとに、子どもにわかりやすく30〜50字で「覚え方のポイント」を一言添えてください。解説：${q.meaning}`}]})});
+    const d=await r.json(),h=d.content?.[0]?.text;
+    if(h){document.getElementById('ai-hint-text').textContent=h;document.getElementById('ai-hint-box').classList.remove('hidden');}
+  }catch(e){}
 }
-function confirmReset(){
-  if(confirm('習熟度をリセットしますか？')){localStorage.removeItem(STORAGE_KEY);goHome();}}
-function goHome(){buildHome();showScreen('home');}
+function quizNext(){
+  if(quizIdx+1>=quizWords.length){showResult();return;}
+  quizIdx++; renderQuiz();
+}
+function quitQuiz(){
+  // 未回答を全て誤答として追加
+  quizWords.forEach(w=>{
+    if(!quizAnswers.find(a=>a.word.id===w.id)){
+      quizAnswers.push({word:w,userIdx:-1,correct:false});
+    }
+  });
+  showResult();
+}
+function retryQuiz(){
+  if(isRedo){startRedoQuiz();}
+  else{startQuiz(quizCat);}
+}
 
-buildHome();showScreen('home');
+function showResult(){
+  // 未回答を誤答として追加
+  quizWords.forEach(w=>{
+    if(!quizAnswers.find(a=>a.word.id===w.id)){
+      quizAnswers.push({word:w,userIdx:-1,correct:false});
+    }
+  });
+
+  const wrongIds=quizAnswers.filter(a=>!a.correct).map(a=>a.word.id);
+  const correctIds=quizAnswers.filter(a=>a.correct).map(a=>a.word.id);
+  const existing=loadRedo();
+  const merged=[...new Set([...existing,...wrongIds])].filter(id=>!correctIds.includes(id));
+  saveRedo(merged);
+
+  const total=quizAnswers.length;
+  document.getElementById('score-num').innerHTML=quizScore+'<span class="score-total">/'+total+'</span>';
+  const pct=quizScore/total;
+  document.getElementById('score-msg').textContent=
+    quizScore===total?'🎉 満点！すばらしい！':pct>=0.8?'👏 よくできました！':pct>=0.6?'😊 もう少し！':'📖 もう一度挑戦しよう';
+
+  document.getElementById('answer-list').innerHTML=quizAnswers.map(a=>{
+    const w=!a.correct&&a.userIdx>=0?'<span class="res-wrong">（あなた：'+window._choices?.[a.userIdx]?.meaning?.slice(0,20)+'…）</span>':
+            !a.correct?'<span class="res-wrong">（未回答）</span>':'';
+    return`<div class="res-item" style="border-left-color:${a.correct?'#22c55e':'#ef4444'}">
+      <div class="res-q">${a.word.word}（${a.word.read}）</div>
+      <div class="res-a">${a.correct?'✅':'❌'} ${a.word.meaning.slice(0,30)}… ${w}</div></div>`;
+  }).join('');
+
+  showScreen('result');
+
+  const btn=document.getElementById('redo-result-btn');
+  if(merged.length>0){btn.textContent='🔁 間違えた'+merged.length+'問を解き直す';btn.style.display='block';}
+  else{btn.style.display='none';}
+  updateRedoBtn();
+}
+
+updateRedoBtn(); showHome();
 </script>
 </body>
 </html>
