@@ -19,11 +19,11 @@ body { background: linear-gradient(135deg,#0f172a 0%,#1e293b 60%,#0f3460 100%); 
 .mode-btn { display: flex; align-items: center; gap: 16px; width: 100%; padding: 24px 20px; border-radius: 18px; border: 1px solid var(--border); cursor: pointer; margin-bottom: 14px; text-align: left; color: var(--text); }
 .mode-btn-blue { background: linear-gradient(135deg,#1e3a5f,#1e40af); box-shadow: 0 8px 32px rgba(59,130,246,0.25); }
 .mode-btn-green { background: linear-gradient(135deg,#14432a,#166534); box-shadow: 0 8px 32px rgba(34,197,94,0.2); }
-.mode-btn-fav { background: linear-gradient(135deg,#4a1d6e,#6d28d9); box-shadow: 0 8px 32px rgba(139,92,246,0.25); }
+.mode-btn-retry { background: linear-gradient(135deg,#7c2d12,#c2410c); box-shadow: 0 8px 32px rgba(234,88,12,0.25); }
 .mode-icon { font-size: 36px; }
 .mode-name { font-size: 20px; font-weight: 800; margin-bottom: 4px; }
 .mode-note { font-size: 13px; color: var(--muted); }
-.fav-count { font-size: 12px; color: #c4b5fd; background: rgba(139,92,246,0.2); padding: 2px 8px; border-radius: 99px; margin-left: 8px; }
+.retry-count { font-size: 12px; color: #fed7aa; background: rgba(234,88,12,0.2); padding: 2px 8px; border-radius: 99px; margin-left: 8px; }
 .back-btn { background: none; border: none; color: var(--blue-light); font-size: 15px; cursor: pointer; margin-bottom: 20px; padding: 4px 0; }
 .select-title { font-size: 20px; font-weight: 800; margin-bottom: 20px; }
 .select-btn { display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 18px 20px; margin-bottom: 10px; border-radius: 14px; border: 1px solid var(--border); background: var(--surface); cursor: pointer; color: var(--text); }
@@ -56,10 +56,12 @@ body { background: linear-gradient(135deg,#0f172a 0%,#1e293b 60%,#0f3460 100%); 
 .res-q { font-size: 12px; color: var(--muted); margin-bottom: 4px; line-height: 1.5; }
 .res-a { font-size: 14px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; gap: 8px; }
 .res-wrong { color: #f87171; font-weight: 400; font-size: 12px; }
-.fav-btn { background: none; border: none; font-size: 20px; cursor: pointer; padding: 2px 6px; line-height: 1; flex-shrink: 0; }
-.result-actions { display: flex; gap: 12px; margin-bottom: 32px; }
+.result-actions { display: flex; gap: 12px; margin-bottom: 16px; }
 .retry-btn { flex: 1; padding: 14px; border-radius: 12px; background: linear-gradient(135deg,#2563eb,#1d4ed8); color: #fff; font-weight: 800; font-size: 16px; border: none; cursor: pointer; }
 .home-btn { flex: 1; padding: 14px; border-radius: 12px; background: rgba(255,255,255,0.08); color: #fff; font-weight: 800; font-size: 16px; border: 1px solid var(--border); cursor: pointer; }
+.redo-btn { width: 100%; padding: 14px; border-radius: 12px; background: linear-gradient(135deg,#7c2d12,#c2410c); color: #fff; font-weight: 800; font-size: 16px; border: none; cursor: pointer; margin-bottom: 32px; }
+.quit-btn { width: 100%; padding: 10px; border-radius: 12px; background: none; border: 1px solid var(--border); color: var(--muted); font-size: 14px; cursor: pointer; margin-top: 8px; margin-bottom: 16px; }
+.redo-btn { width: 100%; padding: 14px; border-radius: 12px; background: linear-gradient(135deg,#7c2d12,#c2410c); color: #fff; font-weight: 800; font-size: 16px; border: none; cursor: pointer; margin-bottom: 32px; }
 .hidden { display: none!important; }
 </style>
 </head>
@@ -78,10 +80,11 @@ body { background: linear-gradient(135deg,#0f172a 0%,#1e293b 60%,#0f3460 100%); 
       <span class="mode-icon">📝</span>
       <div><div class="mode-name">回数別で確認</div><div class="mode-note">第11・12回をテスト形式で解く</div></div>
     </button>
-    <button class="mode-btn mode-btn-fav" id="fav-home-btn" onclick="startFavQuiz()" style="display:none">
-      <span class="mode-icon">⭐</span>
-      <div><div class="mode-name">お気に入り復習 <span class="fav-count" id="fav-home-count"></span></div><div class="mode-note">登録した問題をまとめて復習する</div></div>
+    <button class="mode-btn mode-btn-retry" id="redo-home-btn" onclick="startRedoQuiz()" style="display:none">
+      <span class="mode-icon">🔁</span>
+      <div><div class="mode-name">解き直し <span class="retry-count" id="redo-home-count"></span></div><div class="mode-note">前回間違えた問題をもう一度解く</div></div>
     </button>
+    <button style="width:100%;padding:10px;border-radius:12px;background:none;border:1px solid var(--border);color:var(--muted);font-size:13px;cursor:pointer;margin-top:4px;" onclick="confirmReset()">🗑️ 解き直しリストをリセット</button>
   </div>
   <div id="screen-theme" class="hidden">
     <button class="back-btn" onclick="showHome()">← もどる</button>
@@ -101,6 +104,7 @@ body { background: linear-gradient(135deg,#0f172a 0%,#1e293b 60%,#0f3460 100%); 
     </div>
     <div class="q-box"><p class="q-text" id="q-text"></p></div>
     <div id="options"></div>
+    <button class="quit-btn" onclick="quitQuiz()">終了する →</button>
     <div id="exp-area" class="hidden">
       <div class="exp-box">
         <div class="result-tag" id="result-tag"></div>
@@ -120,6 +124,7 @@ body { background: linear-gradient(135deg,#0f172a 0%,#1e293b 60%,#0f3460 100%); 
       <button class="retry-btn" onclick="retryQuiz()">もう一度</button>
       <button class="home-btn" onclick="showHome()">トップへ</button>
     </div>
+    <button class="redo-btn hidden" id="redo-btn" onclick="startRedoQuiz()">🔁 間違えた問題を解き直す</button>
   </div>
 </div>
 <script>
@@ -387,26 +392,22 @@ const Q = [
 
 const THEMES = ['主語・述語','修飾語','文の組み立て','語彙','語彙・慣用句'];
 const ROUNDS = [11,12];
-const STORAGE_KEY = 'gengo11_favorites';
+const STORAGE_KEY = 'gengo11_redo';
 let questions=[], idx=0, score=0, answers=[], lastFilter=null, lastMode=null;
+let isRedoMode = false;
 
-function loadFavs(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');}catch{return[];}}
-function saveFavs(ids){localStorage.setItem(STORAGE_KEY,JSON.stringify(ids));}
-function isFav(id){return loadFavs().includes(id);}
-function toggleFav(id){
-  let f=loadFavs();
-  f=f.includes(id)?f.filter(x=>x!==id):[...f,id];
-  saveFavs(f); updateFavHomeBtn(); return f.includes(id);
+function loadRedo(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');}catch{return[];}}
+function saveRedo(ids){localStorage.setItem(STORAGE_KEY,JSON.stringify(ids));}
+function updateRedoHomeBtn(){
+  const r=loadRedo(), btn=document.getElementById('redo-home-btn'), cnt=document.getElementById('redo-home-count');
+  if(r.length>0){btn.style.display='flex';cnt.textContent=r.length+'問';}
+  else{btn.style.display='none';}
 }
-function updateFavHomeBtn(){
-  const f=loadFavs(), btn=document.getElementById('fav-home-btn'), cnt=document.getElementById('fav-home-count');
-  if(f.length>0){btn.style.display='flex';cnt.textContent=f.length+'問';}else{btn.style.display='none';}
-}
-function startFavQuiz(){
-  const f=loadFavs();
-  if(!f.length){alert('お気に入りがまだありません');return;}
-  lastFilter='fav';lastMode='fav';
-  questions=shuffle(Q.filter(q=>f.includes(q.id)));
+function startRedoQuiz(){
+  const r=loadRedo();
+  if(!r.length){alert('解き直しの問題がありません');return;}
+  lastFilter='redo';lastMode='redo';isRedoMode=true;
+  questions=shuffle(Q.filter(q=>r.includes(q.id)));
   idx=0;score=0;answers=[];renderQ();showScreen('quiz');
 }
 function shuffle(a){return[...a].sort(()=>Math.random()-.5);}
@@ -414,7 +415,7 @@ function showScreen(id){
   ['home','theme','round','quiz','result'].forEach(s=>document.getElementById('screen-'+s).classList.add('hidden'));
   document.getElementById('screen-'+id).classList.remove('hidden');
 }
-function showHome(){updateFavHomeBtn();showScreen('home');}
+function showHome(){updateRedoHomeBtn();showScreen('home');}
 function showThemeSelect(){
   document.getElementById('theme-list').innerHTML=THEMES.map(t=>{
     const c=Q.filter(q=>q.theme===t).length;
@@ -428,7 +429,7 @@ function showRoundSelect(){
   }).join('');showScreen('round');
 }
 function startQuiz(filter,mode){
-  lastFilter=filter;lastMode=mode;
+  lastFilter=filter;lastMode=mode;isRedoMode=false;
   questions=shuffle(Q.filter(q=>mode==='theme'?q.theme===filter:q.round===filter));
   idx=0;score=0;answers=[];renderQ();showScreen('quiz');
 }
@@ -441,11 +442,18 @@ function renderQ(){
   document.getElementById('exp-area').classList.add('hidden');
   document.getElementById('ai-hint-box').classList.add('hidden');
   document.getElementById('ai-hint-text').textContent='';
+  document.querySelector('.quit-btn').classList.remove('hidden');
   document.getElementById('options').innerHTML=q.options.map((o,i)=>
     `<button class="opt-btn" id="opt-${i}" onclick="selectAns(${i})"><span class="opt-num">${i+1}</span>${o}</button>`
   ).join('');
   document.getElementById('next-btn').textContent=(idx+1>=questions.length)?'結果を見る →':'次の問題 →';
 }
+function confirmReset(){
+  if(confirm('解き直しリストをリセットしますか？')){
+    saveRedo([]);updateRedoHomeBtn();
+  }
+}
+function quitQuiz(){showResult();}
 function selectAns(i){
   const q=questions[idx], ok=i===q.answer;
   if(ok)score++;
@@ -459,6 +467,7 @@ function selectAns(i){
   document.getElementById('result-tag').textContent=ok?'✅ 正解！':'❌ 不正解　正解：'+q.options[q.answer];
   document.getElementById('exp-text').textContent=q.explanation;
   document.getElementById('exp-area').classList.remove('hidden');
+  document.querySelector('.quit-btn').classList.add('hidden');
   document.getElementById('prog-fill').style.width=((idx+1)/questions.length*100)+'%';
   fetchHint(q);
 }
@@ -476,26 +485,46 @@ function nextQuestion(){
   idx++;renderQ();
 }
 function showResult(){
+  // 未回答の問題を誤答として追加
+  questions.forEach(q=>{
+    if(!answers.find(a=>a.question.id===q.id)){
+      answers.push({question:q, userAnswer:-1, correct:false});
+    }
+  });
+  const wrongIds=answers.filter(a=>!a.correct).map(a=>a.question.id);
+  const correctIds=answers.filter(a=>a.correct).map(a=>a.question.id);
+  const existing=loadRedo();
+  const merged=[...new Set([...existing,...wrongIds])].filter(id=>!correctIds.includes(id));
+  saveRedo(merged);
+
   document.getElementById('score-num').innerHTML=score+'<span class="score-total">/'+questions.length+'</span>';
   const p=score/questions.length;
   document.getElementById('score-msg').textContent=
     score===questions.length?'🎉 満点！すばらしい！':p>=0.8?'👏 よくできました！':p>=0.6?'😊 もう少し！':'📖 もう一度挑戦しよう';
   document.getElementById('answer-list').innerHTML=answers.map(a=>{
-    const f=isFav(a.question.id);
-    const w=!a.correct?'<span class="res-wrong">（あなた：'+a.question.options[a.userAnswer]+'）</span>':'';
+    const w=!a.correct&&a.userAnswer>=0?'<span class="res-wrong">（あなた：'+a.question.options[a.userAnswer]+'）</span>':
+            !a.correct?'<span class="res-wrong">（未回答）</span>':'';
     return`<div class="res-item" style="border-left-color:${a.correct?'#22c55e':'#ef4444'}">
       <div class="res-q">${a.question.question.split('\n')[0]}</div>
-      <div class="res-a"><span>${a.correct?'✅':'❌'} ${a.question.options[a.question.answer]}${w}</span>
-      <button class="fav-btn" id="fav-${a.question.id}" onclick="handleFav('${a.question.id}')">${f?'⭐':'☆'}</button></div></div>`;
+      <div class="res-a"><span>${a.correct?'✅':'❌'} ${a.question.options[a.question.answer]}${w}</span></div></div>`;
   }).join('');
-  updateFavHomeBtn();showScreen('result');
+
+  updateRedoHomeBtn();
+  showScreen('result');
+
+  const redoBtn=document.getElementById('redo-btn');
+  if(merged.length>0){
+    redoBtn.textContent='🔁 間違えた'+merged.length+'問を解き直す';
+    redoBtn.style.display='block';
+  } else {
+    redoBtn.style.display='none';
+  }
 }
-function handleFav(id){
-  const n=toggleFav(id);
-  const b=document.getElementById('fav-'+id);if(b)b.textContent=n?'⭐':'☆';
+function retryQuiz(){
+  if(lastMode==='redo'){startRedoQuiz();}
+  else{startQuiz(lastFilter,lastMode);}
 }
-function retryQuiz(){startQuiz(lastFilter,lastMode);}
-updateFavHomeBtn();showHome();
+updateRedoHomeBtn();showHome();
 </script>
 </body>
 </html>
