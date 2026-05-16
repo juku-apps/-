@@ -61,6 +61,13 @@
   .score-badge.correct { color: var(--green-dark); border: 2px solid var(--green); }
   .score-badge.wrong { color: var(--coral-dark); border: 2px solid var(--coral); }
   .score-badge.retry { color: var(--teal-dark); border: 2px solid var(--teal); }
+  .btn-reset {
+    background: white; border: 2px solid #bbb;
+    border-radius: 20px; padding: 6px 14px;
+    font-family: inherit; font-size: 0.8rem; font-weight: 700;
+    color: #888; cursor: pointer; transition: all 0.2s;
+  }
+  .btn-reset:hover { border-color: var(--coral); color: var(--coral-dark); background: #fff0f0; }
 
   .section-title {
     font-size: 1.1rem; font-weight: 800; color: var(--teal-dark);
@@ -264,6 +271,9 @@
     <div class="score-badge wrong">❌ 不正解 <span id="totalWrong">0</span></div>
     <div class="score-badge retry">🔁 解き直し <span id="totalRetry">0</span></div>
   </div>
+  <div style="text-align:right; margin-bottom:8px;">
+    <button class="btn-reset" onclick="resetState()">🗑️ リセット</button>
+  </div>
   <div class="section-title">📚 テーマを選ぼう</div>
   <div class="theme-grid" id="themeGrid"></div>
 </div>
@@ -457,6 +467,44 @@ const themes = [
 ];
 
 // ===== STATE =====
+const STORAGE_KEY = 'quiz_special_rules_v1';
+
+function loadState() {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      return {
+        retryPool: parsed.retryPool || [],
+        totalCorrect: parsed.totalCorrect || 0,
+        totalWrong: parsed.totalWrong || 0,
+      };
+    }
+  } catch(e) {}
+  return { retryPool: [], totalCorrect: 0, totalWrong: 0 };
+}
+
+function saveState() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+      retryPool: state.retryPool,
+      totalCorrect: state.totalCorrect,
+      totalWrong: state.totalWrong,
+    }));
+  } catch(e) {}
+}
+
+function resetState() {
+  if (!confirm('記録（累計スコア・解き直しプール）をすべてリセットしますか？')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  state.retryPool = [];
+  state.totalCorrect = 0;
+  state.totalWrong = 0;
+  document.getElementById('globalScoreBar').style.display = 'none';
+  renderThemeGrid();
+}
+
+const _saved = loadState();
 let state = {
   currentTheme: null,
   currentQuestions: [],
@@ -464,9 +512,9 @@ let state = {
   sessionCorrect: 0,
   sessionWrong: 0,
   answered: false,
-  retryPool: [],
-  totalCorrect: 0,
-  totalWrong: 0,
+  retryPool: _saved.retryPool,
+  totalCorrect: _saved.totalCorrect,
+  totalWrong: _saved.totalWrong,
   isRetrySession: false,
 };
 
@@ -514,7 +562,7 @@ function renderThemeGrid() {
     grid.appendChild(card);
   });
 
-  if (state.totalCorrect + state.totalWrong > 0) {
+  if (state.totalCorrect + state.totalWrong > 0 || state.retryPool.length > 0) {
     document.getElementById('globalScoreBar').style.display = 'flex';
     document.getElementById('totalCorrect').textContent = state.totalCorrect;
     document.getElementById('totalWrong').textContent = state.totalWrong;
@@ -655,6 +703,7 @@ function showFeedback(isCorrect, q) {
     }
   }
   fb.style.display = 'block';
+  saveState();
 
   const isLast = state.currentIdx === state.currentQuestions.length - 1;
   const btnNext = document.getElementById('btnNext');
