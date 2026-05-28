@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>言語知識テスト 練習アプリ 13・14回</title>
+<style>
+:root {
+  --bg: #0f172a; --surface: rgba(255,255,255,0.05); --border: rgba(255,255,255,0.1);
+  --blue: #3b82f6; --blue-light: #60a5fa; --green: #22c55e; --red: #ef4444;
+  --text: #f1f5f9; --muted: #94a3b8;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+body { background: linear-gradient(135deg,#0f172a 0%,#1e293b 60%,#0f3460 100%); min-height: 100vh; font-family: 'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif; color: var(--text); padding: 16px; }
+.wrap { max-width: 600px; margin: 0 auto; }
+.home-title { text-align: center; padding: 40px 0 32px; }
+.home-title-main { font-size: 38px; font-weight: 900; letter-spacing: 0.1em; text-shadow: 0 0 40px rgba(96,165,250,0.7); }
+.home-title-sub { font-size: 14px; color: #93c5fd; margin-top: 6px; }
+.mode-btn { display: flex; align-items: center; gap: 16px; width: 100%; padding: 24px 20px; border-radius: 18px; border: 1px solid var(--border); cursor: pointer; margin-bottom: 14px; text-align: left; color: var(--text); }
+.mode-btn-blue { background: linear-gradient(135deg,#1e3a5f,#1e40af); box-shadow: 0 8px 32px rgba(59,130,246,0.25); }
+.mode-btn-green { background: linear-gradient(135deg,#14432a,#166534); box-shadow: 0 8px 32px rgba(34,197,94,0.2); }
+.mode-btn-orange { background: linear-gradient(135deg,#7c2d12,#c2410c); box-shadow: 0 8px 32px rgba(249,115,22,0.2); }
+.mode-icon { font-size: 36px; }
+.mode-name { font-size: 20px; font-weight: 800; margin-bottom: 4px; }
+.mode-note { font-size: 13px; color: var(--muted); }
+.redo-count { font-size: 12px; color: #fed7aa; background: rgba(249,115,22,0.2); padding: 2px 8px; border-radius: 99px; margin-left: 8px; }
+.back-btn { background: none; border: none; color: var(--blue-light); font-size: 15px; cursor: pointer; margin-bottom: 20px; padding: 4px 0; }
+.select-title { font-size: 20px; font-weight: 800; margin-bottom: 20px; }
+.select-btn { display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 18px 20px; margin-bottom: 10px; border-radius: 14px; border: 1px solid var(--border); background: var(--surface); cursor: pointer; color: var(--text); }
+.select-name { font-size: 17px; font-weight: 700; }
+.select-count { font-size: 13px; color: var(--blue-light); background: rgba(96,165,250,0.15); padding: 3px 10px; border-radius: 99px; }
+.prog-bar { height: 6px; background: rgba(255,255,255,0.1); border-radius: 99px; margin-bottom: 16px; overflow: hidden; }
+.prog-fill { height: 100%; background: linear-gradient(90deg,#3b82f6,#60a5fa); border-radius: 99px; transition: width 0.3s; }
+.quiz-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.badge { font-size: 12px; font-weight: 700; color: var(--blue-light); background: rgba(96,165,250,0.15); padding: 3px 10px; border-radius: 99px; }
+.counter { font-size: 13px; color: #64748b; }
+.q-box { background: var(--surface); border-radius: 16px; padding: 18px; margin-bottom: 14px; border: 1px solid var(--border); }
+.q-text { font-size: 15px; line-height: 1.9; font-weight: 600; white-space: pre-wrap; }
+.opt-btn { display: flex; align-items: flex-start; gap: 10px; width: 100%; padding: 12px 14px; margin-bottom: 8px; border-radius: 12px; border: 1px solid var(--border); background: rgba(255,255,255,0.04); cursor: pointer; color: var(--text); text-align: left; font-size: 14px; font-weight: 600; font-family: inherit; }
+.opt-btn:disabled { cursor: default; }
+.opt-num { width: 26px; height: 26px; border-radius: 50%; background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; color: var(--blue-light); min-width: 26px; margin-top: 1px; }
+.opt-ok { border-color: var(--green)!important; background: rgba(34,197,94,0.15)!important; color: #86efac; }
+.opt-ng { border-color: var(--red)!important; background: rgba(239,68,68,0.15)!important; color: #fca5a5; }
+.opt-dim { opacity: 0.35; }
+.exp-box { background: var(--surface); border-radius: 16px; padding: 18px; border: 1px solid var(--border); margin-top: 4px; }
+.result-tag { font-size: 15px; font-weight: 800; margin-bottom: 8px; }
+.exp-text { font-size: 13px; color: var(--muted); line-height: 1.8; margin-bottom: 12px; }
+.ai-hint { background: rgba(96,165,250,0.08); border: 1px solid rgba(96,165,250,0.2); border-radius: 10px; padding: 10px 14px; font-size: 13px; color: #bfdbfe; line-height: 1.7; margin-bottom: 14px; }
+.ai-hint-label { font-size: 11px; font-weight: 700; color: var(--blue-light); display: block; margin-bottom: 4px; }
+.next-btn { width: 100%; padding: 14px; border-radius: 12px; background: linear-gradient(135deg,#2563eb,#1d4ed8); color: #fff; font-weight: 800; font-size: 16px; border: none; cursor: pointer; }
+.quit-btn { width: 100%; padding: 10px; border-radius: 10px; background: none; border: 1px solid var(--border); color: var(--muted); font-size: 13px; cursor: pointer; margin-top: 8px; margin-bottom: 14px; font-family: inherit; }
+.score-box { text-align: center; background: var(--surface); border-radius: 20px; padding: 32px 24px; border: 1px solid var(--border); margin-bottom: 28px; }
+.score-num { font-size: 64px; font-weight: 900; line-height: 1; margin-bottom: 8px; }
+.score-total { font-size: 28px; color: var(--muted); }
+.score-msg { font-size: 18px; color: var(--blue-light); font-weight: 700; }
+.res-item { padding: 12px 14px; margin-bottom: 10px; border-radius: 12px; background: var(--surface); border-left: 4px solid transparent; }
+.res-q { font-size: 12px; color: var(--muted); margin-bottom: 4px; line-height: 1.5; }
+.res-a { font-size: 14px; font-weight: 700; }
+.res-wrong { color: #f87171; font-weight: 400; font-size: 12px; }
+.result-actions { display: flex; gap: 12px; margin-bottom: 14px; }
+.retry-btn { flex: 1; padding: 14px; border-radius: 12px; background: linear-gradient(135deg,#2563eb,#1d4ed8); color: #fff; font-weight: 800; font-size: 16px; border: none; cursor: pointer; }
+.home-btn2 { flex: 1; padding: 14px; border-radius: 12px; background: rgba(255,255,255,0.08); color: #fff; font-weight: 800; font-size: 16px; border: 1px solid var(--border); cursor: pointer; }
+.redo-result-btn { width: 100%; padding: 14px; border-radius: 12px; background: linear-gradient(135deg,#7c2d12,#c2410c); color: #fff; font-weight: 800; font-size: 16px; border: none; cursor: pointer; margin-bottom: 32px; font-family: inherit; }
+.reset-btn2 { width: 100%; padding: 10px; border-radius: 10px; background: none; border: 1px solid rgba(239,68,68,0.3); color: #f87171; font-size: 13px; cursor: pointer; margin-top: 8px; font-family: inherit; }
+.hidden { display: none!important; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div id="screen-home">
+    <div class="home-title">
+      <div class="home-title-main">言語知識</div>
+      <div class="home-title-sub">練習アプリ　第13・14回</div>
+    </div>
+    <button class="mode-btn mode-btn-blue" onclick="showThemeSelect()">
+      <span class="mode-icon">📚</span>
+      <div><div class="mode-name">テーマ別で練習</div><div class="mode-note">接続語・類義語・対義語など分野ごとに学ぶ</div></div>
+    </button>
+    <button class="mode-btn mode-btn-green" onclick="showRoundSelect()">
+      <span class="mode-icon">📝</span>
+      <div><div class="mode-name">回数別で確認</div><div class="mode-note">第13・14回をテスト形式で解く</div></div>
+    </button>
+    <button class="mode-btn mode-btn-orange" id="redo-home-btn" onclick="startRedoQuiz()" style="display:none">
+      <span class="mode-icon">🔁</span>
+      <div><div class="mode-name">解き直し <span class="redo-count" id="redo-home-count"></span></div><div class="mode-note">間違えた問題を累積復習</div></div>
+    </button>
+    <button class="reset-btn2" onclick="doReset()" id="reset-btn">🗑️ 解き直しリストをリセット</button>
+  </div>
+
+  <div id="screen-theme" class="hidden">
+    <button class="back-btn" onclick="showHome()">← もどる</button>
+    <div class="select-title">テーマを選んでください</div>
+    <div id="theme-list"></div>
+  </div>
+
+  <div id="screen-round" class="hidden">
+    <button class="back-btn" onclick="showHome()">← もどる</button>
+    <div class="select-title">回を選んでください</div>
+    <div id="round-list"></div>
+  </div>
+
+  <div id="screen-quiz" class="hidden">
+    <div class="prog-bar"><div class="prog-fill" id="prog-fill"></div></div>
+    <div class="quiz-meta">
+      <span class="badge" id="q-theme"></span>
+      <span class="counter" id="q-counter"></span>
+    </div>
+    <div class="q-box"><p class="q-text" id="q-text"></p></div>
+    <div id="options"></div>
+    <button class="quit-btn" id="quit-btn" onclick="quitQuiz()">終了する →</button>
+    <div id="exp-area" class="hidden">
+      <div class="exp-box">
+        <div class="result-tag" id="result-tag"></div>
+        <div class="exp-text" id="exp-text"></div>
+        <div class="ai-hint hidden" id="ai-hint-box"><span class="ai-hint-label">💡 ポイント</span><span id="ai-hint-text"></span></div>
+        <button class="next-btn" id="next-btn" onclick="nextQuestion()">次の問題 →</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="screen-result" class="hidden">
+    <button class="back-btn" onclick="showHome()">← もどる</button>
+    <div class="score-box">
+      <div class="score-num" id="score-num"></div>
+      <div class="score-msg" id="score-msg"></div>
+    </div>
+    <div id="answer-list"></div>
+    <div class="result-actions">
+      <button class="retry-btn" onclick="retryQuiz()">もう一度</button>
+      <button class="home-btn2" onclick="showHome()">トップへ</button>
+    </div>
+    <button class="redo-result-btn hidden" id="redo-result-btn" onclick="startRedoQuiz()">🔁 間違えた問題を解き直す</button>
+  </div>
+</div>
+
+<script>
+const Q = [
+  // ===== 第13回 =====
+
+  // 問1 接続語（A群＋B群 完答）
+  {id:'13-1-1', round:13, theme:'接続語',
+   question:'「ナイル川流域には古代エジプト文明が発達した。（　）、チグリス・ユーフラテス川は、古代メソポタミア文明を育んだ」\n\n接続語（A群）はどれですか？',
+   options:['また','ただし','なぜなら','つまり','だから'],
+   answer:0,
+   explanation:'「また」は二つの事柄を並べる並立の接続語。エジプト文明とメソポタミア文明という二つの文明を並べて述べている。'},
+  {id:'13-1-1b', round:13, theme:'接続語',
+   question:'「ナイル川流域には古代エジプト文明が発達した。また、チグリス・ユーフラテス川は、古代メソポタミア文明を育んだ」\n\nこの接続関係（B群）はどれですか？',
+   options:['順接','逆接','並立','添加','説明（例示）','説明（理由）','説明（換言）','説明（補足）','選択','転換'],
+   answer:2,
+   explanation:'「また」は二つの事柄を同格に並べる並立の関係。エジプト文明＋メソポタミア文明という対等な二つの情報を並べている。'},
+  {id:'13-1-2', round:13, theme:'接続語',
+   question:'「初夏から夏にかけて降水量が少なく、また気温も低かった。（　）、農産物の価格が上がるだろうと予想された」\n\n接続語（A群）はどれですか？',
+   options:['また','ただし','なぜなら','つまり','だから'],
+   answer:4,
+   explanation:'降水量が少なく気温が低い→農産物の価格が上がる、という原因→結果の流れ。「だから」は順接の接続語。'},
+  {id:'13-1-2b', round:13, theme:'接続語',
+   question:'「気温が低かった。だから、農産物の価格が上がるだろうと予想された」\n\nこの接続関係（B群）はどれですか？',
+   options:['順接','逆接','並立','添加','説明（例示）','説明（理由）','説明（換言）','説明（補足）','選択','転換'],
+   answer:0,
+   explanation:'前の事柄（気温が低い）から自然に後の事柄（価格上昇）が導かれる順接の関係。「だから・そのため・したがって」が順接の接続語。'},
+  {id:'13-1-3', round:13, theme:'接続語',
+   question:'「多くの民衆が大聖堂前の広場に集まった。（　）、国王が重大な発表をするとのお触れが出たからだ」\n\n接続語（A群）はどれですか？',
+   options:['また','ただし','なぜなら','つまり','だから'],
+   answer:2,
+   explanation:'「なぜなら〜からだ」の形で、前の文の理由を後で説明する。「なぜなら」は理由を説明する接続語。'},
+  {id:'13-1-3b', round:13, theme:'接続語',
+   question:'「民衆が広場に集まった。なぜなら、国王が重大な発表をするとのお触れが出たからだ」\n\nこの接続関係（B群）はどれですか？',
+   options:['順接','逆接','並立','添加','説明（例示）','説明（理由）','説明（換言）','説明（補足）','選択','転換'],
+   answer:5,
+   explanation:'後の文が前の文の「理由」を説明している。「なぜなら」は理由の説明を導く接続語。'},
+  {id:'13-1-4', round:13, theme:'接続語',
+   question:'「あの人は母の妹の娘ですので、（　）、私のいとこということになります」\n\n接続語（A群）はどれですか？',
+   options:['また','ただし','なぜなら','つまり','だから'],
+   answer:3,
+   explanation:'「つまり」は前の内容を言い換えて簡潔にまとめる換言の接続語。「母の妹の娘」＝「いとこ」と言い換えている。'},
+  {id:'13-1-4b', round:13, theme:'接続語',
+   question:'「あの人は母の妹の娘ですので、つまり、私のいとこということになります」\n\nこの接続関係（B群）はどれですか？',
+   options:['順接','逆接','並立','添加','説明（例示）','説明（理由）','説明（換言）','説明（補足）','選択','転換'],
+   answer:6,
+   explanation:'「つまり・すなわち・要するに」は前の内容を別の言い方でまとめる換言の接続語。「母の妹の娘」→「いとこ」と言い換えている。'},
+  {id:'13-1-5', round:13, theme:'接続語',
+   question:'「申し込みの締め切りは今月末日です。（　）、費用の払い込みは、来月の十日まででかまいません」\n\n接続語（A群）はどれですか？',
+   options:['また','ただし','なぜなら','つまり','だから'],
+   answer:1,
+   explanation:'「ただし」は前の内容に条件や例外を補足する接続語。締め切りの原則に対して、費用の例外ルールを補足している。'},
+  {id:'13-1-5b', round:13, theme:'接続語',
+   question:'「締め切りは今月末日です。ただし、費用の払い込みは来月の十日まででかまいません」\n\nこの接続関係（B群）はどれですか？',
+   options:['順接','逆接','並立','添加','説明（例示）','説明（理由）','説明（換言）','説明（補足）','選択','転換'],
+   answer:7,
+   explanation:'「ただし」は前の内容に対して条件・例外・制限を加える補足の接続語。'},
+
+  // 問2 接続関係
+  {id:'13-2-1', round:13, theme:'接続語',
+   question:'「飼うなら日本犬だ。柴犬、秋田犬、紀州犬、甲斐犬などだ」\n\n二文の接続関係はどれですか？',
+   options:['順接','逆接','並立','添加','説明（例示）','説明（理由）','説明（換言）','説明（補足）','選択','転換'],
+   answer:4,
+   explanation:'後の文が前の文の「日本犬」の例を具体的に挙げている。柴犬・秋田犬などが「日本犬」の例示。'},
+  {id:'13-2-2', round:13, theme:'接続語',
+   question:'「空は雲におおわれている。冷たい風まで吹き始めた」\n\n二文の接続関係はどれですか？',
+   options:['順接','逆接','並立','添加','説明（例示）','説明（理由）','説明（換言）','説明（補足）','選択','転換'],
+   answer:3,
+   explanation:'「〜まで」という言葉が添加のサイン。雲が出ている（第一の情報）に加えて、冷たい風も吹き始めた（第二の情報を追加）という添加の関係。'},
+  {id:'13-2-3', round:13, theme:'接続語',
+   question:'「学校まで徒歩で行きますか。自転車で行きますか」\n\n二文の接続関係はどれですか？',
+   options:['順接','逆接','並立','添加','説明（例示）','説明（理由）','説明（換言）','説明（補足）','選択','転換'],
+   answer:8,
+   explanation:'徒歩か自転車か、どちらかを選ぶ選択の関係。「〜か〜か」という形が選択のサイン。'},
+  {id:'13-2-4', round:13, theme:'接続語',
+   question:'「私からの報告は以上です。次回の研究会の日時を決めましょう」\n\n二文の接続関係はどれですか？',
+   options:['順接','逆接','並立','添加','説明（例示）','説明（理由）','説明（換言）','説明（補足）','選択','転換'],
+   answer:9,
+   explanation:'前の話題（報告）を終えて、別の話題（日時決め）に切り替えている転換の関係。'},
+  {id:'13-2-5', round:13, theme:'接続語',
+   question:'「多くの聴衆が集まった。彼の考えが理解されているかは怪しい」\n\n二文の接続関係はどれですか？',
+   options:['順接','逆接','並立','添加','説明（例示）','説明（理由）','説明（換言）','説明（補足）','選択','転換'],
+   answer:1,
+   explanation:'聴衆が集まった（よい面）→理解されているかは怪しい（反転）という逆接の関係。前の内容から予想される結果と逆のことが述べられている。'},
+
+  // 問3 類義語
+  {id:'13-3-1', round:13, theme:'類義語・対義語',
+   question:'「親友」の類義語はどれですか？\n\nア実質　イ知己　ウ簡単　エ合点　オ真意　カ日常',
+   options:['実質','知己','簡単','合点','真意','日常'],
+   answer:1,
+   explanation:'「知己（ちき）」は心の底までよく知り合った友人・親しい友のこと。「親友」と同じ意味。「知己を得る」のように使う。'},
+  {id:'13-3-2', round:13, theme:'類義語・対義語',
+   question:'「単純」の類義語はどれですか？\n\nア実質　イ知己　ウ簡単　エ合点　オ真意　カ日常',
+   options:['実質','知己','簡単','合点','真意','日常'],
+   answer:2,
+   explanation:'「簡単」は手間がかからず容易なこと。「単純」も複雑でなくシンプルなことを表し、両者は類義語の関係。'},
+  {id:'13-3-3', round:13, theme:'類義語・対義語',
+   question:'「内容」の類義語はどれですか？\n\nア実質　イ知己　ウ簡単　エ合点　オ真意　カ日常',
+   options:['実質','知己','簡単','合点','真意','日常'],
+   answer:0,
+   explanation:'「実質（じっしつ）」は外見ではなく実際の内容・中身のこと。「内容」と類義語の関係。「実質的な内容」のように使う。'},
+  {id:'13-3-4', round:13, theme:'類義語・対義語',
+   question:'「平生（へいぜい）」の類義語はどれですか？\n\nア実質　イ知己　ウ簡単　エ合点　オ真意　カ日常',
+   options:['実質','知己','簡単','合点','真意','日常'],
+   answer:5,
+   explanation:'「平生（へいぜい）」はふだん・いつものことを意味する。「日常」も毎日の普通の生活を指し、類義語の関係。'},
+
+  // 問4 類義語になる共通漢字
+  {id:'13-4-1', round:13, theme:'類義語・対義語',
+   question:'「■問＝■疑」\n■に共通してあてはまる漢字はどれですか？',
+   options:['質','問','疑','答','聞'],
+   answer:0,
+   explanation:'「質問」と「質疑」はどちらも「疑問に思ったことを問いただす」という意味の類義語。共通する漢字は「質」。'},
+  {id:'13-4-2', round:13, theme:'類義語・対義語',
+   question:'「生■＝実■」\n■に共通してあてはまる漢字はどれですか？',
+   options:['活','家','力','命','体'],
+   answer:1,
+   explanation:'「生家」は生まれた家・実家のこと。「実家」も同じ意味。共通する漢字は「家」。'},
+  {id:'13-4-3', round:13, theme:'類義語・対義語',
+   question:'「一■＝終■」\n■に共通してあてはまる漢字はどれですか？',
+   options:['末','終','生','代','期'],
+   answer:2,
+   explanation:'「一生」も「終生」も「生涯ずっと・死ぬまで」という意味の類義語。共通する漢字は「生」。'},
+
+  // 問5 意味の大きく違うもの
+  {id:'13-5-1', round:13, theme:'語彙',
+   question:'次の中で、他と意味が大きく違うものはどれですか？\n\nア面目ない　イ青筋を立てる　ウ腹が立つ　エ頭に血が上る',
+   options:['面目ない','青筋を立てる','腹が立つ','頭に血が上る'],
+   answer:0,
+   explanation:'「青筋を立てる・腹が立つ・頭に血が上る」はいずれも「怒る」という意味。「面目ない」は「恥ずかしい・申し訳ない」という意味で、怒りの表現ではない。'},
+  {id:'13-5-2', round:13, theme:'語彙',
+   question:'次の中で、他と意味が大きく違うものはどれですか？\n\nア面映ゆい　イもの悲しい　ウ切ない　エやるせない',
+   options:['面映ゆい','もの悲しい','切ない','やるせない'],
+   answer:0,
+   explanation:'「もの悲しい・切ない・やるせない」はいずれも「悲しい・辛い」という意味。「面映ゆい（おもはゆい）」は「恥ずかしい・照れくさい」という意味で仲間外れ。'},
+  {id:'13-5-3', round:13, theme:'語彙',
+   question:'次の中で、他と意味が大きく違うものはどれですか？\n\nア嘆く　イ浮かれる　ウ落ちこむ　エ憂える',
+   options:['嘆く','浮かれる','落ちこむ','憂える'],
+   answer:1,
+   explanation:'「嘆く・落ちこむ・憂える」はいずれも「悲しむ・気が沈む」という意味。「浮かれる」は「うれしくて気分が高まる」という正反対の意味。'},
+
+  // ===== 第14回 =====
+
+  // 問1 接続語（A群＋B群）
+  {id:'14-1-1', round:14, theme:'接続語',
+   question:'「おや、お久しぶり。（　）、例の件はどうなりました」\n\n接続語（A群）はどれですか？',
+   options:['すなわち','ところで','また','ただし','たとえば'],
+   answer:1,
+   explanation:'「ところで」は前の話題を切り上げて別の話題に移る転換の接続語。挨拶から本題（例の件）に転換している。'},
+  {id:'14-1-1b', round:14, theme:'接続語',
+   question:'「おや、お久しぶり。ところで、例の件はどうなりました」\n\nこの接続関係（B群）はどれですか？',
+   options:['順接','逆接','並立','添加','説明（例示）','説明（理由）','説明（換言）','説明（補足）','選択','転換'],
+   answer:9,
+   explanation:'「ところで・さて・では」は話題を別のものに切り替える転換の接続語。'},
+  {id:'14-1-2', round:14, theme:'接続語',
+   question:'「入場料は五〇〇円です。（　）、未就学児童は無料です」\n\n接続語（A群）はどれですか？',
+   options:['すなわち','ところで','また','ただし','たとえば'],
+   answer:3,
+   explanation:'「ただし」は前の内容（入場料500円）に対して例外・条件（未就学児は無料）を加える補足の接続語。'},
+  {id:'14-1-2b', round:14, theme:'接続語',
+   question:'「入場料は五〇〇円です。ただし、未就学児童は無料です」\n\nこの接続関係（B群）はどれですか？',
+   options:['順接','逆接','並立','添加','説明（例示）','説明（理由）','説明（換言）','説明（補足）','選択','転換'],
+   answer:7,
+   explanation:'「ただし」は原則に対する例外・条件を加える補足の接続語。「入場料500円」という原則に「未就学児無料」という補足を加えている。'},
+  {id:'14-1-3', round:14, theme:'接続語',
+   question:'「果物、（　）、ミカンやリンゴからビタミンを摂取する」\n\n接続語（A群）はどれですか？',
+   options:['すなわち','ところで','また','ただし','たとえば'],
+   answer:4,
+   explanation:'「たとえば」は前の事柄の具体例を挙げる例示の接続語。「果物」の例として「ミカンやリンゴ」を挙げている。'},
+  {id:'14-1-3b', round:14, theme:'接続語',
+   question:'「果物、たとえば、ミカンやリンゴからビタミンを摂取する」\n\nこの接続関係（B群）はどれですか？',
+   options:['順接','逆接','並立','添加','説明（例示）','説明（理由）','説明（換言）','説明（補足）','選択','転換'],
+   answer:4,
+   explanation:'「たとえば」は具体例を挙げる例示の接続語。「果物」という抽象的な語の具体例として「ミカンやリンゴ」を示している。'},
+  {id:'14-1-4', round:14, theme:'接続語',
+   question:'「コペルニクスの地動説、（　）、世界の見方の大転換だ」\n\n接続語（A群）はどれですか？',
+   options:['すなわち','ところで','また','ただし','たとえば'],
+   answer:0,
+   explanation:'「すなわち」は前の内容を別の言い方で言い換える換言の接続語。「地動説」＝「世界の見方の大転換」と言い換えている。'},
+  {id:'14-1-4b', round:14, theme:'接続語',
+   question:'「コペルニクスの地動説、すなわち、世界の見方の大転換だ」\n\nこの接続関係（B群）はどれですか？',
+   options:['順接','逆接','並立','添加','説明（例示）','説明（理由）','説明（換言）','説明（補足）','選択','転換'],
+   answer:6,
+   explanation:'「すなわち・つまり・要するに」は前の内容を別の言葉で言い換える換言の接続語。「地動説」を「世界の見方の大転換」と言い換えている。'},
+  {id:'14-1-5', round:14, theme:'接続語',
+   question:'「利根川は流域面積が広い。（　）、信濃川は日本一長い川だ」\n\n接続語（A群）はどれですか？',
+   options:['すなわち','ところで','また','ただし','たとえば'],
+   answer:2,
+   explanation:'「また」は二つの事柄を並べる並立の接続語。利根川と信濃川というそれぞれ異なる特徴を持つ川を並べている。'},
+  {id:'14-1-5b', round:14, theme:'接続語',
+   question:'「利根川は流域面積が広い。また、信濃川は日本一長い川だ」\n\nこの接続関係（B群）はどれですか？',
+   options:['順接','逆接','並立','添加','説明（例示）','説明（理由）','説明（換言）','説明（補足）','選択','転換'],
+   answer:2,
+   explanation:'「また」は二つの事柄を対等に並べる並立の接続語。利根川（面積が広い）と信濃川（長い）という二つの情報を並べている。'},
+
+  // 問2 文章の接続関係
+  {id:'14-2-1', round:14, theme:'接続語',
+   question:'【文章1】\n①日本は水資源の豊かな国である。\n②世界平均の約２倍に相当する降水量があるからだ。\n\n①と②の接続関係はどれですか？',
+   options:['順接','逆接','並立','添加','説明（例示）','説明（理由）','説明（換言）','説明（補足）','選択','転換'],
+   answer:5,
+   explanation:'②の文が①の理由を説明している。「〜からだ」という語尾が理由の説明のサイン。「なぜなら〜からだ」という構造。'},
+  {id:'14-2-2', round:14, theme:'接続語',
+   question:'【文章1】\n②世界平均の約２倍に相当する降水量があるからだ。\n③梅雨と台風の時期に集中するために降水量の変動が激しいという問題もある。\n\n②と③の接続関係はどれですか？',
+   options:['順接','逆接','並立','添加','説明（例示）','説明（理由）','説明（換言）','説明（補足）','選択','転換'],
+   answer:1,
+   explanation:'②豊富な降水量（よい面）→③変動が激しいという問題（悪い面）という逆接の関係。予想と反対の内容が続いている。'},
+  {id:'14-2-3', round:14, theme:'接続語',
+   question:'【文章2】\n①「拡大造林」政策が強力に推し進められた。\n②一九六〇年代以降、安い外国産の木材が大量に輸入されるようになった。\n\n①と②の接続関係はどれですか？',
+   options:['順接','逆接','並立','添加','説明（例示）','説明（理由）','説明（換言）','説明（補足）','選択','転換'],
+   answer:1,
+   explanation:'①造林政策を推進（国産材を増やす方向）→②外国産木材が大量輸入（逆の流れ）という逆接の関係。'},
+  {id:'14-2-4', round:14, theme:'接続語',
+   question:'【文章2】\n②一九八〇年頃をピークに国産材の価格は下落し続けた。\n③その結果、日本の林業経営の衰退が始まり、森林の荒廃が進んだ。\n\n②と③の接続関係はどれですか？',
+   options:['順接','逆接','並立','添加','説明（例示）','説明（理由）','説明（換言）','説明（補足）','選択','転換'],
+   answer:0,
+   explanation:'②価格下落→③林業衰退・森林荒廃という原因→結果の順接の関係。「その結果」という言葉が順接のサイン。'},
+
+  // 問3 対義語
+  {id:'14-3-1', round:14, theme:'類義語・対義語',
+   question:'「権利」の対義語はどれですか？\n\nア建前　イ義務　ウ手段　エ回答　オ容易　カ玄人　キ偽　ク私',
+   options:['建前','義務','手段','回答','容易','玄人','偽','私'],
+   answer:1,
+   explanation:'「権利」は自分の利益のために主張できること。対義語は「義務」（しなければならないこと）。「権利と義務」はセットで覚える。'},
+  {id:'14-3-2', round:14, theme:'類義語・対義語',
+   question:'「質問」の対義語はどれですか？\n\nア建前　イ義務　ウ手段　エ回答　オ容易　カ玄人　キ偽　ク私',
+   options:['建前','義務','手段','回答','容易','玄人','偽','私'],
+   answer:3,
+   explanation:'「質問」（問うこと）の対義語は「回答」（答えること）。「質問と回答」はセットで覚える。'},
+  {id:'14-3-3', round:14, theme:'類義語・対義語',
+   question:'「困難」の対義語はどれですか？\n\nア建前　イ義務　ウ手段　エ回答　オ容易　カ玄人　キ偽　ク私',
+   options:['建前','義務','手段','回答','容易','玄人','偽','私'],
+   answer:4,
+   explanation:'「困難」（難しいこと）の対義語は「容易（ようい）」（たやすいこと）。「容易ではない」＝「困難だ」。'},
+  {id:'14-3-4', round:14, theme:'類義語・対義語',
+   question:'「公（おおやけ）」の対義語はどれですか？\n\nア建前　イ義務　ウ手段　エ回答　オ容易　カ玄人　キ偽　ク私',
+   options:['建前','義務','手段','回答','容易','玄人','偽','私'],
+   answer:7,
+   explanation:'「公（おおやけ）」は社会全体・公共のこと。対義語は「私（わたくし）」（個人・プライベート）。「公私混同」という熟語でも使われる。'},
+  {id:'14-3-5', round:14, theme:'類義語・対義語',
+   question:'「素人（しろうと）」の対義語はどれですか？\n\nア建前　イ義務　ウ手段　エ回答　オ容易　カ玄人　キ偽　ク私',
+   options:['建前','義務','手段','回答','容易','玄人','偽','私'],
+   answer:5,
+   explanation:'「素人」は専門的な知識・技術のない人。対義語は「玄人（くろうと）」（専門家・その道のプロ）。'},
+  {id:'14-3-6', round:14, theme:'類義語・対義語',
+   question:'「目的」の対義語はどれですか？\n\nア建前　イ義務　ウ手段　エ回答　オ容易　カ玄人　キ偽　ク私',
+   options:['建前','義務','手段','回答','容易','玄人','偽','私'],
+   answer:2,
+   explanation:'「目的」は目指すゴールのこと。対義語は「手段」（目的を達成するための方法・手立て）。「目的と手段」はセットで覚える。'},
+  {id:'14-3-7', round:14, theme:'類義語・対義語',
+   question:'「本音」の対義語はどれですか？\n\nア建前　イ義務　ウ手段　エ回答　オ容易　カ玄人　キ偽　ク私',
+   options:['建前','義務','手段','回答','容易','玄人','偽','私'],
+   answer:0,
+   explanation:'「本音」は本当の気持ち・本心のこと。対義語は「建前（たてまえ）」（表向きの気持ち・表面上の理由）。「本音と建前」はセットで覚える。'},
+  {id:'14-3-8', round:14, theme:'類義語・対義語',
+   question:'「真」の対義語はどれですか？\n\nア建前　イ義務　ウ手段　エ回答　オ容易　カ玄人　キ偽　ク私',
+   options:['建前','義務','手段','回答','容易','玄人','偽','私'],
+   answer:6,
+   explanation:'「真（しん）」は本物・真実のこと。対義語は「偽（ぎ）」（にせもの・うそ）。「真偽（しんぎ）」という熟語でもセットで使われる。'},
+
+  // 問4 熟語の意味と対義語
+  {id:'14-4-1', round:14, theme:'類義語・対義語',
+   question:'「主観（しゅかん）」の意味はどれですか？\n\nア二つ以上のものに共通する性質をぬき出すこと\nイ自分ひとりのものの見方・感じ方のこと\nウ他に比較するものや対立するものがないこと',
+   options:['ア：共通する性質をぬき出すこと','イ：自分ひとりの見方・感じ方','ウ：対立するものがないこと'],
+   answer:1,
+   explanation:'「主観」は自分だけの見方・感じ方。「主観的」とも言う。対義語は「客観」（自分を離れた立場からの見方）。'},
+  {id:'14-4-1b', round:14, theme:'類義語・対義語',
+   question:'「主観」の対義語はどれですか？',
+   options:['客観','相対','具体','抽象','絶対'],
+   answer:0,
+   explanation:'「主観」（自分だけの見方）の対義語は「客観」（誰が見ても同じ、自分を離れた立場の見方）。「客観的に見る」のように使う。'},
+  {id:'14-4-2', round:14, theme:'類義語・対義語',
+   question:'「抽象（ちゅうしょう）」の意味はどれですか？\n\nア二つ以上のものに共通する性質をぬき出すこと\nイ自分ひとりのものの見方・感じ方のこと\nウ他に比較するものや対立するものがないこと',
+   options:['ア：共通する性質をぬき出すこと','イ：自分ひとりの見方・感じ方','ウ：対立するものがないこと'],
+   answer:0,
+   explanation:'「抽象」は複数のものから共通する性質だけをぬき出すこと。「抽象的な話」は具体例がなくわかりにくい話のこと。対義語は「具体」。'},
+  {id:'14-4-2b', round:14, theme:'類義語・対義語',
+   question:'「抽象」の対義語はどれですか？',
+   options:['客観','相対','具体','抽象','絶対'],
+   answer:2,
+   explanation:'「抽象」（共通する性質をぬき出した概念）の対義語は「具体」（実際の形や内容を持つこと）。「具体的な例」のように使う。'},
+  {id:'14-4-3', round:14, theme:'類義語・対義語',
+   question:'「絶対（ぜったい）」の意味はどれですか？\n\nア二つ以上のものに共通する性質をぬき出すこと\nイ自分ひとりのものの見方・感じ方のこと\nウ他に比較するものや対立するものがないこと',
+   options:['ア：共通する性質をぬき出すこと','イ：自分ひとりの見方・感じ方','ウ：対立するものがないこと'],
+   answer:2,
+   explanation:'「絶対」は他と比べるものがなく、それだけで完全に成り立つこと。「絶対に負けない」のように使う。対義語は「相対」。'},
+  {id:'14-4-3b', round:14, theme:'類義語・対義語',
+   question:'「絶対」の対義語はどれですか？',
+   options:['客観','相対','具体','抽象','絶対'],
+   answer:1,
+   explanation:'「絶対」（他と比べるものがない）の対義語は「相対（そうたい）」（他と比べて成り立つこと）。「相対的に見る」のように使う。'},
+];
+
+const THEMES = ['接続語','類義語・対義語','語彙'];
+const ROUNDS = [13,14];
+const STORAGE_KEY = 'gengo13_redo';
+let questions=[], idx=0, score=0, answers=[], lastFilter=null, lastMode=null;
+
+function loadRedo(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');}catch{return[];}}
+function saveRedo(ids){localStorage.setItem(STORAGE_KEY,JSON.stringify(ids));}
+function updateRedoHomeBtn(){
+  const r=loadRedo(), btn=document.getElementById('redo-home-btn'), cnt=document.getElementById('redo-home-count');
+  if(r.length>0){btn.style.display='flex';cnt.textContent=r.length+'問';}
+  else{btn.style.display='none';}
+}
+function doReset(){
+  saveRedo([]);updateRedoHomeBtn();
+  const btn=document.getElementById('reset-btn');
+  btn.textContent='✅ リセットしました';
+  setTimeout(()=>{btn.textContent='🗑️ 解き直しリストをリセット';},2000);
+}
+function startRedoQuiz(){
+  const r=loadRedo();
+  if(!r.length){alert('解き直しの問題がありません');return;}
+  lastFilter='redo';lastMode='redo';
+  questions=shuffle(Q.filter(q=>r.includes(q.id)));
+  idx=0;score=0;answers=[];renderQ();showScreen('quiz');
+}
+function shuffle(a){return[...a].sort(()=>Math.random()-.5);}
+function showScreen(id){
+  ['home','theme','round','quiz','result'].forEach(s=>document.getElementById('screen-'+s).classList.add('hidden'));
+  document.getElementById('screen-'+id).classList.remove('hidden');
+}
+function showHome(){updateRedoHomeBtn();showScreen('home');}
+function showThemeSelect(){
+  document.getElementById('theme-list').innerHTML=THEMES.map(t=>{
+    const c=Q.filter(q=>q.theme===t).length;
+    return`<button class="select-btn" onclick="startQuiz('${t}','theme')"><span class="select-name">${t}</span><span class="select-count">${c}問</span></button>`;
+  }).join('');showScreen('theme');
+}
+function showRoundSelect(){
+  document.getElementById('round-list').innerHTML=ROUNDS.map(r=>{
+    const c=Q.filter(q=>q.round===r).length;
+    return`<button class="select-btn" onclick="startQuiz(${r},'round')"><span class="select-name">第${r}回</span><span class="select-count">${c}問</span></button>`;
+  }).join('');showScreen('round');
+}
+function startQuiz(filter,mode){
+  lastFilter=filter;lastMode=mode;
+  questions=shuffle(Q.filter(q=>mode==='theme'?q.theme===filter:q.round===filter));
+  idx=0;score=0;answers=[];renderQ();showScreen('quiz');
+}
+function renderQ(){
+  const q=questions[idx];
+  document.getElementById('prog-fill').style.width=(idx/questions.length*100)+'%';
+  document.getElementById('q-theme').textContent=q.theme;
+  document.getElementById('q-counter').textContent=(idx+1)+' / '+questions.length;
+  document.getElementById('q-text').textContent=q.question;
+  document.getElementById('exp-area').classList.add('hidden');
+  document.getElementById('ai-hint-box').classList.add('hidden');
+  document.getElementById('ai-hint-text').textContent='';
+  document.getElementById('quit-btn').style.display='block';
+  document.getElementById('options').innerHTML=q.options.map((o,i)=>
+    `<button class="opt-btn" id="opt-${i}" onclick="selectAns(${i})"><span class="opt-num">${i+1}</span><span>${o}</span></button>`
+  ).join('');
+  document.getElementById('next-btn').textContent=(idx+1>=questions.length)?'結果を見る →':'次の問題 →';
+}
+function selectAns(i){
+  const q=questions[idx], ok=i===q.answer;
+  if(ok)score++;
+  answers.push({question:q,userAnswer:i,correct:ok});
+  q.options.forEach((_,j)=>{
+    const b=document.getElementById('opt-'+j);b.disabled=true;
+    if(j===q.answer)b.classList.add('opt-ok');
+    else if(j===i)b.classList.add('opt-ng');
+    else b.classList.add('opt-dim');
+  });
+  document.getElementById('result-tag').textContent=ok?'✅ 正解！':'❌ 不正解　正解：'+q.options[q.answer];
+  document.getElementById('exp-text').textContent=q.explanation;
+  document.getElementById('exp-area').classList.remove('hidden');
+  document.getElementById('quit-btn').style.display='none';
+  document.getElementById('prog-fill').style.width=((idx+1)/questions.length*100)+'%';
+  fetchHint(q);
+}
+async function fetchHint(q){
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:200,
+        messages:[{role:'user',content:`小学5年生向け国語の解説です。以下の解説をもとに、子どもにわかりやすく30〜50字で「覚え方のポイント」を一言添えてください。解説：${q.explanation}`}]})});
+    const d=await r.json(),h=d.content?.[0]?.text;
+    if(h){document.getElementById('ai-hint-text').textContent=h;document.getElementById('ai-hint-box').classList.remove('hidden');}
+  }catch(e){}
+}
+function nextQuestion(){
+  if(idx+1>=questions.length){showResult();return;}
+  idx++;renderQ();
+}
+function quitQuiz(){
+  questions.forEach(q=>{
+    if(!answers.find(a=>a.question.id===q.id)){
+      answers.push({question:q,userAnswer:-1,correct:false});
+    }
+  });
+  showResult();
+}
+function showResult(){
+  questions.forEach(q=>{
+    if(!answers.find(a=>a.question.id===q.id)){
+      answers.push({question:q,userAnswer:-1,correct:false});
+    }
+  });
+  const wrongIds=answers.filter(a=>!a.correct).map(a=>a.question.id);
+  const correctIds=answers.filter(a=>a.correct).map(a=>a.question.id);
+  const existing=loadRedo();
+  const merged=[...new Set([...existing,...wrongIds])].filter(id=>!correctIds.includes(id));
+  saveRedo(merged);
+
+  document.getElementById('score-num').innerHTML=score+'<span class="score-total">/'+questions.length+'</span>';
+  const p=score/questions.length;
+  document.getElementById('score-msg').textContent=
+    score===questions.length?'🎉 満点！すばらしい！':p>=0.8?'👏 よくできました！':p>=0.6?'😊 もう少し！':'📖 もう一度挑戦しよう';
+  document.getElementById('answer-list').innerHTML=answers.map(a=>{
+    const w=!a.correct&&a.userAnswer>=0?'<span class="res-wrong">（あなた：'+a.question.options[a.userAnswer]+'）</span>':
+            !a.correct?'<span class="res-wrong">（未回答）</span>':'';
+    return`<div class="res-item" style="border-left-color:${a.correct?'#22c55e':'#ef4444'}">
+      <div class="res-q">${a.question.question.split('\n')[0]}</div>
+      <div class="res-a">${a.correct?'✅':'❌'} ${a.question.options[a.question.answer]}${w}</div></div>`;
+  }).join('');
+
+  showScreen('result');
+  const btn=document.getElementById('redo-result-btn');
+  if(merged.length>0){btn.textContent='🔁 間違えた'+merged.length+'問を解き直す';btn.style.display='block';}
+  else{btn.style.display='none';}
+  updateRedoHomeBtn();
+}
+function retryQuiz(){
+  if(lastMode==='redo'){startRedoQuiz();}else{startQuiz(lastFilter,lastMode);}
+}
+updateRedoHomeBtn();showHome();
+</script>
+</body>
+</html>
