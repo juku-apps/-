@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>漢コト 13-14回</title>
+<style>
+:root {
+  --bg: #0f172a; --surface: rgba(255,255,255,0.05); --border: rgba(255,255,255,0.1);
+  --accent: #f472b6; --accent2: #be185d; --green: #22c55e; --red: #ef4444;
+  --orange: #f97316; --text: #f1f5f9; --muted: #94a3b8;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+body { background: linear-gradient(135deg,#0f172a 0%,#1e293b 60%,#0f3460 100%); min-height: 100vh; font-family: 'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif; color: var(--text); padding: 16px; }
+.wrap { max-width: 600px; margin: 0 auto; }
+
+/* HOME */
+.home-title { text-align: center; padding: 36px 0 28px; }
+.home-title-main { font-size: 36px; font-weight: 900; letter-spacing: 0.1em; color: var(--accent); text-shadow: 0 0 40px rgba(244,114,182,0.5); }
+.home-title-sub { font-size: 13px; color: var(--muted); margin-top: 6px; }
+.section-label { font-size: 11px; font-weight: 700; color: var(--muted); letter-spacing: .1em; margin: 20px 0 10px; }
+.home-btn { display: flex; align-items: center; gap: 14px; width: 100%; padding: 20px 18px; border-radius: 16px; border: 1px solid var(--border); cursor: pointer; margin-bottom: 12px; text-align: left; color: var(--text); font-family: inherit; }
+.home-btn-pink   { background: linear-gradient(135deg,#4a1236,#9d174d); box-shadow: 0 6px 24px rgba(244,114,182,0.2); }
+.home-btn-purple { background: linear-gradient(135deg,#2e1065,#5b21b6); box-shadow: 0 6px 24px rgba(139,92,246,0.2); }
+.home-btn-orange { background: linear-gradient(135deg,#7c2d12,#c2410c); box-shadow: 0 6px 24px rgba(249,115,22,0.2); }
+.home-btn-teal   { background: linear-gradient(135deg,#0f3460,#0e7490); box-shadow: 0 6px 24px rgba(6,182,212,0.2); }
+
+/* STUDY CARD */
+.word-card { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 28px 22px; margin-bottom: 16px; position: relative; overflow: hidden; }
+.word-card::before { content:''; position:absolute; top:-40px; right:-40px; width:160px; height:160px; background:radial-gradient(circle,rgba(244,114,182,0.07),transparent 70%); pointer-events:none; }
+.word-card-main { font-size: 2rem; font-weight: 900; color: var(--accent); text-align: center; margin-bottom: 6px; letter-spacing: 0.05em; }
+.word-card-read { font-size: 0.8rem; color: var(--muted); text-align: center; margin-bottom: 18px; }
+.word-card-divider { height: 1px; background: var(--border); margin-bottom: 18px; }
+.word-card-label { font-size: 0.65rem; color: var(--muted); letter-spacing: 0.12em; margin-bottom: 8px; }
+.word-card-meaning { font-size: 0.92rem; line-height: 1.8; margin-bottom: 12px; }
+.word-card-pair { display: flex; align-items: center; gap: 10px; background: rgba(244,114,182,0.06); border-radius: 10px; padding: 10px 14px; margin-bottom: 10px; border-left: 3px solid var(--accent2); font-size: 0.88rem; }
+.word-card-pair-label { font-size: 0.65rem; color: var(--accent); font-weight: 700; white-space: nowrap; }
+.word-card-ex { font-size: 0.82rem; color: var(--accent); line-height: 1.7; padding: 10px 14px; background: rgba(244,114,182,0.06); border-radius: 10px; }
+.card-nav-row { display: flex; gap: 10px; align-items: center; margin-bottom: 16px; }
+.prev-card-btn { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 18px; color: var(--muted); font-family: inherit; font-size: 0.9rem; cursor: pointer; }
+.next-card-btn { flex: 1; background: linear-gradient(135deg,#1d4ed8,#2563eb); border: none; border-radius: 12px; padding: 16px; color: white; font-family: inherit; font-size: 1rem; font-weight: 700; cursor: pointer; }
+.study-complete-box { background: rgba(34,197,94,0.07); border: 1px solid rgba(34,197,94,0.25); border-radius: 16px; padding: 24px; text-align: center; margin-bottom: 16px; }
+.study-complete-icon { font-size: 2.5rem; margin-bottom: 8px; }
+.study-complete-msg { font-size: 1rem; font-weight: 700; color: var(--green); margin-bottom: 4px; }
+.study-complete-sub { font-size: 0.8rem; color: var(--muted); margin-bottom: 16px; }
+.goto-quiz-btn { width: 100%; background: linear-gradient(135deg,var(--accent2),#9d174d); border: none; border-radius: 14px; padding: 15px; color: white; font-family: inherit; font-size: 1rem; font-weight: 700; cursor: pointer; }
+.btn-icon { font-size: 30px; flex-shrink: 0; }
+.btn-name { font-size: 17px; font-weight: 800; margin-bottom: 3px; }
+.btn-note { font-size: 12px; color: var(--muted); }
+.redo-count { font-size: 11px; color: #fed7aa; background: rgba(249,115,22,0.2); padding: 2px 8px; border-radius: 99px; margin-left: 6px; }
+.reset-btn { width: 100%; padding: 10px; border-radius: 10px; background: none; border: 1px solid rgba(239,68,68,0.3); color: rgba(239,68,68,0.6); font-size: 12px; cursor: pointer; margin-top: 8px; font-family: inherit; }
+
+/* SELECT */
+.select-wrap { padding-top: 8px; }
+.back-btn { background: none; border: none; color: var(--accent); font-size: 14px; cursor: pointer; margin-bottom: 16px; padding: 4px 0; display: block; font-family: inherit; }
+.select-title { font-size: 18px; font-weight: 800; margin-bottom: 16px; }
+.select-btn { display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 18px 18px; border-radius: 14px; border: 1px solid var(--border); background: var(--surface); cursor: pointer; color: var(--text); margin-bottom: 10px; font-family: inherit; }
+.select-name { font-size: 16px; font-weight: 700; text-align: left; }
+.select-badge { font-size: 12px; color: var(--accent); background: rgba(244,114,182,0.12); padding: 3px 10px; border-radius: 99px; white-space: nowrap; }
+
+/* QUIZ */
+.quiz-wrap { padding-top: 8px; }
+.prog-bar { height: 5px; background: rgba(255,255,255,0.08); border-radius: 99px; margin-bottom: 14px; overflow: hidden; }
+.prog-fill { height: 100%; background: linear-gradient(90deg,var(--accent),var(--accent2)); border-radius: 99px; transition: width 0.3s; }
+.quiz-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+.quiz-badge { font-size: 11px; font-weight: 700; color: var(--accent); background: rgba(244,114,182,0.12); padding: 3px 10px; border-radius: 99px; }
+.quiz-counter { font-size: 12px; color: var(--muted); }
+.q-box { background: var(--surface); border-radius: 16px; padding: 18px; margin-bottom: 14px; border: 1px solid var(--border); }
+.q-label { font-size: 11px; font-weight: 700; color: var(--accent); margin-bottom: 8px; }
+.q-text { font-size: 0.97rem; line-height: 1.9; font-weight: 600; white-space: pre-wrap; }
+.choices { display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
+.choice-btn { display: flex; align-items: flex-start; gap: 10px; width: 100%; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--border); background: rgba(255,255,255,0.04); cursor: pointer; color: var(--text); text-align: left; font-size: 13px; font-weight: 600; font-family: inherit; line-height: 1.6; }
+.choice-btn:disabled { cursor: default; }
+.choice-num { width: 24px; height: 24px; border-radius: 50%; background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; flex-shrink: 0; color: var(--accent); min-width: 24px; margin-top: 2px; }
+.choice-ok  { border-color: var(--green)!important; background: rgba(34,197,94,0.12)!important; color: #86efac; }
+.choice-ng  { border-color: var(--red)!important;   background: rgba(239,68,68,0.12)!important;  color: #fca5a5; }
+.choice-dim { opacity: 0.35; }
+.exp-box { background: var(--surface); border-radius: 14px; padding: 16px; border: 1px solid var(--border); margin-top: 4px; }
+.exp-tag  { font-size: 14px; font-weight: 800; margin-bottom: 8px; }
+.exp-text { font-size: 12px; color: var(--muted); line-height: 1.8; margin-bottom: 12px; }
+.ai-hint  { background: rgba(96,165,250,0.07); border: 1px solid rgba(96,165,250,0.2); border-radius: 10px; padding: 10px 12px; font-size: 12px; color: #bfdbfe; line-height: 1.7; margin-bottom: 12px; }
+.ai-hint-label { font-size: 10px; font-weight: 700; color: #60a5fa; display: block; margin-bottom: 3px; }
+.next-btn { width: 100%; padding: 13px; border-radius: 12px; background: linear-gradient(135deg,#2563eb,#1d4ed8); color: #fff; font-weight: 800; font-size: 15px; border: none; cursor: pointer; font-family: inherit; }
+.quit-btn { width: 100%; padding: 10px; border-radius: 10px; background: none; border: 1px solid var(--border); color: var(--muted); font-size: 13px; cursor: pointer; margin-top: 8px; margin-bottom: 14px; font-family: inherit; }
+
+/* RESULT */
+.result-score { text-align: center; background: var(--surface); border-radius: 18px; padding: 28px 20px; border: 1px solid var(--border); margin-bottom: 24px; }
+.score-num   { font-size: 60px; font-weight: 900; line-height: 1; margin-bottom: 6px; }
+.score-total { font-size: 24px; color: var(--muted); }
+.score-msg   { font-size: 16px; color: var(--accent); font-weight: 700; }
+.res-item { padding: 10px 12px; margin-bottom: 8px; border-radius: 10px; background: var(--surface); border-left: 4px solid transparent; }
+.res-q { font-size: 11px; color: var(--muted); margin-bottom: 3px; line-height: 1.5; }
+.res-a { font-size: 13px; font-weight: 700; }
+.res-wrong { color: #f87171; font-weight: 400; font-size: 11px; }
+.result-actions { display: flex; gap: 10px; margin-bottom: 14px; }
+.again-btn { flex: 1; padding: 13px; border-radius: 12px; background: linear-gradient(135deg,#2563eb,#1d4ed8); color: #fff; font-weight: 800; font-size: 15px; border: none; cursor: pointer; font-family: inherit; }
+.top-btn   { flex: 1; padding: 13px; border-radius: 12px; background: rgba(255,255,255,0.07); color: #fff; font-weight: 800; font-size: 15px; border: 1px solid var(--border); cursor: pointer; font-family: inherit; }
+.redo-result-btn { width: 100%; padding: 13px; border-radius: 12px; background: linear-gradient(135deg,#7c2d12,#c2410c); color: #fff; font-weight: 800; font-size: 15px; border: none; cursor: pointer; margin-bottom: 32px; font-family: inherit; }
+
+.hidden { display: none!important; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- HOME -->
+  <div id="screen-home">
+    <div class="home-title">
+      <div class="home-title-main">漢コト 13-14</div>
+      <div class="home-title-sub">類義語 · 対義語 · 感情の類義語</div>
+    </div>
+
+    <div class="section-label">📖 まず言葉を復習する</div>
+    <button class="home-btn home-btn-teal" onclick="showSelect('study')">
+      <span class="btn-icon">📖</span>
+      <div><div class="btn-name">言葉カードで復習</div><div class="btn-note">類義語・対義語・感情語を一語ずつ確認</div></div>
+    </button>
+
+    <div class="section-label">📚 テーマ別</div>
+    <button class="home-btn home-btn-pink" onclick="showSelect('theme')">
+      <span class="btn-icon">📚</span>
+      <div><div class="btn-name">テーマ別で練習</div><div class="btn-note">類義語・対義語・感情語ごとに学ぶ</div></div>
+    </button>
+
+    <div class="section-label">📝 回数別</div>
+    <button class="home-btn home-btn-purple" onclick="showSelect('round')">
+      <span class="btn-icon">📝</span>
+      <div><div class="btn-name">回数別で確認</div><div class="btn-note">第13回・第14回をテスト形式で解く</div></div>
+    </button>
+
+    <div class="section-label">🔁 復習</div>
+    <button class="home-btn home-btn-orange" id="redo-home-btn" onclick="startRedoQuiz()" style="display:none">
+      <span class="btn-icon">🔁</span>
+      <div><div class="btn-name">解き直し <span class="redo-count" id="redo-home-count"></span></div><div class="btn-note">間違えた問題を累積復習</div></div>
+    </button>
+
+    <button class="reset-btn" id="reset-btn1" onclick="doReset()">🗑️ 解き直しリストをリセット</button>
+  </div>
+
+  <!-- STUDY CARD -->
+  <div id="screen-study" class="hidden">
+    <div class="quiz-wrap">
+      <button class="back-btn" onclick="showHome()">← もどる</button>
+      <div class="prog-bar"><div class="prog-fill" id="study-prog"></div></div>
+      <div class="quiz-meta">
+        <span class="quiz-badge" id="study-badge"></span>
+        <span class="quiz-counter" id="study-counter"></span>
+      </div>
+      <div id="study-card-area"></div>
+      <div id="study-nav-area"></div>
+    </div>
+  </div>
+
+  <!-- SELECT -->
+  <div id="screen-select" class="hidden">
+    <div class="select-wrap">
+      <button class="back-btn" onclick="showHome()">← もどる</button>
+      <div class="select-title" id="select-title"></div>
+      <div id="select-list"></div>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div id="screen-quiz" class="hidden">
+    <div class="quiz-wrap">
+      <button class="back-btn" onclick="showHome()">← もどる</button>
+      <div class="prog-bar"><div class="prog-fill" id="quiz-prog"></div></div>
+      <div class="quiz-meta">
+        <span class="quiz-badge" id="quiz-badge"></span>
+        <span class="quiz-counter" id="quiz-counter"></span>
+      </div>
+      <div class="q-box">
+        <div class="q-label" id="q-label">問題</div>
+        <div class="q-text" id="q-text"></div>
+      </div>
+      <div class="choices" id="choices"></div>
+      <button class="quit-btn" id="quit-btn" onclick="quitQuiz()">終了する →</button>
+      <div id="exp-area" class="hidden">
+        <div class="exp-box">
+          <div class="exp-tag" id="exp-tag"></div>
+          <div class="exp-text" id="exp-text"></div>
+          <div class="ai-hint hidden" id="ai-hint-box"><span class="ai-hint-label">💡 ポイント</span><span id="ai-hint-text"></span></div>
+          <button class="next-btn" id="next-btn" onclick="quizNext()">次の問題 →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULT -->
+  <div id="screen-result" class="hidden">
+    <button class="back-btn" onclick="showHome()">← もどる</button>
+    <div class="result-score">
+      <div class="score-num" id="score-num"></div>
+      <div class="score-msg" id="score-msg"></div>
+    </div>
+    <div id="answer-list"></div>
+    <div class="result-actions">
+      <button class="again-btn" onclick="retryQuiz()">もう一度</button>
+      <button class="top-btn" onclick="showHome()">トップへ</button>
+    </div>
+    <button class="redo-result-btn hidden" id="redo-result-btn" onclick="startRedoQuiz()">🔁 間違えた問題を解き直す</button>
+  </div>
+
+</div>
+<script>
+// ===== 問題データ =====
+// 【テキスト画像より正確に転記】
+// 13回：類義語の練習問題フォーマット
+// 14回：対義語・感情の類義語の練習問題フォーマット
+
+const Q = [
+
+  // ========== 第13回：類義語 ==========
+
+  // 問一 それぞれ記号で答えなさい
+  // ア合点 イ知己 ウ真意 エ簡単 オ日常 カ実質 キ平生 ク承知 ケ出版
+  {id:'13-1-1', round:13, theme:'類義語',
+   question:'問一　次の(1)〜(4)の熟語の類義語を後のア〜カから選び、記号で答えなさい。\n\n(1)「親友」の類義語はどれですか？\n\nア 合点　イ 知己　ウ 真意\nエ 簡単　オ 日常　カ 実質',
+   options:['ア 合点','イ 知己','ウ 真意','エ 簡単','オ 日常','カ 実質'],
+   answer:1,
+   explanation:'「知己（ちき）」は心の底までよく知り合った友人・親しい友のこと。「親友」の類義語。'},
+  {id:'13-1-2', round:13, theme:'類義語',
+   question:'問一　次の(1)〜(4)の熟語の類義語を後のア〜カから選び、記号で答えなさい。\n\n(2)「単純」の類義語はどれですか？\n\nア 合点　イ 知己　ウ 真意\nエ 簡単　オ 日常　カ 実質',
+   options:['ア 合点','イ 知己','ウ 真意','エ 簡単','オ 日常','カ 実質'],
+   answer:3,
+   explanation:'「簡単」は手間がかからず容易なこと。「単純」も複雑でなくシンプルなことを表し、類義語の関係。'},
+  {id:'13-1-3', round:13, theme:'類義語',
+   question:'問一　次の(1)〜(4)の熟語の類義語を後のア〜カから選び、記号で答えなさい。\n\n(3)「内容」の類義語はどれですか？\n\nア 合点　イ 知己　ウ 真意\nエ 簡単　オ 日常　カ 実質',
+   options:['ア 合点','イ 知己','ウ 真意','エ 簡単','オ 日常','カ 実質'],
+   answer:5,
+   explanation:'「実質（じっしつ）」は外見ではなく実際の内容・中身のこと。「内容」の類義語。'},
+  {id:'13-1-4', round:13, theme:'類義語',
+   question:'問一　次の(1)〜(4)の熟語の類義語を後のア〜カから選び、記号で答えなさい。\n\n(4)「平生（へいぜい）」の類義語はどれですか？\n\nア 合点　イ 知己　ウ 真意\nエ 簡単　オ 日常　カ 実質',
+   options:['ア 合点','イ 知己','ウ 真意','エ 簡単','オ 日常','カ 実質'],
+   answer:4,
+   explanation:'「平生（へいぜい）」はふだん・いつものことを意味する。「日常」も毎日の普通の生活を指し、類義語の関係。'},
+
+  // 問二 □に共通する漢字
+  {id:'13-2-1', round:13, theme:'類義語',
+   question:'問二　二つの熟語が類義語の関係になるように、□に共通する漢字を答えなさい。\n\n(1)　生□ ＝ 実□',
+   options:['家','活','命','力','体'],
+   answer:0,
+   explanation:'「生家（せいか）」と「実家（じっか）」はどちらも「生まれた家」という意味の類義語。共通するのは「家」。'},
+  {id:'13-2-2', round:13, theme:'類義語',
+   question:'問二　二つの熟語が類義語の関係になるように、□に共通する漢字を答えなさい。\n\n(2)　□問 ＝ □疑',
+   options:['質','問','疑','答','聞'],
+   answer:0,
+   explanation:'「質問（しつもん）」と「質疑（しつぎ）」はどちらも「疑問に思ったことを問いただす」という意味の類義語。共通するのは「質」。'},
+  {id:'13-2-3', round:13, theme:'類義語',
+   question:'問二　二つの熟語が類義語の関係になるように、□に共通する漢字を答えなさい。\n\n(3)　一□ ＝ 終□',
+   options:['生','末','終','代','期'],
+   answer:0,
+   explanation:'「一生（いっしょう）」と「終生（しゅうせい）」はどちらも「生涯ずっと・死ぬまで」という意味の類義語。共通するのは「生」。'},
+  {id:'13-2-4', round:13, theme:'類義語',
+   question:'問二　二つの熟語が類義語の関係になるように、□に共通する漢字を答えなさい。\n\n(4)　一□ ＝ □□（3文字）\n※ヒント：「納得」「承知」と同じ意味',
+   options:['合点（がてん）','一致（いっち）','承認（しょうにん）','同意（どうい）','賛成（さんせい）'],
+   answer:0,
+   explanation:'「合点（がてん）」は納得すること・もっともだと思うこと。「納得＝承知＝合点」はすべて類義語。'},
+
+  // 問三 仲間外れ
+  {id:'13-3-1', round:13, theme:'感情の類義語',
+   question:'問三　次の(1)〜(3)の言葉の中で、一つ選び、それぞれ記号と意味の大きさが違う理由を答えなさい。\n\n(1) 他と意味が大きく違うものはどれですか？\n\nア 腹が立つ　イ 面目ない\nウ 青筋を立てる　エ 頭に血が上る',
+   options:['ア 腹が立つ','イ 面目ない','ウ 青筋を立てる','エ 頭に血が上る'],
+   answer:1,
+   explanation:'「腹が立つ・青筋を立てる・頭に血が上る」はすべて「怒る」の類義語。「面目ない」だけ「恥ずかしい・申し訳ない」という意味で仲間外れ。'},
+  {id:'13-3-2', round:13, theme:'感情の類義語',
+   question:'問三　次の(1)〜(3)の言葉の中で、一つ選び、それぞれ記号と意味の大きさが違う理由を答えなさい。\n\n(2) 他と意味が大きく違うものはどれですか？\n\nア 切ない　イ 面映ゆい\nウ もの悲しい　エ やるせない',
+   options:['ア 切ない','イ 面映ゆい','ウ もの悲しい','エ やるせない'],
+   answer:1,
+   explanation:'「切ない・もの悲しい・やるせない」はすべて「悲しい・つらい」の類義語。「面映ゆい（おもはゆい）」だけ「恥ずかしい・照れくさい」という意味で仲間外れ。'},
+  {id:'13-3-3', round:13, theme:'感情の類義語',
+   question:'問三　次の(1)〜(3)の言葉の中で、一つ選び、それぞれ記号と意味の大きさが違う理由を答えなさい。\n\n(3) 他と意味が大きく違うものはどれですか？\n\nア 嘆く　イ 浮かれる\nウ 落ち込む　エ 憂える',
+   options:['ア 嘆く','イ 浮かれる','ウ 落ち込む','エ 憂える'],
+   answer:1,
+   explanation:'「嘆く・落ち込む・憂える」はすべて「悲しむ・気が沈む」の類義語。「浮かれる」だけ「うれしくて気分が高まる」という正反対の意味で仲間外れ。'},
+
+  // ========== 第14回：対義語 ==========
+
+  // 問一 対義語を選ぶ（テキスト画像1の練習問題フォーマット）
+  {id:'14-1-1', round:14, theme:'対義語',
+   question:'問一　次の(1)〜(9)の熟語の対義語を後のア〜ケから選び、記号で答えなさい。\n\nア 建前　イ 義務　ウ 手段　エ 回答\nオ 公　カ 玄人　キ 偽　ク 不足　ケ 質問\n\n(1)「目的」の対義語はどれですか？',
+   options:['ア 建前','イ 義務','ウ 手段','エ 回答','オ 公','カ 玄人','キ 偽','ク 不足'],
+   answer:2,
+   explanation:'「目的」は目指すゴール・めあてのこと。対義語は「手段（しゅだん）」（目的を達成するための方法・手立て）。「目的と手段」はセットで覚える。'},
+  {id:'14-1-2', round:14, theme:'対義語',
+   question:'問一　次の(1)〜(9)の熟語の対義語を後のア〜ケから選び、記号で答えなさい。\n\nア 建前　イ 義務　ウ 手段　エ 回答\nオ 公　カ 玄人　キ 偽　ク 不足　ケ 質問\n\n(2)「素人（しろうと）」の対義語はどれですか？',
+   options:['ア 建前','イ 義務','ウ 手段','エ 回答','オ 公','カ 玄人','キ 偽','ク 不足'],
+   answer:5,
+   explanation:'「素人（しろうと）」は専門的な知識・技術のない人。対義語は「玄人（くろうと）」（専門家・その道のプロ）。'},
+  {id:'14-1-3', round:14, theme:'対義語',
+   question:'問一　次の(1)〜(9)の熟語の対義語を後のア〜ケから選び、記号で答えなさい。\n\nア 建前　イ 義務　ウ 手段　エ 回答\nオ 公　カ 玄人　キ 偽　ク 不足　ケ 質問\n\n(3)「本音」の対義語はどれですか？',
+   options:['ア 建前','イ 義務','ウ 手段','エ 回答','オ 公','カ 玄人','キ 偽','ク 不足'],
+   answer:0,
+   explanation:'「本音」は本当の気持ち・本心のこと。対義語は「建前（たてまえ）」（表向きの気持ち・表面上の立場）。「本音と建前」はセットで覚える。'},
+  {id:'14-1-4', round:14, theme:'対義語',
+   question:'問一　次の(1)〜(9)の熟語の対義語を後のア〜ケから選び、記号で答えなさい。\n\nア 建前　イ 義務　ウ 手段　エ 回答\nオ 公　カ 玄人　キ 偽　ク 不足　ケ 質問\n\n(4)「困難」の対義語はどれですか？',
+   options:['容易（ようい）','建前（たてまえ）','義務（ぎむ）','回答（かいとう）','手段（しゅだん）'],
+   answer:0,
+   explanation:'「困難（こんなん）」は難しいこと。対義語は「容易（ようい）」（たやすいこと・やさしいこと）。「容易ではない」＝「困難だ」。'},
+  {id:'14-1-5', round:14, theme:'対義語',
+   question:'問一　次の(1)〜(9)の熟語の対義語を後のア〜ケから選び、記号で答えなさい。\n\nア 建前　イ 義務　ウ 手段　エ 回答\nオ 公　カ 玄人　キ 偽　ク 不足　ケ 質問\n\n(5)「公（おおやけ）」の対義語はどれですか？',
+   options:['ア 建前','イ 義務','ウ 手段','エ 回答','オ 公','カ 玄人','キ 偽','ク 不足'],
+   answer:0,
+   explanation:'正しくは「私（わたくし・し）」。「公（おおやけ）」は社会全体・公共のこと。対義語は「私（し）」（個人・プライベート）。「公私混同」という熟語でもセットで使われる。',
+   options:['私（わたくし）','建前（たてまえ）','手段（しゅだん）','不足（ふそく）','偽（にせ）'],
+   answer:0},
+  {id:'14-1-6', round:14, theme:'対義語',
+   question:'問一　次の(1)〜(9)の熟語の対義語を後のア〜ケから選び、記号で答えなさい。\n\nア 建前　イ 義務　ウ 手段　エ 回答\nオ 公　カ 玄人　キ 偽　ク 不足　ケ 質問\n\n(7)「権利」の対義語はどれですか？',
+   options:['ア 建前','イ 義務','ウ 手段','エ 回答','オ 公','カ 玄人','キ 偽','ク 不足'],
+   answer:1,
+   explanation:'「権利（けんり）」は自分の利益のために主張できること。対義語は「義務（ぎむ）」（しなければならないこと）。「権利と義務」はセットで覚える。'},
+  {id:'14-1-7', round:14, theme:'対義語',
+   question:'問一　次の(1)〜(9)の熟語の対義語を後のア〜ケから選び、記号で答えなさい。\n\nア 建前　イ 義務　ウ 手段　エ 回答\nオ 公　カ 玄人　キ 偽　ク 不足　ケ 質問\n\n(8)「過剰（かじょう）」の対義語はどれですか？',
+   options:['ア 建前','イ 義務','ウ 手段','エ 回答','オ 公','カ 玄人','キ 偽','ク 不足'],
+   answer:7,
+   explanation:'「過剰（かじょう）」は必要以上に多すぎること・ありあまること。対義語は「不足（ふそく）」（足りないこと）。'},
+  {id:'14-1-8', round:14, theme:'対義語',
+   question:'問一　次の(1)〜(9)の熟語の対義語を後のア〜ケから選び、記号で答えなさい。\n\nア 建前　イ 義務　ウ 手段　エ 回答\nオ 公　カ 玄人　キ 偽　ク 不足　ケ 質問\n\n(9)「質問」の対義語はどれですか？',
+   options:['ア 建前','イ 義務','ウ 手段','エ 回答','オ 公','カ 玄人','キ 偽','ク 不足'],
+   answer:3,
+   explanation:'「質問（しつもん）」（問うこと）の対義語は「回答（かいとう）」（答えること）。「質問と回答」はセットで覚える。※「質問＝質疑」は類義語、「質問⇔回答」は対義語。'},
+  {id:'14-1-9', round:14, theme:'対義語',
+   question:'問一　次の(1)〜(9)の熟語の対義語を後のア〜ケから選び、記号で答えなさい。\n\nア 建前　イ 義務　ウ 手段　エ 回答\nオ 公　カ 玄人　キ 偽　ク 不足　ケ 質問\n\n「真（しん）」の対義語はどれですか？',
+   options:['ア 建前','イ 義務','ウ 手段','エ 回答','オ 公','カ 玄人','キ 偽','ク 不足'],
+   answer:6,
+   explanation:'「真（しん）」は本物・真実のこと。対義語は「偽（ぎ）」（にせもの・うそ）。「真偽（しんぎ）」という熟語でもセットで使われる。'},
+
+  // 問二 熟語の意味と対義語（主観・抽象・絶対・画一）
+  {id:'14-2-1', round:14, theme:'対義語',
+   question:'問二　(1)〜(4)の熟語の意味を後のア〜カから選び、記号で答えなさい。また、それらの熟語の対義語をア〜カから選んで漢字で答えなさい。\n\n(1)「主観（しゅかん）」の意味はどれですか？\n\nア 自分ひとりのものの見方・感じ方のこと\nイ 形や内容がはっきり分かること\nウ 他に比較するものや対立するものがないこと\nエ 二つ以上のものに共通する性質をぬき出すこと\nオ 当事者ではなく第三者の観点\nカ 個々の事情や個性、性質を考慮せず全体を一様にそろえること',
+   options:['ア 自分ひとりの見方・感じ方','イ 形や内容がはっきり分かること','ウ 対立するものがないこと','エ 共通する性質をぬき出すこと','オ 第三者の観点','カ 全体を一様にそろえること'],
+   answer:0,
+   explanation:'「主観（しゅかん）」は自分だけの見方・感じ方。「私は〜と思う」というのが主観的な表現。対義語は「客観（きゃっかん）」（第三者の立場からの見方）。'},
+  {id:'14-2-1b', round:14, theme:'対義語',
+   question:'「主観（しゅかん）」の対義語はどれですか？',
+   options:['客観（きゃっかん）','相対（そうたい）','具体（ぐたい）','多様（たよう）','絶対（ぜったい）'],
+   answer:0,
+   explanation:'「主観」（自分だけの見方）の対義語は「客観（きゃっかん）」。だれもがそうだと納得できるような第三者の観点。新聞記事・報告書などは客観的な文章といえる。'},
+  {id:'14-2-2', round:14, theme:'対義語',
+   question:'問二　(1)〜(4)の熟語の意味を後のア〜カから選び、記号で答えなさい。また、それらの熟語の対義語をア〜カから選んで漢字で答えなさい。\n\n(2)「抽象（ちゅうしょう）」の意味はどれですか？\n\nア 自分ひとりのものの見方・感じ方のこと\nイ 形や内容がはっきり分かること\nウ 他に比較するものや対立するものがないこと\nエ 二つ以上のものに共通する性質をぬき出すこと\nオ 当事者ではなく第三者の観点\nカ 個々の事情や個性、性質を考慮せず全体を一様にそろえること',
+   options:['ア 自分ひとりの見方・感じ方','イ 形や内容がはっきり分かること','ウ 対立するものがないこと','エ 共通する性質をぬき出すこと','オ 第三者の観点','カ 全体を一様にそろえること'],
+   answer:3,
+   explanation:'「抽象（ちゅうしょう）」は複数のものから共通する性質だけをぬき出すこと。「抽象的な話」は具体例がなくわかりにくい話のこと。対義語は「具体（ぐたい）」。'},
+  {id:'14-2-2b', round:14, theme:'対義語',
+   question:'「抽象（ちゅうしょう）」の対義語はどれですか？',
+   options:['客観（きゃっかん）','相対（そうたい）','具体（ぐたい）','多様（たよう）','絶対（ぜったい）'],
+   answer:2,
+   explanation:'「抽象」の対義語は「具体（ぐたい）」。形や内容がはっきり分かること。「具体的な例を挙げると…」のように使う。'},
+  {id:'14-2-3', round:14, theme:'対義語',
+   question:'問二　(1)〜(4)の熟語の意味を後のア〜カから選び、記号で答えなさい。また、それらの熟語の対義語をア〜カから選んで漢字で答えなさい。\n\n(3)「絶対（ぜったい）」の意味はどれですか？\n\nア 自分ひとりのものの見方・感じ方のこと\nイ 形や内容がはっきり分かること\nウ 他に比較するものや対立するものがないこと\nエ 二つ以上のものに共通する性質をぬき出すこと\nオ 当事者ではなく第三者の観点\nカ 個々の事情や個性、性質を考慮せず全体を一様にそろえること',
+   options:['ア 自分ひとりの見方・感じ方','イ 形や内容がはっきり分かること','ウ 対立するものがないこと','エ 共通する性質をぬき出すこと','オ 第三者の観点','カ 全体を一様にそろえること'],
+   answer:2,
+   explanation:'「絶対（ぜったい）」は他と比べるものがなく、それだけで完全に成り立つこと。「絶対に負けない」のように使う。対義語は「相対（そうたい）」。'},
+  {id:'14-2-3b', round:14, theme:'対義語',
+   question:'「絶対（ぜったい）」の対義語はどれですか？',
+   options:['客観（きゃっかん）','相対（そうたい）','具体（ぐたい）','多様（たよう）','画一（かくいつ）'],
+   answer:1,
+   explanation:'「絶対」の対義語は「相対（そうたい）」。他との関係の上に存在あるいは成立していること。テストの点数を「相対的に見る」などのように使う。'},
+  {id:'14-2-4', round:14, theme:'対義語',
+   question:'問二　(1)〜(4)の熟語の意味を後のア〜カから選び、記号で答えなさい。また、それらの熟語の対義語をア〜カから選んで漢字で答えなさい。\n\n(4)「画一（かくいつ）」の意味はどれですか？\n\nア 自分ひとりのものの見方・感じ方のこと\nイ 形や内容がはっきり分かること\nウ 他に比較するものや対立するものがないこと\nエ 二つ以上のものに共通する性質をぬき出すこと\nオ 当事者ではなく第三者の観点\nカ 個々の事情や個性、性質を考慮せず全体を一様にそろえること',
+   options:['ア 自分ひとりの見方・感じ方','イ 形や内容がはっきり分かること','ウ 対立するものがないこと','エ 共通する性質をぬき出すこと','オ 第三者の観点','カ 全体を一様にそろえること'],
+   answer:5,
+   explanation:'「画一（かくいつ）」は個々の事情や個性、性質を考慮せず、全体を一様にそろえること。「画一的な教育」などのように使う。対義語は「多様（たよう）」。'},
+  {id:'14-2-4b', round:14, theme:'対義語',
+   question:'「画一（かくいつ）」の対義語はどれですか？',
+   options:['客観（きゃっかん）','相対（そうたい）','具体（ぐたい）','多様（たよう）','絶対（ぜったい）'],
+   answer:3,
+   explanation:'「画一」の対義語は「多様（たよう）」。いろいろと種類の違ったものがあること。「多様性（ダイバーシティ）」という言葉でも使われる。'},
+
+  // ========== 感情の類義語（13・14回共通） ==========
+
+  // うれしい系
+  {id:'k-u1', round:13, theme:'感情の類義語',
+   question:'「うれしい」の類義語について答えなさい。\n\n「心がうきうきして落ち着かなくなる。調子に乗って浮かれ騒ぐ」という意味の言葉はどれですか？',
+   options:['はしゃぐ','めでたい','小躍り','心が弾む','有頂天'],
+   answer:0,
+   explanation:'「はしゃぐ」は楽しくて心がうきうきして騒ぐこと。「遠足の前日ははしゃいでなかなか眠れない」のように使う。'},
+  {id:'k-u2', round:13, theme:'感情の類義語',
+   question:'「うれしい」の類義語について答えなさい。\n\n「躍り上がりたくなるほど激しく喜ぶこと」という意味の言葉はどれですか？',
+   options:['はしゃぐ','めでたい','小躍り（こおどり）','心が弾む','有頂天'],
+   answer:2,
+   explanation:'「小躍り（こおどり）」は躍り上がりたくなるほど激しく喜ぶこと。「合格通知を受け取って小躍りして喜んだ」のように使う。'},
+  {id:'k-u3', round:13, theme:'感情の類義語',
+   question:'「うれしい」の類義語について答えなさい。\n\n「最高の気分で、得意の絶頂にあること」という意味の言葉はどれですか？',
+   options:['はしゃぐ','歓喜（かんき）','小躍り','心が弾む','有頂天（うちょうてん）'],
+   answer:4,
+   explanation:'「有頂天（うちょうてん）」は最高の気分で得意の絶頂にあること。「褒められて有頂天になってしまった」のように使う。'},
+  {id:'k-u4', round:13, theme:'感情の類義語',
+   question:'「うれしい」の類義語について答えなさい。\n\n「奮迅するほど、激しく喜ぶこと」という意味の言葉はどれですか？',
+   options:['はしゃぐ','歓喜（かんき）','小躍り','心が弾む','有頂天'],
+   answer:1,
+   explanation:'「歓喜（かんき）」は興奮するほど激しく喜ぶこと。「チームが優勝し、選手たちは歓喜した」のように使う。'},
+
+  // 悲しい系
+  {id:'k-s1', round:13, theme:'感情の類義語',
+   question:'「悲しい」の類義語について答えなさい。\n\n「理由もないのに、何となく悲しい」という意味の言葉はどれですか？',
+   options:['もの悲しい','切ない','やるせない','嘆く','胸がつかえる'],
+   answer:0,
+   explanation:'「もの悲しい」は理由もないのに何となく悲しい気持ち。「秋の夕暮れはなんともの悲しい気持ちになる」のように使う。'},
+  {id:'k-s2', round:13, theme:'感情の類義語',
+   question:'「悲しい」の類義語について答えなさい。\n\n「つらかったり悲しかったりして、胸がしめつけられるような気持ちになる」という意味の言葉はどれですか？',
+   options:['もの悲しい','切ない','やるせない','嘆く','胸が張り裂ける'],
+   answer:1,
+   explanation:'「切ない」はつらかったり悲しかったりして胸がしめつけられるような気持ち。「別れの場面がとても切なかった」のように使う。'},
+  {id:'k-s3', round:13, theme:'感情の類義語',
+   question:'「悲しい」の類義語について答えなさい。\n\n「悲しみなどのまぎらわしようがなくて、どうしようもない気持ち」という意味の言葉はどれですか？',
+   options:['もの悲しい','切ない','やるせない','嘆く','胸がつかえる'],
+   answer:2,
+   explanation:'「やるせない」は悲しみなどのまぎらわしようがなくて、どうしようもない気持ち。「理不尽な扱いを受けてやるせない気持ちになった」のように使う。'},
+  {id:'k-s4', round:14, theme:'感情の類義語',
+   question:'「悲しい」の類義語について答えなさい。\n\n「あまりの深い悲しみに打ちひしがれる」という意味の言葉はどれですか？',
+   options:['胸がつかえる','胸が張り裂ける','悲痛','悲惨','落ち込む'],
+   answer:0,
+   explanation:'「胸がつかえる」はあまりの深い悲しみに打ちひしがれること。「心配事があって胸がつかえて眠れない」のように使う。'},
+  {id:'k-s5', round:14, theme:'感情の類義語',
+   question:'「悲しい」の類義語について答えなさい。\n\n「見聞きに耐えられないほど、悲しく痛ましいこと」という意味の言葉はどれですか？',
+   options:['胸がつかえる','胸が張り裂ける','悲痛（ひつう）','悲惨（ひさん）','落ち込む'],
+   answer:2,
+   explanation:'「悲痛（ひつう）」は見聞きに耐えられないほど悲しく痛ましいこと。「悲痛な叫び声」のように使う。「悲惨（ひさん）」も似た意味。'},
+
+  // 怒る系
+  {id:'k-o1', round:14, theme:'感情の類義語',
+   question:'「怒る」の類義語について答えなさい。\n\n「頭がぼうっとなるくらい、ひどく怒って興奮する。かっとなる」という意味の言葉はどれですか？',
+   options:['腹が立つ','頭に血が上る','血相を変える','青筋を立てる','激高'],
+   answer:1,
+   explanation:'「頭に血が上る」は頭がぼうっとなるくらいひどく怒って興奮すること。「侮辱されて頭に血が上ってしまった」のように使う。'},
+  {id:'k-o2', round:14, theme:'感情の類義語',
+   question:'「怒る」の類義語について答えなさい。\n\n「あまりにも激しく怒ったり興奮したりして、顔つきが変わる」という意味の言葉はどれですか？',
+   options:['腹が立つ','頭に血が上る','血相を変える','青筋を立てる','激高'],
+   answer:2,
+   explanation:'「血相を変える（けっそうをかえる）」はあまりにも激しく怒ったり興奮したりして顔つきが変わること。「突然の知らせに血相を変えて駆けつけた」のように使う。'},
+  {id:'k-o3', round:14, theme:'感情の類義語',
+   question:'「怒る」の類義語について答えなさい。\n\n「ひどく興奮して、分別を失うこと」という意味の言葉はどれですか？',
+   options:['腹が立つ','頭に血が上る','逆上（ぎゃくじょう）','青筋を立てる','激高（げきこう）'],
+   answer:2,
+   explanation:'「逆上（ぎゃくじょう）」はひどく興奮して分別を失うこと。「激高（げきこう）」も「ひどく興奮して怒ること」を意味する類義語。'},
+
+  // 恥ずかしい系
+  {id:'k-h1', round:14, theme:'感情の類義語',
+   question:'「恥ずかしい」の類義語について答えなさい。\n\n「人に注目され、緊張する。恥ずかしそうな表情になる」という意味の言葉はどれですか？',
+   options:['照れる','面映ゆい','はにかむ','きまりが悪い','赤面'],
+   answer:0,
+   explanation:'「照れる」は人に注目され緊張して、恥ずかしそうな表情になること。「褒められて照れてしまった」のように使う。'},
+  {id:'k-h2', round:14, theme:'感情の類義語',
+   question:'「恥ずかしい」の類義語について答えなさい。\n\n「体裁が良くないと感じて、何となく恥ずかしいようす」という意味の言葉はどれですか？',
+   options:['照れる','面映ゆい（おもはゆい）','はにかむ','きまりが悪い','赤面'],
+   answer:1,
+   explanation:'「面映ゆい（おもはゆい）」は体裁が良くないと感じて何となく恥ずかしいようす。「みんなの前で褒められて面映ゆかった」のように使う。'},
+  {id:'k-h3', round:14, theme:'感情の類義語',
+   question:'「恥ずかしい」の類義語について答えなさい。\n\n「恥ずかしがる。恥ずかしそうな表情をする」という意味の言葉はどれですか？',
+   options:['照れる','面映ゆい','はにかむ','きまりが悪い','赤面（せきめん）'],
+   answer:2,
+   explanation:'「はにかむ」は恥ずかしがること・恥ずかしそうな表情をすること。「初めて会う人の前ではにかんでしまった」のように使う。'},
+  {id:'k-h4', round:14, theme:'感情の類義語',
+   question:'「恥ずかしい」の類義語について答えなさい。\n\n「場の具合や都合が悪いこと。恥ずかしくて世間や仲間に対し顔向けできない」という意味の言葉はどれですか？',
+   options:['照れる','面映ゆい','はにかむ','きまりが悪い','赤面'],
+   answer:3,
+   explanation:'「きまりが悪い」は場の具合や都合が悪いこと。恥ずかしくて顔向けできない気持ち。「ばつが悪い」「肩身が狭い」も同じ意味の類義語。'},
+];
+
+// === ダブルオプション誤りを回避するため、14-1-5を再定義 ===
+// （上記でoptionsが二回定義されてしまっているため修正）
+(function(){
+  const q = Q.find(x=>x.id==='14-1-5');
+  if(q){ q.options=['私（わたくし）','建前（たてまえ）','手段（しゅだん）','不足（ふそく）','偽（にせ）']; q.answer=0; }
+})();
+
+// ===== 学習カードデータ =====
+const CARDS = [
+  // --- 類義語（第13回）---
+  { cat:'類義語', word:'容易＝平易', read:'ようい＝へいい',
+    meaning:'たやすいこと。やさしいこと。手間がかからないこと。',
+    pair:'類義語', pair2:'',
+    ex:'「容易（平易）な問題でもミスをしないように注意する」' },
+  { cat:'類義語', word:'単純＝簡単', read:'たんじゅん＝かんたん',
+    meaning:'こみいっていないこと。手数がかからないこと。',
+    pair:'類義語', pair2:'',
+    ex:'「単純（簡単）な作業ほど、集中力が大切だ」' },
+  { cat:'類義語', word:'一生＝終生', read:'いっしょう＝しゅうせい',
+    meaning:'生まれてから死ぬまでの間。生涯ずっと。',
+    pair:'類義語', pair2:'',
+    ex:'「一生（終生）をかけて研究に打ちこむ」' },
+  { cat:'類義語', word:'本意＝本心＝真意', read:'ほんい＝ほんしん＝しんい',
+    meaning:'本当の意図・気持ち。うそのない本来の考え。',
+    pair:'類義語', pair2:'',
+    ex:'「彼の本意（本心／真意）を確かめたい」' },
+  { cat:'類義語', word:'生家＝実家', read:'せいか＝じっか',
+    meaning:'その人が生まれた家。',
+    pair:'類義語', pair2:'',
+    ex:'「久しぶりに生家（実家）に帰省した」' },
+  { cat:'類義語', word:'質問＝質疑', read:'しつもん＝しつぎ',
+    meaning:'わからない事・疑わしい事を問いただすこと。',
+    pair:'類義語', pair2:'',
+    ex:'「授業の後に質問（質疑）の時間が設けられた」' },
+  { cat:'類義語', word:'平生＝平素＝日常', read:'へいぜい＝へいそ＝にちじょう',
+    meaning:'ふだん。つね日ごろ。',
+    pair:'類義語', pair2:'',
+    ex:'「平生（平素／日常）から健康に気をつけることが大切だ」' },
+  { cat:'類義語', word:'親友＝知己', read:'しんゆう＝ちき',
+    meaning:'とても仲のいい友人。心の底までよく知り合った友。',
+    pair:'類義語', pair2:'',
+    ex:'「彼女は私の親友（知己）だ」' },
+  { cat:'類義語', word:'刊行＝出版', read:'かんこう＝しゅっぱん',
+    meaning:'書籍・文書などを印刷して世に出すこと。',
+    pair:'類義語', pair2:'',
+    ex:'「新しい小説が刊行（出版）された」' },
+  { cat:'類義語', word:'内容＝実質', read:'ないよう＝じっしつ',
+    meaning:'実際に事物に備わっているもの。外見ではなく中身。',
+    pair:'類義語', pair2:'',
+    ex:'「内容（実質）のある発表ができた」' },
+  { cat:'類義語', word:'納得＝承知＝合点', read:'なっとく＝しょうち＝がてん',
+    meaning:'他人の考え・行為を理解し、もっともだと認めること。',
+    pair:'類義語', pair2:'',
+    ex:'「先生の説明にようやく納得（承知／合点）がいった」' },
+
+  // --- 対義語（第14回）---
+  { cat:'対義語', word:'素人　⇔　玄人', read:'しろうと　⇔　くろうと',
+    meaning:'素人：専門的な知識・技術のない人。アマチュア。\n玄人：技芸などに熟達した専門家。プロ。',
+    pair:'対義語', pair2:'',
+    ex:'「玄人はだしの演技を見せてくれた」' },
+  { cat:'対義語', word:'不足　⇔　過剰', read:'ふそく　⇔　かじょう',
+    meaning:'不足：足りないこと。\n過剰：必要な程度を越えて多いこと。ありあまること。',
+    pair:'対義語', pair2:'',
+    ex:'「過剰な期待をかけると、かえってプレッシャーになる」' },
+  { cat:'対義語', word:'本音　⇔　建前', read:'ほんね　⇔　たてまえ',
+    meaning:'本音：本心からの言葉。本当の気持ち。\n建前：原則として立てている表向きの考え。',
+    pair:'対義語', pair2:'',
+    ex:'「建前では賛成したが、本音は反対だった」' },
+  { cat:'対義語', word:'困難　⇔　容易', read:'こんなん　⇔　ようい',
+    meaning:'困難：難しいこと。\n容易：たやすいこと。やさしいこと。',
+    pair:'対義語', pair2:'',
+    ex:'「容易には解けない困難な問題に挑戦した」' },
+  { cat:'対義語', word:'権利　⇔　義務', read:'けんり　⇔　ぎむ',
+    meaning:'権利：自分の意志で自由に行ったり要求できる資格・能力。\n義務：当然しなければならない務め。',
+    pair:'対義語', pair2:'',
+    ex:'「権利と義務はセットで考えることが大切だ」' },
+  { cat:'対義語', word:'公　⇔　私', read:'おおやけ　⇔　わたくし',
+    meaning:'公：社会全体・公共のこと。\n私：個人・プライベートのこと。',
+    pair:'対義語', pair2:'',
+    ex:'「公私混同をしないようにしよう」' },
+  { cat:'対義語', word:'偽　⇔　真', read:'にせ　⇔　しん',
+    meaning:'偽：にせもの・うそ。\n真：本物・真実のこと。',
+    pair:'対義語', pair2:'',
+    ex:'「真偽（しんぎ）を確かめることが大切だ」' },
+  { cat:'対義語', word:'目的　⇔　手段', read:'もくてき　⇔　しゅだん',
+    meaning:'目的：実現しようとめざす事柄。ゴール。\n手段：目的を達成するための方法・手立て。',
+    pair:'対義語', pair2:'',
+    ex:'「目的を達成するためにどんな手段をとるべきか考える」' },
+  { cat:'対義語', word:'質問　⇔　回答', read:'しつもん　⇔　かいとう',
+    meaning:'質問：疑問に思ったことを問いただすこと。\n回答：質問・要求などに答えること。',
+    pair:'対義語', pair2:'',
+    ex:'「質問に対してていねいな回答が返ってきた」\n※「質問＝質疑」は類義語、「質問⇔回答」は対義語。' },
+  { cat:'対義語', word:'主観　⇔　客観', read:'しゅかん　⇔　きゃっかん',
+    meaning:'主観：自分ひとりのものの見方・感じ方。\n客観：第三者の立場から見ること。だれもが納得できる見方。',
+    pair:'対義語', pair2:'',
+    ex:'「エッセイは主観的、報告書は客観的な文章といえる」' },
+  { cat:'対義語', word:'抽象　⇔　具体', read:'ちゅうしょう　⇔　ぐたい',
+    meaning:'抽象：複数のものに共通する性質をぬき出すこと。\n具体：形や内容がはっきり分かること。',
+    pair:'対義語', pair2:'',
+    ex:'「抽象的な説明より具体的な例を挙げると分かりやすい」' },
+  { cat:'対義語', word:'絶対　⇔　相対', read:'ぜったい　⇔　そうたい',
+    meaning:'絶対：他に比較するものや対立するものがないこと。\n相対：他との関係の上に存在・成立していること。',
+    pair:'対義語', pair2:'',
+    ex:'「テストの点数を相対的に見ることもある」' },
+  { cat:'対義語', word:'画一　⇔　多様', read:'かくいつ　⇔　たよう',
+    meaning:'画一：個性を考慮せず全体を一様にそろえること。\n多様：いろいろと種類の違ったものがあること。',
+    pair:'対義語', pair2:'',
+    ex:'「画一的な教育より、多様な個性を伸ばす教育が大切だ」' },
+
+  // --- 感情の類義語 ---
+  { cat:'感情の類義語', word:'うれしい（喜び）の仲間', read:'',
+    meaning:'めでたい／浮かれる／はしゃぐ／心が弾む／いそいそ／小躍り（こおどり）／歓喜（かんき）／有頂天（うちょうてん）',
+    pair:'', pair2:'',
+    ex:'「歓喜」は激しく喜ぶこと。「有頂天」は得意の絶頂にあること。「小躍り」は躍り上がって喜ぶこと。' },
+  { cat:'感情の類義語', word:'悲しい（悲しみ）の仲間', read:'',
+    meaning:'もの悲しい／切ない／やるせない／嘆く／憂える／胸がつかえる／胸が張り裂ける／悲痛（ひつう）／悲惨（ひさん）／落ち込む',
+    pair:'', pair2:'',
+    ex:'「切ない」は胸がしめつけられる悲しさ。「やるせない」はどうしようもない悲しさ。「憂える」は嘆き悲しむこと。' },
+  { cat:'感情の類義語', word:'怒る（怒り）の仲間', read:'',
+    meaning:'腹が立つ／頭に血が上る／頭に来る／血相を変える／青筋を立てる／わなわな／逆上（ぎゃくじょう）／激高（げきこう）',
+    pair:'', pair2:'',
+    ex:'「血相を変える」は顔つきが変わるほど激しく怒ること。「逆上」は興奮して分別を失うこと。' },
+  { cat:'感情の類義語', word:'恥ずかしい（羞恥）の仲間', read:'',
+    meaning:'照れる／面映ゆい（おもはゆい）／きまりが悪い／はにかむ／赤面（せきめん）／肩身が狭い／面目ない',
+    pair:'', pair2:'',
+    ex:'「面映ゆい」は何となく照れくさいようす。「はにかむ」は恥ずかしそうな表情をすること。「赤面」は恥ずかしくて顔が赤くなること。' },
+];
+
+const STUDY_CATS = ['類義語','対義語','感情の類義語'];
+
+// ===== 学習カード関数 =====
+let studyCards=[], studyIdx=0, studyCat='';
+
+function startStudy(cat){
+  studyCat=cat;
+  studyCards=CARDS.filter(c=>c.cat===cat);
+  studyIdx=0;
+  renderStudyCard();
+  showScreen('study');
+}
+
+function renderStudyCard(){
+  const c=studyCards[studyIdx], total=studyCards.length;
+  const pct=(studyIdx/total*100);
+  document.getElementById('study-prog').style.width=pct+'%';
+  document.getElementById('study-badge').textContent=studyCat;
+  document.getElementById('study-counter').textContent=(studyIdx+1)+' / '+total;
+
+  document.getElementById('study-card-area').innerHTML=`
+    <div class="word-card">
+      <div class="word-card-main">${c.word}</div>
+      ${c.read?`<div class="word-card-read">${c.read}</div>`:''}
+      <div class="word-card-divider"></div>
+      <div class="word-card-label">意　味</div>
+      <div class="word-card-meaning">${c.meaning.replace(/\n/g,'<br>')}</div>
+      ${c.ex?`<div class="word-card-ex">例）${c.ex.replace(/\n/g,'<br>')}</div>`:''}
+    </div>`;
+
+  const isLast = studyIdx===total-1;
+  if(isLast){
+    document.getElementById('study-nav-area').innerHTML=`
+      <div class="study-complete-box">
+        <div class="study-complete-icon">🎉</div>
+        <div class="study-complete-msg">${studyCat}の学習完了！</div>
+        <div class="study-complete-sub">次は問題にチャレンジしよう</div>
+        <button class="goto-quiz-btn" onclick="startQuiz('${studyCat}','theme')">📝 ${studyCat}の問題を解く →</button>
+      </div>
+      <div class="card-nav-row">
+        <button class="prev-card-btn" onclick="prevCard()">← 前へ</button>
+        <button class="next-card-btn" style="background:rgba(255,255,255,0.07);border:1px solid var(--border);color:var(--muted);" disabled>最後のカード</button>
+      </div>`;
+  } else {
+    document.getElementById('study-nav-area').innerHTML=`
+      <div class="card-nav-row">
+        ${studyIdx>0?'<button class="prev-card-btn" onclick="prevCard()">← 前へ</button>':'<div></div>'}
+        <button class="next-card-btn" onclick="nextCard()">次のカード →</button>
+      </div>`;
+  }
+  window.scrollTo(0,0);
+}
+
+function nextCard(){ if(studyIdx<studyCards.length-1){studyIdx++;renderStudyCard();} }
+function prevCard(){ if(studyIdx>0){studyIdx--;renderStudyCard();} }
+
+
+const ROUNDS = [13, 14];
+const STORAGE_KEY = 'kankoto13_redo';
+
+function loadRedo(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');}catch{return[];}}
+function saveRedo(ids){localStorage.setItem(STORAGE_KEY,JSON.stringify(ids));}
+function updateRedoBtn(){
+  const r=loadRedo(),btn=document.getElementById('redo-home-btn'),cnt=document.getElementById('redo-home-count');
+  if(r.length>0){btn.style.display='flex';cnt.textContent=r.length+'問';}
+  else{btn.style.display='none';}
+}
+
+function showScreen(id){
+  ['home','select','study','quiz','result'].forEach(s=>document.getElementById('screen-'+s).classList.add('hidden'));
+  document.getElementById('screen-'+id).classList.remove('hidden');
+}
+function showHome(){updateRedoBtn();showScreen('home');}
+function doReset(){
+  saveRedo([]);updateRedoBtn();
+  const btn=document.getElementById('reset-btn1');
+  btn.textContent='✅ リセットしました';
+  setTimeout(()=>{btn.textContent='🗑️ 解き直しリストをリセット';},2000);
+}
+
+function showSelect(mode){
+  const titleEl=document.getElementById('select-title');
+  const listEl=document.getElementById('select-list');
+  if(mode==='study'){
+    titleEl.textContent='復習するテーマを選んでください';
+    listEl.innerHTML=STUDY_CATS.map(t=>{
+      const c=CARDS.filter(x=>x.cat===t).length;
+      return`<button class="select-btn" onclick="startStudy('${t}')">
+        <span class="select-name">📖 ${t}</span><span class="select-badge">${c}語</span></button>`;
+    }).join('');
+  } else if(mode==='theme'){
+    titleEl.textContent='テーマを選んでください';
+    listEl.innerHTML=THEMES.map(t=>{
+      const c=Q.filter(q=>q.theme===t).length;
+      return`<button class="select-btn" onclick="startQuiz('${t}','theme')">
+        <span class="select-name">${t}</span><span class="select-badge">${c}問</span></button>`;
+    }).join('');
+  }else{
+    titleEl.textContent='回を選んでください';
+    listEl.innerHTML=ROUNDS.map(r=>{
+      const c=Q.filter(q=>q.round===r).length;
+      return`<button class="select-btn" onclick="startQuiz(${r},'round')">
+        <span class="select-name">第${r}回</span><span class="select-badge">${c}問</span></button>`;
+    }).join('');
+  }
+  showScreen('select');
+}
+
+let quizWords=[],quizIdx=0,quizScore=0,quizAnswers=[],lastFilter=null,lastMode=null;
+function shuffle(a){return[...a].sort(()=>Math.random()-.5);}
+
+function startQuiz(filter,mode){
+  lastFilter=filter;lastMode=mode;
+  quizWords=shuffle(Q.filter(q=>mode==='theme'?q.theme===filter:q.round===filter));
+  quizIdx=0;quizScore=0;quizAnswers=[];
+  renderQuiz();showScreen('quiz');
+}
+function startRedoQuiz(){
+  const r=loadRedo();
+  if(!r.length){alert('解き直しの問題がありません');return;}
+  lastFilter='redo';lastMode='redo';
+  quizWords=shuffle(Q.filter(q=>q&&r.includes(q.id)));
+  if(!quizWords.length){alert('解き直しの問題が見つかりません');saveRedo([]);updateRedoBtn();return;}
+  quizIdx=0;quizScore=0;quizAnswers=[];
+  renderQuiz();showScreen('quiz');
+}
+
+function renderQuiz(){
+  const q=quizWords[quizIdx];
+  document.getElementById('quiz-prog').style.width=(quizIdx/quizWords.length*100)+'%';
+  document.getElementById('quiz-badge').textContent=q.theme;
+  document.getElementById('quiz-counter').textContent=(quizIdx+1)+' / '+quizWords.length;
+  document.getElementById('q-label').textContent='問題';
+  document.getElementById('q-text').textContent=q.question;
+  document.getElementById('exp-area').classList.add('hidden');
+  document.getElementById('ai-hint-box').classList.add('hidden');
+  document.getElementById('ai-hint-text').textContent='';
+  document.getElementById('quit-btn').style.display='block';
+  document.getElementById('choices').innerHTML=q.options.map((o,i)=>
+    `<button class="choice-btn" id="ch-${i}" onclick="answerQuiz(${i})">
+      <span class="choice-num">${i+1}</span><span>${o}</span></button>`
+  ).join('');
+  document.getElementById('next-btn').textContent=(quizIdx+1>=quizWords.length)?'結果を見る →':'次の問題 →';
+}
+
+function answerQuiz(i){
+  const q=quizWords[quizIdx],ok=(i===q.answer);
+  if(ok)quizScore++;
+  quizAnswers.push({q,userIdx:i,correct:ok});
+  q.options.forEach((_,j)=>{
+    const b=document.getElementById('ch-'+j);b.disabled=true;
+    if(j===q.answer)b.classList.add('choice-ok');
+    else if(j===i)b.classList.add('choice-ng');
+    else b.classList.add('choice-dim');
+  });
+  document.getElementById('exp-tag').textContent=ok?'✅ 正解！':'❌ 不正解　正解：'+q.options[q.answer];
+  document.getElementById('exp-text').textContent=q.explanation;
+  document.getElementById('exp-area').classList.remove('hidden');
+  document.getElementById('quiz-prog').style.width=((quizIdx+1)/quizWords.length*100)+'%';
+  document.getElementById('quit-btn').style.display='none';
+  fetchHint(q);
+}
+
+async function fetchHint(q){
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:200,
+        messages:[{role:'user',content:`小学5年生向け国語の解説です。以下の解説をもとに、子どもにわかりやすく30〜50字で「覚え方のポイント」を一言添えてください。解説：${q.explanation}`}]})});
+    const d=await r.json(),h=d.content?.[0]?.text;
+    if(h){document.getElementById('ai-hint-text').textContent=h;document.getElementById('ai-hint-box').classList.remove('hidden');}
+  }catch(e){}
+}
+
+function quizNext(){
+  if(quizIdx+1>=quizWords.length){showResult();return;}
+  quizIdx++;renderQuiz();
+}
+function quitQuiz(){
+  quizWords.forEach(q=>{if(!quizAnswers.find(a=>a.q.id===q.id))quizAnswers.push({q,userIdx:-1,correct:false});});
+  showResult();
+}
+function retryQuiz(){
+  if(lastMode==='redo')startRedoQuiz();
+  else startQuiz(lastFilter,lastMode);
+}
+
+function showResult(){
+  quizWords.forEach(q=>{if(!quizAnswers.find(a=>a.q.id===q.id))quizAnswers.push({q,userIdx:-1,correct:false});});
+  const wrongIds=quizAnswers.filter(a=>!a.correct).map(a=>a.q.id);
+  const correctIds=quizAnswers.filter(a=>a.correct).map(a=>a.q.id);
+  const existing=loadRedo();
+  const merged=[...new Set([...existing,...wrongIds])].filter(id=>!correctIds.includes(id));
+  saveRedo(merged);
+
+  const total=quizAnswers.length;
+  document.getElementById('score-num').innerHTML=quizScore+'<span class="score-total">/'+total+'</span>';
+  const pct=quizScore/total;
+  document.getElementById('score-msg').textContent=
+    quizScore===total?'🎉 満点！すばらしい！':pct>=0.8?'👏 よくできました！':pct>=0.6?'😊 もう少し！':'📖 もう一度挑戦しよう';
+
+  document.getElementById('answer-list').innerHTML=quizAnswers.filter(a=>a&&a.q).map(a=>{
+    const wrong=!a.correct&&a.userIdx>=0
+      ?`<span class="res-wrong">（あなた：${a.q.options[a.userIdx]||'?'}）</span>`
+      :!a.correct?'<span class="res-wrong">（未回答）</span>':'';
+    return`<div class="res-item" style="border-left-color:${a.correct?'#22c55e':'#ef4444'}">
+      <div class="res-q">${a.q.question.split('\n')[0]}</div>
+      <div class="res-a">${a.correct?'✅':'❌'} ${a.q.options[a.q.answer]} ${wrong}</div></div>`;
+  }).join('');
+
+  showScreen('result');
+  const btn=document.getElementById('redo-result-btn');
+  if(merged.length>0){btn.textContent='🔁 間違えた'+merged.length+'問を解き直す';btn.style.display='block';}
+  else{btn.style.display='none';}
+  updateRedoBtn();
+}
+
+updateRedoBtn();showHome();
+</script>
+</body>
+</html>
