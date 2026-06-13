@@ -1,0 +1,1357 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>塾スケジュール</title>
+<script type="module">
+// ===== Firebase 初期化 =====
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref, set, get, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBCCW9eVVluS_i9Uilq43uMUEREh7FoXqc",
+  authDomain: "study-schedule-79493.firebaseapp.com",
+  databaseURL: "https://study-schedule-79493-default-rtdb.firebaseio.com",
+  projectId: "study-schedule-79493",
+  storageBucket: "study-schedule-79493.firebasestorage.app",
+  messagingSenderId: "126949580601",
+  appId: "1:126949580601:web:e8ca4c5d4eed84a56d12e8"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+// Firebaseへの読み書き関数をグローバルに公開
+window._fbDb = db;
+window._fbRef = ref;
+window._fbSet = set;
+window._fbGet = get;
+window._fbOnValue = onValue;
+window._fbReady = true;
+
+// Firebase準備完了後にアプリ初期化
+window.addEventListener('DOMContentLoaded', () => {
+  initApp();
+});
+</script>
+<style>
+  :root {
+    --kokugo: #E8734A;
+    --kokugo-light: #FDF0EB;
+    --sansu: #4A90D9;
+    --sansu-light: #EBF3FD;
+    --rika: #5BAD6F;
+    --rika-light: #EBF7EE;
+    --shakai: #9B6DD6;
+    --shakai-light: #F3EEFB;
+    --bg: #F7F8FA;
+    --surface: #FFFFFF;
+    --border: #E4E7EC;
+    --text: #1A1D23;
+    --text-sub: #6B7280;
+    --shukudai: #FF6B6B;
+    --jishu: #54B3D6;
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 15px;
+  }
+
+  /* ヘッダー */
+  .app-header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 16px 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .app-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 12px;
+  }
+
+  .week-selector {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .week-selector button {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 4px 10px;
+    font-size: 13px;
+    cursor: pointer;
+    color: var(--text);
+  }
+
+  .week-label {
+    font-size: 14px;
+    font-weight: 600;
+    flex: 1;
+    text-align: center;
+  }
+
+  /* タブ */
+  .tabs {
+    display: flex;
+    gap: 0;
+  }
+
+  .tab {
+    flex: 1;
+    padding: 10px 4px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-sub);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.15s;
+  }
+
+  .tab.active {
+    color: var(--text);
+    border-bottom-color: var(--text);
+  }
+
+  /* コンテンツ */
+  .tab-content {
+    display: none;
+    padding: 16px;
+    padding-bottom: 80px;
+  }
+
+  .tab-content.active { display: block; }
+
+  /* 進捗バー */
+  .progress-section {
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    margin-bottom: 14px;
+    border: 1px solid var(--border);
+  }
+
+  .progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .progress-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-sub);
+  }
+
+  .progress-count {
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  .progress-bar-wrap {
+    background: var(--border);
+    border-radius: 4px;
+    height: 8px;
+    overflow: hidden;
+    margin-bottom: 12px;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #4A90D9, #5BAD6F);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+  }
+
+  .subject-progress {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+
+  .subject-chip {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    padding: 4px 8px;
+    border-radius: 6px;
+  }
+
+  .subject-chip .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* タスクカード */
+  .section-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--text-sub);
+    text-transform: uppercase;
+    margin: 16px 0 8px;
+  }
+
+  .task-card {
+    background: var(--surface);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    margin-bottom: 8px;
+    overflow: hidden;
+    transition: box-shadow 0.15s;
+  }
+
+  .task-card.done {
+    opacity: 0.6;
+  }
+
+  .task-main {
+    display: flex;
+    align-items: center;
+    padding: 12px 14px;
+    gap: 10px;
+  }
+
+  .subject-bar {
+    width: 4px;
+    border-radius: 2px;
+    align-self: stretch;
+    flex-shrink: 0;
+  }
+
+  .task-check {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: all 0.15s;
+    font-size: 14px;
+  }
+
+  .task-check.checked {
+    background: #5BAD6F;
+    border-color: #5BAD6F;
+    color: white;
+  }
+
+  .task-info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .task-name {
+    font-size: 14px;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .task-meta {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 3px;
+  }
+
+  .badge {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 10px;
+  }
+
+  .badge.shukudai {
+    background: #FEE2E2;
+    color: var(--shukudai);
+  }
+
+  .badge.jishu {
+    background: #E0F4FB;
+    color: var(--jishu);
+  }
+
+  .deadline {
+    font-size: 11px;
+    color: var(--text-sub);
+  }
+
+  .deadline.urgent {
+    color: #EF4444;
+    font-weight: 600;
+  }
+
+  .rikai-group {
+    display: flex;
+    gap: 4px;
+    flex-shrink: 0;
+  }
+
+  .rikai-btn {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 1.5px solid var(--border);
+    background: none;
+    font-size: 13px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+    font-weight: 700;
+  }
+
+  .rikai-btn.maru.active { background: #DCFCE7; border-color: #5BAD6F; color: #166534; }
+  .rikai-btn.sankaku.active { background: #FEF9C3; border-color: #EAB308; color: #713F12; }
+  .rikai-btn.batsu.active { background: #FEE2E2; border-color: #EF4444; color: #991B1B; }
+
+  /* コメント欄 */
+  .task-comment {
+    border-top: 1px solid var(--border);
+    padding: 8px 14px 10px;
+    display: none;
+  }
+
+  .task-comment.show { display: block; }
+
+  .comment-toggle {
+    font-size: 11px;
+    color: var(--text-sub);
+    cursor: pointer;
+    padding: 2px 14px 6px;
+    display: block;
+  }
+
+  .comment-toggle:hover { color: var(--text); }
+
+  .comment-input {
+    width: 100%;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 8px 10px;
+    font-size: 13px;
+    font-family: inherit;
+    resize: none;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 60px;
+  }
+
+  .comment-input:focus {
+    outline: none;
+    border-color: #4A90D9;
+  }
+
+  .comment-label {
+    font-size: 11px;
+    color: var(--text-sub);
+    margin-bottom: 4px;
+  }
+
+  /* 計画タブ */
+  .plan-week-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+  }
+
+  .btn-primary {
+    background: var(--text);
+    color: white;
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 10px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+  }
+
+  .btn-secondary {
+    background: var(--surface);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 8px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+  }
+
+  .btn-danger {
+    background: none;
+    border: none;
+    color: #EF4444;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 4px 8px;
+    line-height: 1;
+  }
+
+  /* テンプレートモーダル */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: 200;
+    display: none;
+    align-items: flex-end;
+    justify-content: center;
+  }
+
+  .modal-overlay.show {
+    display: flex;
+  }
+
+  .modal {
+    background: var(--surface);
+    border-radius: var(--radius) var(--radius) 0 0;
+    width: 100%;
+    max-width: 600px;
+    max-height: 85vh;
+    overflow-y: auto;
+    padding: 20px 16px 40px;
+  }
+
+  .modal-title {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 16px;
+  }
+
+  .modal-close {
+    float: right;
+    background: none;
+    border: none;
+    font-size: 22px;
+    cursor: pointer;
+    color: var(--text-sub);
+    line-height: 1;
+  }
+
+  .subject-section {
+    margin-bottom: 16px;
+  }
+
+  .subject-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+
+  .subject-tag {
+    font-size: 12px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 10px;
+    color: white;
+  }
+
+  .template-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    background: var(--bg);
+    border-radius: var(--radius-sm);
+    margin-bottom: 6px;
+  }
+
+  .template-item input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  .template-item-name {
+    flex: 1;
+    font-size: 14px;
+  }
+
+  .template-item-badge {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 8px;
+  }
+
+  /* フォーム */
+  .form-row {
+    margin-bottom: 12px;
+  }
+
+  .form-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-sub);
+    margin-bottom: 5px;
+    display: block;
+  }
+
+  .form-input, .form-select {
+    width: 100%;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 10px 12px;
+    font-size: 14px;
+    font-family: inherit;
+    background: var(--surface);
+    color: var(--text);
+  }
+
+  .form-input:focus, .form-select:focus {
+    outline: none;
+    border-color: #4A90D9;
+  }
+
+  .form-row-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  /* 設定タブ */
+  .setting-section {
+    background: var(--surface);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    margin-bottom: 14px;
+    overflow: hidden;
+  }
+
+  .setting-section-title {
+    padding: 12px 16px;
+    font-size: 13px;
+    font-weight: 700;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .template-edit-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border);
+    gap: 8px;
+  }
+
+  .template-edit-item:last-child { border-bottom: none; }
+
+  .template-edit-name {
+    flex: 1;
+    font-size: 14px;
+  }
+
+  .template-edit-sub {
+    font-size: 11px;
+    color: var(--text-sub);
+  }
+
+  .kind-toggle {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+  }
+
+  .kind-toggle.shukudai { background: #FEE2E2; color: var(--shukudai); }
+  .kind-toggle.jishu { background: #E0F4FB; color: var(--jishu); }
+
+  /* 科目フィルタータブ */
+  .subject-tabs {
+    display: flex;
+    gap: 6px;
+    padding: 10px 16px 0;
+    background: var(--surface);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .subject-tabs::-webkit-scrollbar { display: none; }
+
+  .subject-tab {
+    flex-shrink: 0;
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    border: 2px solid transparent;
+    background: var(--bg);
+    color: var(--text-sub);
+    transition: all 0.15s;
+  }
+
+  .subject-tab.active-all {
+    background: var(--text);
+    color: white;
+  }
+
+  .subject-tab.active-kokugo { background: var(--kokugo); color: white; }
+  .subject-tab.active-sansu  { background: var(--sansu);  color: white; }
+  .subject-tab.active-rika   { background: var(--rika);   color: white; }
+  .subject-tab.active-shakai { background: var(--shakai); color: white; }
+
+  /* 空状態 */
+  .empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-sub);
+  }
+
+  .empty-state .icon { font-size: 40px; margin-bottom: 12px; }
+  .empty-state p { font-size: 14px; line-height: 1.6; }
+
+  /* トースト */
+  .toast {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: #1A1D23;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    opacity: 0;
+    transition: all 0.2s;
+    z-index: 300;
+    pointer-events: none;
+  }
+
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* 科目カラー */
+  .kokugo-bar { background: var(--kokugo); }
+  .sansu-bar { background: var(--sansu); }
+  .rika-bar { background: var(--rika); }
+  .shakai-bar { background: var(--shakai); }
+  .kokugo-bg { background: var(--kokugo-light); }
+  .sansu-bg { background: var(--sansu-light); }
+  .rika-bg { background: var(--rika-light); }
+  .shakai-bg { background: var(--shakai-light); }
+  .kokugo-tag { background: var(--kokugo); }
+  .sansu-tag { background: var(--sansu); }
+  .rika-tag { background: var(--rika); }
+  .shakai-tag { background: var(--shakai); }
+  .kokugo-dot { background: var(--kokugo); }
+  .sansu-dot { background: var(--sansu); }
+  .rika-dot { background: var(--rika); }
+  .shakai-dot { background: var(--shakai); }
+</style>
+</head>
+<body>
+
+<div class="app-header">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+    <div class="app-title">📚 塾スケジュール</div>
+  </div>
+  <div class="week-selector">
+    <button onclick="changeWeek(-1)">‹</button>
+    <div class="week-label" id="weekLabel"></div>
+    <button onclick="changeWeek(1)">›</button>
+    <button class="btn-secondary" style="font-size:12px;padding:4px 10px;" onclick="goToCurrentWeek()">今週</button>
+  </div>
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('today')">今週のタスク</div>
+    <div class="tab" onclick="switchTab('plan')">計画</div>
+    <div class="tab" onclick="switchTab('settings')">設定</div>
+  </div>
+</div>
+
+<!-- 今週のタスク -->
+<div id="tab-today" class="tab-content active">
+  <div class="progress-section" id="progressSection"></div>
+  <div class="subject-tabs" id="subjectTabs">
+    <div class="subject-tab active-all" onclick="filterSubject('全部')">全部</div>
+    <div class="subject-tab" onclick="filterSubject('国語')">国語</div>
+    <div class="subject-tab" onclick="filterSubject('算数')">算数</div>
+    <div class="subject-tab" onclick="filterSubject('理科')">理科</div>
+    <div class="subject-tab" onclick="filterSubject('社会')">社会</div>
+  </div>
+  <div id="taskList" style="padding-top:10px;"></div>
+</div>
+
+<!-- 計画タブ -->
+<div id="tab-plan" class="tab-content">
+  <div style="display:flex;gap:8px;margin-bottom:16px;">
+    <button class="btn-primary" style="flex:1;" onclick="openTemplateModal()">＋ テンプレートから追加</button>
+    <button class="btn-secondary" onclick="openAddModal()">手動で追加</button>
+  </div>
+  <div id="planList"></div>
+</div>
+
+<!-- 設定タブ -->
+<div id="tab-settings" class="tab-content">
+  <div id="settingsList"></div>
+</div>
+
+<!-- テンプレートモーダル -->
+<div class="modal-overlay" id="templateModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('templateModal')">×</button>
+    <div class="modal-title">テンプレートから追加</div>
+    <div style="display:flex;gap:8px;margin-bottom:12px;">
+      <button class="btn-secondary" style="flex:1;font-size:13px;" onclick="selectAllTemplates(true)">すべて選択</button>
+      <button class="btn-secondary" style="flex:1;font-size:13px;" onclick="selectAllTemplates(false)">すべて解除</button>
+    </div>
+    <div id="templateContent"></div>
+    <button class="btn-primary" style="width:100%;margin-top:12px;" onclick="addFromTemplate()">選択した項目を追加</button>
+  </div>
+</div>
+
+<!-- 手動追加モーダル -->
+<div class="modal-overlay" id="addModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('addModal')">×</button>
+    <div class="modal-title" id="addModalTitle">タスクを追加</div>
+    <div class="form-row">
+      <label class="form-label">科目</label>
+      <select class="form-select" id="f-subject">
+        <option value="国語">国語</option>
+        <option value="算数">算数</option>
+        <option value="理科">理科</option>
+        <option value="社会">社会</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label class="form-label">教材・作業名</label>
+      <input class="form-input" id="f-name" placeholder="例：予習シリーズ 要点チェック">
+    </div>
+    <div class="form-row-2">
+      <div>
+        <label class="form-label">種別</label>
+        <select class="form-select" id="f-kind">
+          <option value="宿題">宿題</option>
+          <option value="自習">自習</option>
+        </select>
+      </div>
+      <div>
+        <label class="form-label">締め切り</label>
+        <input class="form-input" type="date" id="f-deadline">
+      </div>
+    </div>
+    <input type="hidden" id="f-edit-id">
+    <button class="btn-primary" style="width:100%;margin-top:4px;" onclick="saveTask()">保存</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== データ =====
+const DEFAULT_TEMPLATES = [
+  // 国語
+  { id: 't1',  subject: '国語', name: '予習シリーズ 読解',    kind: '宿題' },
+  { id: 't2',  subject: '国語', name: '漢コト 漢字',          kind: '宿題' },
+  { id: 't3',  subject: '国語', name: '漢コト ことば',        kind: '宿題' },
+  { id: 't4',  subject: '国語', name: '漢コト 言語知識',      kind: '宿題' },
+  // 算数
+  { id: 't5',  subject: '算数', name: '演習問題集 反復問題',  kind: '宿題' },
+  { id: 't6',  subject: '算数', name: '演習問題集 トレーニング', kind: '宿題' },
+  { id: 't7',  subject: '算数', name: '演習問題集 実践問題',  kind: '宿題' },
+  { id: 't8',  subject: '算数', name: '基礎プリント',         kind: '自習' },
+  { id: 't9',  subject: '算数', name: '計算',                 kind: '宿題' },
+  // 理科
+  { id: 't10', subject: '理科', name: '予習シリーズ 要点チェック', kind: '宿題' },
+  { id: 't11', subject: '理科', name: '演習問題集 まとめてみよう', kind: '宿題' },
+  { id: 't12', subject: '理科', name: '演習問題集 基本問題',  kind: '宿題' },
+  { id: 't13', subject: '理科', name: '演習問題集 練習問題',  kind: '宿題' },
+  { id: 't14', subject: '理科', name: '錬成問題集 ノート',    kind: '宿題' },
+  { id: 't15', subject: '理科', name: '錬成問題集 トレーニング', kind: '宿題' },
+  { id: 't16', subject: '理科', name: '錬成問題集 基本問題',  kind: '宿題' },
+  { id: 't17', subject: '理科', name: '錬成問題集 練習問題',  kind: '宿題' },
+  { id: 't18', subject: '理科', name: '確認プリント Basic',   kind: '自習' },
+  { id: 't19', subject: '理科', name: '確認プリント Standard', kind: '自習' },
+  { id: 't20', subject: '理科', name: '週テスト',             kind: '宿題' },
+  // 社会
+  { id: 't21', subject: '社会', name: '予習シリーズ 要点チェック', kind: '宿題' },
+  { id: 't22', subject: '社会', name: '演習問題集 まとめてみよう', kind: '宿題' },
+  { id: 't23', subject: '社会', name: '演習問題集 基本問題',  kind: '宿題' },
+  { id: 't24', subject: '社会', name: '演習問題集 練習問題',  kind: '宿題' },
+  { id: 't25', subject: '社会', name: '錬成問題集 ノート',    kind: '宿題' },
+  { id: 't26', subject: '社会', name: '錬成問題集 トレーニング', kind: '宿題' },
+  { id: 't27', subject: '社会', name: '錬成問題集 基本問題',  kind: '宿題' },
+  { id: 't28', subject: '社会', name: '錬成問題集 練習問題',  kind: '宿題' },
+  { id: 't29', subject: '社会', name: '確認プリント Basic',   kind: '自習' },
+  { id: 't30', subject: '社会', name: '確認プリント Standard', kind: '自習' },
+  { id: 't31', subject: '社会', name: '週テスト',             kind: '宿題' },
+];
+
+const SUBJECT_KEYS = {
+  '国語': { bar: 'kokugo-bar', bg: 'kokugo-bg', tag: 'kokugo-tag', dot: 'kokugo-dot', color: '#E8734A' },
+  '算数': { bar: 'sansu-bar',  bg: 'sansu-bg',  tag: 'sansu-tag',  dot: 'sansu-dot',  color: '#4A90D9' },
+  '理科': { bar: 'rika-bar',   bg: 'rika-bg',   tag: 'rika-tag',   dot: 'rika-dot',   color: '#5BAD6F' },
+  '社会': { bar: 'shakai-bar', bg: 'shakai-bg', tag: 'shakai-tag', dot: 'shakai-dot', color: '#9B6DD6' },
+};
+
+let currentWeekOffset = 0;
+let currentSubjectFilter = '全部';
+
+function filterSubject(subject) {
+  currentSubjectFilter = subject;
+  // タブのアクティブ状態更新
+  const keyMap = { '全部': 'all', '国語': 'kokugo', '算数': 'sansu', '理科': 'rika', '社会': 'shakai' };
+  document.querySelectorAll('.subject-tab').forEach((tab, i) => {
+    const keys = ['全部','国語','算数','理科','社会'];
+    const isActive = keys[i] === subject;
+    tab.className = 'subject-tab';
+    if (isActive) tab.classList.add('active-' + keyMap[keys[i]]);
+  });
+  renderToday();
+}
+
+function getWeekKey(offset = 0) {
+  const d = new Date();
+  d.setDate(d.getDate() - d.getDay() + 1 + offset * 7); // 月曜基準
+  return `${d.getFullYear()}-W${String(getWeekNumber(d)).padStart(2,'0')}`;
+}
+
+function getWeekNumber(d) {
+  const onejan = new Date(d.getFullYear(), 0, 1);
+  return Math.ceil((((d - onejan) / 86400000) + onejan.getDay() + 1) / 7);
+}
+
+function getWeekRange(offset = 0) {
+  const d = new Date();
+  d.setDate(d.getDate() - d.getDay() + 1 + offset * 7);
+  const mon = new Date(d);
+  const sun = new Date(d);
+  sun.setDate(mon.getDate() + 6);
+  const fmt = (x) => `${x.getMonth()+1}/${x.getDate()}`;
+  return `${mon.getFullYear()}年 ${fmt(mon)}〜${fmt(sun)}`;
+}
+
+// ===== Firebase データ読み書き =====
+let _cachedTasks = [];
+let _cachedTemplates = null;
+
+async function loadData() {
+  return _cachedTasks;
+}
+
+async function saveData(data) {
+  _cachedTasks = data;
+  const db = window._fbDb;
+  await window._fbSet(window._fbRef(db, 'tasks'), data);
+}
+
+async function loadTemplates() {
+  if (_cachedTemplates) return _cachedTemplates;
+  const db = window._fbDb;
+  const snap = await window._fbGet(window._fbRef(db, 'templates'));
+  if (snap.exists()) {
+    _cachedTemplates = snap.val();
+  } else {
+    _cachedTemplates = DEFAULT_TEMPLATES.map(x => ({ ...x }));
+    await window._fbSet(window._fbRef(db, 'templates'), _cachedTemplates);
+  }
+  return _cachedTemplates;
+}
+
+async function saveTemplates(t) {
+  _cachedTemplates = t;
+  const db = window._fbDb;
+  await window._fbSet(window._fbRef(db, 'templates'), t);
+}
+
+async function getWeekTasks(offset = currentWeekOffset) {
+  const key = getWeekKey(offset);
+  const data = await loadData();
+  return data.filter(t => t.week === key);
+}
+
+// ===== 週操作 =====
+function changeWeek(dir) {
+  currentWeekOffset += dir;
+  updateWeekLabel();
+  renderAll();
+}
+
+function goToCurrentWeek() {
+  currentWeekOffset = 0;
+  updateWeekLabel();
+  renderAll();
+}
+
+function updateWeekLabel() {
+  document.getElementById('weekLabel').textContent = getWeekRange(currentWeekOffset);
+}
+
+// ===== タブ =====
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach((t,i) => {
+    t.classList.toggle('active', ['today','plan','settings'][i] === name);
+  });
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  renderAll();
+}
+
+// ===== レンダリング =====
+async function renderAll() {
+  await renderToday();
+  await renderPlan();
+  await renderSettings();
+}
+
+async function renderToday() {
+  const tasks = await getWeekTasks();
+  const total = tasks.length;
+  const done = tasks.filter(t => t.done).length;
+  const pct = total > 0 ? Math.round(done / total * 100) : 0;
+
+  const subjectCounts = {};
+  ['国語','算数','理科','社会'].forEach(s => {
+    const st = tasks.filter(t => t.subject === s);
+    subjectCounts[s] = { total: st.length, done: st.filter(t => t.done).length };
+  });
+
+  const prog = document.getElementById('progressSection');
+  prog.innerHTML = `
+    <div class="progress-header">
+      <span class="progress-title">今週の進捗</span>
+      <span class="progress-count">${done} / ${total} 完了</span>
+    </div>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" style="width:${pct}%"></div>
+    </div>
+    <div class="subject-progress">
+      ${['国語','算数','理科','社会'].map(s => {
+        const c = subjectCounts[s];
+        if (c.total === 0) return '';
+        const k = SUBJECT_KEYS[s];
+        return `<div class="subject-chip">
+          <div class="dot ${k.dot}"></div>
+          <span style="font-size:12px;font-weight:600;">${s}</span>
+          <span style="font-size:12px;color:var(--text-sub);margin-left:auto;">${c.done}/${c.total}</span>
+        </div>`;
+      }).join('')}
+    </div>
+  `;
+
+  const list = document.getElementById('taskList');
+  if (tasks.length === 0) {
+    list.innerHTML = `<div class="empty-state"><div class="icon">📝</div><p>今週のタスクはまだありません。<br>「計画」タブから追加してください。</p></div>`;
+    return;
+  }
+
+  const filtered = currentSubjectFilter === '全部'
+    ? tasks
+    : tasks.filter(t => t.subject === currentSubjectFilter);
+
+  if (filtered.length === 0) {
+    list.innerHTML = `<div class="empty-state"><div class="icon">📭</div><p>${currentSubjectFilter}のタスクはありません。</p></div>`;
+    return;
+  }
+
+  const sorted = [...filtered].sort((a, b) => {
+    if (a.kind !== b.kind) return a.kind === '宿題' ? -1 : 1;
+    if (a.deadline && b.deadline) return a.deadline.localeCompare(b.deadline);
+    return 0;
+  });
+
+  let html = '';
+  let lastKind = null;
+  sorted.forEach(task => {
+    if (task.kind !== lastKind) {
+      html += `<div class="section-label">${task.kind === '宿題' ? '📌 宿題' : '📖 自習'}</div>`;
+      lastKind = task.kind;
+    }
+    html += renderTaskCard(task);
+  });
+
+  list.innerHTML = html;
+  attachTaskEvents();
+}
+
+async function renderPlan() {
+  const tasks = await getWeekTasks();
+  const list = document.getElementById('planList');
+
+  if (tasks.length === 0) {
+    list.innerHTML = `<div class="empty-state"><div class="icon">📋</div><p>タスクがありません。<br>テンプレートから追加してください。</p></div>`;
+    return;
+  }
+
+  const bySubject = {};
+  ['国語','算数','理科','社会'].forEach(s => bySubject[s] = []);
+  tasks.forEach(t => { if (bySubject[t.subject]) bySubject[t.subject].push(t); });
+
+  let html = '';
+  ['国語','算数','理科','社会'].forEach(s => {
+    if (bySubject[s].length === 0) return;
+    const k = SUBJECT_KEYS[s];
+    html += `<div style="margin-bottom:16px;">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+        <span class="subject-tag ${k.tag}" style="color:white;font-size:12px;font-weight:700;padding:3px 10px;border-radius:10px;">${s}</span>
+      </div>`;
+    bySubject[s].forEach(task => {
+      const dl = task.deadline ? `締め切り：${formatDeadline(task.deadline)}` : '締め切りなし';
+      html += `<div class="task-card" style="margin-bottom:6px;">
+        <div class="task-main">
+          <div class="subject-bar ${k.bar}"></div>
+          <div class="task-info">
+            <div class="task-name">${task.name}</div>
+            <div class="task-meta">
+              <span class="badge ${task.kind === '宿題' ? 'shukudai' : 'jishu'}">${task.kind}</span>
+              <span class="deadline">${dl}</span>
+            </div>
+          </div>
+          <div style="display:flex;gap:6px;">
+            <button class="btn-secondary" style="font-size:12px;padding:5px 10px;" onclick="editTask('${task.id}')">編集</button>
+            <button class="btn-danger" onclick="deleteTask('${task.id}')">×</button>
+          </div>
+        </div>
+      </div>`;
+    });
+    html += '</div>';
+  });
+
+  list.innerHTML = html;
+}
+
+async function renderSettings() {
+  const templates = await loadTemplates();
+  const bySubject = {};
+  ['国語','算数','理科','社会'].forEach(s => bySubject[s] = []);
+  templates.forEach(t => { if (bySubject[t.subject]) bySubject[t.subject].push(t); });
+
+  let html = '<div style="margin-bottom:8px;font-size:13px;color:var(--text-sub);">テンプレートの種別を変更すると、以降の追加時に反映されます。</div>';
+
+  ['国語','算数','理科','社会'].forEach(s => {
+    const k = SUBJECT_KEYS[s];
+    html += `<div class="setting-section">
+      <div class="setting-section-title">
+        <span class="subject-tag ${k.tag}" style="color:white;font-size:12px;font-weight:700;padding:3px 10px;border-radius:10px;">${s}</span>
+        <button class="btn-secondary" style="font-size:11px;padding:4px 10px;" onclick="addTemplateItem('${s}')">＋ 追加</button>
+      </div>`;
+    bySubject[s].forEach(t => {
+      html += `<div class="template-edit-item">
+        <div class="template-edit-name">${t.name}</div>
+        <button class="kind-toggle ${t.kind === '宿題' ? 'shukudai' : 'jishu'}" onclick="toggleTemplateKind('${t.id}')">${t.kind}</button>
+        <button class="btn-danger" onclick="deleteTemplate('${t.id}')">×</button>
+      </div>`;
+    });
+    html += '</div>';
+  });
+
+  document.getElementById('settingsList').innerHTML = html;
+}
+
+function renderTaskCard(task) {
+  const k = SUBJECT_KEYS[task.subject] || SUBJECT_KEYS['国語'];
+  const rikaiBtns = ['○','△','×'].map(r => {
+    const cls = r === '○' ? 'maru' : r === '△' ? 'sankaku' : 'batsu';
+    const active = task.rikai === r ? 'active' : '';
+    return `<button class="rikai-btn ${cls} ${active}" data-id="${task.id}" data-rikai="${r}">${r}</button>`;
+  }).join('');
+
+  const hasComment = task.comment && task.comment.trim();
+  const showComment = (task.rikai === '△' || task.rikai === '×' || hasComment);
+  const dl = task.deadline ? formatDeadline(task.deadline) : '';
+  const isUrgent = task.deadline && isDeadlineUrgent(task.deadline);
+
+  return `<div class="task-card ${task.done ? 'done' : ''}" id="card-${task.id}">
+    <div class="task-main">
+      <div class="subject-bar ${k.bar}"></div>
+      <div class="task-check ${task.done ? 'checked' : ''}" data-id="${task.id}" onclick="toggleDone('${task.id}')">
+        ${task.done ? '✓' : ''}
+      </div>
+      <div class="task-info">
+        <div class="task-name">${task.name}</div>
+        <div class="task-meta">
+          <span class="badge ${task.kind === '宿題' ? 'shukudai' : 'jishu'}">${task.kind}</span>
+          ${dl ? `<span class="deadline ${isUrgent ? 'urgent' : ''}">${dl}</span>` : ''}
+        </div>
+      </div>
+      <div class="rikai-group">${rikaiBtns}</div>
+    </div>
+    <span class="comment-toggle" onclick="toggleComment('${task.id}')">
+      ${hasComment ? '💬 コメントを見る・編集' : '＋ コメント'}
+    </span>
+    <div class="task-comment ${showComment ? 'show' : ''}" id="comment-${task.id}">
+      <div class="comment-label">メモ・コメント（子供・保護者どちらでも）</div>
+      <textarea class="comment-input" data-id="${task.id}" placeholder="気づいたことや一言メモを書いてね">${task.comment || ''}</textarea>
+    </div>
+  </div>`;
+}
+
+function attachTaskEvents() {
+  document.querySelectorAll('.rikai-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const id = btn.dataset.id;
+      const rikai = btn.dataset.rikai;
+      const data = await loadData();
+      const task = data.find(t => t.id === id);
+      if (!task) return;
+      task.rikai = task.rikai === rikai ? null : rikai;
+      await saveData(data);
+      const commentEl = document.getElementById('comment-' + id);
+      if (task.rikai === '△' || task.rikai === '×') commentEl.classList.add('show');
+      renderAll();
+    });
+  });
+
+  document.querySelectorAll('.comment-input').forEach(el => {
+    el.addEventListener('blur', async () => {
+      const id = el.dataset.id;
+      const data = await loadData();
+      const task = data.find(t => t.id === id);
+      if (!task) return;
+      task.comment = el.value;
+      await saveData(data);
+    });
+  });
+}
+
+function toggleComment(id) {
+  document.getElementById('comment-' + id).classList.toggle('show');
+}
+
+async function toggleDone(id) {
+  const data = await loadData();
+  const task = data.find(t => t.id === id);
+  if (!task) return;
+  task.done = !task.done;
+  await saveData(data);
+  renderAll();
+  if (task.done) showToast('✓ 完了！');
+}
+
+function formatDeadline(dl) {
+  const d = new Date(dl);
+  const days = ['日','月','火','水','木','金','土'];
+  return `${d.getMonth()+1}/${d.getDate()}(${days[d.getDay()]})`;
+}
+
+function isDeadlineUrgent(dl) {
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  const d = new Date(dl);
+  return (d - today) / 86400000 <= 1;
+}
+
+// ===== テンプレートモーダル =====
+async function openTemplateModal() {
+  const templates = await loadTemplates();
+  const weekTasks = await getWeekTasks();
+  const existing = weekTasks.map(t => t.templateId).filter(Boolean);
+  const bySubject = {};
+  ['国語','算数','理科','社会'].forEach(s => bySubject[s] = []);
+  templates.forEach(t => { if (bySubject[t.subject]) bySubject[t.subject].push(t); });
+
+  let html = '';
+  ['国語','算数','理科','社会'].forEach(s => {
+    const k = SUBJECT_KEYS[s];
+    html += `<div class="subject-section">
+      <div class="subject-header">
+        <span class="subject-tag ${k.tag}" style="color:white;font-size:12px;font-weight:700;padding:3px 10px;border-radius:10px;">${s}</span>
+      </div>`;
+    bySubject[s].forEach(t => {
+      const alreadyAdded = existing.includes(t.id);
+      html += `<div class="template-item">
+        <input type="checkbox" id="tpl-${t.id}" value="${t.id}" ${alreadyAdded ? 'disabled checked' : ''}>
+        <label for="tpl-${t.id}" class="template-item-name" style="${alreadyAdded ? 'color:var(--text-sub);' : ''}">${t.name}${alreadyAdded ? '（追加済み）' : ''}</label>
+        <span class="template-item-badge" style="background:${t.kind === '宿題' ? '#FEE2E2' : '#E0F4FB'};color:${t.kind === '宿題' ? 'var(--shukudai)' : 'var(--jishu)'};">${t.kind}</span>
+      </div>`;
+    });
+    html += '</div>';
+  });
+
+  document.getElementById('templateContent').innerHTML = html;
+  document.getElementById('templateModal').classList.add('show');
+}
+
+function selectAllTemplates(select) {
+  document.querySelectorAll('#templateContent input[type="checkbox"]:not(:disabled)').forEach(cb => {
+    cb.checked = select;
+  });
+}
+
+async function addFromTemplate() {
+  const checked = [...document.querySelectorAll('#templateContent input[type="checkbox"]:checked:not(:disabled)')];
+  if (checked.length === 0) { showToast('項目を選択してください'); return; }
+
+  const templates = await loadTemplates();
+  const data = await loadData();
+  const week = getWeekKey(currentWeekOffset);
+
+  checked.forEach(cb => {
+    const tpl = templates.find(t => t.id === cb.value);
+    if (!tpl) return;
+    data.push({
+      id: 'task_' + Date.now() + '_' + Math.random().toString(36).slice(2),
+      week, templateId: tpl.id, subject: tpl.subject,
+      name: tpl.name, kind: tpl.kind,
+      deadline: null, done: false, rikai: null, comment: '',
+    });
+  });
+
+  await saveData(data);
+  closeModal('templateModal');
+  showToast(`${checked.length}件追加しました`);
+  renderAll();
+}
+
+// ===== 手動追加 =====
+function openAddModal() {
+  document.getElementById('f-name').value = '';
+  document.getElementById('f-deadline').value = '';
+  document.getElementById('f-edit-id').value = '';
+  document.getElementById('addModalTitle').textContent = 'タスクを追加';
+  document.getElementById('addModal').classList.add('show');
+}
+
+async function editTask(id) {
+  const data = await loadData();
+  const task = data.find(t => t.id === id);
+  if (!task) return;
+  document.getElementById('f-subject').value = task.subject;
+  document.getElementById('f-name').value = task.name;
+  document.getElementById('f-kind').value = task.kind;
+  document.getElementById('f-deadline').value = task.deadline || '';
+  document.getElementById('f-edit-id').value = id;
+  document.getElementById('addModalTitle').textContent = 'タスクを編集';
+  document.getElementById('addModal').classList.add('show');
+}
+
+async function saveTask() {
+  const name = document.getElementById('f-name').value.trim();
+  if (!name) { showToast('作業名を入力してください'); return; }
+
+  const editId = document.getElementById('f-edit-id').value;
+  const data = await loadData();
+
+  if (editId) {
+    const task = data.find(t => t.id === editId);
+    if (task) {
+      task.subject = document.getElementById('f-subject').value;
+      task.name = name;
+      task.kind = document.getElementById('f-kind').value;
+      task.deadline = document.getElementById('f-deadline').value || null;
+    }
+  } else {
+    data.push({
+      id: 'task_' + Date.now(),
+      week: getWeekKey(currentWeekOffset),
+      templateId: null,
+      subject: document.getElementById('f-subject').value,
+      name, kind: document.getElementById('f-kind').value,
+      deadline: document.getElementById('f-deadline').value || null,
+      done: false, rikai: null, comment: '',
+    });
+  }
+
+  await saveData(data);
+  closeModal('addModal');
+  showToast(editId ? '更新しました' : '追加しました');
+  renderAll();
+}
+
+async function deleteTask(id) {
+  if (!confirm('このタスクを削除しますか？')) return;
+  const data = (await loadData()).filter(t => t.id !== id);
+  await saveData(data);
+  showToast('削除しました');
+  renderAll();
+}
+
+// ===== テンプレート設定 =====
+async function toggleTemplateKind(id) {
+  const templates = await loadTemplates();
+  const t = templates.find(x => x.id === id);
+  if (!t) return;
+  t.kind = t.kind === '宿題' ? '自習' : '宿題';
+  await saveTemplates(templates);
+  renderSettings();
+}
+
+async function deleteTemplate(id) {
+  if (!confirm('このテンプレートを削除しますか？')) return;
+  const templates = (await loadTemplates()).filter(t => t.id !== id);
+  await saveTemplates(templates);
+  renderSettings();
+}
+
+async function addTemplateItem(subject) {
+  const name = prompt(`${subject}に追加するテンプレート名を入力してください`);
+  if (!name || !name.trim()) return;
+  const templates = await loadTemplates();
+  templates.push({ id: 'tpl_' + Date.now(), subject, name: name.trim(), kind: '宿題' });
+  await saveTemplates(templates);
+  renderSettings();
+}
+
+// ===== モーダル =====
+function closeModal(id) {
+  document.getElementById(id).classList.remove('show');
+}
+
+document.querySelectorAll('.modal-overlay').forEach(el => {
+  el.addEventListener('click', e => {
+    if (e.target === el) el.classList.remove('show');
+  });
+});
+
+// ===== トースト =====
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 1800);
+}
+
+// ===== 初期化 =====
+async function initApp() {
+  // Firebaseのリアルタイム同期：tasksが更新されたら自動で画面反映
+  const db = window._fbDb;
+  window._fbOnValue(window._fbRef(db, 'tasks'), (snapshot) => {
+    _cachedTasks = snapshot.exists() ? (snapshot.val() || []) : [];
+    updateWeekLabel();
+    renderAll();
+  });
+}
+</script>
+</body>
+</html>
