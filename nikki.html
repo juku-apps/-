@@ -655,35 +655,62 @@ function selectEvent(event, icon) {
   btn.style.opacity = '1';
 }
 
+// ===== 固定問いかけ定義 =====
+const QUESTIONS = {
+  'がっこう': [
+    'きょう、がっこうで いちばん たのしかったことは なあに？',
+    'そのとき、だれと いたの？',
+    'そのとき、どんな きもちだった？',
+  ],
+  'ともだち': [
+    'きょう、ともだちと どんなことを したの？',
+    'それって どんなふうに たのしかった？',
+    'そのとき、どんな きもちだった？',
+  ],
+  'べんきょう': [
+    'きょう、べんきょうで どんなことを やったの？',
+    'むずかしかった？ それとも かんたんだった？',
+    'そのとき、どんな きもちだった？',
+  ],
+  'あそび': [
+    'きょう、なにをして あそんだの？',
+    'だれと あそんだの？',
+    'そのとき、どんな きもちだった？',
+  ],
+  'たべもの': [
+    'きょう、おいしいものを たべたの？ なにを たべたの？',
+    'それって どんな あじだった？',
+    'たべたとき、どんな きもちだった？',
+  ],
+  'そのほか': [
+    'きょう、どんなことが あったか おしえてね！',
+    'それって どんなふうだった？',
+    'そのとき、どんな きもちだった？',
+  ],
+};
+
+const REACTIONS = [
+  'そっか〜！ おしえてくれてありがとう！',
+  'わあ、すごいね！',
+  'なるほど〜！',
+  'それは たのしそう！',
+  'へえ〜！ もっとおしえて！',
+];
+
 // ===== 対話開始 =====
-async function startChat() {
+function startChat() {
   document.getElementById('step1').style.display = 'none';
   document.getElementById('step2').style.display = 'block';
   chatHistory = [];
   turnCount = 0;
 
-  const systemPrompt = `あなたは小学1年生の子どもと話す、やさしいAIです。
-子どもが「${selectedEvent}」についてのことを話してくれます。
-以下のルールを守って会話してください：
-- すべてひらがなとカタカナと数字だけ使う（漢字は使わない）
-- 1回の返答は1〜2文だけ
-- やさしく、たのしく、子どもが話しやすい雰囲気で
-- 会話の中で自然に「そのとき、どんなきもちだった？」など感情を聞く
-- 子どもの返答をほめて、もっと話したくなるようにする
-- ${MAX_TURNS}回やりとりしたら、まとめを促す
-最初の一言で「${selectedEvent}」について最初の質問をしてください。`;
-
-  addMessage('ai', '…');
-  document.getElementById('chatMessages').lastElementChild.querySelector('.msg-bubble').classList.add('loading');
-
-  const firstMsg = await callAI(systemPrompt, []);
-  document.getElementById('chatMessages').lastElementChild.remove();
-  addMessage('ai', firstMsg);
-  chatHistory.push({ role: 'assistant', content: firstMsg });
+  const firstQ = (QUESTIONS[selectedEvent] || QUESTIONS['そのほか'])[0];
+  addMessage('ai', firstQ);
+  chatHistory.push({ role: 'assistant', content: firstQ });
 }
 
 // ===== メッセージ送信 =====
-async function sendMessage() {
+function sendMessage() {
   const input = document.getElementById('chatInput');
   const text = input.value.trim();
   if (!text) return;
@@ -694,74 +721,52 @@ async function sendMessage() {
   chatHistory.push({ role: 'user', content: text });
   turnCount++;
 
-  document.getElementById('sendBtn').disabled = true;
+  const questions = QUESTIONS[selectedEvent] || QUESTIONS['そのほか'];
 
-  const systemPrompt = `あなたは小学1年生の子どもと話す、やさしいAIです。
-子どもが「${selectedEvent}」について話してくれています。
-以下のルールを守って会話してください：
-- すべてひらがなとカタカナと数字だけ使う（漢字は使わない）
-- 1回の返答は1〜2文だけ
-- やさしく、たのしく、子どもが話しやすい雰囲気で
-- 会話の中で自然に感情（たのしい・かなしい・おどろき・うれしい・いかり）を聞く
-- 子どもの返答をほめて、もっと話したくなるようにする`;
-
-  addMessage('ai', '…');
-  document.getElementById('chatMessages').lastElementChild.querySelector('.msg-bubble').classList.add('loading');
-
-  const reply = await callAI(systemPrompt, chatHistory);
-  document.getElementById('chatMessages').lastElementChild.remove();
-  addMessage('ai', reply);
-  chatHistory.push({ role: 'assistant', content: reply });
-
-  document.getElementById('sendBtn').disabled = false;
-
-  if (turnCount >= MAX_TURNS) {
-    document.getElementById('summaryBtn').style.display = 'block';
+  if (turnCount < questions.length) {
+    // リアクション＋次の質問
+    const reaction = REACTIONS[Math.floor(Math.random() * REACTIONS.length)];
+    const nextQ = questions[turnCount];
+    setTimeout(() => {
+      const msg = `${reaction} ${nextQ}`;
+      addMessage('ai', msg);
+      chatHistory.push({ role: 'assistant', content: msg });
+      if (turnCount >= questions.length - 1) {
+        document.getElementById('summaryBtn').style.display = 'block';
+      }
+    }, 400);
+  } else {
+    setTimeout(() => {
+      const msg = 'たくさん おはなし してくれて ありがとう！ まとめてみよう！';
+      addMessage('ai', msg);
+      chatHistory.push({ role: 'assistant', content: msg });
+      document.getElementById('summaryBtn').style.display = 'block';
+    }, 400);
   }
 }
 
-// ===== まとめ生成 =====
-async function requestSummary() {
+// ===== まとめ生成（固定テンプレート） =====
+function requestSummary() {
   document.getElementById('step2').style.display = 'none';
   document.getElementById('step3').style.display = 'block';
-  document.getElementById('summaryText').value = 'まとめをつくっているよ…';
   if (selectedDate) {
     document.getElementById('summaryTitle').textContent = `📝 ${selectedDate.label}のにっき`;
   }
 
-  const systemPrompt = `以下の会話をもとに、小学1年生の子どもが書いた日記文としてまとめてください。
-ルール：
-- すべてひらがなとカタカナと数字だけ（漢字なし）
-- 「きょう、〜した。〜だった。」のような子ども目線の一人称
-- 3〜5文でまとめる
-- 感情も含める
-- 自然で温かい文章に`;
+  // 会話からまとめ文を自動生成
+  const userAnswers = chatHistory
+    .filter(m => m.role === 'user')
+    .map(m => m.content);
 
-  const messages = chatHistory.map(m => ({ role: m.role, content: m.content }));
-  messages.push({ role: 'user', content: 'これまでの会話をもとに日記文にまとめてください。' });
+  const dateStr = selectedDate ? selectedDate.label : 'きょう';
+  const event = selectedEvent || 'いろいろなこと';
 
-  const summary = await callAI(systemPrompt, messages);
-  document.getElementById('summaryText').value = summary;
-}
+  let summary = `${dateStr}、${event}のことを かきます。\n`;
+  userAnswers.forEach(ans => {
+    summary += `${ans}。\n`;
+  });
 
-// ===== AI呼び出し =====
-async function callAI(systemPrompt, messages) {
-  try {
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-6',
-        max_tokens: 1000,
-        system: systemPrompt,
-        messages: messages.length > 0 ? messages : [{ role: 'user', content: 'はじめて' }]
-      })
-    });
-    const data = await response.json();
-    return data.content?.[0]?.text || 'ごめんね、もういちどためしてね。';
-  } catch (e) {
-    return 'ごめんね、エラーがおきたよ。';
-  }
+  document.getElementById('summaryText').value = summary.trim();
 }
 
 // ===== メッセージ追加 =====
