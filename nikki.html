@@ -655,62 +655,53 @@ function selectEvent(event, icon) {
   btn.style.opacity = '1';
 }
 
-// ===== 固定問いかけ定義 =====
-const QUESTIONS = {
-  'がっこう': [
-    'きょう、がっこうで いちばん たのしかったことは なあに？',
-    'そのとき、だれと いたの？',
-    'そのとき、どんな きもちだった？',
-  ],
-  'ともだち': [
-    'きょう、ともだちと どんなことを したの？',
-    'それって どんなふうに たのしかった？',
-    'そのとき、どんな きもちだった？',
-  ],
-  'べんきょう': [
-    'きょう、べんきょうで どんなことを やったの？',
-    'むずかしかった？ それとも かんたんだった？',
-    'そのとき、どんな きもちだった？',
-  ],
-  'あそび': [
-    'きょう、なにをして あそんだの？',
-    'だれと あそんだの？',
-    'そのとき、どんな きもちだった？',
-  ],
-  'たべもの': [
-    'きょう、おいしいものを たべたの？ なにを たべたの？',
-    'それって どんな あじだった？',
-    'たべたとき、どんな きもちだった？',
-  ],
-  'そのほか': [
-    'きょう、どんなことが あったか おしえてね！',
-    'それって どんなふうだった？',
-    'そのとき、どんな きもちだった？',
-  ],
-};
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbz18HCdEiaNlNEQyJvXahpfQKBuciIW6vif-ZTSwiesJFdYagOA75gdSLH064Dap_YHkA/exec';
 
-const REACTIONS = [
-  'そっか〜！ おしえてくれてありがとう！',
-  'わあ、すごいね！',
-  'なるほど〜！',
-  'それは たのしそう！',
-  'へえ〜！ もっとおしえて！',
-];
+// ===== AI呼び出し =====
+async function callAI(system, messages) {
+  try {
+    const response = await fetch(GAS_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: 300,
+        system: system,
+        messages: messages.length > 0 ? messages : [{ role: 'user', content: 'はじめて' }]
+      })
+    });
+    const data = await response.json();
+    return data.content?.[0]?.text || 'ごめんね、もういちどためしてね。';
+  } catch (e) {
+    return 'ごめんね、エラーがおきたよ。';
+  }
+}
 
 // ===== 対話開始 =====
-function startChat() {
+async function startChat() {
   document.getElementById('step1').style.display = 'none';
   document.getElementById('step2').style.display = 'block';
   chatHistory = [];
   turnCount = 0;
 
-  const firstQ = (QUESTIONS[selectedEvent] || QUESTIONS['そのほか'])[0];
-  addMessage('ai', firstQ);
-  chatHistory.push({ role: 'assistant', content: firstQ });
+  const system = `あなたは小学1年生の子どもとはなすやさしいともだちです。
+こどもが「${selectedEvent}」についてはなしてくれます。
+ルール：
+- すべてひらがなとカタカナと数字だけ（かんじはつかわない）
+- 1かいのへんじは1〜2ぶんだけ
+- やさしく、たのしく、こどもがはなしやすいふんいきで
+- さいしょのひとことで「${selectedEvent}」についてしつもんしてね`;
+
+  addMessage('ai', '…');
+  document.getElementById('chatMessages').lastElementChild.querySelector('.msg-bubble').classList.add('loading');
+  const first = await callAI(system, []);
+  document.getElementById('chatMessages').lastElementChild.remove();
+  addMessage('ai', first);
+  chatHistory.push({ role: 'assistant', content: first });
 }
 
 // ===== メッセージ送信 =====
-function sendMessage() {
+async function sendMessage() {
   const input = document.getElementById('chatInput');
   const text = input.value.trim();
   if (!text) return;
@@ -721,52 +712,52 @@ function sendMessage() {
   chatHistory.push({ role: 'user', content: text });
   turnCount++;
 
-  const questions = QUESTIONS[selectedEvent] || QUESTIONS['そのほか'];
+  document.getElementById('sendBtn').disabled = true;
 
-  if (turnCount < questions.length) {
-    // リアクション＋次の質問
-    const reaction = REACTIONS[Math.floor(Math.random() * REACTIONS.length)];
-    const nextQ = questions[turnCount];
-    setTimeout(() => {
-      const msg = `${reaction} ${nextQ}`;
-      addMessage('ai', msg);
-      chatHistory.push({ role: 'assistant', content: msg });
-      if (turnCount >= questions.length - 1) {
-        document.getElementById('summaryBtn').style.display = 'block';
-      }
-    }, 400);
-  } else {
-    setTimeout(() => {
-      const msg = 'たくさん おはなし してくれて ありがとう！ まとめてみよう！';
-      addMessage('ai', msg);
-      chatHistory.push({ role: 'assistant', content: msg });
-      document.getElementById('summaryBtn').style.display = 'block';
-    }, 400);
+  const system = `あなたは小学1年生の子どもとはなすやさしいともだちです。
+こどもが「${selectedEvent}」についてはなしてくれています。
+ルール：
+- すべてひらがなとカタカナと数字だけ（かんじはつかわない）
+- 1かいのへんじは1〜2ぶんだけ
+- やさしく、たのしく、こどもがはなしやすいふんいきで
+- こどものへんじをほめて、もっとはなしたくなるようにする
+- かいわのなかで「そのとき、どんなきもちだった？」など、きもちをきく
+- ${MAX_TURNS}かいやりとりしたら「まとめてみよう！」とさそってね`;
+
+  addMessage('ai', '…');
+  document.getElementById('chatMessages').lastElementChild.querySelector('.msg-bubble').classList.add('loading');
+  const reply = await callAI(system, chatHistory);
+  document.getElementById('chatMessages').lastElementChild.remove();
+  addMessage('ai', reply);
+  chatHistory.push({ role: 'assistant', content: reply });
+
+  document.getElementById('sendBtn').disabled = false;
+
+  if (turnCount >= MAX_TURNS) {
+    document.getElementById('summaryBtn').style.display = 'block';
   }
 }
 
-// ===== まとめ生成（固定テンプレート） =====
-function requestSummary() {
+// ===== まとめ生成 =====
+async function requestSummary() {
   document.getElementById('step2').style.display = 'none';
   document.getElementById('step3').style.display = 'block';
+  document.getElementById('summaryText').value = 'まとめをつくっているよ…';
   if (selectedDate) {
     document.getElementById('summaryTitle').textContent = `📝 ${selectedDate.label}のにっき`;
   }
 
-  // 会話からまとめ文を自動生成
-  const userAnswers = chatHistory
-    .filter(m => m.role === 'user')
-    .map(m => m.content);
+  const system = `このかいわをもとに、しょうがく1ねんせいのこどもがかいたにっきとしてまとめてください。
+ルール：
+- すべてひらがなとカタカナと数字だけ（かんじなし）
+- 「きょう、〜したよ。〜だったよ。」のようなこどもめせんのいちにんしょう
+- 3〜4ぶんでまとめる
+- きもちもいれる
+- あたたかくてやさしいぶんしょうに`;
 
-  const dateStr = selectedDate ? selectedDate.label : 'きょう';
-  const event = selectedEvent || 'いろいろなこと';
-
-  let summary = `${dateStr}、${event}のことを かきます。\n`;
-  userAnswers.forEach(ans => {
-    summary += `${ans}。\n`;
-  });
-
-  document.getElementById('summaryText').value = summary.trim();
+  const messages = [...chatHistory, { role: 'user', content: 'これまでのかいわをにっきにまとめてください。' }];
+  const summary = await callAI(system, messages);
+  document.getElementById('summaryText').value = summary;
 }
 
 // ===== メッセージ追加 =====
