@@ -662,7 +662,8 @@ async function callAI(system, messages) {
   try {
     const response = await fetch(GAS_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      redirect: 'follow',
+      headers: { 'Content-Type': 'text/plain' },
       body: JSON.stringify({
         model: 'claude-haiku-4-5-20251001',
         max_tokens: 300,
