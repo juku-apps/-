@@ -167,6 +167,27 @@ body { font-family: 'Hiragino Sans','Hiragino Kaku Gothic ProN','Noto Sans JP',s
 /* 科目カラー */
 .kokugo-bar{background:var(--kokugo)} .sansu-bar{background:var(--sansu)} .rika-bar{background:var(--rika)} .shakai-bar{background:var(--shakai)}
 .kokugo-tag{background:var(--kokugo)} .sansu-tag{background:var(--sansu)} .rika-tag{background:var(--rika)} .shakai-tag{background:var(--shakai)}
+/* バナー */
+.banner {
+  margin: 12px 16px 0;
+  border-radius: var(--radius);
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  animation: slideDown 0.3s ease;
+  border: 1.5px solid transparent;
+}
+@keyframes slideDown { from{opacity:0;transform:translateY(-8px)} to{opacity:1;transform:translateY(0)} }
+.banner.info    { background: #EBF3FD; border-color: var(--sansu); }
+.banner.warning { background: #FEF9C3; border-color: #EAB308; }
+.banner.danger  { background: #FEE2E2; border-color: var(--shukudai); }
+.banner-icon { font-size: 22px; flex-shrink: 0; }
+.banner-text { flex: 1; font-size: 13px; font-weight: 700; line-height: 1.5; }
+.banner-arrow { font-size: 16px; color: var(--text-sub); flex-shrink: 0; }
+.banner-close { font-size: 18px; color: var(--text-sub); cursor: pointer; padding: 0 4px; flex-shrink: 0; }
+
 .kokugo-dot{background:var(--kokugo)} .sansu-dot{background:var(--sansu)} .rika-dot{background:var(--rika)} .shakai-dot{background:var(--shakai)}
 </style>
 </head>
@@ -188,6 +209,9 @@ body { font-family: 'Hiragino Sans','Hiragino Kaku Gothic ProN','Noto Sans JP',s
     <div class="tab" onclick="switchTab('schedule')">予定日</div>
   </div>
 </div>
+
+<!-- バナーエリア -->
+<div id="bannerArea"></div>
 
 <!-- 今週のタスク -->
 <div id="tab-today" class="tab-content active">
@@ -283,6 +307,16 @@ body { font-family: 'Hiragino Sans','Hiragino Kaku Gothic ProN','Noto Sans JP',s
     <button class="modal-close" onclick="closeModal('settingsModal')">×</button>
     <div class="modal-title">設定（テンプレート）</div>
     <div id="settingsList"></div>
+  </div>
+</div>
+
+<!-- 期限切れモーダル -->
+<div class="modal-overlay" id="overdueModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('overdueModal')">×</button>
+    <div class="modal-title">⚠️ 期限切れのタスク</div>
+    <div style="font-size:13px;color:var(--text-sub);margin-bottom:12px;">完了したものはチェック、未完了のものは予定日を変更してください。</div>
+    <div id="overdueList"></div>
   </div>
 </div>
 
@@ -707,6 +741,124 @@ async function addTemplateItem(subject) {
   await saveTemplates(templates); renderSettings();
 }
 
+// ===== バナー =====
+async function renderBanners() {
+  const tasks = await loadData();
+  const now = new Date();
+  const hour = now.getHours();
+  const todayISO = getDateISO(now);
+
+  // 今日の予定タスク
+  const todayTasks = tasks.filter(t => t.deadline === todayISO);
+  const todayUndone = todayTasks.filter(t => !t.done);
+
+  // 期限切れ未完了（今日より前）
+  const overdueTasks = tasks.filter(t => t.deadline && t.deadline < todayISO && !t.done);
+
+  const area = document.getElementById('bannerArea');
+  let html = '';
+
+  // 期限切れバナー（最優先）
+  if (overdueTasks.length > 0) {
+    html += `<div class="banner danger" onclick="openOverdueModal()">
+      <div class="banner-icon">🚨</div>
+      <div class="banner-text">期限切れのタスクが${overdueTasks.length}件あります！<br>確認して完了チェックか予定日を変更してください。</div>
+      <div class="banner-arrow">›</div>
+      <div class="banner-close" onclick="event.stopPropagation();this.parentElement.remove()">×</div>
+    </div>`;
+  }
+
+  // 今日の予定バナー
+  if (todayTasks.length > 0) {
+    if (hour >= 21 && todayUndone.length > 0) {
+      // 21時以降・未完了あり
+      html += `<div class="banner warning" onclick="openOverdueModalToday()">
+        <div class="banner-icon">⏰</div>
+        <div class="banner-text">今日の予定がまだ${todayUndone.length}件残っています。<br>予定日を変更しますか？</div>
+        <div class="banner-arrow">›</div>
+        <div class="banner-close" onclick="event.stopPropagation();this.parentElement.remove()">×</div>
+      </div>`;
+    } else if (todayUndone.length > 0) {
+      // 通常時間帯・未完了あり
+      html += `<div class="banner info" onclick="switchTab('schedule');closeAllBanners()">
+        <div class="banner-icon">📅</div>
+        <div class="banner-text">今日の予定が${todayUndone.length}件あります！</div>
+        <div class="banner-arrow">›</div>
+        <div class="banner-close" onclick="event.stopPropagation();this.parentElement.remove()">×</div>
+      </div>`;
+    } else {
+      // 全完了
+      html += `<div class="banner info" style="cursor:default;">
+        <div class="banner-icon">🎉</div>
+        <div class="banner-text">今日の予定はすべて完了！お疲れさま！</div>
+        <div class="banner-close" onclick="this.parentElement.remove()">×</div>
+      </div>`;
+    }
+  }
+
+  area.innerHTML = html;
+}
+
+function closeAllBanners() {
+  document.getElementById('bannerArea').innerHTML = '';
+}
+
+async function openOverdueModal() {
+  const tasks = await loadData();
+  const todayISO = getDateISO(new Date());
+  const overdue = tasks.filter(t => t.deadline && t.deadline < todayISO && !t.done);
+  renderOverdueList(overdue, false);
+  document.getElementById('overdueModal').classList.add('show');
+}
+
+async function openOverdueModalToday() {
+  const tasks = await loadData();
+  const todayISO = getDateISO(new Date());
+  const todayUndone = tasks.filter(t => t.deadline === todayISO && !t.done);
+  renderOverdueList(todayUndone, true);
+  document.getElementById('overdueModal').classList.add('show');
+}
+
+function renderOverdueList(tasks, isToday) {
+  const list = document.getElementById('overdueList');
+  if (tasks.length === 0) { list.innerHTML = '<div class="empty-state"><p>該当するタスクはありません。</p></div>'; return; }
+  list.innerHTML = tasks.map(task => {
+    const k = SUBJECT_KEYS[task.subject] || SUBJECT_KEYS['国語'];
+    return `<div class="task-card" style="margin-bottom:8px;">
+      <div class="task-main">
+        <div class="subject-bar ${k.bar}"></div>
+        <div class="task-check ${task.done?'checked':''}" onclick="toggleDoneInOverdue('${task.id}')" id="overdue-check-${task.id}">${task.done?'✓':''}</div>
+        <div class="task-info">
+          <div class="task-name">${task.name}</div>
+          <div class="task-meta">
+            <span class="badge ${task.kind==='宿題'?'shukudai':'jishu'}">${task.kind}</span>
+            <span class="deadline urgent">${task.deadline?formatDeadlineShort(task.deadline):''}</span>
+          </div>
+        </div>
+        <button class="btn-secondary" style="font-size:11px;padding:5px 8px;flex-shrink:0;" onclick="editTaskFromOverdue('${task.id}')">予定日変更</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function toggleDoneInOverdue(id) {
+  const data = await loadData();
+  const task = data.find(t => t.id === id);
+  if (!task) return;
+  task.done = !task.done;
+  await saveData(data);
+  // チェック表示を更新
+  const check = document.getElementById('overdue-check-' + id);
+  if (check) { check.classList.toggle('checked', task.done); check.textContent = task.done ? '✓' : ''; }
+  if (task.done) showToast('✓ 完了！');
+  renderAll();
+}
+
+async function editTaskFromOverdue(id) {
+  closeModal('overdueModal');
+  await editTask(id);
+}
+
 // ===== モーダル =====
 function closeModal(id) { document.getElementById(id).classList.remove('show'); }
 document.querySelectorAll('.modal-overlay').forEach(el=>{
@@ -725,6 +877,7 @@ async function initApp() {
     _cachedTasks=snapshot.exists()?(snapshot.val()||[]):[];
     updateWeekLabel();
     renderAll();
+    renderBanners();
   });
 }
 </script>
