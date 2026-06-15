@@ -835,16 +835,18 @@ function switchTab(name) {
 }
 
 // ===== 日記一覧 =====
-function renderList() {
+async function renderList() {
   const listEl = document.getElementById('diaryList');
-  window._dbOnValue(window._dbRef('diary'), snap => {
+  listEl.innerHTML = '<div class="empty-state"><div class="icon">⏳</div><p>よみこんでいるよ…</p></div>';
+  try {
+    const snap = await window._dbGet(window._dbRef('diary'));
     if (!snap.exists()) {
       listEl.innerHTML = `<div class="empty-state"><div class="icon">📒</div><p>にっきがまだないよ。<br>「かく」タブからかいてみよう！</p></div>`;
       return;
     }
     const entries = [];
     snap.forEach(child => entries.push(child.val()));
-    entries.sort((a, b) => new Date(b.date) - new Date(a.date));
+    entries.sort((a, b) => new Date(b.createdAt || b.date) - new Date(a.createdAt || a.date));
 
     listEl.innerHTML = entries.map(e => {
       const d = new Date(e.createdAt || e.date);
@@ -871,7 +873,9 @@ function renderList() {
         </div>
       </div>`;
     }).join('');
-  }, { onlyOnce: true });
+  } catch(e) {
+    listEl.innerHTML = `<div class="empty-state"><div class="icon">😢</div><p>よみこみに しっぱいしたよ。<br>もういちど ためしてね。</p></div>`;
+  }
 }
 
 async function saveComment(id) {
