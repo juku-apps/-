@@ -630,8 +630,6 @@ function isDeadlineUrgent(dl) {
 // ===== テンプレートモーダル =====
 async function openTemplateModal() {
   const templates=await loadTemplates();
-  const weekTasks=await getWeekTasks();
-  const existing=weekTasks.map(t=>t.templateId).filter(Boolean);
   const bySubject={}; ['国語','算数','理科','社会'].forEach(s=>bySubject[s]=[]);
   templates.forEach(t=>{ if(bySubject[t.subject])bySubject[t.subject].push(t); });
   let html='';
@@ -639,10 +637,9 @@ async function openTemplateModal() {
     const k=SUBJECT_KEYS[s];
     html+=`<div class="subject-section"><div class="subject-header"><span class="subject-tag ${k.tag}">${s}</span></div>`;
     bySubject[s].forEach(t=>{
-      const added=existing.includes(t.id);
       html+=`<div class="template-item">
-        <input type="checkbox" id="tpl-${t.id}" value="${t.id}" ${added?'disabled checked':''}>
-        <label for="tpl-${t.id}" class="template-item-name" style="${added?'color:var(--text-sub);':''}">${t.name}${added?' （追加済み）':''}</label>
+        <input type="checkbox" id="tpl-${t.id}" value="${t.id}">
+        <label for="tpl-${t.id}" class="template-item-name">${t.name}</label>
         <span style="font-size:10px;font-weight:700;padding:2px 7px;border-radius:8px;background:${t.kind==='宿題'?'#FEE2E2':'#E0F4FB'};color:${t.kind==='宿題'?'var(--shukudai)':'var(--jishu)'};">${t.kind}</span>
       </div>`;
     });
