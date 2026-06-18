@@ -31,6 +31,16 @@ window._dbGet  = (r) => get(r);
 // Firebase準備完了を通知
 window.dispatchEvent(new Event('firebaseReady'));
 </script>
+<script>
+// DOMContentLoaded後にinitAppを呼ぶ（firebaseReady後でも対応）
+function _tryInitApp() {
+  if (window._dbRef && document.readyState !== 'loading') {
+    initApp();
+  }
+}
+window.addEventListener('firebaseReady', _tryInitApp);
+document.addEventListener('DOMContentLoaded', _tryInitApp);
+</script>
 <style>
 :root {
   --sky: #6BB8F0;
@@ -835,44 +845,45 @@ function switchTab(name) {
 }
 
 // ===== 日記一覧 =====
-async function renderList() {
+function renderList() {
   const listEl = document.getElementById('diaryList');
   listEl.innerHTML = '<div class="empty-state"><div class="icon">⏳</div><p>よみこんでいるよ…</p></div>';
   try {
-    const snap = await window._dbGet(window._dbRef('diary'));
-    if (!snap.exists()) {
-      listEl.innerHTML = `<div class="empty-state"><div class="icon">📒</div><p>にっきがまだないよ。<br>「かく」タブからかいてみよう！</p></div>`;
-      return;
-    }
-    const entries = [];
-    snap.forEach(child => entries.push(child.val()));
-    entries.sort((a, b) => new Date(b.createdAt || b.date) - new Date(a.createdAt || a.date));
+    window._dbOnValue(window._dbRef('diary'), (snap) => {
+      if (!snap.exists()) {
+        listEl.innerHTML = `<div class="empty-state"><div class="icon">📒</div><p>にっきがまだないよ。<br>「かく」タブからかいてみよう！</p></div>`;
+        return;
+      }
+      const entries = [];
+      snap.forEach(child => entries.push(child.val()));
+      entries.sort((a, b) => new Date(b.createdAt || b.date) - new Date(a.createdAt || a.date));
 
-    listEl.innerHTML = entries.map(e => {
-      const d = new Date(e.createdAt || e.date);
-      const dateStr = e.dateLabel || `${d.getFullYear()}ねん ${d.getMonth()+1}がつ ${d.getDate()}にち`;
-      const hasComment = e.parentComment && e.parentComment.trim();
-      return `<div class="diary-card">
-        <div class="diary-card-header">
-          <span class="diary-event-icon">${e.eventIcon}</span>
-          <div>
-            <div class="diary-date">${dateStr}</div>
-            <span class="diary-event-label">${e.event}</span>
+      listEl.innerHTML = entries.map(e => {
+        const d = new Date(e.createdAt || e.date);
+        const dateStr = e.dateLabel || `${d.getFullYear()}ねん ${d.getMonth()+1}がつ ${d.getDate()}にち`;
+        const hasComment = e.parentComment && e.parentComment.trim();
+        return `<div class="diary-card">
+          <div class="diary-card-header">
+            <span class="diary-event-icon">${e.eventIcon}</span>
+            <div>
+              <div class="diary-date">${dateStr}</div>
+              <span class="diary-event-label">${e.event}</span>
+            </div>
           </div>
-        </div>
-        <div class="diary-body">${e.body.replace(/\n/g,'<br>')}</div>
-        <div class="diary-comment-area">
-          <div class="diary-comment-label">💌 おやからのコメント</div>
-          ${hasComment
-            ? `<div class="diary-comment-text">${e.parentComment}</div>
-               <textarea class="diary-comment-input" id="comment-${e.id}" style="margin-top:8px;">${e.parentComment}</textarea>
-               <button class="btn-comment-save" onclick="saveComment('${e.id}')">こうしん</button>`
-            : `<textarea class="diary-comment-input" id="comment-${e.id}" placeholder="コメントをかいてあげよう…"></textarea>
-               <button class="btn-comment-save" onclick="saveComment('${e.id}')">おくる</button>`
-          }
-        </div>
-      </div>`;
-    }).join('');
+          <div class="diary-body">${e.body.replace(/\n/g,'<br>')}</div>
+          <div class="diary-comment-area">
+            <div class="diary-comment-label">💌 おやからのコメント</div>
+            ${hasComment
+              ? `<div class="diary-comment-text">${e.parentComment}</div>
+                 <textarea class="diary-comment-input" id="comment-${e.id}" style="margin-top:8px;">${e.parentComment}</textarea>
+                 <button class="btn-comment-save" onclick="saveComment('${e.id}')">こうしん</button>`
+              : `<textarea class="diary-comment-input" id="comment-${e.id}" placeholder="コメントをかいてあげよう…"></textarea>
+                 <button class="btn-comment-save" onclick="saveComment('${e.id}')">おくる</button>`
+            }
+          </div>
+        </div>`;
+      }).join('');
+    });
   } catch(e) {
     listEl.innerHTML = `<div class="empty-state"><div class="icon">😢</div><p>よみこみに しっぱいしたよ。<br>もういちど ためしてね。</p></div>`;
   }
@@ -894,18 +905,22 @@ function showToast(msg) {
 }
 
 // ===== 初期化 =====
+let _appInitialized = false;
 function initApp() {
+  if (_appInitialized) return;
+  _appInitialized = true;
   initDateButtons();
   const input = document.getElementById('chatInput');
-  input.addEventListener('input', () => {
-    input.style.height = 'auto';
-    input.style.height = input.scrollHeight + 'px';
-  });
+  if (input) {
+    input.addEventListener('input', () => {
+      input.style.height = 'auto';
+      input.style.height = input.scrollHeight + 'px';
+    });
+  }
 }
 
 // Firebase準備完了後に初期化
 window.addEventListener('firebaseReady', initApp);
-// すでに準備済みの場合（リロード時）
 if (window._dbRef) initApp();
 </script>
 </body>
