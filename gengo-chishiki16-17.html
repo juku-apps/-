@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>言語知識テスト 練習アプリ 16・17回</title>
+<style>
+:root {
+  --bg: #0f172a; --surface: rgba(255,255,255,0.05); --border: rgba(255,255,255,0.1);
+  --blue: #3b82f6; --blue-light: #60a5fa; --green: #22c55e; --red: #ef4444;
+  --text: #f1f5f9; --muted: #94a3b8;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+body { background: linear-gradient(135deg,#0f172a 0%,#1e293b 60%,#0f3460 100%); min-height: 100vh; font-family: 'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif; color: var(--text); padding: 16px; }
+.wrap { max-width: 600px; margin: 0 auto; }
+.home-title { text-align: center; padding: 40px 0 32px; }
+.home-title-main { font-size: 38px; font-weight: 900; letter-spacing: 0.1em; text-shadow: 0 0 40px rgba(96,165,250,0.7); }
+.home-title-sub { font-size: 14px; color: #93c5fd; margin-top: 6px; }
+.mode-btn { display: flex; align-items: center; gap: 16px; width: 100%; padding: 24px 20px; border-radius: 18px; border: 1px solid var(--border); cursor: pointer; margin-bottom: 14px; text-align: left; color: var(--text); }
+.mode-btn-blue { background: linear-gradient(135deg,#1e3a5f,#1e40af); box-shadow: 0 8px 32px rgba(59,130,246,0.25); }
+.mode-btn-green { background: linear-gradient(135deg,#14432a,#166534); box-shadow: 0 8px 32px rgba(34,197,94,0.2); }
+.mode-btn-orange { background: linear-gradient(135deg,#7c2d12,#c2410c); box-shadow: 0 8px 32px rgba(249,115,22,0.2); }
+.mode-icon { font-size: 36px; }
+.mode-name { font-size: 20px; font-weight: 800; margin-bottom: 4px; }
+.mode-note { font-size: 13px; color: var(--muted); }
+.redo-count { font-size: 12px; color: #fed7aa; background: rgba(249,115,22,0.2); padding: 2px 8px; border-radius: 99px; margin-left: 8px; }
+.back-btn { background: none; border: none; color: var(--blue-light); font-size: 15px; cursor: pointer; margin-bottom: 20px; padding: 4px 0; }
+.select-title { font-size: 20px; font-weight: 800; margin-bottom: 20px; }
+.select-btn { display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 18px 20px; margin-bottom: 10px; border-radius: 14px; border: 1px solid var(--border); background: var(--surface); cursor: pointer; color: var(--text); }
+.select-name { font-size: 17px; font-weight: 700; }
+.select-count { font-size: 13px; color: var(--blue-light); background: rgba(96,165,250,0.15); padding: 3px 10px; border-radius: 99px; }
+.prog-bar { height: 6px; background: rgba(255,255,255,0.1); border-radius: 99px; margin-bottom: 16px; overflow: hidden; }
+.prog-fill { height: 100%; background: linear-gradient(90deg,#3b82f6,#60a5fa); border-radius: 99px; transition: width 0.3s; }
+.quiz-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.badge { font-size: 12px; font-weight: 700; color: var(--blue-light); background: rgba(96,165,250,0.15); padding: 3px 10px; border-radius: 99px; }
+.counter { font-size: 13px; color: #64748b; }
+.q-box { background: var(--surface); border-radius: 16px; padding: 18px; margin-bottom: 14px; border: 1px solid var(--border); }
+.q-text { font-size: 15px; line-height: 1.9; font-weight: 600; white-space: pre-wrap; }
+.opt-btn { display: flex; align-items: flex-start; gap: 10px; width: 100%; padding: 12px 14px; margin-bottom: 8px; border-radius: 12px; border: 1px solid var(--border); background: rgba(255,255,255,0.04); cursor: pointer; color: var(--text); text-align: left; font-size: 14px; font-weight: 600; font-family: inherit; }
+.opt-btn:disabled { cursor: default; }
+.opt-num { width: 26px; height: 26px; border-radius: 50%; background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; color: var(--blue-light); min-width: 26px; margin-top: 1px; }
+.opt-ok { border-color: var(--green)!important; background: rgba(34,197,94,0.15)!important; color: #86efac; }
+.opt-ng { border-color: var(--red)!important; background: rgba(239,68,68,0.15)!important; color: #fca5a5; }
+.opt-dim { opacity: 0.35; }
+.exp-box { background: var(--surface); border-radius: 16px; padding: 18px; border: 1px solid var(--border); margin-top: 4px; }
+.result-tag { font-size: 15px; font-weight: 800; margin-bottom: 8px; }
+.exp-text { font-size: 13px; color: var(--muted); line-height: 1.8; margin-bottom: 12px; }
+.ai-hint { background: rgba(96,165,250,0.08); border: 1px solid rgba(96,165,250,0.2); border-radius: 10px; padding: 10px 14px; font-size: 13px; color: #bfdbfe; line-height: 1.7; margin-bottom: 14px; }
+.ai-hint-label { font-size: 11px; font-weight: 700; color: var(--blue-light); display: block; margin-bottom: 4px; }
+.next-btn { width: 100%; padding: 14px; border-radius: 12px; background: linear-gradient(135deg,#2563eb,#1d4ed8); color: #fff; font-weight: 800; font-size: 16px; border: none; cursor: pointer; }
+.quit-btn { width: 100%; padding: 10px; border-radius: 10px; background: none; border: 1px solid var(--border); color: var(--muted); font-size: 13px; cursor: pointer; margin-top: 8px; margin-bottom: 14px; font-family: inherit; }
+.score-box { text-align: center; background: var(--surface); border-radius: 20px; padding: 32px 24px; border: 1px solid var(--border); margin-bottom: 28px; }
+.score-num { font-size: 64px; font-weight: 900; line-height: 1; margin-bottom: 8px; }
+.score-total { font-size: 28px; color: var(--muted); }
+.score-msg { font-size: 18px; color: var(--blue-light); font-weight: 700; }
+.res-item { padding: 12px 14px; margin-bottom: 10px; border-radius: 12px; background: var(--surface); border-left: 4px solid transparent; }
+.res-q { font-size: 12px; color: var(--muted); margin-bottom: 4px; line-height: 1.5; }
+.res-a { font-size: 14px; font-weight: 700; }
+.res-wrong { color: #f87171; font-weight: 400; font-size: 12px; }
+.result-actions { display: flex; gap: 12px; margin-bottom: 14px; }
+.retry-btn { flex: 1; padding: 14px; border-radius: 12px; background: linear-gradient(135deg,#2563eb,#1d4ed8); color: #fff; font-weight: 800; font-size: 16px; border: none; cursor: pointer; }
+.home-btn2 { flex: 1; padding: 14px; border-radius: 12px; background: rgba(255,255,255,0.08); color: #fff; font-weight: 800; font-size: 16px; border: 1px solid var(--border); cursor: pointer; }
+.redo-result-btn { width: 100%; padding: 14px; border-radius: 12px; background: linear-gradient(135deg,#7c2d12,#c2410c); color: #fff; font-weight: 800; font-size: 16px; border: none; cursor: pointer; margin-bottom: 32px; font-family: inherit; }
+.reset-btn2 { width: 100%; padding: 10px; border-radius: 10px; background: none; border: 1px solid rgba(239,68,68,0.3); color: #f87171; font-size: 13px; cursor: pointer; margin-top: 8px; font-family: inherit; }
+.hidden { display: none!important; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div id="screen-home">
+    <div class="home-title">
+      <div class="home-title-main">言語知識</div>
+      <div class="home-title-sub">練習アプリ　第16・17回</div>
+    </div>
+    <button class="mode-btn mode-btn-blue" onclick="showThemeSelect()">
+      <span class="mode-icon">📚</span>
+      <div><div class="mode-name">テーマ別で練習</div><div class="mode-note">接続語・外来語・ことわざなど分野ごとに学ぶ</div></div>
+    </button>
+    <button class="mode-btn mode-btn-green" onclick="showRoundSelect()">
+      <span class="mode-icon">📝</span>
+      <div><div class="mode-name">回数別で確認</div><div class="mode-note">第16・17回をテスト形式で解く</div></div>
+    </button>
+    <button class="mode-btn mode-btn-orange" id="redo-home-btn" onclick="startRedoQuiz()" style="display:none">
+      <span class="mode-icon">🔁</span>
+      <div><div class="mode-name">解き直し <span class="redo-count" id="redo-home-count"></span></div><div class="mode-note">間違えた問題を累積復習</div></div>
+    </button>
+    <button class="reset-btn2" onclick="doReset()" id="reset-btn">🗑️ 解き直しリストをリセット</button>
+  </div>
+
+  <div id="screen-theme" class="hidden">
+    <button class="back-btn" onclick="showHome()">← もどる</button>
+    <div class="select-title">テーマを選んでください</div>
+    <div id="theme-list"></div>
+  </div>
+
+  <div id="screen-round" class="hidden">
+    <button class="back-btn" onclick="showHome()">← もどる</button>
+    <div class="select-title">回を選んでください</div>
+    <div id="round-list"></div>
+  </div>
+
+  <div id="screen-quiz" class="hidden">
+    <div class="prog-bar"><div class="prog-fill" id="prog-fill"></div></div>
+    <div class="quiz-meta">
+      <span class="badge" id="q-theme"></span>
+      <span class="counter" id="q-counter"></span>
+    </div>
+    <div class="q-box"><p class="q-text" id="q-text"></p></div>
+    <div id="options"></div>
+    <button class="quit-btn" id="quit-btn" onclick="quitQuiz()">終了する →</button>
+    <div id="exp-area" class="hidden">
+      <div class="exp-box">
+        <div class="result-tag" id="result-tag"></div>
+        <div class="exp-text" id="exp-text"></div>
+        <div class="ai-hint hidden" id="ai-hint-box"><span class="ai-hint-label">💡 ポイント</span><span id="ai-hint-text"></span></div>
+        <button class="next-btn" id="next-btn" onclick="nextQuestion()">次の問題 →</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="screen-result" class="hidden">
+    <button class="back-btn" onclick="showHome()">← もどる</button>
+    <div class="score-box">
+      <div class="score-num" id="score-num"></div>
+      <div class="score-msg" id="score-msg"></div>
+    </div>
+    <div id="answer-list"></div>
+    <div class="result-actions">
+      <button class="retry-btn" onclick="retryQuiz()">もう一度</button>
+      <button class="home-btn2" onclick="showHome()">トップへ</button>
+    </div>
+    <button class="redo-result-btn hidden" id="redo-result-btn" onclick="startRedoQuiz()">🔁 間違えた問題を解き直す</button>
+  </div>
+</div>
+
+<script>
+const Q = [
+
+  // ===== 第16回 =====
+
+  // 問1-1 段落の内容（抽象・具体）
+  {id:'16-1-1', round:16, theme:'読解・文章の構造',
+   question:'【第16回 本文】\nトゥアレグ語について。\n\n「私はトゥアレグ語を習うのをあきらめた。こんなかんたんな単語でこんな複雑な意味をあらわす言葉というのは、そのコミュニティーにとけこまないかぎり、外部の者にはとうてい理解できない独特の取りきめ、すなわち言語外のルールを持っているにちがいないからである。」\n\nこの段落の内容として正しいのはどちらですか？',
+   options:['抽象的な内容（ア）','具体的な内容（イ）'],
+   answer:1,
+   explanation:'トゥアレグ語という具体的な言語のエピソード（習うのをあきらめた）が語られているので「具体的（イ）」。'},
+
+  {id:'16-1-2', round:16, theme:'読解・文章の構造',
+   question:'【第16回 本文】\n同質社会と表現について。\n\n「このことは逆にいうと、その社会（コミュニティー）が同質であればあるほど、表現はかんたんですむということである。家庭内の会話ではくどくどという必要はない。言語の大半が省略されても意志はちゃんと通じる。」\n\nこの段落の内容として正しいのはどちらですか？',
+   options:['抽象的な内容（ア）','具体的な内容（イ）'],
+   answer:0,
+   explanation:'同質社会では表現が簡単になるという一般的な法則（原理・原則）を述べているので「抽象的（ア）」。'},
+
+  // 問1-2 接続語
+  {id:'16-2-1', round:16, theme:'接続語',
+   question:'【第16回 問2-1】\n「このことは逆にいうと、その社会が同質であればあるほど、表現はかんたんですむということである。家庭内の会話ではくどくどという必要はない。言語の大半が省略されても意志はちゃんと通じる。（　　）、判断や意志や感情を相手につたえる場合、伝達者と受け手とが同質の情報環境に置かれているなら、言葉を厳密に使用する必要はなく…」\n\n（　　）に入る接続語はどれですか？',
+   options:['なぜなら','しかし','たとえば','そのため','また'],
+   answer:0,
+   explanation:'前の文（省略されても通じる）の理由を後の文で説明している。「なぜなら」は理由を説明する接続語。'},
+
+  {id:'16-2-2', round:16, theme:'接続語',
+   question:'【第16回 問2-2】\n「家庭内の会話ではくどくどという必要はない」という理由が述べられている一文はどれですか？',
+   options:['言語の大半が省略されても意志はちゃんと通じる。','なぜなら、判断や意志や感情を相手につたえる場合、伝達者と受け手とが同質の情報環境に置かれているなら、言葉を厳密に使用する必要はなく、きわめて簡単な表現でも同質の価値観や等質の感情が言葉を補足してくれるからである。','「よろしく」というのはそうした同質環境における言葉のいい例であろう。','そのコミュニティーにとけこまないかぎり、外部の者にはとうてい理解できない。'],
+   answer:1,
+   explanation:'「なぜなら〜からである」の文が理由の説明。伝達者と受け手が同質の情報環境にいるから、簡単な表現でも通じると理由を述べている。'},
+
+  // 問3 外来語（文脈）
+  {id:'16-3-1', round:16, theme:'外来語',
+   question:'「叔父はアメリカでティラノサウルスの歩行の（　）について研究している。」\n\n（　）にあてはまる外来語はどれですか？\n\nア シンボル　イ スタンス　ウ キャラクター\nエ ストレス　オ レッテル　カ メカニズム',
+   options:['シンボル','スタンス','キャラクター','ストレス','レッテル','メカニズム'],
+   answer:5,
+   explanation:'「メカニズム」は「仕組み・機構」という意味の外来語。歩行の「仕組み」を研究しているという文脈にあてはまる。'},
+
+  {id:'16-3-2', round:16, theme:'外来語',
+   question:'「叔父は明るい（　）なので、現地の大学でもすぐ周囲になじんだようだ。」\n\n（　）にあてはまる外来語はどれですか？\n\nア シンボル　イ スタンス　ウ キャラクター\nエ ストレス　オ レッテル　カ メカニズム',
+   options:['シンボル','スタンス','キャラクター','ストレス','レッテル','メカニズム'],
+   answer:2,
+   explanation:'「キャラクター」は「性格・個性」という意味の外来語。明るい「性格」なので周囲になじんだという文脈にあてはまる。'},
+
+  {id:'16-3-3', round:16, theme:'外来語',
+   question:'「俺は世界中どこに行っても、環境の変化に（　）なんか感じないね」\n\n（　）にあてはまる外来語はどれですか？\n\nア シンボル　イ スタンス　ウ キャラクター\nエ ストレス　オ レッテル　カ メカニズム',
+   options:['シンボル','スタンス','キャラクター','ストレス','レッテル','メカニズム'],
+   answer:3,
+   explanation:'「ストレス」は「精神的・肉体的な緊張・圧力」という意味の外来語。環境の変化による「ストレス」を感じないという文脈にあてはまる。'},
+
+  {id:'16-3-4', round:16, theme:'外来語',
+   question:'「基本的に『郷に入っては郷に従え』という（　）らしい。」\n\n（　）にあてはまる外来語はどれですか？\n\nア シンボル　イ スタンス　ウ キャラクター\nエ ストレス　オ レッテル　カ メカニズム',
+   options:['シンボル','スタンス','キャラクター','ストレス','レッテル','メカニズム'],
+   answer:1,
+   explanation:'「スタンス」は「立場・姿勢・態度」という意味の外来語。郷に従うという「スタンス（姿勢）」という文脈にあてはまる。'},
+
+  // 問4 外来語（意味から選ぶ）
+  {id:'16-4-1', round:16, theme:'外来語',
+   question:'「必要な情報を正しく（出力）して…」\n\n「出力」の意味の外来語はどれですか？\n\nア シェア　イ クレーム　ウ バロメーター\nエ システム　オ ソーシャル　カ コミュニティ\nキ アウトプット　ク バッシング',
+   options:['シェア','クレーム','バロメーター','システム','ソーシャル','コミュニティ','アウトプット','バッシング'],
+   answer:6,
+   explanation:'「アウトプット」は「出力・産出」という意味の外来語。「インプット（入力）」の対義語。'},
+
+  {id:'16-4-2', round:16, theme:'外来語',
+   question:'「…（地域社会）全体で…」\n\n「地域社会」の意味の外来語はどれですか？\n\nア シェア　イ クレーム　ウ バロメーター\nエ システム　オ ソーシャル　カ コミュニティ\nキ アウトプット　ク バッシング',
+   options:['シェア','クレーム','バロメーター','システム','ソーシャル','コミュニティ','アウトプット','バッシング'],
+   answer:5,
+   explanation:'「コミュニティ」は「地域社会・共同体」という意味の外来語。地域のつながりや共同体を指す。'},
+
+  {id:'16-4-3', round:16, theme:'外来語',
+   question:'「…（共有）できるような…」\n\n「共有」の意味の外来語はどれですか？\n\nア シェア　イ クレーム　ウ バロメーター\nエ システム　オ ソーシャル　カ コミュニティ\nキ アウトプット　ク バッシング',
+   options:['シェア','クレーム','バロメーター','システム','ソーシャル','コミュニティ','アウトプット','バッシング'],
+   answer:0,
+   explanation:'「シェア」は「共有・分かち合い」という意味の外来語。「シェアする」は情報などを共有すること。'},
+
+  {id:'16-4-4', round:16, theme:'外来語',
+   question:'「…（制度）を構築するべきだ。」\n\n「制度」の意味の外来語はどれですか？\n\nア シェア　イ クレーム　ウ バロメーター\nエ システム　オ ソーシャル　カ コミュニティ\nキ アウトプット　ク バッシング',
+   options:['シェア','クレーム','バロメーター','システム','ソーシャル','コミュニティ','アウトプット','バッシング'],
+   answer:3,
+   explanation:'「システム」は「制度・仕組み・体系」という意味の外来語。「社会システム」のように制度や仕組みを指す。'},
+
+  // ===== 第17回 =====
+
+  // 問1 段落の内容（抽象・具体）
+  {id:'17-1-1', round:17, theme:'読解・文章の構造',
+   question:'【第17回 本文 段落①】\n「〝テツガク〟と聞くと、多くの人は、実生活に対して役に立たない、何だかよく分からない難しそうなことを考えているもの、というイメージを持つんじゃないかと思う。」\n\nこの段落の内容として正しいのはどちらですか？',
+   options:['抽象的な内容（ア）','具体的な内容（イ）'],
+   answer:0,
+   explanation:'哲学に対して多くの人が持つ一般的なイメージを述べており、特定の例が出ていない。「多くの人は〜と思う」という一般論なので「抽象的（ア）」。'},
+
+  {id:'17-1-2', round:17, theme:'読解・文章の構造',
+   question:'【第17回 本文 段落②】\n「たしかに、『私ってなんだろう？』とか、『時間ってなんだろう？』『愛って何だろう？』『言葉ってなんだろう？』『生きる意味ってなんだろう？』とかいったいかにも哲学的な問いは、それだけ聞くとあんまり役に立つ感じはしない。」\n\nこの段落の内容として正しいのはどちらですか？',
+   options:['抽象的な内容（ア）','具体的な内容（イ）'],
+   answer:1,
+   explanation:'哲学的な問いの具体例（「私とは？」「時間とは？」「愛とは？」など）が列挙されているので「具体的（イ）」。'},
+
+  {id:'17-1-3', round:17, theme:'読解・文章の構造',
+   question:'【第17回 本文 段落③】\n「哲学者と呼ばれる人たちも、そうしたさまざまなことがらの『そもそも』を、どこまでも考えずにはいられない人間だ。だからまともに相手をしたら、はっきりいって面倒くさくて仕方ない。」\n\nこの段落の内容として正しいのはどちらですか？',
+   options:['抽象的な内容（ア）','具体的な内容（イ）'],
+   answer:0,
+   explanation:'哲学者とはどういう人物かを一般的に述べており、特定の人物の例が出ていない。「哲学者とは〜な人間だ」という一般論なので「抽象的（ア）」。'},
+
+  {id:'17-1-4', round:17, theme:'読解・文章の構造',
+   question:'【第17回 本文 段落④】\n「西洋哲学の父、ソクラテス（紀元前469−399年）は、古代ギリシアのアテナイで、道行く人びとに『ねえ君、君、恋とはいったい何だと思うかね？』などと問いかけて、多くの人をげんなりさせていた。」\n\nこの段落の内容として正しいのはどちらですか？',
+   options:['抽象的な内容（ア）','具体的な内容（イ）'],
+   answer:1,
+   explanation:'ソクラテスという特定の哲学者の具体的なエピソードが語られているので「具体的（イ）」。'},
+
+  // 問1-2 ソクラテスのエピソードの目的
+  {id:'17-1-5', round:17, theme:'読解・文章の構造',
+   question:'【第17回 問1-2】\n線「西洋哲学の父、ソクラテス」のエピソードは、どういうことを言うために紹介されていますか？\n\n最もふさわしいものを選びなさい。',
+   options:['古代ギリシアの哲学が現代に与えた影響を説明するため。','哲学も哲学者も実生活には役に立たないという印象を持たれやすいということを具体的に示すため。','ソクラテスが歴史上最も有名な哲学者であることを示すため。','哲学的な問いに答えることが大切だと伝えるため。'],
+   answer:1,
+   explanation:'段落①②③で「哲学は役に立たない・面倒くさい」という一般的な印象を述べ、段落④でソクラテスの例を挙げてその印象を具体的に示している。'},
+
+  // 問2 ことわざ穴埋め（A群）
+  {id:'17-2-1', round:17, theme:'ことわざ',
+   question:'【第17回 問2】ことわざの穴埋め\n\n「同じ穴の（　）」\n\n（　）にあてはまる言葉を選びなさい。\n\nア 文殊　イ 火事　ウ 狐　エ 千里\nオ 鉄　カ 失敗　キ 狢',
+   options:['文殊（もんじゅ）','火事（かじ）','狐（きつね）','千里（せんり）','鉄（てつ）','失敗（しっぱい）','狢（むじな）'],
+   answer:6,
+   explanation:'「同じ穴の狢（むじな）」＝一見関係がないようでも実は同類の悪人のたとえ。「狢」はタヌキに似た動物。'},
+
+  {id:'17-2-2', round:17, theme:'ことわざ',
+   question:'【第17回 問2】ことわざの穴埋め\n\n「（　）は熱いうちに打て」\n\n（　）にあてはまる言葉を選びなさい。\n\nア 文殊　イ 火事　ウ 狐　エ 千里\nオ 鉄　カ 失敗　キ 狢',
+   options:['文殊（もんじゅ）','火事（かじ）','狐（きつね）','千里（せんり）','鉄（てつ）','失敗（しっぱい）','狢（むじな）'],
+   answer:4,
+   explanation:'「鉄は熱いうちに打て」＝精神が柔軟で吸収する力のある若いうちに鍛えるべきである、というたとえ。'},
+
+  {id:'17-2-3', round:17, theme:'ことわざ',
+   question:'【第17回 問2】ことわざの穴埋め\n\n「対岸の（　）」\n\n（　）にあてはまる言葉を選びなさい。\n\nア 文殊　イ 火事　ウ 狐　エ 千里\nオ 鉄　カ 失敗　キ 狢',
+   options:['文殊（もんじゅ）','火事（かじ）','狐（きつね）','千里（せんり）','鉄（てつ）','失敗（しっぱい）','狢（むじな）'],
+   answer:1,
+   explanation:'「対岸の火事」＝自分には関係がなく、なんの苦痛もないこと。川の向こうで火事が起きても自分は困らないことから。'},
+
+  {id:'17-2-4', round:17, theme:'ことわざ',
+   question:'【第17回 問2】ことわざの穴埋め\n\n「三人寄れば（　）の知恵」\n\n（　）にあてはまる言葉を選びなさい。\n\nア 文殊　イ 火事　ウ 狐　エ 千里\nオ 鉄　カ 失敗　キ 狢',
+   options:['文殊（もんじゅ）','火事（かじ）','狐（きつね）','千里（せんり）','鉄（てつ）','失敗（しっぱい）','狢（むじな）'],
+   answer:0,
+   explanation:'「三人寄れば文殊の知恵」＝凡人でも三人集まって相談すれば、すばらしい知恵が出るものだ。文殊は仏教の知恵の菩薩。'},
+
+  {id:'17-2-5', round:17, theme:'ことわざ',
+   question:'【第17回 問2】ことわざの穴埋め\n\n「虎の威を借る（　）」\n\n（　）にあてはまる言葉を選びなさい。\n\nア 文殊　イ 火事　ウ 狐　エ 千里\nオ 鉄　カ 失敗　キ 狢',
+   options:['文殊（もんじゅ）','火事（かじ）','狐（きつね）','千里（せんり）','鉄（てつ）','失敗（しっぱい）','狢（むじな）'],
+   answer:2,
+   explanation:'「虎の威を借る狐」＝他の権勢に頼って威張る小人のたとえ。強い虎の威を借りて他の動物を威かす狐の話から。'},
+
+  {id:'17-2-6', round:17, theme:'ことわざ',
+   question:'【第17回 問2】ことわざの穴埋め\n\n「（　）の道も一歩から」\n\n（　）にあてはまる言葉を選びなさい。\n\nア 文殊　イ 火事　ウ 狐　エ 千里\nオ 鉄　カ 失敗　キ 狢',
+   options:['文殊（もんじゅ）','火事（かじ）','狐（きつね）','千里（せんり）','鉄（てつ）','失敗（しっぱい）','狢（むじな）'],
+   answer:3,
+   explanation:'「千里の道も一歩から」＝どんな大事業も手近なところから始まることのたとえ。千里の長い旅も最初の一歩から始まる。'},
+
+  {id:'17-2-7', round:17, theme:'ことわざ',
+   question:'【第17回 問2】ことわざの穴埋め\n\n「（　）は成功のもと」\n\n（　）にあてはまる言葉を選びなさい。\n\nア 文殊　イ 火事　ウ 狐　エ 千里\nオ 鉄　カ 失敗　キ 狢',
+   options:['文殊（もんじゅ）','火事（かじ）','狐（きつね）','千里（せんり）','鉄（てつ）','失敗（しっぱい）','狢（むじな）'],
+   answer:5,
+   explanation:'「失敗は成功のもと」＝失敗してもそこから欠点を知って改めれば、かえってその後の成功につながる。'},
+
+  // 問2 ことわざの意味（B群）
+  {id:'17-2-1b', round:17, theme:'ことわざ',
+   question:'「同じ穴の狢（むじな）」の意味はどれですか？',
+   options:['他の権勢に頼って威張る小人のたとえ。','自分には関係がなく、なんの苦痛もないこと。','どんな大事業も手近なところから始まることのたとえ。','一見関係がないようでも実は同類の悪人である。','精神が柔軟で、吸収する力のある若いうちに鍛えるべきである、というたとえ。','失敗してもそこから欠点を知って改めれば、かえってその後の成功につながる。','凡人でも三人集まって相談すれば、すばらしい知恵が出るものだ。'],
+   answer:3,
+   explanation:'「同じ穴の狢」は、一見無関係に見えても実は同じ仲間の悪人であることを指す。「あの二人は同じ穴の狢だ」のように使う。'},
+
+  {id:'17-2-2b', round:17, theme:'ことわざ',
+   question:'「鉄は熱いうちに打て」の意味はどれですか？',
+   options:['他の権勢に頼って威張る小人のたとえ。','自分には関係がなく、なんの苦痛もないこと。','どんな大事業も手近なところから始まることのたとえ。','一見関係がないようでも実は同類の悪人である。','精神が柔軟で、吸収する力のある若いうちに鍛えるべきである、というたとえ。','失敗してもそこから欠点を知って改めれば、かえってその後の成功につながる。','凡人でも三人集まって相談すれば、すばらしい知恵が出るものだ。'],
+   answer:4,
+   explanation:'鉄は熱くて柔らかいうちに叩いて形を整えるように、人間も若いうちに鍛えるべきだという意味。'},
+
+  {id:'17-2-3b', round:17, theme:'ことわざ',
+   question:'「対岸の火事」の意味はどれですか？',
+   options:['他の権勢に頼って威張る小人のたとえ。','自分には関係がなく、なんの苦痛もないこと。','どんな大事業も手近なところから始まることのたとえ。','一見関係がないようでも実は同類の悪人である。','精神が柔軟で、吸収する力のある若いうちに鍛えるべきである、というたとえ。','失敗してもそこから欠点を知って改めれば、かえってその後の成功につながる。','凡人でも三人集まって相談すれば、すばらしい知恵が出るものだ。'],
+   answer:1,
+   explanation:'川の対岸（向こう岸）の火事は自分には被害が及ばないことから、他人事で自分に関係なく、痛くも痒くもないことを指す。'},
+
+  {id:'17-2-4b', round:17, theme:'ことわざ',
+   question:'「三人寄れば文殊の知恵」の意味はどれですか？',
+   options:['他の権勢に頼って威張る小人のたとえ。','自分には関係がなく、なんの苦痛もないこと。','どんな大事業も手近なところから始まることのたとえ。','一見関係がないようでも実は同類の悪人である。','精神が柔軟で、吸収する力のある若いうちに鍛えるべきである、というたとえ。','失敗してもそこから欠点を知って改めれば、かえってその後の成功につながる。','凡人でも三人集まって相談すれば、すばらしい知恵が出るものだ。'],
+   answer:6,
+   explanation:'文殊菩薩は知恵の神様。凡人でも三人集まれば、そのような知恵が生まれるという意味。集合知の大切さを説く。'},
+
+  {id:'17-2-5b', round:17, theme:'ことわざ',
+   question:'「虎の威を借る狐」の意味はどれですか？',
+   options:['他の権勢に頼って威張る小人のたとえ。','自分には関係がなく、なんの苦痛もないこと。','どんな大事業も手近なところから始まることのたとえ。','一見関係がないようでも実は同類の悪人である。','精神が柔軟で、吸収する力のある若いうちに鍛えるべきである、というたとえ。','失敗してもそこから欠点を知って改めれば、かえってその後の成功につながる。','凡人でも三人集まって相談すれば、すばらしい知恵が出るものだ。'],
+   answer:0,
+   explanation:'虎（強い者）の威力を借りた狐が他の動物を威かすように、実力のない者が権力者に頼って威張ることを指す。'},
+
+  {id:'17-2-6b', round:17, theme:'ことわざ',
+   question:'「千里の道も一歩から」の意味はどれですか？',
+   options:['他の権勢に頼って威張る小人のたとえ。','自分には関係がなく、なんの苦痛もないこと。','どんな大事業も手近なところから始まることのたとえ。','一見関係がないようでも実は同類の悪人である。','精神が柔軟で、吸収する力のある若いうちに鍛えるべきである、というたとえ。','失敗してもそこから欠点を知って改めれば、かえってその後の成功につながる。','凡人でも三人集まって相談すれば、すばらしい知恵が出るものだ。'],
+   answer:2,
+   explanation:'どんなに長い千里の旅も、最初の一歩を踏み出すことから始まる。大きな目標も小さな一歩の積み重ねが大切。'},
+
+  {id:'17-2-7b', round:17, theme:'ことわざ',
+   question:'「失敗は成功のもと」の意味はどれですか？',
+   options:['他の権勢に頼って威張る小人のたとえ。','自分には関係がなく、なんの苦痛もないこと。','どんな大事業も手近なところから始まることのたとえ。','一見関係がないようでも実は同類の悪人である。','精神が柔軟で、吸収する力のある若いうちに鍛えるべきである、というたとえ。','失敗してもそこから欠点を知って改めれば、かえってその後の成功につながる。','凡人でも三人集まって相談すれば、すばらしい知恵が出るものだ。'],
+   answer:5,
+   explanation:'失敗はただの失敗ではなく、そこから学んで改善することで成功への糧になる。失敗を恐れず挑戦する勇気を与えることわざ。'},
+
+  // 問3 ことわざを文脈で使う
+  {id:'17-3-1', round:17, theme:'ことわざ',
+   question:'「明日からマラソンの練習を始めるって決意はいいけれど、（　）と言うし、今日から走ろうよ。」\n\n（　）にあてはまることわざはどれですか？',
+   options:['聞くは一時の恥、聞かぬは一生の恥','となりの芝生は青い','思い立ったが吉日'],
+   answer:2,
+   explanation:'「思い立ったが吉日（きちじつ）」は、やろうと思ったその日が良い日である＝すぐに始めるべきだという意味。「今日から走ろう」という呼びかけと合う。'},
+
+  {id:'17-3-2', round:17, theme:'ことわざ',
+   question:'「友だちが自分の知らないことわざを口にしたが、分かったふりをして聞いていた。（　）と言うから、素直に意味をたずねればよかった。」\n\n（　）にあてはまることわざはどれですか？',
+   options:['聞くは一時の恥、聞かぬは一生の恥','となりの芝生は青い','思い立ったが吉日'],
+   answer:0,
+   explanation:'「聞くは一時の恥、聞かぬは一生の恥」は、知らないことをその場で聞く恥は一時のものだが、聞かずにいると一生知らないままだという意味。'},
+
+  {id:'17-3-3', round:17, theme:'ことわざ',
+   question:'「サッカー部に所属する兄は、テニス部で活躍している友人の話を聞いて、自分もテニス部に入ればよかったと言った。兄もこれまで部活を楽しんでいたように見えたが、（　）というやつだろう。」\n\n（　）にあてはまることわざはどれですか？',
+   options:['聞くは一時の恥、聞かぬは一生の恥','となりの芝生は青い','思い立ったが吉日'],
+   answer:1,
+   explanation:'「となりの芝生は青い」は、他人のものは何でも自分のものより良く見えるという意味。サッカーを楽しんでいたのにテニス部がよく見えてしまう兄の状況と合う。'},
+];
+
+const THEMES = ['読解・文章の構造','接続語','外来語','ことわざ'];
+const ROUNDS = [16,17];
+const STORAGE_KEY = 'gengo16_redo';
+let questions=[], idx=0, score=0, answers=[], lastFilter=null, lastMode=null;
+
+function loadRedo(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');}catch{return[];}}
+function saveRedo(ids){localStorage.setItem(STORAGE_KEY,JSON.stringify(ids));}
+function updateRedoHomeBtn(){
+  const r=loadRedo(), btn=document.getElementById('redo-home-btn'), cnt=document.getElementById('redo-home-count');
+  if(r.length>0){btn.style.display='flex';cnt.textContent=r.length+'問';}
+  else{btn.style.display='none';}
+}
+function doReset(){
+  saveRedo([]);updateRedoHomeBtn();
+  const btn=document.getElementById('reset-btn');
+  btn.textContent='✅ リセットしました';
+  setTimeout(()=>{btn.textContent='🗑️ 解き直しリストをリセット';},2000);
+}
+function startRedoQuiz(){
+  const r=loadRedo();
+  if(!r.length){alert('解き直しの問題がありません');return;}
+  lastFilter='redo';lastMode='redo';
+  questions=shuffle(Q.filter(q=>r.includes(q.id)));
+  idx=0;score=0;answers=[];renderQ();showScreen('quiz');
+}
+function shuffle(a){return[...a].sort(()=>Math.random()-.5);}
+function showScreen(id){
+  ['home','theme','round','quiz','result'].forEach(s=>document.getElementById('screen-'+s).classList.add('hidden'));
+  document.getElementById('screen-'+id).classList.remove('hidden');
+}
+function showHome(){updateRedoHomeBtn();showScreen('home');}
+function showThemeSelect(){
+  document.getElementById('theme-list').innerHTML=THEMES.map(t=>{
+    const c=Q.filter(q=>q.theme===t).length;
+    return`<button class="select-btn" onclick="startQuiz('${t}','theme')"><span class="select-name">${t}</span><span class="select-count">${c}問</span></button>`;
+  }).join('');showScreen('theme');
+}
+function showRoundSelect(){
+  document.getElementById('round-list').innerHTML=ROUNDS.map(r=>{
+    const c=Q.filter(q=>q.round===r).length;
+    return`<button class="select-btn" onclick="startQuiz(${r},'round')"><span class="select-name">第${r}回</span><span class="select-count">${c}問</span></button>`;
+  }).join('');showScreen('round');
+}
+function startQuiz(filter,mode){
+  lastFilter=filter;lastMode=mode;
+  questions=shuffle(Q.filter(q=>mode==='theme'?q.theme===filter:q.round===filter));
+  idx=0;score=0;answers=[];renderQ();showScreen('quiz');
+}
+function renderQ(){
+  const q=questions[idx];
+  document.getElementById('prog-fill').style.width=(idx/questions.length*100)+'%';
+  document.getElementById('q-theme').textContent=q.theme;
+  document.getElementById('q-counter').textContent=(idx+1)+' / '+questions.length;
+  document.getElementById('q-text').textContent=q.question;
+  document.getElementById('exp-area').classList.add('hidden');
+  document.getElementById('ai-hint-box').classList.add('hidden');
+  document.getElementById('ai-hint-text').textContent='';
+  document.getElementById('quit-btn').style.display='block';
+  document.getElementById('options').innerHTML=q.options.map((o,i)=>
+    `<button class="opt-btn" id="opt-${i}" onclick="selectAns(${i})"><span class="opt-num">${i+1}</span><span>${o}</span></button>`
+  ).join('');
+  document.getElementById('next-btn').textContent=(idx+1>=questions.length)?'結果を見る →':'次の問題 →';
+}
+function selectAns(i){
+  const q=questions[idx], ok=i===q.answer;
+  if(ok)score++;
+  answers.push({question:q,userAnswer:i,correct:ok});
+  q.options.forEach((_,j)=>{
+    const b=document.getElementById('opt-'+j);b.disabled=true;
+    if(j===q.answer)b.classList.add('opt-ok');
+    else if(j===i)b.classList.add('opt-ng');
+    else b.classList.add('opt-dim');
+  });
+  document.getElementById('result-tag').textContent=ok?'✅ 正解！':'❌ 不正解　正解：'+q.options[q.answer];
+  document.getElementById('exp-text').textContent=q.explanation;
+  document.getElementById('exp-area').classList.remove('hidden');
+  document.getElementById('quit-btn').style.display='none';
+  document.getElementById('prog-fill').style.width=((idx+1)/questions.length*100)+'%';
+  fetchHint(q);
+}
+async function fetchHint(q){
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:200,
+        messages:[{role:'user',content:`小学5年生向け国語の解説です。以下の解説をもとに、子どもにわかりやすく30〜50字で「覚え方のポイント」を一言添えてください。解説：${q.explanation}`}]})});
+    const d=await r.json(),h=d.content?.[0]?.text;
+    if(h){document.getElementById('ai-hint-text').textContent=h;document.getElementById('ai-hint-box').classList.remove('hidden');}
+  }catch(e){}
+}
+function nextQuestion(){
+  if(idx+1>=questions.length){showResult();return;}
+  idx++;renderQ();
+}
+function quitQuiz(){
+  questions.forEach(q=>{
+    if(!answers.find(a=>a.question.id===q.id)){
+      answers.push({question:q,userAnswer:-1,correct:false});
+    }
+  });
+  showResult();
+}
+function showResult(){
+  questions.forEach(q=>{
+    if(!answers.find(a=>a.question.id===q.id)){
+      answers.push({question:q,userAnswer:-1,correct:false});
+    }
+  });
+  const wrongIds=answers.filter(a=>!a.correct).map(a=>a.question.id);
+  const correctIds=answers.filter(a=>a.correct).map(a=>a.question.id);
+  const existing=loadRedo();
+  const merged=[...new Set([...existing,...wrongIds])].filter(id=>!correctIds.includes(id));
+  saveRedo(merged);
+
+  document.getElementById('score-num').innerHTML=score+'<span class="score-total">/'+questions.length+'</span>';
+  const p=score/questions.length;
+  document.getElementById('score-msg').textContent=
+    score===questions.length?'🎉 満点！すばらしい！':p>=0.8?'👏 よくできました！':p>=0.6?'😊 もう少し！':'📖 もう一度挑戦しよう';
+  document.getElementById('answer-list').innerHTML=answers.map(a=>{
+    const w=!a.correct&&a.userAnswer>=0?'<span class="res-wrong">（あなた：'+a.question.options[a.userAnswer]+'）</span>':
+            !a.correct?'<span class="res-wrong">（未回答）</span>':'';
+    return`<div class="res-item" style="border-left-color:${a.correct?'#22c55e':'#ef4444'}">
+      <div class="res-q">${a.question.question.split('\n')[0]}</div>
+      <div class="res-a">${a.correct?'✅':'❌'} ${a.question.options[a.question.answer]}${w}</div></div>`;
+  }).join('');
+
+  showScreen('result');
+  const btn=document.getElementById('redo-result-btn');
+  if(merged.length>0){btn.textContent='🔁 間違えた'+merged.length+'問を解き直す';btn.style.display='block';}
+  else{btn.style.display='none';}
+  updateRedoHomeBtn();
+}
+function retryQuiz(){
+  if(lastMode==='redo'){startRedoQuiz();}else{startQuiz(lastFilter,lastMode);}
+}
+updateRedoHomeBtn();showHome();
+</script>
+</body>
+</html>
