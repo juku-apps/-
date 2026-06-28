@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>漢字18回｜予習シリーズ</title>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;700;900&family=Kaisei+HarunoUmi:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0e1117;--surface:#161b27;--card:#1e2535;--border:rgba(255,255,255,0.08);--accent:#06b6d4;--accent2:#0e7490;--green:#3dd68c;--red:#f05a5a;--blue:#4a9eff;--text:#e8eaf0;--muted:rgba(232,234,240,0.45);--radius:16px;}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+.app{max-width:600px;margin:0 auto;padding:0 16px 60px;}
+.header{display:flex;align-items:center;justify-content:space-between;padding:20px 0 16px;}
+.header-title{font-family:'Kaisei HarunoUmi',serif;font-size:1.3rem;color:var(--accent);}
+.header-sub{font-size:0.68rem;color:var(--muted);margin-top:2px;}
+.reset-btn{background:none;border:1px solid var(--border);border-radius:8px;padding:6px 12px;color:var(--muted);font-size:0.7rem;cursor:pointer;font-family:'Zen Kaku Gothic New',sans-serif;}
+.reset-btn:hover{border-color:var(--red);color:var(--red);}
+.tab-bar{display:flex;gap:8px;margin-bottom:20px;}
+.tab-btn{flex:1;padding:10px;border:1.5px solid var(--border);border-radius:12px;background:var(--surface);color:var(--muted);font-family:'Zen Kaku Gothic New',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;text-align:center;}
+.tab-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(6,182,212,0.08);}
+.summary-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px;}
+.summary-label{font-size:0.7rem;color:var(--muted);letter-spacing:0.12em;margin-bottom:12px;}
+.mastery-bar-wrap{height:8px;background:rgba(255,255,255,0.06);border-radius:4px;overflow:hidden;margin-bottom:10px;}
+.mastery-bar-fill{height:100%;background:linear-gradient(90deg,var(--accent2),var(--accent));border-radius:4px;transition:width 0.6s;}
+.mastery-stats{display:flex;gap:20px;}
+.stat-item{display:flex;flex-direction:column;gap:2px;}
+.stat-num{font-family:'Kaisei HarunoUmi',serif;font-size:1.5rem;line-height:1;color:var(--accent);}
+.stat-label{font-size:0.65rem;color:var(--muted);}
+.section-label{font-size:0.7rem;color:var(--muted);letter-spacing:0.12em;margin:20px 0 10px;}
+.question-list{display:flex;flex-direction:column;gap:6px;margin-bottom:100px;}
+.q-item{display:flex;align-items:center;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 16px;gap:12px;}
+.q-status{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:900;flex-shrink:0;}
+.q-status.mastered{background:rgba(61,214,140,0.15);color:var(--green);border:1.5px solid var(--green);}
+.q-status.learning{background:rgba(6,182,212,0.12);color:var(--accent);border:1.5px solid rgba(6,182,212,0.4);}
+.q-status.new{background:rgba(255,255,255,0.04);color:var(--muted);border:1.5px solid var(--border);}
+.q-info{flex:1;}
+.q-kanji{font-size:1.1rem;font-weight:700;}
+.q-reading{font-size:0.7rem;color:var(--muted);margin-top:1px;}
+.q-count{font-size:0.68rem;color:var(--muted);}
+.mastery-badge{display:inline-block;font-size:0.62rem;padding:2px 7px;border-radius:10px;margin-left:8px;vertical-align:middle;font-weight:700;}
+.badge-new{background:rgba(74,158,255,0.15);color:var(--blue);}
+.badge-learning{background:rgba(6,182,212,0.15);color:var(--accent);}
+.badge-mastered{background:rgba(61,214,140,0.15);color:var(--green);}
+.home-btns{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:600px;padding:12px 16px 20px;background:linear-gradient(to top,var(--bg) 80%,transparent);display:flex;flex-direction:column;gap:8px;}
+.study-btn{width:100%;background:linear-gradient(135deg,#001a2a,#000e1a);border:1.5px solid var(--accent);border-radius:14px;padding:16px;color:white;font-family:'Zen Kaku Gothic New',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;}
+.study-btn:active{transform:scale(0.98);}
+.start-row{display:flex;gap:8px;}
+.start-btn{flex:1;background:linear-gradient(135deg,var(--accent2),#c04420);border:none;border-radius:14px;padding:14px;color:white;font-family:'Zen Kaku Gothic New',sans-serif;font-size:0.9rem;font-weight:700;cursor:pointer;}
+.start-btn:active{transform:scale(0.98);}
+.weak-btn{flex:1;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;color:var(--text);font-family:'Zen Kaku Gothic New',sans-serif;font-size:0.82rem;font-weight:700;cursor:pointer;}
+.weak-btn:disabled{opacity:0.35;cursor:default;}
+.finish-btn{background:none;border:1px solid rgba(255,255,255,0.2);border-radius:8px;padding:5px 10px;color:var(--muted);font-family:'Zen Kaku Gothic New',sans-serif;font-size:0.75rem;cursor:pointer;white-space:nowrap;}
+.finish-btn:hover{border-color:var(--accent);color:var(--accent);}
+.kakitori-area{background:var(--surface);border:2px solid var(--border);border-radius:14px;padding:20px;margin-bottom:10px;text-align:center;}
+.kakitori-hint{font-size:0.88rem;color:var(--muted);margin-bottom:14px;line-height:1.7;}
+.kakitori-reveal-btn{background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:10px;padding:10px 24px;color:var(--text);font-family:'Zen Kaku Gothic New',sans-serif;font-size:0.9rem;cursor:pointer;margin-bottom:10px;}
+.kakitori-answer{font-family:'Kaisei HarunoUmi',serif;font-size:2.5rem;color:var(--accent);font-weight:700;letter-spacing:0.2em;padding:10px 0;}
+.kakitori-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
+.kakitori-ok{border:none;border-radius:12px;padding:18px;background:linear-gradient(135deg,#16a34a,#14532d);color:white;font-family:'Zen Kaku Gothic New',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;}
+.kakitori-ng{border:none;border-radius:12px;padding:18px;background:linear-gradient(135deg,#dc2626,#7f1d1d);color:white;font-family:'Zen Kaku Gothic New',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;}
+.ng-list{display:flex;flex-direction:column;gap:8px;margin-bottom:12px;}
+.ng-item{background:rgba(220,38,38,0.08);border:1px solid rgba(220,38,38,0.25);border-radius:10px;padding:10px 14px;font-size:0.85rem;line-height:1.6;}
+.ng-item-ans{font-family:'Kaisei HarunoUmi',serif;font-size:1.2rem;color:var(--red);font-weight:700;margin-top:4px;}
+.retry-kakitori-btn{width:100%;background:linear-gradient(135deg,#dc2626,#7f1d1d);border:none;border-radius:14px;padding:16px;color:white;font-family:'Zen Kaku Gothic New',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;margin-bottom:8px;}
+.kakitori-complete{background:rgba(61,214,140,0.1);border:1px solid rgba(61,214,140,0.3);border-radius:16px;padding:20px;text-align:center;margin-bottom:16px;}
+.kakitori-complete-icon{font-size:2.5rem;margin-bottom:8px;}
+.kakitori-complete-msg{font-size:1.1rem;font-weight:700;color:var(--green);}
+.fav-home-btn{width:100%;background:rgba(251,191,36,0.08);border:1.5px solid rgba(251,191,36,0.35);border-radius:14px;padding:14px;color:#fbbf24;font-family:'Zen Kaku Gothic New',sans-serif;font-size:0.88rem;font-weight:700;cursor:pointer;display:none;}
+.fav-list{display:flex;flex-direction:column;gap:6px;margin-bottom:12px;}
+.fav-item{display:flex;align-items:flex-start;gap:12px;background:var(--card);border:1.5px solid var(--border);border-radius:12px;padding:12px 14px;cursor:pointer;transition:border-color 0.15s;}
+.fav-item.checked{border-color:#fbbf24;background:rgba(251,191,36,0.07);}
+.fav-check{font-size:1.2rem;flex-shrink:0;margin-top:2px;}
+.fav-item-q{font-size:0.82rem;line-height:1.65;flex:1;}
+.fav-item-ans{font-size:0.78rem;color:var(--green);font-weight:700;margin-top:3px;}
+.fav-save-btn{width:100%;background:linear-gradient(135deg,#d97706,#92400e);border:none;border-radius:14px;padding:15px;color:white;font-family:'Zen Kaku Gothic New',sans-serif;font-size:0.95rem;font-weight:700;cursor:pointer;margin-bottom:8px;}
+.fav-section{background:var(--card);border:1px solid rgba(251,191,36,0.25);border-radius:16px;padding:16px;margin-bottom:16px;}
+.fav-section-title{font-size:0.7rem;color:#fbbf24;letter-spacing:0.1em;margin-bottom:12px;}
+#study-screen{display:none;}
+.study-nav{display:flex;align-items:center;gap:12px;padding:16px 0 12px;}
+.back-icon{background:none;border:none;color:var(--muted);font-size:1.2rem;cursor:pointer;padding:4px 8px 4px 0;}
+.study-progress-bar{flex:1;height:4px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden;}
+.study-progress-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--accent));border-radius:2px;transition:width 0.4s;}
+.study-progress-text{font-size:0.75rem;color:var(--muted);}
+.kanji-card{background:var(--card);border:1px solid var(--border);border-radius:24px;padding:28px 24px;margin-bottom:16px;position:relative;overflow:hidden;}
+.kanji-card::before{content:'';position:absolute;top:-40px;right:-40px;width:160px;height:160px;background:radial-gradient(circle,rgba(240,192,64,0.06),transparent 70%);pointer-events:none;}
+.kanji-big{font-family:'Kaisei HarunoUmi',serif;font-size:5rem;color:var(--accent);text-align:center;line-height:1;margin-bottom:16px;text-shadow:0 0 40px rgba(240,192,64,0.3);}
+.kanji-readings{display:flex;gap:12px;justify-content:center;margin-bottom:20px;flex-wrap:wrap;}
+.reading-badge{background:rgba(240,192,64,0.1);border:1px solid rgba(240,192,64,0.25);border-radius:20px;padding:4px 14px;font-size:0.78rem;}
+.reading-label{font-size:0.6rem;color:var(--muted);margin-right:4px;}
+.reading-val{color:var(--accent);font-weight:700;}
+.kanji-meanings{margin-bottom:20px;}
+.meaning-title{font-size:0.68rem;color:var(--muted);letter-spacing:0.1em;margin-bottom:8px;}
+.meaning-item{background:rgba(255,255,255,0.04);border-radius:10px;padding:10px 14px;margin-bottom:6px;font-size:0.88rem;line-height:1.6;}
+.kanji-examples{margin-bottom:8px;}
+.example-title{font-size:0.68rem;color:var(--muted);letter-spacing:0.1em;margin-bottom:8px;}
+.example-list{display:flex;flex-direction:column;gap:6px;}
+.example-item{display:flex;align-items:baseline;gap:8px;font-size:0.85rem;}
+.example-word{font-weight:700;color:var(--text);min-width:90px;}
+.example-meaning{color:var(--muted);font-size:0.8rem;line-height:1.5;}
+.card-nav-row{display:flex;gap:10px;align-items:center;}
+.prev-btn{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 20px;color:var(--muted);font-family:'Zen Kaku Gothic New',sans-serif;font-size:0.9rem;cursor:pointer;}
+.next-card-btn{flex:1;background:linear-gradient(135deg,var(--blue),#2a5fa8);border:none;border-radius:12px;padding:16px;color:white;font-family:'Zen Kaku Gothic New',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;}
+.next-card-btn:active{transform:scale(0.98);}
+.study-complete{background:var(--card);border:1px solid rgba(61,214,140,0.3);border-radius:16px;padding:20px;text-align:center;margin-bottom:16px;}
+.complete-icon{font-size:2.5rem;margin-bottom:8px;}
+.complete-msg{font-size:1rem;font-weight:700;color:var(--green);margin-bottom:4px;}
+.complete-sub{font-size:0.8rem;color:var(--muted);}
+.goto-quiz-row{display:flex;gap:8px;margin-top:16px;}
+.goto-btn{flex:1;border:none;border-radius:14px;padding:16px;color:white;font-family:'Zen Kaku Gothic New',sans-serif;font-size:0.9rem;font-weight:700;cursor:pointer;}
+.goto-renshu{background:linear-gradient(135deg,var(--accent2),#c04420);}
+.goto-kakunin{background:linear-gradient(135deg,#3a6aaa,#2a4a8a);}
+#quiz-screen{display:none;}
+.quiz-header{display:flex;align-items:center;gap:12px;padding:16px 0 12px;}
+.quiz-progress-bar{flex:1;height:4px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden;}
+.quiz-progress-fill{height:100%;background:linear-gradient(90deg,var(--accent2),var(--accent));border-radius:2px;transition:width 0.4s;}
+.quiz-progress-text{font-size:0.75rem;color:var(--muted);}
+.mode-tag{display:inline-block;font-size:0.62rem;background:rgba(6,182,212,0.12);color:var(--accent);border:1px solid rgba(240,192,64,0.25);padding:3px 10px;border-radius:20px;letter-spacing:0.1em;margin-bottom:14px;font-weight:700;}
+.quiz-card-q{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:24px 20px;margin-bottom:16px;}
+.quiz-q{font-size:1rem;line-height:1.85;font-weight:500;white-space:pre-wrap;}
+.hint-btn{background:none;border:1px solid rgba(255,255,255,0.15);border-radius:8px;padding:5px 14px;color:var(--muted);font-size:0.72rem;cursor:pointer;margin-top:12px;font-family:'Zen Kaku Gothic New',sans-serif;}
+.hint-btn:hover{border-color:var(--accent);color:var(--accent);}
+.quiz-hint{font-size:0.72rem;color:var(--accent);margin-top:8px;display:none;}
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
+.choice-btn{background:var(--surface);border:1.5px solid var(--border);border-radius:12px;padding:16px 10px;color:var(--text);font-family:'Zen Kaku Gothic New',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;text-align:center;transition:all 0.15s;}
+.choice-btn:hover:not(:disabled){border-color:var(--accent);background:rgba(240,192,64,0.07);}
+.choice-btn.correct{background:rgba(61,214,140,0.12);border-color:var(--green);color:var(--green);}
+.choice-btn.wrong{background:rgba(240,90,90,0.1);border-color:var(--red);color:var(--red);}
+.choice-btn:disabled{cursor:default;}
+.input-area{margin-bottom:12px;}
+.feedback{border-radius:14px;padding:14px 18px;margin-bottom:12px;font-size:0.85rem;line-height:1.75;display:none;}
+.feedback.show{display:block;}
+.feedback.ok{background:rgba(61,214,140,0.1);border:1px solid rgba(61,214,140,0.3);}
+.feedback.ng{background:rgba(240,90,90,0.08);border:1px solid rgba(240,90,90,0.25);}
+.fb-title{font-weight:700;font-size:0.95rem;margin-bottom:4px;}
+.feedback.ok .fb-title{color:var(--green);}
+.feedback.ng .fb-title{color:var(--red);}
+.next-btn{width:100%;background:var(--accent2);border:none;border-radius:14px;padding:16px;color:white;font-family:'Zen Kaku Gothic New',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;display:none;}
+.next-btn.show{display:block;}
+#result-screen{display:none;}
+.result-wrap{padding:20px 0;}
+.result-top{display:flex;align-items:center;gap:20px;background:var(--card);border:1px solid var(--border);border-radius:20px;padding:24px;margin-bottom:16px;}
+.result-circle{width:90px;height:90px;border-radius:50%;border:3px solid var(--accent);display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;background:rgba(240,192,64,0.06);}
+.result-num{font-family:'Kaisei HarunoUmi',serif;font-size:2rem;color:var(--accent);line-height:1;}
+.result-denom{font-size:0.7rem;color:var(--muted);}
+.result-msg{font-size:1rem;font-weight:700;line-height:1.6;}
+.result-sub{font-size:0.8rem;color:var(--muted);margin-top:6px;line-height:1.6;}
+.updated-section{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;margin-bottom:16px;}
+.updated-title{font-size:0.7rem;color:var(--muted);letter-spacing:0.1em;margin-bottom:10px;}
+.updated-list{display:flex;flex-direction:column;gap:6px;}
+.updated-item{display:flex;align-items:center;gap:10px;font-size:0.85rem;}
+.updated-arrow{color:var(--muted);font-size:0.7rem;}
+.updated-new{color:var(--green);font-weight:700;}
+.review-section{background:var(--card);border:1px solid rgba(240,90,90,0.2);border-radius:16px;padding:16px;margin-bottom:20px;}
+.review-title{font-size:0.7rem;color:var(--muted);letter-spacing:0.1em;margin-bottom:10px;}
+.review-item{border-bottom:1px solid var(--border);padding:8px 0;font-size:0.82rem;line-height:1.7;}
+.review-item:last-child{border-bottom:none;}
+.review-answer{font-weight:700;color:var(--accent);}
+.result-btns{display:flex;flex-direction:column;gap:8px;}
+.retry-btn{width:100%;background:linear-gradient(135deg,var(--accent2),#c04420);border:none;border-radius:14px;padding:16px;color:white;font-family:'Zen Kaku Gothic New',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;}
+.home-btn-r{width:100%;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;color:var(--muted);font-family:'Zen Kaku Gothic New',sans-serif;font-size:0.9rem;cursor:pointer;}
+</style>
+</head>
+<body>
+<div class="app">
+<div id="home-screen">
+  <div class="header">
+    <div><div class="header-title">漢字 第18回</div><div class="header-sub">予習シリーズ ｜ 困・砂・座・済・裁・策・冊・蚕・至・私</div></div>
+    <button class="reset-btn" onclick="confirmReset()">リセット</button>
+  </div>
+  <div class="tab-bar">
+    <button class="tab-btn active" id="tab-renshu" onclick="switchTab('renshu')">📝 練習問題</button>
+    <button class="tab-btn" id="tab-kakitori" onclick="switchTab('kakitori')">✏️ 書き取り</button>
+  </div>
+  <div class="summary-card">
+    <div class="summary-label">MASTERY PROGRESS</div>
+    <div class="mastery-bar-wrap"><div class="mastery-bar-fill" id="home-bar" style="width:0%"></div></div>
+    <div class="mastery-stats">
+      <div class="stat-item"><div class="stat-num" id="stat-mastered">0</div><div class="stat-label">習得済み</div></div>
+      <div class="stat-item"><div class="stat-num" id="stat-learning">0</div><div class="stat-label">練習中</div></div>
+      <div class="stat-item"><div class="stat-num" id="stat-new">0</div><div class="stat-label">未挑戦</div></div>
+      <div class="stat-item"><div class="stat-num" id="stat-total">0</div><div class="stat-label">合計</div></div>
+    </div>
+  </div>
+  <div class="section-label">KANJI LIST</div>
+  <div class="question-list" id="question-list"></div>
+  <div class="home-btns">
+    <button class="study-btn" onclick="startStudy()">📖 漢字を学習する</button>
+    <div class="start-row">
+      <button class="start-btn" onclick="startAllMode()">▶ 全問スタート</button>
+      <button class="weak-btn" id="weak-btn" onclick="startWeakMode()">⚡ 未習得</button>
+    </div>
+    <button class="fav-home-btn" id="fav-btn" onclick="startFavMode()">⭐ お気に入りを復習</button>
+    <button class="weak-btn" id="retry-home-btn" onclick="startRetryMode()" style="width:100%">🔁 解き直し</button>
+  </div>
+</div>
+
+<div id="study-screen">
+  <div class="study-nav">
+    <button class="back-icon" onclick="goHome()">←</button>
+    <div class="study-progress-bar"><div class="study-progress-fill" id="sp-fill" style="width:0%"></div></div>
+    <div class="study-progress-text" id="sp-text">1 / 10</div>
+  </div>
+  <div id="kanji-card-area"></div>
+  <div id="card-nav"></div>
+</div>
+
+<div id="quiz-screen">
+  <div class="quiz-header">
+    <button class="back-icon" onclick="goHome()">←</button>
+    <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="qp-fill" style="width:0%"></div></div>
+    <div class="quiz-progress-text" id="qp-text">1/20</div>
+    <button class="finish-btn" id="finish-btn" onclick="finishEarly()" style="display:none">終了</button>
+  </div>
+  <div class="mode-tag" id="mode-tag">練習問題</div>
+  <div class="quiz-card-q">
+    <div class="quiz-q" id="quiz-q"></div>
+    <button class="hint-btn" id="hint-btn" onclick="showHint()">ヒントを見る</button>
+    <div class="quiz-hint" id="quiz-hint"></div>
+  </div>
+  <div class="choices" id="choice-area"></div>
+  <div class="input-area" id="input-area" style="display:none">
+    <div class="kakitori-area">
+      <div class="kakitori-hint" id="kakitori-hint">📓 ノートに漢字を書いてください</div>
+      <button class="kakitori-reveal-btn" id="kakitori-reveal-btn" onclick="revealAnswer()">答えを見る</button>
+      <div class="kakitori-answer" id="kakitori-answer" style="display:none"></div>
+      <div class="kakitori-btns" id="kakitori-btns" style="display:none">
+        <button class="kakitori-ok" onclick="kakitoriAnswer(true)">✅ 書けた！</button>
+        <button class="kakitori-ng" onclick="kakitoriAnswer(false)">❌ 書けなかった</button>
+      </div>
+    </div>
+  </div>
+  <div class="feedback" id="feedback"><div class="fb-title" id="fb-title"></div><div id="fb-body"></div></div>
+  <button class="next-btn" id="next-btn" onclick="nextQ()">次の問題 →</button>
+</div>
+
+<div id="result-screen">
+  <div class="result-wrap">
+    <div class="quiz-header" style="padding-top:16px">
+      <button class="back-icon" onclick="goHome()">←</button>
+      <span style="font-size:0.85rem;color:var(--muted)">結果</span>
+    </div>
+    <div class="result-top">
+      <div class="result-circle"><div class="result-num" id="r-score">0</div><div class="result-denom" id="r-total">/0問</div></div>
+      <div><div class="result-msg" id="r-msg"></div><div class="result-sub" id="r-sub"></div></div>
+    </div>
+    <div class="updated-section" id="updated-section"></div>
+    <div class="review-section" id="review-section" style="display:none"></div>
+    <div class="fav-section" id="fav-section" style="display:none"></div>
+    <div class="result-btns">
+      <button class="retry-btn" id="retry-btn">もう一度</button>
+      <button class="home-btn-r" onclick="goHome()">ホームに戻る</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+const KANJI_DATA=[
+{kanji:'困',on:'コン',kun:'こまる',
+ meanings:[
+  {text:'こまる。ゆきづまる。貧乏で生活が苦しいこと。'},
+  {text:'困窮…必要なものがなくて、こまり苦しむこと。'},
+  {text:'困難…どうしてよいかわからなくて、こまり苦しいこと。物事をなしとげることが難しくてこまること。'},
+  {text:'困惑…どうしてよいかわからなくて生活が楽でなくなることにこまること。'}
+ ],
+ examples:[
+  {word:'困難',reading:'こんなん',meaning:'物事をなしとげることが難しいこと'},
+  {word:'困窮',reading:'こんきゅう',meaning:'貧乏でひどくこまること'},
+  {word:'貧困',reading:'ひんこん',meaning:'貧しくてひどくこまること'},
+  {word:'困惑',reading:'こんわく',meaning:'どうしてよいかわからなくてこまること'}
+ ]},
+{kanji:'砂',on:'サ・（シャ）',kun:'すな',
+ meanings:[
+  {text:'すな。小さくくずされた石。岩石が細かくくだけたもの。'},
+  {text:'砂場…運動・遊びのためにすなを入れてくきった所。'},
+  {text:'砂時計…落ちるすなの量によって時間を計る時計。'},
+  {text:'砂糖…（川や海の底にまじる細かい鉄鉱石のつぶ。さとうきびなどからとる甘い味の調味料）。'}
+ ],
+ examples:[
+  {word:'砂場',reading:'すなば',meaning:'すなを入れた遊び場'},
+  {word:'砂糖',reading:'さとう',meaning:'甘みをつける調味料'},
+  {word:'砂丘',reading:'さきゅう',meaning:'砂が積もってできた丘'},
+  {word:'砂金',reading:'さきん',meaning:'川や海の底にまじる細かい金のつぶ'}
+ ]},
+{kanji:'座',on:'ザ',kun:'すわる・また',
+ meanings:[
+  {text:'すわる。人々が集まって座る場所。位置。こしかける場所。'},
+  {text:'座席…こしかける場所。国王の身分・地位。首位。'},
+  {text:'星座…星の集まりをある形に見たてて名づけたもの。'},
+  {text:'座談会…宴会などでその場をもりあげる芸や遊び。数人があるテーマについて自由に話し合う会。'}
+ ],
+ examples:[
+  {word:'座席',reading:'ざせき',meaning:'こしかける場所。席'},
+  {word:'星座',reading:'せいざ',meaning:'星の集まりをある形に見たてたもの'},
+  {word:'座談会',reading:'ざだんかい',meaning:'テーマについて自由に話し合う会'},
+  {word:'正座',reading:'せいざ',meaning:'きちんとひざをついて座ること'}
+ ]},
+{kanji:'済',on:'サイ',kun:'すむ・すます',
+ meanings:[
+  {text:'すます。物や代金を貸し借りして帳しりをそろえること。取引を終える。'},
+  {text:'返済…借りたお金を全部返すこと。'},
+  {text:'完済…借りたお金を全部返すこと。'},
+  {text:'経済…お金や物を手に入れ、使う。すべての働き。'}
+ ],
+ examples:[
+  {word:'返済',reading:'へんさい',meaning:'借りたお金を返すこと'},
+  {word:'経済',reading:'けいざい',meaning:'お金やものを手に入れて使う営み'},
+  {word:'救済',reading:'きゅうさい',meaning:'困っている人を助けること'},
+  {word:'決済',reading:'けっさい',meaning:'取引の代金を支払って終えること'}
+ ]},
+{kanji:'裁',on:'サイ',kun:'さばく・たつ',
+ meanings:[
+  {text:'さばく。布をたちきること。よい悪いを決める物の形や着物を縫い、布をたちきること。'},
+  {text:'裁縫…外から見切って服や着物を縫い、布をたちきること。'},
+  {text:'裁判…争いやつったえを決めることにもとづいてさばくこと。'},
+  {text:'決裁…自分の考えで決める権限のある人が物事を判断して決めること。'}
+ ],
+ examples:[
+  {word:'裁縫',reading:'さいほう',meaning:'布を裁ってぬい合わせること'},
+  {word:'裁判',reading:'さいばん',meaning:'法にもとづいて争いごとをさばくこと'},
+  {word:'制裁',reading:'せいさい',meaning:'規則に違反した者を罰すること'},
+  {word:'独裁',reading:'どくさい',meaning:'一人で思いのままに決めること'}
+ ]},
+{kanji:'策',on:'サク',kun:'—',
+ meanings:[
+  {text:'はかりごと。たくらみ。相手や事情に合ったやり方。必要なお金を準備してそろえること。'},
+  {text:'対策…相手や事情に合ったやり方。'},
+  {text:'全策…必要なお金を準備してそろえること。'},
+  {text:'散策…健康や気晴らしのために歩くこと。散歩。'}
+ ],
+ examples:[
+  {word:'対策',reading:'たいさく',meaning:'相手や事情に合ったやり方'},
+  {word:'政策',reading:'せいさく',meaning:'政治上の方針や手立て'},
+  {word:'策略',reading:'さくりゃく',meaning:'はかりごと。計画。'},
+  {word:'散策',reading:'さんさく',meaning:'気晴らしのためにぶらぶら歩くこと'}
+ ]},
+{kanji:'冊',on:'サツ・（サク）',kun:'—',
+ meanings:[
+  {text:'書物。文字を書きつけたもの。紙をまとめとした本。'},
+  {text:'分冊…一つの書物を何さつかに分けてまとめたもの。'},
+  {text:'小冊子…小型の書のうすい本。パンフレット。'},
+  {text:'冊数…本や雑誌を数える単位の言葉。'}
+ ],
+ examples:[
+  {word:'別冊',reading:'べっさつ',meaning:'雑誌などで、別にとじた冊子'},
+  {word:'小冊子',reading:'しょうさっし',meaning:'小型のうすい本。パンフレット'},
+  {word:'冊数',reading:'さっすう',meaning:'本や雑誌の数'},
+  {word:'分冊',reading:'ぶんさつ',meaning:'一つの書物を分けてまとめた本'}
+ ]},
+{kanji:'蚕',on:'サン',kun:'かいこ',
+ meanings:[
+  {text:'かいこ。まゆから絹糸をとる虫のこと。'},
+  {text:'蚕食…かいこのまゆから絹糸をとること。かいこのように少しずつ侵入していくこと。'},
+  {text:'蚕業…かいこを飼い、まゆから絹糸をとる仕事。'},
+  {text:'蚕棚…かいこを飼ってまゆから絹糸をとること。何段か重なった棚。'}
+ ],
+ examples:[
+  {word:'蚕糸',reading:'さんし',meaning:'かいこのまゆからとる絹糸'},
+  {word:'蚕業',reading:'さんぎょう',meaning:'かいこを飼って絹糸をとる産業'},
+  {word:'養蚕',reading:'ようさん',meaning:'かいこを飼ってまゆから絹糸をとること'},
+  {word:'蚕食',reading:'さんしょく',meaning:'かいこが葉を食べるように少しずつ侵食すること'}
+ ]},
+{kanji:'至',on:'シ',kun:'いたる',
+ meanings:[
+  {text:'いたる。行きさわたる。必ずそうなるであろう様子。'},
+  {text:'至近…とても近いこと。行きついてこの上もない。'},
+  {text:'至上…この上もないほど大切なこと。とてもむずかしいこと。'},
+  {text:'至急…とても急ぐこと。'}
+ ],
+ examples:[
+  {word:'至急',reading:'しきゅう',meaning:'非常に急ぐこと'},
+  {word:'至近',reading:'しきん',meaning:'非常に近いこと'},
+  {word:'至上',reading:'しじょう',meaning:'この上もなく大切なこと'},
+  {word:'冬至',reading:'とうじ',meaning:'一年の中で昼の時間が最も短い日'}
+ ]},
+{kanji:'私',on:'シ',kun:'わたくし・わたし',
+ meanings:[
+  {text:'わたくし。自分だけの。個人。'},
+  {text:'私有…個人が持って管理・運営していること。'},
+  {text:'私立…（公的なことと個人的なことの区別）。'},
+  {text:'私語…時と場所をわきまえないひそこそりと、ないしょ話。'}
+ ],
+ examples:[
+  {word:'私有',reading:'しゆう',meaning:'個人が持って管理すること'},
+  {word:'私立',reading:'しりつ',meaning:'個人や法人が設立・運営すること'},
+  {word:'私情',reading:'しじょう',meaning:'自分だけの気持ち。個人的な感情'},
+  {word:'私語',reading:'しご',meaning:'授業中などのひそひそ話'}
+ ]}
+];
+
+const RENSHU=[
+{id:'r01',kanji:'困',reading:'コン・こまる',q:'「生活費にこまる」\n漢字に直しなさい。',answer:'困る',choices:['困る','固る','困る','根る'],hint:'こまる＝困る',explain:'「困る」はゆきづまって苦しむこと。'},
+{id:'r02',kanji:'困',reading:'コン・こまる',q:'「ヒンコンから救う活動をする」\n漢字に直しなさい。',answer:'貧困',choices:['貧困','貧根','貧昆','貧混'],hint:'ヒン＋コン（困）',explain:'「貧困」は貧しくてひどくこまること。'},
+{id:'r03',kanji:'砂',reading:'サ・すな',q:'「子どもが公園のすなばで遊ぶ」\n漢字に直しなさい。',answer:'砂場',choices:['砂場','沙場','差場','査場'],hint:'すな（砂）＋ば',explain:'「砂場」はすなを入れた遊び場。'},
+{id:'r04',kanji:'砂',reading:'サ・すな',q:'「川底にドシャがたまる」\n漢字に直しなさい。',answer:'土砂',choices:['土砂','土沙','土差','土査'],hint:'ド＋シャ（砂）',explain:'「土砂」は土とすな。'},
+{id:'r05',kanji:'座',reading:'ザ・すわる',q:'「オリオンはふゆのセイザだ」\n漢字に直しなさい。',answer:'星座',choices:['星座','星佐','星差','星沙'],hint:'セイ＋ザ（座）',explain:'「星座」は星の集まりをある形に見たてたもの。'},
+{id:'r06',kanji:'座',reading:'ザ・すわる',q:'「自分のザセキにもどる」\n漢字に直しなさい。',answer:'座席',choices:['座席','佐席','差席','査席'],hint:'ザ（座）＋セキ',explain:'「座席」はこしかける場所。席のこと。'},
+{id:'r07',kanji:'済',reading:'サイ・すむ',q:'「借金をヘンサイする」\n漢字に直しなさい。',answer:'返済',choices:['返済','返斉','返剤','返財'],hint:'ヘン＋サイ（済）',explain:'「返済」は借りたお金を返すこと。'},
+{id:'r08',kanji:'済',reading:'サイ・すむ',q:'「高度ケイザイ成長をとげる」\n漢字に直しなさい。',answer:'経済',choices:['経済','経斉','経剤','経財'],hint:'ケイ＋ザイ（済）',explain:'「経済」はお金やものを手に入れて使う営み。'},
+{id:'r09',kanji:'裁',reading:'サイ・さばく',q:'「布地をハサミでたつ」\n漢字に直しなさい。',answer:'裁つ',choices:['裁つ','載つ','彩つ','菜つ'],hint:'たつ＝裁つ',explain:'「裁つ」は布などをたちきること。'},
+{id:'r10',kanji:'裁',reading:'サイ・さばく',q:'「犯人をサイバンにかける」\n漢字に直しなさい。',answer:'裁判',choices:['裁判','載判','彩判','菜判'],hint:'サイ（裁）＋バン',explain:'「裁判」は法にもとづいて争いごとをさばくこと。'},
+{id:'r11',kanji:'策',reading:'サク',q:'「すぐにタイサクを講じる」\n漢字に直しなさい。',answer:'対策',choices:['対策','対冊','対柵','対索'],hint:'タイ＋サク（策）',explain:'「対策」は相手や事情に合ったやり方。'},
+{id:'r12',kanji:'策',reading:'サク',q:'「公書タイサクを進める」\n漢字に直しなさい。',answer:'対策',choices:['対策','対冊','対柵','対索'],hint:'タイ＋サク（策）',explain:'「対策」は問題に対処するための方法。'},
+{id:'r13',kanji:'冊',reading:'サツ',q:'「試験のサッシを配る」\n漢字に直しなさい。',answer:'冊子',choices:['冊子','柵子','索子','策子'],hint:'サツ（冊）＋シ',explain:'「冊子」は紙をとじた小さな本。'},
+{id:'r14',kanji:'冊',reading:'サツ',q:'「本のショウサッシを配る」\n漢字に直しなさい。',answer:'小冊子',choices:['小冊子','小柵子','小索子','小策子'],hint:'ショウ＋サツ（冊）＋シ',explain:'「小冊子」は小型のうすい本。パンフレット。'},
+{id:'r15',kanji:'蚕',reading:'サン・かいこ',q:'「かいこがまゆをつくる」\n漢字に直しなさい。',answer:'蚕',choices:['蚕','桑','累','蛹'],hint:'かいこ＝蚕',explain:'「蚕」はまゆから絹糸をとる虫のこと。'},
+{id:'r16',kanji:'蚕',reading:'サン・かいこ',q:'「ヨウサン農家を訪ねる」\n漢字に直しなさい。',answer:'養蚕',choices:['養蚕','養桑','養累','養蛹'],hint:'ヨウ＋サン（蚕）',explain:'「養蚕」はかいこを飼ってまゆから絹糸をとること。'},
+{id:'r17',kanji:'至',reading:'シ・いたる',q:'「シキュウ兄と連絡をとる」\n漢字に直しなさい。',answer:'至急',choices:['至急','止急','矢急','史急'],hint:'シ（至）＋キュウ',explain:'「至急」は非常に急ぐこと。'},
+{id:'r18',kanji:'至',reading:'シ・いたる',q:'「大阪を経て京都にいたる」\n漢字に直しなさい。',answer:'至る',choices:['至る','止る','矢る','史る'],hint:'いたる＝至る',explain:'「至る」はある場所に行きつくこと。'},
+{id:'r19',kanji:'私',reading:'シ・わたし',q:'「コウシの区別をはっきりつける」\n漢字に直しなさい。',answer:'公私',choices:['公私','公史','公士','公詩'],hint:'コウ＋シ（私）',explain:'「公私」は公のことと私のことの区別。'},
+{id:'r20',kanji:'私',reading:'シ・わたし',q:'「授業中のシゴを禁止する」\n漢字に直しなさい。',answer:'私語',choices:['私語','史語','士語','詩語'],hint:'シ（私）＋ゴ',explain:'「私語」は授業中などのひそひそ話。'},
+];
+
+const KAKITORI=[
+{id:'k01',kanji:'困',reading:'コン',q:'「難民をキュウサイする」\nカタカナを漢字に。',answer:'救済',hint:'キュウ＋サイ（済）',explain:'「救済」は困っている人を助けること。'},
+{id:'k02',kanji:'砂',reading:'サ',q:'「磁石でサテツを集める」\nカタカナを漢字に。',answer:'砂鉄',hint:'サ（砂）＋テツ',explain:'「砂鉄」は川や海の底にまじる鉄のつぶ。'},
+{id:'k03',kanji:'座',reading:'ザ',q:'「用意された席にゆったりとすわる」\nカタカナを漢字に。',answer:'座る',hint:'すわる＝座る',explain:'「座る」はこしをおろしてすわること。'},
+{id:'k04',kanji:'済',reading:'サイ',q:'「使用ズミの切手を集める」\nカタカナを漢字に。',answer:'済み',hint:'すむ（済）＋み',explain:'「済み」はすでに終わっていること。'},
+{id:'k05',kanji:'裁',reading:'サイ',q:'「生地をハサミでサイダンする」\nカタカナを漢字に。',answer:'裁断',hint:'サイ（裁）＋ダン',explain:'「裁断」は布などを型紙に合わせて切ること。'},
+{id:'k06',kanji:'策',reading:'サク',q:'「善コウサクを講じる」\nカタカナを漢字に。',answer:'策',hint:'コウ＋サク（策）',explain:'「策」ははかりごと。計画のこと。'},
+{id:'k07',kanji:'冊',reading:'サツ',q:'「宣伝のショウサッシを配る」\nカタカナを漢字に。',answer:'小冊子',hint:'ショウ＋サツ（冊）＋シ',explain:'「小冊子」は小型のうすい本。パンフレット。'},
+{id:'k08',kanji:'蚕',reading:'かいこ',q:'「ヨウサン農家を訪ねる」\nカタカナを漢字に。',answer:'養蚕',hint:'ヨウ＋サン（蚕）',explain:'「養蚕」はかいこを飼ってまゆから絹糸をとること。'},
+{id:'k09',kanji:'至',reading:'シ',q:'「敗北ヒッシの情勢である」\nカタカナを漢字に。',answer:'必至',hint:'ヒツ＋シ（至）',explain:'「必至」は必ずそうなるであろうこと。'},
+{id:'k10',kanji:'私',reading:'シ',q:'「これはわたくしの本です」\nカタカナを漢字に。',answer:'私',hint:'わたくし＝私',explain:'「私」は自分自身。個人のこと。'},
+{id:'k11',kanji:'困',reading:'コン',q:'「コンナンを克服する」\nカタカナを漢字に。',answer:'困難',hint:'コン（困）＋ナン',explain:'「困難」は物事をなしとげることが難しいこと。'},
+{id:'k12',kanji:'砂',reading:'サ',q:'「川の底からサキンを探す」\nカタカナを漢字に。',answer:'砂金',hint:'サ（砂）＋キン',explain:'「砂金」は川や海の底にまじる金のつぶ。'},
+{id:'k13',kanji:'座',reading:'ザ',q:'「イッサツ1万円もする大きな図鑑」\nカタカナを漢字に。',answer:'一冊',hint:'イチ＋サツ（冊）',explain:'「一冊」は本や雑誌が一つのこと。'},
+{id:'k14',kanji:'済',reading:'サイ',q:'「借金をケッサイする」\nカタカナを漢字に。',answer:'決済',hint:'ケツ＋サイ（済）',explain:'「決済」は取引の代金を支払って終えること。'},
+{id:'k15',kanji:'裁',reading:'サイ',q:'「コンナン状況は依然として続いている」\nカタカナを漢字に（困難）。',answer:'困難',hint:'コン（困）＋ナン',explain:'「困難」は物事をなしとげることが難しいこと。'},
+{id:'k16',kanji:'策',reading:'サク',q:'「優勝へといたるまでの道のりは決して楽ではなかった」\nカタカナを漢字に（至る）。',answer:'至る',hint:'いたる＝至る',explain:'「至る」はある場所や状態に行きつくこと。'},
+{id:'k17',kanji:'冊',reading:'サツ',q:'「本をイッサツ読み終える」\nカタカナを漢字に。',answer:'一冊',hint:'イチ＋サツ（冊）',explain:'「一冊」は本や雑誌が一つのこと。'},
+{id:'k18',kanji:'蚕',reading:'サン',q:'「夏の夜空を見上げて知っているセイザを探す」\nカタカナを漢字に。',answer:'星座',hint:'セイ＋ザ（座）',explain:'「星座」は星の集まりをある形に見たてたもの。'},
+{id:'k19',kanji:'至',reading:'シ',q:'「試験の前日にタイサクをはじめてももう遅い」\nカタカナを漢字に（対策）。',answer:'対策',hint:'タイ＋サク（策）',explain:'「対策」は問題に対処するための方法。'},
+{id:'k20',kanji:'私',reading:'シ',q:'「コウシを捨てて決断する」\nカタカナを漢字に。',answer:'公私',hint:'コウ＋シ（私）',explain:'「公私」は公のことと私のことの区別。'},
+{id:'k21',kanji:'困',reading:'コン',q:'「多くの人々をヒンコンから救う」\nカタカナを漢字に。',answer:'貧困',hint:'ヒン＋コン（困）',explain:'「貧困」は貧しくてひどくこまること。'},
+{id:'k22',kanji:'砂',reading:'サ',q:'「サトウを使ったお菓子」\nカタカナを漢字に。',answer:'砂糖',hint:'サ（砂）＋トウ',explain:'「砂糖」は甘みをつける調味料。'},
+{id:'k23',kanji:'座',reading:'ザ',q:'「ヨウサン農家が海外市場をサンショクする」\nカタカナを漢字に（養蚕）。',answer:'養蚕',hint:'ヨウ＋サン（蚕）',explain:'「養蚕」はかいこを飼って絹糸をとること。'},
+{id:'k24',kanji:'済',reading:'サイ',q:'「難民をキュウサイするための活動」\nカタカナを漢字に。',answer:'救済',hint:'キュウ＋サイ（済）',explain:'「救済」は困っている人を助けること。'},
+{id:'k25',kanji:'裁',reading:'サイ',q:'「セイサイを加えられた」\nカタカナを漢字に。',answer:'制裁',hint:'セイ＋サイ（裁）',explain:'「制裁」は規則に違反した者を罰すること。'},
+{id:'k26',kanji:'策',reading:'サク',q:'「機嫌の悪い姉には逆らわずに従ったトクサクだ」\nカタカナを漢字に。',answer:'得策',hint:'トク＋サク（策）',explain:'「得策」はうまいやり方。よいはかりごと。'},
+{id:'k27',kanji:'冊',reading:'サツ',q:'「夏休み前は図書館での貸出サッスウが増える」\nカタカナを漢字に。',answer:'冊数',hint:'サツ（冊）＋スウ',explain:'「冊数」は本や雑誌の数のこと。'},
+{id:'k28',kanji:'蚕',reading:'かいこ',q:'「かいこがまゆをつくる様子を観察した」\nカタカナを漢字に。',answer:'蚕',hint:'かいこ＝蚕',explain:'「蚕」はまゆから絹糸をとる虫のこと。'},
+{id:'k29',kanji:'至',reading:'シ',q:'「シキュウ対応してください」\nカタカナを漢字に。',answer:'至急',hint:'シ（至）＋キュウ',explain:'「至急」は非常に急ぐこと。'},
+{id:'k30',kanji:'私',reading:'シ',q:'「シリツ学校に入学する」\nカタカナを漢字に。',answer:'私立',hint:'シ（私）＋リツ',explain:'「私立」は個人や法人が設立・運営すること。'},
+{id:'k31',kanji:'困',reading:'コン',q:'「コンワクした表情で答える」\nカタカナを漢字に。',answer:'困惑',hint:'コン（困）＋ワク',explain:'「困惑」はどうしてよいかわからなくてこまること。'},
+{id:'k32',kanji:'砂',reading:'サ',q:'「砂漠にサキュウが広がる」\nカタカナを漢字に。',answer:'砂丘',hint:'サ（砂）＋キュウ',explain:'「砂丘」は砂が積もってできた丘。'},
+{id:'k33',kanji:'座',reading:'ザ',q:'「国内市場が外資系の会社にサンショクされる」\nカタカナを漢字に（蚕食）。',answer:'蚕食',hint:'サン（蚕）＋ショク',explain:'「蚕食」は少しずつ侵食していくこと。'},
+{id:'k34',kanji:'済',reading:'サイ',q:'「ヘンサイの必要のない奨学金を申請する」\nカタカナを漢字に。',answer:'返済',hint:'ヘン＋サイ（済）',explain:'「返済」は借りたお金を返すこと。'},
+{id:'k35',kanji:'裁',reading:'サイ',q:'「ドクサイ者に立ち向かう」\nカタカナを漢字に。',answer:'独裁',hint:'ドク＋サイ（裁）',explain:'「独裁」は一人で思いのままに決めること。'},
+{id:'k36',kanji:'策',reading:'サク',q:'「早急にゼンサクを講じる」\nカタカナを漢字に。',answer:'善策',hint:'ゼン＋サク（策）',explain:'「善策」はよいはかりごと・よい方法。'},
+{id:'k37',kanji:'冊',reading:'サツ',q:'「クラス全員の作文がサッシにまとめられて配られた」\nカタカナを漢字に。',answer:'冊子',hint:'サツ（冊）＋シ',explain:'「冊子」は紙をとじた小さな本。'},
+{id:'k38',kanji:'蚕',reading:'サン',q:'「ヨウサンは日本に昔からある伝統的な産業だ」\nカタカナを漢字に。',answer:'養蚕',hint:'ヨウ＋サン（蚕）',explain:'「養蚕」はかいこを飼って絹糸をとること。'},
+{id:'k39',kanji:'至',reading:'シ',q:'「早急に善コウサクを講じるための会議を開く」\nカタカナを漢字に（策）。',answer:'策',hint:'サク（策）',explain:'「策」ははかりごと。計画のこと。'},
+{id:'k40',kanji:'私',reading:'シ',q:'「シジョウ命令が下る」\nカタカナを漢字に。',answer:'至上',hint:'シ（至）＋ジョウ',explain:'「至上」はこの上もなく大切なこと。'},
+];
+
+const SK_R='kanji18-renshu',SK_K='kanji18-kakitori',SK_NG='kanji18-nglist',MASTERY=3;
+function lD(k){try{const r=localStorage.getItem(k);return r?JSON.parse(r):{};}catch(e){return{};}}
+function sD(k,d){try{localStorage.setItem(k,JSON.stringify(d));}catch(e){}}
+function getM(k,id){const d=lD(k);return d[id]||{correct:0,attempt:0};}
+function recR(k,id,ok){const d=lD(k);if(!d[id])d[id]={correct:0,attempt:0};d[id].attempt++;if(ok)d[id].correct++;sD(k,d);}
+function getLv(k,id){const m=getM(k,id);if(m.correct>=MASTERY)return'mastered';if(m.attempt>0)return'learning';return'new';}
+function loadNg(){try{const r=localStorage.getItem(SK_NG);return r?JSON.parse(r):[];}catch(e){return[];}}
+function saveNg(ids){try{localStorage.setItem(SK_NG,JSON.stringify(ids));}catch(e){}}
+function loadFav(){try{const r=localStorage.getItem(currentTab==='renshu'?SK_R+'-fav':SK_K+'-fav');return r?JSON.parse(r):[];}catch(e){return[];}}
+function saveFav(ids){try{localStorage.setItem(currentTab==='renshu'?SK_R+'-fav':SK_K+'-fav',JSON.stringify(ids));}catch(e){}}
+let currentTab='renshu',quizQueue=[],quizIndex=0,quizScore=0,quizAnswered=false,quizMode='all',sessionResults=[],studyIndex=0;
+let kakitoriNgList=[],isRetryMode=false;
+function getCK(){return currentTab==='renshu'?SK_R:SK_K;}
+function getCQ(){return currentTab==='renshu'?RENSHU:KAKITORI;}
+function switchTab(tab){
+  currentTab=tab;
+  document.getElementById('tab-renshu').className='tab-btn'+(tab==='renshu'?' active':'');
+  document.getElementById('tab-kakitori').className='tab-btn'+(tab==='kakitori'?' active':'');
+  buildHome();
+}
+function buildHome(){
+  const key=getCK(),qs=getCQ();let mastered=0,learning=0,newQ=0;
+  qs.forEach(q=>{const lv=getLv(key,q.id);if(lv==='mastered')mastered++;else if(lv==='learning')learning++;else newQ++;});
+  const total=qs.length;
+  document.getElementById('stat-mastered').textContent=mastered;
+  document.getElementById('stat-learning').textContent=learning;
+  document.getElementById('stat-new').textContent=newQ;
+  document.getElementById('stat-total').textContent=total;
+  document.getElementById('home-bar').style.width=`${Math.round(mastered/total*100)}%`;
+  const unmastered=qs.filter(q=>getLv(key,q.id)!=='mastered');
+  const wb=document.getElementById('weak-btn');
+  if(wb){wb.disabled=unmastered.length===0;wb.textContent=`⚡ 未習得（${unmastered.length}）`;}
+  const favIds=loadFav();const fb=document.getElementById('fav-btn');
+  if(favIds.length>0){fb.style.display='block';fb.textContent=`⭐ お気に入りを復習（${favIds.length}問）`;}
+  else{fb.style.display='none';}
+  const ngIds=loadNg();const retryBtn2=document.getElementById('retry-home-btn');
+  if(retryBtn2){if(ngIds.length>0){retryBtn2.textContent=`🔁 解き直し（${ngIds.length}問）`;retryBtn2.style.opacity='1';}
+  else{retryBtn2.textContent='🔁 解き直し';retryBtn2.style.opacity='0.5';}}
+  const list=document.getElementById('question-list');list.innerHTML='';
+  const kanjiMap={};
+  qs.forEach(q=>{
+    if(!kanjiMap[q.kanji])kanjiMap[q.kanji]={kanji:q.kanji,reading:q.reading,ids:[],correct:0,total:0};
+    const km=kanjiMap[q.kanji];km.ids.push(q.id);
+    const m=getM(key,q.id);km.correct+=m.correct;km.total+=MASTERY;
+  });
+  Object.values(kanjiMap).forEach(km=>{
+    const allMastered=km.ids.every(id=>getLv(key,id)==='mastered');
+    const anyLearning=km.ids.some(id=>getLv(key,id)==='learning');
+    const lv=allMastered?'mastered':anyLearning?'learning':'new';
+    const div=document.createElement('div');div.className='q-item';
+    div.innerHTML=`<div class="q-status ${lv}">${lv==='mastered'?'✓':km.correct}</div><div class="q-info"><div class="q-kanji">${km.kanji}<span class="mastery-badge badge-${lv}">${lv==='mastered'?'習得済':lv==='learning'?'練習中':'未挑戦'}</span></div><div class="q-reading">${km.reading}</div></div><div class="q-count">${km.correct}/${km.total}</div>`;
+    list.appendChild(div);});
+}
+function confirmReset(){if(confirm('習熟度をリセットしますか？')){localStorage.removeItem(SK_R);localStorage.removeItem(SK_K);localStorage.removeItem(SK_R+'-fav');localStorage.removeItem(SK_K+'-fav');localStorage.removeItem(SK_NG);buildHome();}}
+function startStudy(){studyIndex=0;showScreen('study-screen');renderCard();}
+function renderCard(){
+  const k=KANJI_DATA[studyIndex],total=KANJI_DATA.length;
+  document.getElementById('sp-fill').style.width=`${studyIndex/total*100}%`;
+  document.getElementById('sp-text').textContent=`${studyIndex+1} / ${total}`;
+  const mHtml=k.meanings.map(m=>`<div class="meaning-item">● ${m.text}</div>`).join('');
+  const eHtml=k.examples.map(e=>`<div class="example-item"><span class="example-word">${e.word}（${e.reading}）</span><span class="example-meaning">${e.meaning}</span></div>`).join('');
+  document.getElementById('kanji-card-area').innerHTML=`<div class="kanji-card"><div class="kanji-big">${k.kanji}</div><div class="kanji-readings"><div class="reading-badge"><span class="reading-label">音</span><span class="reading-val">${k.on}</span></div><div class="reading-badge"><span class="reading-label">訓</span><span class="reading-val">${k.kun}</span></div></div><div class="kanji-meanings"><div class="meaning-title">意　味</div>${mHtml}</div><div class="kanji-examples"><div class="example-title">用　例</div><div class="example-list">${eHtml}</div></div></div>`;
+  const isLast=studyIndex===total-1;
+  document.getElementById('card-nav').innerHTML=isLast?`<div class="study-complete"><div class="complete-icon">🎉</div><div class="complete-msg">10字の学習完了！</div><div class="complete-sub">次は問題にチャレンジしよう</div><div class="goto-quiz-row"><button class="goto-btn goto-renshu" onclick="startFromStudy('renshu')">📝 練習問題へ</button><button class="goto-btn goto-kakunin" onclick="startFromStudy('kakitori')">✏️ 書き取りへ</button></div></div><div class="card-nav-row">${studyIndex>0?'<button class="prev-btn" onclick="prevCard()">← 前へ</button>':'<div></div>'}<button class="next-card-btn" style="background:var(--card);border:1px solid var(--border);color:var(--muted);" disabled>最後のカードです</button></div>`:
+    `<div class="card-nav-row">${studyIndex>0?'<button class="prev-btn" onclick="prevCard()">← 前へ</button>':'<div></div>'}<button class="next-card-btn" onclick="nextCard()">次のカード →</button></div>`;
+  window.scrollTo(0,0);
+}
+function nextCard(){if(studyIndex<KANJI_DATA.length-1){studyIndex++;renderCard();}}
+function prevCard(){if(studyIndex>0){studyIndex--;renderCard();}}
+function startFromStudy(tab){currentTab=tab;document.getElementById('tab-renshu').className='tab-btn'+(tab==='renshu'?' active':'');document.getElementById('tab-kakitori').className='tab-btn'+(tab==='kakitori'?' active':'');startAllMode();}
+function shuffle(arr){return[...arr].sort(()=>Math.random()-0.5);}
+function startAllMode(){quizQueue=shuffle(getCQ());quizMode='all';startQuizCommon();}
+function startWeakMode(){
+  const key=getCK(),qs=getCQ();
+  quizQueue=shuffle(qs.filter(q=>getLv(key,q.id)!=='mastered'));
+  if(quizQueue.length===0){alert('未習得の問題がありません');return;}
+  quizMode='weak';startQuizCommon();
+}
+function startFavMode(){
+  const favIds=loadFav(),qs=getCQ();
+  quizQueue=shuffle(qs.filter(q=>favIds.includes(q.id)));
+  if(quizQueue.length===0){alert('お気に入りの問題がありません');return;}
+  quizMode='fav';startQuizCommon();
+}
+function startQuizCommon(){
+  quizIndex=0;quizScore=0;quizAnswered=false;sessionResults=[];kakitoriNgList=[];isRetryMode=false;
+  showScreen('quiz-screen');renderQ();
+}
+function startKakitoriRetry(){
+  quizQueue=[...kakitoriNgList];quizIndex=0;quizScore=0;quizAnswered=false;sessionResults=[];kakitoriNgList=[];isRetryMode=true;
+  showScreen('quiz-screen');renderQ();
+}
+function renderQ(){
+  const q=quizQueue[quizIndex],total=quizQueue.length;
+  document.getElementById('qp-fill').style.width=`${quizIndex/total*100}%`;
+  document.getElementById('qp-text').textContent=`${quizIndex+1}/${total}`;
+  const mLabel=currentTab==='kakitori'?(isRetryMode?'✏️ 書き取り復習':'✏️ 書き取り'):(quizMode==='fav'?'⭐ お気に入り復習':'練習問題（選択式）');
+  document.getElementById('mode-tag').textContent=mLabel;
+  const dispQ=currentTab==='kakitori'?q.q.replace(/\nカタカナを漢字に。/g,'').replace(/（[^）]+）/g,'').trim():q.q;
+  document.getElementById('quiz-q').textContent=dispQ;
+  document.getElementById('quiz-hint').textContent=`ヒント：${q.hint}`;
+  document.getElementById('quiz-hint').style.display='none';
+  document.getElementById('hint-btn').style.display='inline-block';
+  document.getElementById('feedback').className='feedback';
+  document.getElementById('next-btn').className='next-btn';
+  quizAnswered=false;
+  const finBtn=document.getElementById('finish-btn');
+  if(finBtn)finBtn.style.display=currentTab==='kakitori'?'inline-block':'none';
+  if(currentTab==='kakitori'){
+    document.getElementById('choice-area').style.display='none';
+    document.getElementById('input-area').style.display='block';
+    document.getElementById('kakitori-hint').textContent='📓 ノートに漢字を書いてください';
+    document.getElementById('kakitori-answer').style.display='none';
+    document.getElementById('kakitori-answer').textContent='';
+    document.getElementById('kakitori-reveal-btn').style.display='inline-block';
+    document.getElementById('kakitori-btns').style.display='none';
+  } else {
+    document.getElementById('choice-area').style.display='grid';
+    document.getElementById('input-area').style.display='none';
+    const area=document.getElementById('choice-area');area.innerHTML='';
+    shuffle(q.choices||[]).forEach(opt=>{const btn=document.createElement('button');btn.className='choice-btn';btn.textContent=opt;btn.onclick=()=>selC(btn,opt,q);area.appendChild(btn);});
+  }
+}
+function revealAnswer(){
+  const q=quizQueue[quizIndex];
+  document.getElementById('kakitori-answer').textContent=q.answer;
+  document.getElementById('kakitori-answer').style.display='block';
+  document.getElementById('kakitori-reveal-btn').style.display='none';
+  document.getElementById('kakitori-btns').style.display='grid';
+}
+function kakitoriAnswer(ok){
+  if(quizAnswered)return;quizAnswered=true;
+  const q=quizQueue[quizIndex],key=getCK(),prev=getLv(key,q.id);
+  recR(key,q.id,ok);const newLv=getLv(key,q.id);
+  sessionResults.push({q,wasCorrect:ok,prevLv:prev,newLv});
+  if(ok){quizScore++;}else{kakitoriNgList.push(q);}
+  const fb=document.getElementById('feedback');
+  document.getElementById('fb-title').textContent=ok?'✅ 書けた！'+(newLv==='mastered'?'　🎉 習得達成！':''):'❌ 書けなかった…　次回また挑戦！';
+  document.getElementById('fb-body').textContent=ok?`正解：${q.answer}　${q.explain}`:`正解：${q.answer}　（${q.hint}）`;
+  fb.className='feedback show '+(ok?'ok':'ng');
+  document.getElementById('next-btn').className='next-btn show';
+  document.getElementById('next-btn').textContent=quizIndex<quizQueue.length-1?'次の問題 →':'結果を見る';
+}
+function selC(btn,opt,q){
+  if(quizAnswered)return;quizAnswered=true;
+  const key=getCK(),prev=getLv(key,q.id),ok=opt===q.answer;
+  recR(key,q.id,ok);const newLv=getLv(key,q.id);
+  sessionResults.push({q,wasCorrect:ok,prevLv:prev,newLv});
+  if(ok){quizScore++;btn.classList.add('correct');}
+  else{btn.classList.add('wrong');document.querySelectorAll('.choice-btn').forEach(b=>{if(b.textContent===q.answer)b.classList.add('correct');});}
+  document.querySelectorAll('.choice-btn').forEach(b=>b.disabled=true);
+  const fb=document.getElementById('feedback');
+  document.getElementById('fb-title').textContent=ok?'✓ 正解！'+(newLv==='mastered'?'　🎉 習得達成！':''):`✗ 不正解　正解：${q.answer}`;
+  document.getElementById('fb-body').textContent=q.explain||'';
+  fb.className='feedback show '+(ok?'ok':'ng');
+  document.getElementById('next-btn').className='next-btn show';
+}
+function showHint(){document.getElementById('quiz-hint').style.display='block';document.getElementById('hint-btn').style.display='none';}
+function nextQ(){quizIndex++;if(quizIndex>=quizQueue.length)showResult();else{renderQ();window.scrollTo(0,0);}}
+function showResult(){
+  showScreen('result-screen');
+  const total=quizQueue.length,pct=Math.round(quizScore/total*100);
+  document.getElementById('r-score').textContent=quizScore;
+  document.getElementById('r-total').textContent=`/${total}問`;
+  const[msg,sub]=pct===100?['🎉 全問クリア！','全部書けました！すごい！']:pct>=80?['👏 よくできました！',`あと${total-quizScore}問！`]:pct>=60?['🙆 まずまず！','書けなかった問題を復習しよう！']:['💪 もう一度！','書けなかった問題から始めよう！'];
+  document.getElementById('r-msg').textContent=msg;document.getElementById('r-sub').textContent=sub;
+  const upgraded=sessionResults.filter(r=>r.wasCorrect&&r.prevLv!==r.newLv);
+  const us=document.getElementById('updated-section');
+  if(upgraded.length>0){const ll={new:'未挑戦',learning:'練習中',mastered:'習得済み✓'};us.style.display='block';us.innerHTML=`<div class="updated-title">▲ 習熟度アップ！</div><div class="updated-list">`+upgraded.map(r=>`<div class="updated-item"><span>${r.q.answer}</span><span class="updated-arrow">→</span><span class="updated-new">${ll[r.newLv]}</span></div>`).join('')+'</div>';}
+  else{us.style.display='none';}
+  const rs=document.getElementById('review-section');
+  if(currentTab==='kakitori'&&kakitoriNgList.length>0){
+    saveNg(kakitoriNgList.map(q=>q.id));
+    rs.style.display='block';
+    rs.innerHTML=`<div class="review-title">❌ 書けなかった問題（${kakitoriNgList.length}問）</div><div class="ng-list">`+kakitoriNgList.map(q=>`<div class="ng-item">${q.q.replace(/\n/g,'<br>')}<div class="ng-item-ans">${q.answer}</div></div>`).join('')+'</div><button class="retry-kakitori-btn" onclick="startKakitoriRetry()">✏️ 書けなかった問題をもう一度</button>';
+  }else if(!kakitoriNgList.length&&currentTab==='kakitori'){
+    saveNg([]);rs.style.display='block';
+    rs.innerHTML=`<div class="kakitori-complete"><div class="kakitori-complete-icon">🎊</div><div class="kakitori-complete-msg">全問書けました！完璧です！</div></div>`;
+  }else{
+    const wrong=sessionResults.filter(r=>!r.wasCorrect);
+    if(wrong.length>0){rs.style.display='block';rs.innerHTML=`<div class="review-title">▼ 間違えた問題</div>`+wrong.map(r=>`<div class="review-item"><span class="review-answer">正解：${r.q.answer}</span>（${r.q.hint}）<br>${r.q.q}</div>`).join('');}
+    else{rs.style.display='none';}
+  }
+  const favSec=document.getElementById('fav-section');
+  if(currentTab==='kakitori'&&favSec){
+    favSec.style.display='block';
+    const allQ=getCQ();
+    favSec.innerHTML='<div class="fav-section-title">⭐ お気に入りに登録する問題を選んでください</div><div class="fav-list" id="fav-list">'+allQ.map(q=>'<div class="fav-item" id="fi-'+q.id+'" onclick="toggleFavItem(\''+q.id+'\')"><span class="fav-check" id="fc-'+q.id+'">☆</span><div class="fav-item-q">'+q.q.replace(/\n/g,'<br>')+'<div class="fav-item-ans">正解：'+q.answer+'</div></div></div>').join('')+'</div><button class="fav-save-btn" onclick="saveFavFromList()">⭐ チェックした問題をお気に入り登録</button>';
+  }else if(favSec){favSec.style.display='none';}
+  document.getElementById('retry-btn').onclick=()=>{startAllMode();};
+}
+function toggleFavItem(id){const el=document.getElementById('fi-'+id);const ic=document.getElementById('fc-'+id);if(!el)return;el.classList.toggle('checked');ic.textContent=el.classList.contains('checked')?'⭐':'☆';}
+function saveFavFromList(){const checked=[...document.querySelectorAll('.fav-item.checked')].map(el=>el.id.replace('fi-',''));saveFav(checked);const fb=document.getElementById('fav-btn');if(checked.length>0){fb.style.display='block';fb.textContent=`⭐ お気に入りを復習（${checked.length}問）`;}else{fb.style.display='none';}alert(`${checked.length}問をお気に入りに登録しました！`);}
+function finishEarly(){
+  for(let i=quizIndex+(quizAnswered?1:0);i<quizQueue.length;i++){
+    const q=quizQueue[i],key=getCK(),prev=getLv(key,q.id);
+    recR(key,q.id,false);const newLv=getLv(key,q.id);
+    sessionResults.push({q,wasCorrect:false,prevLv:prev,newLv});kakitoriNgList.push(q);
+  }
+  if(!quizAnswered&&quizIndex<quizQueue.length){
+    const q=quizQueue[quizIndex],key=getCK(),prev=getLv(key,q.id);
+    recR(key,q.id,false);const newLv=getLv(key,q.id);
+    sessionResults.push({q,wasCorrect:false,prevLv:prev,newLv});kakitoriNgList.push(q);
+  }
+  showResult();
+}
+function startRetryMode(){
+  const ngIds=loadNg(),qs=getCQ(),ngQ=qs.filter(q=>ngIds.includes(q.id));
+  if(ngQ.length===0){alert('解き直しの問題がありません。\n書き取りを解いてから使ってください。');return;}
+  quizQueue=shuffle(ngQ);quizMode='retry';startQuizCommon();
+}
+function showScreen(id){['home-screen','study-screen','quiz-screen','result-screen'].forEach(s=>{document.getElementById(s).style.display=s===id?'block':'none';});}
+function goHome(){buildHome();showScreen('home-screen');}
+buildHome();showScreen('home-screen');
+</script>
+</body>
+</html>
