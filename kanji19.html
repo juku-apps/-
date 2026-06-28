@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>漢字18回｜予習シリーズ</title>
+<title>漢字19回｜予習シリーズ</title>
 <link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;700;900&family=Kaisei+HarunoUmi:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#0e1117;--surface:#161b27;--card:#1e2535;--border:rgba(255,255,255,0.08);--accent:#06b6d4;--accent2:#0e7490;--green:#3dd68c;--red:#f05a5a;--blue:#4a9eff;--text:#e8eaf0;--muted:rgba(232,234,240,0.45);--radius:16px;}
@@ -46,7 +46,6 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg);color:var
 .study-btn:active{transform:scale(0.98);}
 .start-row{display:flex;gap:8px;}
 .start-btn{flex:1;background:linear-gradient(135deg,var(--accent2),#c04420);border:none;border-radius:14px;padding:14px;color:white;font-family:'Zen Kaku Gothic New',sans-serif;font-size:0.9rem;font-weight:700;cursor:pointer;}
-.start-btn:active{transform:scale(0.98);}
 .weak-btn{flex:1;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;color:var(--text);font-family:'Zen Kaku Gothic New',sans-serif;font-size:0.82rem;font-weight:700;cursor:pointer;}
 .weak-btn:disabled{opacity:0.35;cursor:default;}
 .finish-btn{background:none;border:1px solid rgba(255,255,255,0.2);border-radius:8px;padding:5px 10px;color:var(--muted);font-family:'Zen Kaku Gothic New',sans-serif;font-size:0.75rem;cursor:pointer;white-space:nowrap;}
@@ -100,7 +99,6 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg);color:var
 .card-nav-row{display:flex;gap:10px;align-items:center;}
 .prev-btn{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 20px;color:var(--muted);font-family:'Zen Kaku Gothic New',sans-serif;font-size:0.9rem;cursor:pointer;}
 .next-card-btn{flex:1;background:linear-gradient(135deg,var(--blue),#2a5fa8);border:none;border-radius:12px;padding:16px;color:white;font-family:'Zen Kaku Gothic New',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;}
-.next-card-btn:active{transform:scale(0.98);}
 .study-complete{background:var(--card);border:1px solid rgba(61,214,140,0.3);border-radius:16px;padding:20px;text-align:center;margin-bottom:16px;}
 .complete-icon{font-size:2.5rem;margin-bottom:8px;}
 .complete-msg{font-size:1rem;font-weight:700;color:var(--green);margin-bottom:4px;}
@@ -164,7 +162,7 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg);color:var
 <div class="app">
 <div id="home-screen">
   <div class="header">
-    <div><div class="header-title">漢字 第18回</div><div class="header-sub">予習シリーズ ｜ 困・砂・座・済・裁・策・冊・蚕・至・私</div></div>
+    <div><div class="header-title">漢字 第19回</div><div class="header-sub">予習シリーズ ｜ 姿・視・詞・誌・磁・射・捨・尺・若・樹</div></div>
     <button class="reset-btn" onclick="confirmReset()">リセット</button>
   </div>
   <div class="tab-bar">
@@ -256,205 +254,205 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg);color:var
 
 <script>
 const KANJI_DATA=[
-{kanji:'困',on:'コン',kun:'こまる',
+{kanji:'姿',on:'シ',kun:'すがた',
  meanings:[
-  {text:'こまる。ゆきづまる。貧乏で生活が苦しいこと。'},
-  {text:'困窮…必要なものがなくて、こまり苦しむこと。'},
-  {text:'困難…どうしてよいかわからなくて、こまり苦しいこと。物事をなしとげることが難しくてこまること。'},
-  {text:'困惑…どうしてよいかわからなくて生活が楽でなくなることにこまること。'}
+  {text:'すがた。身なり。物事にとりくむときの心がまえ。'},
+  {text:'姿勢…休のかまえ。物事にとりくむときの心がまえ。'},
+  {text:'勇姿…いさましく活躍する様子。'},
+  {text:'容姿…顔だちやすがた。詩などのおもむきのある表現。'}
  ],
  examples:[
-  {word:'困難',reading:'こんなん',meaning:'物事をなしとげることが難しいこと'},
-  {word:'困窮',reading:'こんきゅう',meaning:'貧乏でひどくこまること'},
-  {word:'貧困',reading:'ひんこん',meaning:'貧しくてひどくこまること'},
-  {word:'困惑',reading:'こんわく',meaning:'どうしてよいかわからなくてこまること'}
+  {word:'姿勢',reading:'しせい',meaning:'体のかまえ。物事への取り組み方'},
+  {word:'勇姿',reading:'ゆうし',meaning:'いさましく活躍する様子・すがた'},
+  {word:'容姿',reading:'ようし',meaning:'顔だちやからだつき'},
+  {word:'風姿',reading:'ふうし',meaning:'すがた・ようす。詩などのおもむき'}
  ]},
-{kanji:'砂',on:'サ・（シャ）',kun:'すな',
+{kanji:'視',on:'シ',kun:'—',
  meanings:[
-  {text:'すな。小さくくずされた石。岩石が細かくくだけたもの。'},
-  {text:'砂場…運動・遊びのためにすなを入れてくきった所。'},
-  {text:'砂時計…落ちるすなの量によって時間を計る時計。'},
-  {text:'砂糖…（川や海の底にまじる細かい鉄鉱石のつぶ。さとうきびなどからとる甘い味の調味料）。'}
+  {text:'気をつけて見る。目で物を見る力の度合い。目で見ている方向。'},
+  {text:'視力…目で物を見る力の度合い。'},
+  {text:'直視…目をそむけずに、まっすぐ見ること。'},
+  {text:'無視…物事を軽く考え、あってもないようにあつかうこと。'}
  ],
  examples:[
-  {word:'砂場',reading:'すなば',meaning:'すなを入れた遊び場'},
-  {word:'砂糖',reading:'さとう',meaning:'甘みをつける調味料'},
-  {word:'砂丘',reading:'さきゅう',meaning:'砂が積もってできた丘'},
-  {word:'砂金',reading:'さきん',meaning:'川や海の底にまじる細かい金のつぶ'}
+  {word:'視力',reading:'しりょく',meaning:'目で物を見る力'},
+  {word:'視線',reading:'しせん',meaning:'目で見ている方向'},
+  {word:'無視',reading:'むし',meaning:'存在を認めずに無いようにあつかうこと'},
+  {word:'重要視',reading:'じゅうようし',meaning:'重要だと考えること'}
  ]},
-{kanji:'座',on:'ザ',kun:'すわる・また',
+{kanji:'詞',on:'シ',kun:'—',
  meanings:[
-  {text:'すわる。人々が集まって座る場所。位置。こしかける場所。'},
-  {text:'座席…こしかける場所。国王の身分・地位。首位。'},
-  {text:'星座…星の集まりをある形に見たてて名づけたもの。'},
-  {text:'座談会…宴会などでその場をもりあげる芸や遊び。数人があるテーマについて自由に話し合う会。'}
+  {text:'言葉。文章。歌の言葉や文句。単語の生まれのこと。'},
+  {text:'歌詞…歌の言葉や文句。'},
+  {text:'作詞…歌詞を作ること。'},
+  {text:'品詞…人や物事の名前・単語の様子や性質を表す言葉。'}
  ],
  examples:[
-  {word:'座席',reading:'ざせき',meaning:'こしかける場所。席'},
-  {word:'星座',reading:'せいざ',meaning:'星の集まりをある形に見たてたもの'},
-  {word:'座談会',reading:'ざだんかい',meaning:'テーマについて自由に話し合う会'},
-  {word:'正座',reading:'せいざ',meaning:'きちんとひざをついて座ること'}
+  {word:'歌詞',reading:'かし',meaning:'歌の言葉・文句'},
+  {word:'作詞',reading:'さくし',meaning:'歌詞を作ること'},
+  {word:'品詞',reading:'ひんし',meaning:'単語をはたらきや性質で分類したもの'},
+  {word:'接続詞',reading:'せつぞくし',meaning:'文と文・単語と単語をつなぐ言葉'}
  ]},
-{kanji:'済',on:'サイ',kun:'すむ・すます',
+{kanji:'誌',on:'シ',kun:'—',
  meanings:[
-  {text:'すます。物や代金を貸し借りして帳しりをそろえること。取引を終える。'},
-  {text:'返済…借りたお金を全部返すこと。'},
-  {text:'完済…借りたお金を全部返すこと。'},
-  {text:'経済…お金や物を手に入れ、使う。すべての働き。'}
+  {text:'書き記す。様々な記事をのせた本。雑誌の略。'},
+  {text:'雑誌…様々な記事をのせた本。'},
+  {text:'日誌…個人的なものではない日記。'},
+  {text:'地誌…その地方の地理を記したもの。'}
  ],
  examples:[
-  {word:'返済',reading:'へんさい',meaning:'借りたお金を返すこと'},
-  {word:'経済',reading:'けいざい',meaning:'お金やものを手に入れて使う営み'},
-  {word:'救済',reading:'きゅうさい',meaning:'困っている人を助けること'},
-  {word:'決済',reading:'けっさい',meaning:'取引の代金を支払って終えること'}
+  {word:'雑誌',reading:'ざっし',meaning:'さまざまな記事をのせた定期刊行物'},
+  {word:'日誌',reading:'にっし',meaning:'毎日の出来事を記録した日記'},
+  {word:'週刊誌',reading:'しゅうかんし',meaning:'一週間に一度出される雑誌'},
+  {word:'地誌',reading:'ちし',meaning:'ある地方の地理を記したもの'}
  ]},
-{kanji:'裁',on:'サイ',kun:'さばく・たつ',
+{kanji:'磁',on:'ジ',kun:'—',
  meanings:[
-  {text:'さばく。布をたちきること。よい悪いを決める物の形や着物を縫い、布をたちきること。'},
-  {text:'裁縫…外から見切って服や着物を縫い、布をたちきること。'},
-  {text:'裁判…争いやつったえを決めることにもとづいてさばくこと。'},
-  {text:'決裁…自分の考えで決める権限のある人が物事を判断して決めること。'}
+  {text:'磁石。鉄を引きつける性質を持つ物体。方向を知るために使う道具。'},
+  {text:'磁針…磁石の南北をはしの方向を示す。強く鉄を引きつける部分。'},
+  {text:'磁石…鉄を引きつける性質を持つ物体。'},
+  {text:'磁器…磁石にくだいて原料にし、高温で焼いたうすくかたい焼物。'}
  ],
  examples:[
-  {word:'裁縫',reading:'さいほう',meaning:'布を裁ってぬい合わせること'},
-  {word:'裁判',reading:'さいばん',meaning:'法にもとづいて争いごとをさばくこと'},
-  {word:'制裁',reading:'せいさい',meaning:'規則に違反した者を罰すること'},
-  {word:'独裁',reading:'どくさい',meaning:'一人で思いのままに決めること'}
+  {word:'磁石',reading:'じしゃく',meaning:'鉄などを引きつける物体'},
+  {word:'磁針',reading:'じしん',meaning:'磁石の南北を指す針'},
+  {word:'磁力',reading:'じりょく',meaning:'磁石が鉄を引きつける力'},
+  {word:'磁器',reading:'じき',meaning:'磁石を原料にした焼き物'}
  ]},
-{kanji:'策',on:'サク',kun:'—',
+{kanji:'射',on:'シャ',kun:'いる',
  meanings:[
-  {text:'はかりごと。たくらみ。相手や事情に合ったやり方。必要なお金を準備してそろえること。'},
-  {text:'対策…相手や事情に合ったやり方。'},
-  {text:'全策…必要なお金を準備してそろえること。'},
-  {text:'散策…健康や気晴らしのために歩くこと。散歩。'}
+  {text:'矢をはなつ。弓に矢をつがえていること。'},
+  {text:'射程…矢や弾丸などが届く距離。'},
+  {text:'発射…ロケットや弾丸などを勢いよく飛び出させること。'},
+  {text:'反射…光や電波が物に当たって長時間日光を浴びて起こる病気。'}
  ],
  examples:[
-  {word:'対策',reading:'たいさく',meaning:'相手や事情に合ったやり方'},
-  {word:'政策',reading:'せいさく',meaning:'政治上の方針や手立て'},
-  {word:'策略',reading:'さくりゃく',meaning:'はかりごと。計画。'},
-  {word:'散策',reading:'さんさく',meaning:'気晴らしのためにぶらぶら歩くこと'}
+  {word:'射程',reading:'しゃてい',meaning:'矢や弾丸などが届く距離'},
+  {word:'発射',reading:'はっしゃ',meaning:'ロケットや弾丸などを飛ばすこと'},
+  {word:'反射',reading:'はんしゃ',meaning:'光や音などが物に当たってはね返ること'},
+  {word:'注射',reading:'ちゅうしゃ',meaning:'薬液を皮膚に針で注入すること'}
  ]},
-{kanji:'冊',on:'サツ・（サク）',kun:'—',
+{kanji:'捨',on:'シャ',kun:'すてる',
  meanings:[
-  {text:'書物。文字を書きつけたもの。紙をまとめとした本。'},
-  {text:'分冊…一つの書物を何さつかに分けてまとめたもの。'},
-  {text:'小冊子…小型の書のうすい本。パンフレット。'},
-  {text:'冊数…本や雑誌を数える単位の言葉。'}
+  {text:'すてる。手放す。良い物を取り、悪い物をすてること。'},
+  {text:'取捨…良い物を取り、悪い物をすてること。'},
+  {text:'捨て値…損得をぬきにした安い値段。'},
+  {text:'捨て鉢…投げやりな気持ち。やけくそ。'}
  ],
  examples:[
-  {word:'別冊',reading:'べっさつ',meaning:'雑誌などで、別にとじた冊子'},
-  {word:'小冊子',reading:'しょうさっし',meaning:'小型のうすい本。パンフレット'},
-  {word:'冊数',reading:'さっすう',meaning:'本や雑誌の数'},
-  {word:'分冊',reading:'ぶんさつ',meaning:'一つの書物を分けてまとめた本'}
+  {word:'取捨',reading:'しゅしゃ',meaning:'よいものを取り、不要なものを捨てること'},
+  {word:'捨て身',reading:'すてみ',meaning:'自分を犠牲にして全力を尽くすこと'},
+  {word:'四捨五入',reading:'ししゃごにゅう',meaning:'端数を処理する計算方法の一つ'},
+  {word:'見捨てる',reading:'みすてる',meaning:'助けるのをやめて去ること'}
  ]},
-{kanji:'蚕',on:'サン',kun:'かいこ',
+{kanji:'尺',on:'シャク',kun:'—',
  meanings:[
-  {text:'かいこ。まゆから絹糸をとる虫のこと。'},
-  {text:'蚕食…かいこのまゆから絹糸をとること。かいこのように少しずつ侵入していくこと。'},
-  {text:'蚕業…かいこを飼い、まゆから絹糸をとる仕事。'},
-  {text:'蚕棚…かいこを飼ってまゆから絹糸をとること。何段か重なった棚。'}
+  {text:'ものさし。長さ。昔の単位で標準の長さが一尺八寸ある笛。'},
+  {text:'一尺…竹製で、今の単位では約30・3センチメートルの笛。'},
+  {text:'縮尺…地図などを実物より小さくかくときの割合。'},
+  {text:'巻き尺…まいてしまうような動きをする蛾の幼虫。'}
  ],
  examples:[
-  {word:'蚕糸',reading:'さんし',meaning:'かいこのまゆからとる絹糸'},
-  {word:'蚕業',reading:'さんぎょう',meaning:'かいこを飼って絹糸をとる産業'},
-  {word:'養蚕',reading:'ようさん',meaning:'かいこを飼ってまゆから絹糸をとること'},
-  {word:'蚕食',reading:'さんしょく',meaning:'かいこが葉を食べるように少しずつ侵食すること'}
+  {word:'尺度',reading:'しゃくど',meaning:'ものさし。計測・評価の基準'},
+  {word:'縮尺',reading:'しゅくしゃく',meaning:'地図などで実物を縮めた割合'},
+  {word:'一尺',reading:'いっしゃく',meaning:'長さの単位。約30センチメートル'},
+  {word:'尺貫法',reading:'しゃっかんほう',meaning:'日本の伝統的な計量法'}
  ]},
-{kanji:'至',on:'シ',kun:'いたる',
+{kanji:'若',on:'ジャク・（ニャク）',kun:'わかい・もしくは',
  meanings:[
-  {text:'いたる。行きさわたる。必ずそうなるであろう様子。'},
-  {text:'至近…とても近いこと。行きついてこの上もない。'},
-  {text:'至上…この上もないほど大切なこと。とてもむずかしいこと。'},
-  {text:'至急…とても急ぐこと。'}
+  {text:'わかい。年かさのない人。全体の中で年かさのない人。'},
+  {text:'若者…年がわかい人。'},
+  {text:'若手…全体の中で年かさのない人々。'},
+  {text:'若葉…生えてでて間もない木の葉。'}
  ],
  examples:[
-  {word:'至急',reading:'しきゅう',meaning:'非常に急ぐこと'},
-  {word:'至近',reading:'しきん',meaning:'非常に近いこと'},
-  {word:'至上',reading:'しじょう',meaning:'この上もなく大切なこと'},
-  {word:'冬至',reading:'とうじ',meaning:'一年の中で昼の時間が最も短い日'}
+  {word:'若者',reading:'わかもの',meaning:'年が若い人'},
+  {word:'若手',reading:'わかて',meaning:'集団の中で年が若い人たち'},
+  {word:'若葉',reading:'わかば',meaning:'生えて間もない木の葉'},
+  {word:'若干',reading:'じゃっかん',meaning:'いくらか。すこし'}
  ]},
-{kanji:'私',on:'シ',kun:'わたくし・わたし',
+{kanji:'樹',on:'ジュ',kun:'—',
  meanings:[
-  {text:'わたくし。自分だけの。個人。'},
-  {text:'私有…個人が持って管理・運営していること。'},
-  {text:'私立…（公的なことと個人的なことの区別）。'},
-  {text:'私語…時と場所をわきまえないひそこそりと、ないしょ話。'}
+  {text:'木。立ち木。霧の水分が樹木にこおりついて白く見えるもの。'},
+  {text:'樹木…木。'},
+  {text:'樹林…木が群がり生えている所。'},
+  {text:'植樹園…木を植えるための果物を育てる畑。'}
  ],
  examples:[
-  {word:'私有',reading:'しゆう',meaning:'個人が持って管理すること'},
-  {word:'私立',reading:'しりつ',meaning:'個人や法人が設立・運営すること'},
-  {word:'私情',reading:'しじょう',meaning:'自分だけの気持ち。個人的な感情'},
-  {word:'私語',reading:'しご',meaning:'授業中などのひそひそ話'}
+  {word:'樹木',reading:'じゅもく',meaning:'木。たちき'},
+  {word:'樹林',reading:'じゅりん',meaning:'木が群れ生えている所'},
+  {word:'樹海',reading:'じゅかい',meaning:'緑の森林が広がり海のように見える所'},
+  {word:'果樹園',reading:'かじゅえん',meaning:'果物の木を育てる畑'}
  ]}
 ];
 
 const RENSHU=[
-{id:'r01',kanji:'困',reading:'コン・こまる',q:'「生活費にこまる」\n漢字に直しなさい。',answer:'困る',choices:['困る','固る','困る','根る'],hint:'こまる＝困る',explain:'「困る」はゆきづまって苦しむこと。'},
-{id:'r02',kanji:'困',reading:'コン・こまる',q:'「ヒンコンから救う活動をする」\n漢字に直しなさい。',answer:'貧困',choices:['貧困','貧根','貧昆','貧混'],hint:'ヒン＋コン（困）',explain:'「貧困」は貧しくてひどくこまること。'},
-{id:'r03',kanji:'砂',reading:'サ・すな',q:'「子どもが公園のすなばで遊ぶ」\n漢字に直しなさい。',answer:'砂場',choices:['砂場','沙場','差場','査場'],hint:'すな（砂）＋ば',explain:'「砂場」はすなを入れた遊び場。'},
-{id:'r04',kanji:'砂',reading:'サ・すな',q:'「川底にドシャがたまる」\n漢字に直しなさい。',answer:'土砂',choices:['土砂','土沙','土差','土査'],hint:'ド＋シャ（砂）',explain:'「土砂」は土とすな。'},
-{id:'r05',kanji:'座',reading:'ザ・すわる',q:'「オリオンはふゆのセイザだ」\n漢字に直しなさい。',answer:'星座',choices:['星座','星佐','星差','星沙'],hint:'セイ＋ザ（座）',explain:'「星座」は星の集まりをある形に見たてたもの。'},
-{id:'r06',kanji:'座',reading:'ザ・すわる',q:'「自分のザセキにもどる」\n漢字に直しなさい。',answer:'座席',choices:['座席','佐席','差席','査席'],hint:'ザ（座）＋セキ',explain:'「座席」はこしかける場所。席のこと。'},
-{id:'r07',kanji:'済',reading:'サイ・すむ',q:'「借金をヘンサイする」\n漢字に直しなさい。',answer:'返済',choices:['返済','返斉','返剤','返財'],hint:'ヘン＋サイ（済）',explain:'「返済」は借りたお金を返すこと。'},
-{id:'r08',kanji:'済',reading:'サイ・すむ',q:'「高度ケイザイ成長をとげる」\n漢字に直しなさい。',answer:'経済',choices:['経済','経斉','経剤','経財'],hint:'ケイ＋ザイ（済）',explain:'「経済」はお金やものを手に入れて使う営み。'},
-{id:'r09',kanji:'裁',reading:'サイ・さばく',q:'「布地をハサミでたつ」\n漢字に直しなさい。',answer:'裁つ',choices:['裁つ','載つ','彩つ','菜つ'],hint:'たつ＝裁つ',explain:'「裁つ」は布などをたちきること。'},
-{id:'r10',kanji:'裁',reading:'サイ・さばく',q:'「犯人をサイバンにかける」\n漢字に直しなさい。',answer:'裁判',choices:['裁判','載判','彩判','菜判'],hint:'サイ（裁）＋バン',explain:'「裁判」は法にもとづいて争いごとをさばくこと。'},
-{id:'r11',kanji:'策',reading:'サク',q:'「すぐにタイサクを講じる」\n漢字に直しなさい。',answer:'対策',choices:['対策','対冊','対柵','対索'],hint:'タイ＋サク（策）',explain:'「対策」は相手や事情に合ったやり方。'},
-{id:'r12',kanji:'策',reading:'サク',q:'「公書タイサクを進める」\n漢字に直しなさい。',answer:'対策',choices:['対策','対冊','対柵','対索'],hint:'タイ＋サク（策）',explain:'「対策」は問題に対処するための方法。'},
-{id:'r13',kanji:'冊',reading:'サツ',q:'「試験のサッシを配る」\n漢字に直しなさい。',answer:'冊子',choices:['冊子','柵子','索子','策子'],hint:'サツ（冊）＋シ',explain:'「冊子」は紙をとじた小さな本。'},
-{id:'r14',kanji:'冊',reading:'サツ',q:'「本のショウサッシを配る」\n漢字に直しなさい。',answer:'小冊子',choices:['小冊子','小柵子','小索子','小策子'],hint:'ショウ＋サツ（冊）＋シ',explain:'「小冊子」は小型のうすい本。パンフレット。'},
-{id:'r15',kanji:'蚕',reading:'サン・かいこ',q:'「かいこがまゆをつくる」\n漢字に直しなさい。',answer:'蚕',choices:['蚕','桑','累','蛹'],hint:'かいこ＝蚕',explain:'「蚕」はまゆから絹糸をとる虫のこと。'},
-{id:'r16',kanji:'蚕',reading:'サン・かいこ',q:'「ヨウサン農家を訪ねる」\n漢字に直しなさい。',answer:'養蚕',choices:['養蚕','養桑','養累','養蛹'],hint:'ヨウ＋サン（蚕）',explain:'「養蚕」はかいこを飼ってまゆから絹糸をとること。'},
-{id:'r17',kanji:'至',reading:'シ・いたる',q:'「シキュウ兄と連絡をとる」\n漢字に直しなさい。',answer:'至急',choices:['至急','止急','矢急','史急'],hint:'シ（至）＋キュウ',explain:'「至急」は非常に急ぐこと。'},
-{id:'r18',kanji:'至',reading:'シ・いたる',q:'「大阪を経て京都にいたる」\n漢字に直しなさい。',answer:'至る',choices:['至る','止る','矢る','史る'],hint:'いたる＝至る',explain:'「至る」はある場所に行きつくこと。'},
-{id:'r19',kanji:'私',reading:'シ・わたし',q:'「コウシの区別をはっきりつける」\n漢字に直しなさい。',answer:'公私',choices:['公私','公史','公士','公詩'],hint:'コウ＋シ（私）',explain:'「公私」は公のことと私のことの区別。'},
-{id:'r20',kanji:'私',reading:'シ・わたし',q:'「授業中のシゴを禁止する」\n漢字に直しなさい。',answer:'私語',choices:['私語','史語','士語','詩語'],hint:'シ（私）＋ゴ',explain:'「私語」は授業中などのひそひそ話。'},
+{id:'r01',kanji:'姿',reading:'シ・すがた',q:'「選手たちのユウシを撮影する」\n漢字に直しなさい。',answer:'勇姿',choices:['勇姿','勇資','勇士','勇示'],hint:'ユウ＋シ（姿）',explain:'「勇姿」はいさましく活躍するすがたのこと。'},
+{id:'r02',kanji:'姿',reading:'シ・すがた',q:'「シセイを正して話を聞く」\n漢字に直しなさい。',answer:'姿勢',choices:['姿勢','資勢','士勢','示勢'],hint:'シ（姿）＋セイ',explain:'「姿勢」は体のかまえ。物事への取り組み方。'},
+{id:'r03',kanji:'視',reading:'シ',q:'「新説をジュウヨウシする」\n漢字に直しなさい。',answer:'重要視',choices:['重要視','重用視','重抑視','重葉視'],hint:'ジュウ＋ヨウ＋シ（視）',explain:'「重要視」は重要だと考えること。'},
+{id:'r04',kanji:'視',reading:'シ',q:'「周囲の人のチュウコクをムシする」\n漢字に直しなさい。',answer:'無視',choices:['無視','無士','無詞','無誌'],hint:'ム＋シ（視）',explain:'「無視」は存在を認めずに無いようにあつかうこと。'},
+{id:'r05',kanji:'詞',reading:'シ',q:'「自分でサクシした歌を歌う」\n漢字に直しなさい。',answer:'作詞',choices:['作詞','作誌','作視','作士'],hint:'サク＋シ（詞）',explain:'「作詞」は歌詞を作ること。'},
+{id:'r06',kanji:'詞',reading:'シ',q:'「好きな曲のカシを覚える」\n漢字に直しなさい。',answer:'歌詞',choices:['歌詞','歌誌','歌視','歌士'],hint:'カ＋シ（詞）',explain:'「歌詞」は歌の言葉・文句のこと。'},
+{id:'r07',kanji:'誌',reading:'シ',q:'「古いザッシをたばねる」\n漢字に直しなさい。',answer:'雑誌',choices:['雑誌','雑詞','雑視','雑士'],hint:'ザツ＋シ（誌）',explain:'「雑誌」はさまざまな記事をのせた定期刊行物。'},
+{id:'r08',kanji:'誌',reading:'シ',q:'「学級ニッシに記録して発表する」\n漢字に直しなさい。',answer:'日誌',choices:['日誌','日詞','日視','日士'],hint:'ニチ＋シ（誌）',explain:'「日誌」は毎日の出来事を記録した日記。'},
+{id:'r09',kanji:'磁',reading:'ジ',q:'「砂鉄はジシャクにくっつく」\n漢字に直しなさい。',answer:'磁石',choices:['磁石','磁積','磁責','磁跡'],hint:'ジ（磁）＋シャク',explain:'「磁石」は鉄などを引きつける物体。'},
+{id:'r10',kanji:'磁',reading:'ジ',q:'「ジシンで北の方角を知る」\n漢字に直しなさい。',answer:'磁針',choices:['磁針','磁伸','磁真','磁信'],hint:'ジ（磁）＋シン',explain:'「磁針」は磁石の南北を指す針。'},
+{id:'r11',kanji:'射',reading:'シャ・いる',q:'「弓で矢をいる」\n漢字に直しなさい。',answer:'射る',choices:['射る','捨る','者る','遮る'],hint:'いる＝射る',explain:'「射る」は弓で矢を放つこと。'},
+{id:'r12',kanji:'射',reading:'シャ・いる',q:'「ロケットをハッシャする」\n漢字に直しなさい。',answer:'発射',choices:['発射','発捨','発者','発遮'],hint:'ハツ＋シャ（射）',explain:'「発射」はロケットや弾丸などを飛ばすこと。'},
+{id:'r13',kanji:'捨',reading:'シャ・すてる',q:'「紙くずをゴミ箱にすてる」\n漢字に直しなさい。',answer:'捨てる',choices:['捨てる','射てる','者てる','遮てる'],hint:'すてる＝捨てる',explain:'「捨てる」は不要なものを手放すこと。'},
+{id:'r14',kanji:'捨',reading:'シャ・すてる',q:'「シシャゴニュウした数」\n漢字に直しなさい。',answer:'四捨五入',choices:['四捨五入','四射五入','四者五入','四遮五入'],hint:'シシャ（四捨）＋ゴニュウ',explain:'「四捨五入」は端数を処理する計算方法。'},
+{id:'r15',kanji:'尺',reading:'シャク',q:'「イッシャク分の長さのひも」\n漢字に直しなさい。',answer:'一尺',choices:['一尺','一積','一責','一跡'],hint:'イチ＋シャク（尺）',explain:'「一尺」は長さの単位。約30センチメートル。'},
+{id:'r16',kanji:'尺',reading:'シャク',q:'「シュクシャク五万分の一の地図で調べる」\n漢字に直しなさい。',answer:'縮尺',choices:['縮尺','縮積','縮責','縮跡'],hint:'シュク＋シャク（尺）',explain:'「縮尺」は地図などで実物を縮めた割合。'},
+{id:'r17',kanji:'若',reading:'ジャク・わかい',q:'「わかばが美しい季節になる」\n漢字に直しなさい。',answer:'若葉',choices:['若葉','弱葉','惹葉','寂葉'],hint:'わか（若）＋ば',explain:'「若葉」は生えて間もない木の葉。'},
+{id:'r18',kanji:'若',reading:'ジャク・わかい',q:'「名前の追加ワカシュウ募集」\n漢字に直しなさい。',answer:'若者',choices:['若者','弱者','惹者','寂者'],hint:'わか（若）＋もの',explain:'「若者」は年が若い人のこと。'},
+{id:'r19',kanji:'樹',reading:'ジュ',q:'「カジュエンに桃の苗を植える」\n漢字に直しなさい。',answer:'果樹園',choices:['果樹園','果重園','果住園','果儒園'],hint:'カ＋ジュ（樹）＋エン',explain:'「果樹園」は果物の木を育てる畑のこと。'},
+{id:'r20',kanji:'樹',reading:'ジュ',q:'「日本新記録をジュリツする」\n漢字に直しなさい。',answer:'樹立',choices:['樹立','重立','住立','儒立'],hint:'ジュ（樹）＋リツ',explain:'「樹立」は新たに打ち立てること。'},
 ];
 
 const KAKITORI=[
-{id:'k01',kanji:'私',reading:'シ',q:'早朝に川原をサンサクするのは気持ちがいい。\n（サンサク）',answer:'散策',hint:'サン＋サク（策）',explain:'「散策」は気晴らしにぶらぶら歩くこと。'},
-{id:'k02',kanji:'座',reading:'ザ',q:'いわあなに彫られた仏像。\n（いわあな）',answer:'岩穴',hint:'いわ＋あな（穴）',explain:'「岩穴」は岩にできた穴のこと。※第18回の漢字含む'},
-{id:'k03',kanji:'済',reading:'サイ',q:'パソコンのデンゲンを入れる。\n（デンゲン）',answer:'電源',hint:'デン＋ゲン（源）',explain:'「電源」は電気の取り入れ口。'},
-{id:'k04',kanji:'裁',reading:'サイ',q:'新幹線のザセキを指定して券を買う。\n（ザセキ）',answer:'座席',hint:'ザ（座）＋セキ',explain:'「座席」はこしかける場所。席のこと。'},
-{id:'k05',kanji:'冊',reading:'サツ',q:'型紙にそって布をサイダンする。\n（サイダン）',answer:'裁断',hint:'サイ（裁）＋ダン',explain:'「裁断」は布などを型紙に合わせて切ること。'},
-{id:'k06',kanji:'蚕',reading:'サン',q:'コンクの末に病死した画家の作品だ。\n（コンク）',answer:'困苦',hint:'コン（困）＋ク',explain:'「困苦」はこまり苦しむこと。'},
-{id:'k07',kanji:'至',reading:'シ',q:'クラス全員の作文がサッシにまとめられて配られた。\n（サッシ）',answer:'冊子',hint:'サツ（冊）＋シ',explain:'「冊子」は紙をとじた小さな本。'},
-{id:'k08',kanji:'私',reading:'シ',q:'教室でかいこを飼う。\n（かいこ）',answer:'蚕',hint:'かいこ＝蚕',explain:'「蚕」はまゆから絹糸をとる虫のこと。'},
-{id:'k09',kanji:'困',reading:'コン',q:'子供たちが校庭のすなばで遊ぶ。\n（すなば）',answer:'砂場',hint:'すな（砂）＋ば',explain:'「砂場」はすなを入れた遊び場。'},
-{id:'k10',kanji:'砂',reading:'サ',q:'大災害の影響で、国内のケイザイ状況が悪化する。\n（ケイザイ）',answer:'経済',hint:'ケイ＋ザイ（済）',explain:'「経済」はお金やものを手に入れて使う営み。'},
-{id:'k11',kanji:'座',reading:'ザ',q:'あなたにはむやみに他人をさばくケンリはない。\n（ケンリ）',answer:'権利',hint:'ケン（権）＋リ',explain:'「権利」は自分の利益のために主張できること。'},
-{id:'k12',kanji:'済',reading:'サイ',q:'川でサキンを集める実験をした。\n（サキン）',answer:'砂金',hint:'サ（砂）＋キン',explain:'「砂金」は川や海の底にまじる金のつぶ。'},
-{id:'k13',kanji:'裁',reading:'サイ',q:'祖父は昔サンソン試験場に勤めていた。\n（サンソン）',answer:'蚕村',hint:'サン（蚕）＋ソン',explain:'「蚕村」は養蚕を中心にした村。'},
-{id:'k14',kanji:'冊',reading:'サツ',q:'ヘンサイの必要のない奨学金を申請する。\n（ヘンサイ）',answer:'返済',hint:'ヘン＋サイ（済）',explain:'「返済」は借りたお金を返すこと。'},
-{id:'k15',kanji:'蚕',reading:'サン',q:'加減なことばかりさせてはいだこまる。\n（こまる）',answer:'困る',hint:'こまる＝困る',explain:'「困る」はゆきづまって苦しむこと。'},
-{id:'k16',kanji:'至',reading:'シ',q:'試験の前日にタイサクをはじめてももう遅い。\n（タイサク）',answer:'対策',hint:'タイ＋サク（策）',explain:'「対策」は問題に対処するための方法。'},
-{id:'k17',kanji:'私',reading:'シ',q:'仕事にジョウウをはざむな。\n（ジョウウ）',answer:'私情',hint:'シ（私）＋ジョウ',explain:'「私情」は自分だけの気持ち。個人的な感情。'},
-{id:'k18',kanji:'困',reading:'コン',q:'夏の夜空を見上げて知っているセイザを探す。\n（セイザ）',answer:'星座',hint:'セイ＋ザ（座）',explain:'「星座」は星の集まりをある形に見たてたもの。'},
-{id:'k19',kanji:'砂',reading:'サ',q:'来季は日本一奪回がジョウウ命令となる。\n（ジョウウ）',answer:'至上',hint:'シ（至）＋ジョウ',explain:'「至上」はこの上もなく大切なこと。'},
-{id:'k20',kanji:'座',reading:'ザ',q:'郷、土資料館でショウサッシにまとめられた情報を読む。\n（ショウサッシ）',answer:'小冊子',hint:'ショウ＋サツ（冊）＋シ',explain:'「小冊子」は小型のうすい本。パンフレット。'},
-{id:'k21',kanji:'済',reading:'サイ',q:'用意された席にゆったりとすわる。\n（すわる）',answer:'座る',hint:'すわる＝座る',explain:'「座る」はこしをおろしてすわること。'},
-{id:'k22',kanji:'裁',reading:'サイ',q:'イッサツ1万円もする大きな図鑑。\n（イッサツ）',answer:'一冊',hint:'イチ＋サツ（冊）',explain:'「一冊」は本や雑誌が一つのこと。'},
-{id:'k23',kanji:'冊',reading:'サツ',q:'コン難な状況は依然として続いている。\n（コン難）',answer:'困難',hint:'コン（困）＋ナン',explain:'「困難」は物事をなしとげることが難しいこと。'},
-{id:'k24',kanji:'蚕',reading:'サン',q:'奈良時代の僧、行基は貧しい人々のキュウサイにあたった。\n（キュウサイ）',answer:'救済',hint:'キュウ＋サイ（済）',explain:'「救済」は困っている人を助けること。'},
-{id:'k25',kanji:'至',reading:'シ',q:'講演会の間はシゴをつしむべきだ。\n（シゴ）',answer:'私語',hint:'シ（私）＋ゴ',explain:'「私語」は授業や会議中のひそひそ話。'},
-{id:'k26',kanji:'私',reading:'シ',q:'機嫌の悪い姉には逆らわずに従ったトクサクだ。\n（トクサク）',answer:'得策',hint:'トク＋サク（策）',explain:'「得策」はうまいやり方。よいはかりごと。'},
-{id:'k27',kanji:'困',reading:'コン',q:'サテツが磁石にくっつかためしてみる。\n（サテツ）',answer:'砂鉄',hint:'サ（砂）＋テツ',explain:'「砂鉄」は川や海の底にまじる鉄のつぶ。'},
-{id:'k28',kanji:'砂',reading:'サ',q:'ヨウサンは日本に昔からある伝統的な産業だ。\n（ヨウサン）',answer:'養蚕',hint:'ヨウ＋サン（蚕）',explain:'「養蚕」はかいこを飼って絹糸をとること。'},
-{id:'k29',kanji:'座',reading:'ザ',q:'ジャッカンのちがいはあるが似た商品だ。\n（ジャッカン）',answer:'若干',hint:'ジャッ＋カン（若干）',explain:'「若干」はいくらか・すこしのこと。'},
-{id:'k30',kanji:'済',reading:'サイ',q:'ドレスを作るために布をたつ。\n（たつ）',answer:'裁つ',hint:'たつ＝裁つ',explain:'「裁つ」は布などをたちきること。'},
-{id:'k31',kanji:'裁',reading:'サイ',q:'わたくしは新人の四谷です。\n（わたくし）',answer:'私',hint:'わたくし＝私',explain:'「私」は自分自身。個人のこと。'},
-{id:'k32',kanji:'冊',reading:'サツ',q:'有名な企業の社長が脱税の疑惑でサイバンにかけられた。\n（サイバン）',answer:'裁判',hint:'サイ（裁）＋バン',explain:'「裁判」は法にもとづいて争いごとをさばくこと。'},
-{id:'k33',kanji:'蚕',reading:'サン',q:'有名な作家たちのザンコクな動画でインターネットの動画で見る。\n（ザンコク）',answer:'残酷',hint:'ザン＋コク',explain:'「残酷」は心がなく、むごいこと。'},
-{id:'k34',kanji:'至',reading:'シ',q:'美しい海の写真が載ったシメンに釘付けになる。\n（シメン）',answer:'誌面',hint:'シ（誌）＋メン',explain:'「誌面」は雑誌の記事がのっている面。'},
-{id:'k35',kanji:'私',reading:'シ',q:'大雨でシャクずれが起きる。\n（シャクずれ）',answer:'地滑り',hint:'じ＋すべり',explain:'「地滑り」は斜面の土砂が崩れること。'},
-{id:'k36',kanji:'困',reading:'コン',q:'優勝へといたるまでの道のりは決して楽ではなかった。\n（いたる）',answer:'至る',hint:'いたる＝至る',explain:'「至る」はある場所や状態に行きつくこと。'},
-{id:'k37',kanji:'砂',reading:'サ',q:'夏休み前は図書館での貸出サッスウが増える。\n（サッスウ）',answer:'冊数',hint:'サツ（冊）＋スウ',explain:'「冊数」は本や雑誌の数のこと。'},
-{id:'k38',kanji:'座',reading:'ザ',q:'スーパーで調理ずみの食品を買う。\n（ずみ）',answer:'済み',hint:'すむ（済）＋み',explain:'「済み」はすでに終わっていること。'},
-{id:'k39',kanji:'済',reading:'サイ',q:'早急に善コウサクを講じるための会議を開く。\n（コウサク）',answer:'策',hint:'サク（策）',explain:'「策」ははかりごと。計画のこと。'},
-{id:'k40',kanji:'裁',reading:'サイ',q:'ヒンコンを世界からなくすための活動に従事する。\n（ヒンコン）',answer:'貧困',hint:'ヒン＋コン（困）',explain:'「貧困」は貧しくてひどくこまること。'},
+{id:'k01',kanji:'樹',reading:'ジュ',q:'ぶどうを育てているカジュエンを見学する。\n（カジュエン）',answer:'果樹園',hint:'カ＋ジュ（樹）＋エン',explain:'「果樹園」は果物の木を育てる畑のこと。'},
+{id:'k02',kanji:'視',reading:'シ',q:'雪が降ってシカイが悪い。\n（シカイ）',answer:'視界',hint:'シ（視）＋カイ',explain:'「視界」は目で見わたすことのできる範囲。'},
+{id:'k03',kanji:'裁',reading:'サイ',q:'馬に乗って弓矢をいる流鏑馬が奉納される。\n（いる）',answer:'射る',hint:'いる＝射る',explain:'「射る」は弓で矢を放つこと。'},
+{id:'k04',kanji:'誌',reading:'シ',q:'シュウカンシに漫画を連載している人気作家。\n（シュウカンシ）',answer:'週刊誌',hint:'シュウカン＋シ（誌）',explain:'「週刊誌」は一週間に一度出される雑誌。'},
+{id:'k05',kanji:'尺',reading:'シャク',q:'イッシャクの長さはおよそ30センチメートルである。\n（イッシャク）',answer:'一尺',hint:'イチ＋シャク（尺）',explain:'「一尺」は長さの単位。約30センチメートル。'},
+{id:'k06',kanji:'詞',reading:'シ',q:'サクシと作曲の両方を行う。\n（サクシ）',answer:'作詞',hint:'サク＋シ（詞）',explain:'「作詞」は歌詞を作ること。'},
+{id:'k07',kanji:'捨',reading:'シャ',q:'生ごみをごみ箱にすてる。\n（すてる）',answer:'捨てる',hint:'すてる＝捨てる',explain:'「捨てる」は不要なものを手放すこと。'},
+{id:'k08',kanji:'磁',reading:'ジ',q:'地図と方位ジシンを持って町を歩く。\n（ジシン）',answer:'磁針',hint:'ジ（磁）＋シン',explain:'「磁針」は磁石の南北を指す針。'},
+{id:'k09',kanji:'若',reading:'ジャク',q:'10代から20代前半のわかての選手を中心に構成されたサッカーチーム。\n（わかて）',answer:'若手',hint:'わか（若）＋て',explain:'「若手」は集団の中で年が若い人たち。'},
+{id:'k10',kanji:'姿',reading:'シ',q:'正しいシセイでいすに座る。\n（シセイ）',answer:'姿勢',hint:'シ（姿）＋セイ',explain:'「姿勢」は体のかまえ。物事への取り組み方。'},
+{id:'k11',kanji:'磁',reading:'ジ',q:'わが家の冷蔵庫には色々なジシャがはりつけてある。\n（ジシャ）',answer:'磁石',hint:'ジ（磁）＋シャク',explain:'「磁石」は鉄などを引きつける物体。'},
+{id:'k12',kanji:'捨',reading:'シャ',q:'小数第一位をシシャゴニュウして答える。\n（シシャゴニュウ）',answer:'四捨五入',hint:'シシャ（四捨）＋ゴニュウ',explain:'「四捨五入」は端数を処理する計算方法。'},
+{id:'k13',kanji:'若',reading:'ジャク',q:'途中でカシを間違えたが気にせず歌い続けた。\n（カシ）',answer:'歌詞',hint:'カ＋シ（詞）',explain:'「歌詞」は歌の言葉・文句のこと。'},
+{id:'k14',kanji:'尺',reading:'シャク',q:'わかばの色が目にまぶしい。\n（わかば）',answer:'若葉',hint:'わか（若）＋ば',explain:'「若葉」は生えて間もない木の葉。'},
+{id:'k15',kanji:'樹',reading:'ジュ',q:'甲子園での兄のユウシを目に焼きつける。\n（ユウシ）',answer:'勇姿',hint:'ユウ＋シ（姿）',explain:'「勇姿」はいさましく活躍するすがたのこと。'},
+{id:'k16',kanji:'射',reading:'シャ',q:'ミサイルがハッシャされたという誤報が流れた。\n（ハッシャ）',answer:'発射',hint:'ハツ＋シャ（射）',explain:'「発射」はロケットや弾丸などを飛ばすこと。'},
+{id:'k17',kanji:'誌',reading:'シ',q:'結果よりも過程をジュウヨウシする。\n（ジュウヨウシ）',answer:'重要視',hint:'ジュウヨウ＋シ（視）',explain:'「重要視」は重要だと考えること。'},
+{id:'k18',kanji:'尺',reading:'シャク',q:'虚無僧がシャクハチを吹く。\n（シャクハチ）',answer:'尺八',hint:'シャク（尺）＋ハチ',explain:'「尺八」は竹製の縦笛。一尺八寸の長さが標準。'},
+{id:'k19',kanji:'姿',reading:'シ',q:'朝顔の観察ニッシに毎日記録をつける。\n（ニッシ）',answer:'日誌',hint:'ニチ＋シ（誌）',explain:'「日誌」は毎日の出来事を記録したもの。'},
+{id:'k20',kanji:'樹',reading:'ジュ',q:'ショクジュのボランティア活動に参加する。\n（ショクジュ）',answer:'植樹',hint:'ショク＋ジュ（樹）',explain:'「植樹」は木を植えること。'},
+{id:'k21',kanji:'磁',reading:'ジ',q:'シュクシャク五万分の一の地図で調べる。\n（シュクシャク）',answer:'縮尺',hint:'シュク＋シャク（尺）',explain:'「縮尺」は地図などで実物を縮めた割合。'},
+{id:'k22',kanji:'視',reading:'シ',q:'スマートフォンの画面に光がハンシャしてよく見えない。\n（ハンシャ）',answer:'反射',hint:'ハン＋シャ（射）',explain:'「反射」は光などが物に当たってはね返ること。'},
+{id:'k23',kanji:'詞',reading:'シ',q:'「ねこ」は普通メイシだ。\n（メイシ）',answer:'名詞',hint:'メイ＋シ（詞）',explain:'「名詞」は人や物事の名前を表す単語。'},
+{id:'k24',kanji:'樹',reading:'ジュ',q:'針葉ジュリンの地図記号は木の形を模している。\n（ジュリン）',answer:'樹林',hint:'ジュ（樹）＋リン',explain:'「樹林」は木が群れ生えている所。'},
+{id:'k25',kanji:'姿',reading:'シ',q:'青い模様の入った白いジキを飾る。\n（ジキ）',answer:'磁器',hint:'ジ（磁）＋キ',explain:'「磁器」は磁石を原料にした焼き物。'},
+{id:'k26',kanji:'捨',reading:'シャ',q:'必要なものと不要なものをシュシャ選択することが難しい。\n（シュシャ）',answer:'取捨',hint:'シュ＋シャ（捨）',explain:'「取捨」はよいものを取り、不要なものを捨てること。'},
+{id:'k27',kanji:'射',reading:'シャ',q:'ヨウシを気にするよりも中身をみがくべきだ。\n（ヨウシ）',answer:'容姿',hint:'ヨウ＋シ（姿）',explain:'「容姿」は顔だちやからだつきのこと。'},
+{id:'k28',kanji:'若',reading:'ジャク',q:'ジャッカンのちがいはあるが似た商品だ。\n（ジャッカン）',answer:'若干',hint:'ジャッ＋カン（若干）',explain:'「若干」はいくらか・すこしのこと。'},
+{id:'k29',kanji:'誌',reading:'シ',q:'ジャッカンのちがいはあるが似た商品だ。（ジャッカン）→ 初めて応募した小説がザッシに掲載された。\n（ザッシ）',answer:'雑誌',hint:'ザツ＋シ（誌）',explain:'「雑誌」はさまざまな記事をのせた定期刊行物。'},
+{id:'k30',kanji:'尺',reading:'シャク',q:'ジキを読み取る方式のクレジットカード。\n（ジキ）',answer:'磁気',hint:'ジ（磁）＋キ',explain:'「磁気」は磁石に関する性質や力のこと。'},
+{id:'k31',kanji:'姿',reading:'シ',q:'声をかけたのにムシされるとつらい。\n（ムシ）',answer:'無視',hint:'ム＋シ（視）',explain:'「無視」は存在を認めずに無いようにあつかうこと。'},
+{id:'k32',kanji:'視',reading:'シ',q:'わかい店員が一生懸命に働いている。\n（わかい）',answer:'若い',hint:'わかい＝若い',explain:'「若い」は年かさのないこと。'},
+{id:'k33',kanji:'磁',reading:'ジ',q:'美しい海の写真が載ったシメンに釘付けになる。\n（シメン）',answer:'誌面',hint:'シ（誌）＋メン',explain:'「誌面」は雑誌の記事がのっている面。'},
+{id:'k34',kanji:'捨',reading:'シャ',q:'ホウシャ性元素の研究をする。\n（ホウシャ）',answer:'放射',hint:'ホウ＋シャ（射）',explain:'「放射」は光や電波などを四方に放つこと。'},
+{id:'k35',kanji:'若',reading:'ジャク',q:'成人式で両親にはれすがたを見せる。\n（はれすがた）',answer:'晴れ姿',hint:'はれ＋すがた（姿）',explain:'「晴れ姿」は正式な晴れやかなすがたのこと。'},
+{id:'k36',kanji:'樹',reading:'ジュ',q:'最年少の選手によって大会新記録がジュリツされた。\n（ジュリツ）',answer:'樹立',hint:'ジュ（樹）＋リツ',explain:'「樹立」は新たに打ち立てること。'},
+{id:'k37',kanji:'尺',reading:'シャク',q:'シャクとりむしのユーモラスな動きをながめる。\n（シャクとりむし）',answer:'尺取虫',hint:'シャク（尺）＋とりむし',explain:'「尺取虫」はまいてしまうような動きをする蛾の幼虫。'},
+{id:'k38',kanji:'射',reading:'シャ',q:'舞台上の役者に観客のシセンが集まる。\n（シセン）',answer:'視線',hint:'シ（視）＋セン',explain:'「視線」は目で見ている方向。'},
+{id:'k39',kanji:'若',reading:'ジャク',q:'すてみの攻撃が勝利をもたらした。\n（すてみ）',answer:'捨て身',hint:'すて（捨）＋み',explain:'「捨て身」は自分を犠牲にして全力を尽くすこと。'},
+{id:'k40',kanji:'樹',reading:'ジュ',q:'十種類あるヒンシの特徴を理解する。\n（ヒンシ）',answer:'品詞',hint:'ヒン＋シ（詞）',explain:'「品詞」は単語をはたらきや性質で分類したもの。'},
 ];
 
-const SK_R='kanji18-renshu',SK_K='kanji18-kakitori',SK_NG='kanji18-nglist',MASTERY=3;
+const SK_R='kanji19-renshu',SK_K='kanji19-kakitori',SK_NG='kanji19-nglist',MASTERY=3;
 function lD(k){try{const r=localStorage.getItem(k);return r?JSON.parse(r):{};}catch(e){return{};}}
 function sD(k,d){try{localStorage.setItem(k,JSON.stringify(d));}catch(e){}}
 function getM(k,id){const d=lD(k);return d[id]||{correct:0,attempt:0};}
@@ -570,7 +568,7 @@ function renderQ(){
     document.getElementById('kakitori-answer').textContent='';
     document.getElementById('kakitori-reveal-btn').style.display='inline-block';
     document.getElementById('kakitori-btns').style.display='none';
-  } else {
+  }else{
     document.getElementById('choice-area').style.display='grid';
     document.getElementById('input-area').style.display='none';
     const area=document.getElementById('choice-area');area.innerHTML='';
