@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>言語知識テスト 練習アプリ 18・19回</title>
+<style>
+:root {
+  --bg: #0f172a; --surface: rgba(255,255,255,0.05); --border: rgba(255,255,255,0.1);
+  --blue: #3b82f6; --blue-light: #60a5fa; --green: #22c55e; --red: #ef4444;
+  --text: #f1f5f9; --muted: #94a3b8;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+body { background: linear-gradient(135deg,#0f172a 0%,#1e293b 60%,#0f3460 100%); min-height: 100vh; font-family: 'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif; color: var(--text); padding: 16px; }
+.wrap { max-width: 600px; margin: 0 auto; }
+.home-title { text-align: center; padding: 40px 0 32px; }
+.home-title-main { font-size: 38px; font-weight: 900; letter-spacing: 0.1em; text-shadow: 0 0 40px rgba(96,165,250,0.7); }
+.home-title-sub { font-size: 14px; color: #93c5fd; margin-top: 6px; }
+.mode-btn { display: flex; align-items: center; gap: 16px; width: 100%; padding: 24px 20px; border-radius: 18px; border: 1px solid var(--border); cursor: pointer; margin-bottom: 14px; text-align: left; color: var(--text); }
+.mode-btn-blue { background: linear-gradient(135deg,#1e3a5f,#1e40af); box-shadow: 0 8px 32px rgba(59,130,246,0.25); }
+.mode-btn-green { background: linear-gradient(135deg,#14432a,#166534); box-shadow: 0 8px 32px rgba(34,197,94,0.2); }
+.mode-btn-orange { background: linear-gradient(135deg,#7c2d12,#c2410c); box-shadow: 0 8px 32px rgba(249,115,22,0.2); }
+.mode-icon { font-size: 36px; }
+.mode-name { font-size: 20px; font-weight: 800; margin-bottom: 4px; }
+.mode-note { font-size: 13px; color: var(--muted); }
+.redo-count { font-size: 12px; color: #fed7aa; background: rgba(249,115,22,0.2); padding: 2px 8px; border-radius: 99px; margin-left: 8px; }
+.back-btn { background: none; border: none; color: var(--blue-light); font-size: 15px; cursor: pointer; margin-bottom: 20px; padding: 4px 0; }
+.select-title { font-size: 20px; font-weight: 800; margin-bottom: 20px; }
+.select-btn { display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 18px 20px; margin-bottom: 10px; border-radius: 14px; border: 1px solid var(--border); background: var(--surface); cursor: pointer; color: var(--text); }
+.select-name { font-size: 17px; font-weight: 700; }
+.select-count { font-size: 13px; color: var(--blue-light); background: rgba(96,165,250,0.15); padding: 3px 10px; border-radius: 99px; }
+.prog-bar { height: 6px; background: rgba(255,255,255,0.1); border-radius: 99px; margin-bottom: 16px; overflow: hidden; }
+.prog-fill { height: 100%; background: linear-gradient(90deg,#3b82f6,#60a5fa); border-radius: 99px; transition: width 0.3s; }
+.quiz-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.badge { font-size: 12px; font-weight: 700; color: var(--blue-light); background: rgba(96,165,250,0.15); padding: 3px 10px; border-radius: 99px; }
+.counter { font-size: 13px; color: #64748b; }
+.q-box { background: var(--surface); border-radius: 16px; padding: 18px; margin-bottom: 14px; border: 1px solid var(--border); }
+.q-text { font-size: 15px; line-height: 1.9; font-weight: 600; white-space: pre-wrap; }
+.opt-btn { display: flex; align-items: flex-start; gap: 10px; width: 100%; padding: 12px 14px; margin-bottom: 8px; border-radius: 12px; border: 1px solid var(--border); background: rgba(255,255,255,0.04); cursor: pointer; color: var(--text); text-align: left; font-size: 14px; font-weight: 600; font-family: inherit; }
+.opt-btn:disabled { cursor: default; }
+.opt-num { width: 26px; height: 26px; border-radius: 50%; background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; color: var(--blue-light); min-width: 26px; margin-top: 1px; }
+.opt-ok { border-color: var(--green)!important; background: rgba(34,197,94,0.15)!important; color: #86efac; }
+.opt-ng { border-color: var(--red)!important; background: rgba(239,68,68,0.15)!important; color: #fca5a5; }
+.opt-dim { opacity: 0.35; }
+.exp-box { background: var(--surface); border-radius: 16px; padding: 18px; border: 1px solid var(--border); margin-top: 4px; }
+.result-tag { font-size: 15px; font-weight: 800; margin-bottom: 8px; }
+.exp-text { font-size: 13px; color: var(--muted); line-height: 1.8; margin-bottom: 12px; }
+.ai-hint { background: rgba(96,165,250,0.08); border: 1px solid rgba(96,165,250,0.2); border-radius: 10px; padding: 10px 14px; font-size: 13px; color: #bfdbfe; line-height: 1.7; margin-bottom: 14px; }
+.ai-hint-label { font-size: 11px; font-weight: 700; color: var(--blue-light); display: block; margin-bottom: 4px; }
+.next-btn { width: 100%; padding: 14px; border-radius: 12px; background: linear-gradient(135deg,#2563eb,#1d4ed8); color: #fff; font-weight: 800; font-size: 16px; border: none; cursor: pointer; }
+.quit-btn { width: 100%; padding: 10px; border-radius: 10px; background: none; border: 1px solid var(--border); color: var(--muted); font-size: 13px; cursor: pointer; margin-top: 8px; margin-bottom: 14px; font-family: inherit; }
+.score-box { text-align: center; background: var(--surface); border-radius: 20px; padding: 32px 24px; border: 1px solid var(--border); margin-bottom: 28px; }
+.score-num { font-size: 64px; font-weight: 900; line-height: 1; margin-bottom: 8px; }
+.score-total { font-size: 28px; color: var(--muted); }
+.score-msg { font-size: 18px; color: var(--blue-light); font-weight: 700; }
+.res-item { padding: 12px 14px; margin-bottom: 10px; border-radius: 12px; background: var(--surface); border-left: 4px solid transparent; }
+.res-q { font-size: 12px; color: var(--muted); margin-bottom: 4px; line-height: 1.5; }
+.res-a { font-size: 14px; font-weight: 700; }
+.res-wrong { color: #f87171; font-weight: 400; font-size: 12px; }
+.result-actions { display: flex; gap: 12px; margin-bottom: 14px; }
+.retry-btn { flex: 1; padding: 14px; border-radius: 12px; background: linear-gradient(135deg,#2563eb,#1d4ed8); color: #fff; font-weight: 800; font-size: 16px; border: none; cursor: pointer; }
+.home-btn2 { flex: 1; padding: 14px; border-radius: 12px; background: rgba(255,255,255,0.08); color: #fff; font-weight: 800; font-size: 16px; border: 1px solid var(--border); cursor: pointer; }
+.redo-result-btn { width: 100%; padding: 14px; border-radius: 12px; background: linear-gradient(135deg,#7c2d12,#c2410c); color: #fff; font-weight: 800; font-size: 16px; border: none; cursor: pointer; margin-bottom: 32px; font-family: inherit; }
+.reset-btn2 { width: 100%; padding: 10px; border-radius: 10px; background: none; border: 1px solid rgba(239,68,68,0.3); color: #f87171; font-size: 13px; cursor: pointer; margin-top: 8px; font-family: inherit; }
+.hidden { display: none!important; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div id="screen-home">
+    <div class="home-title">
+      <div class="home-title-main">言語知識</div>
+      <div class="home-title-sub">練習アプリ　第18・19回</div>
+    </div>
+    <button class="mode-btn mode-btn-blue" onclick="showThemeSelect()">
+      <span class="mode-icon">📚</span>
+      <div><div class="mode-name">テーマ別で練習</div><div class="mode-note">敬語・対義語・季節の言葉など分野ごとに学ぶ</div></div>
+    </button>
+    <button class="mode-btn mode-btn-green" onclick="showRoundSelect()">
+      <span class="mode-icon">📝</span>
+      <div><div class="mode-name">回数別で確認</div><div class="mode-note">第18・19回をテスト形式で解く</div></div>
+    </button>
+    <button class="mode-btn mode-btn-orange" id="redo-home-btn" onclick="startRedoQuiz()" style="display:none">
+      <span class="mode-icon">🔁</span>
+      <div><div class="mode-name">解き直し <span class="redo-count" id="redo-home-count"></span></div><div class="mode-note">間違えた問題を累積復習</div></div>
+    </button>
+    <button class="reset-btn2" onclick="doReset()" id="reset-btn">🗑️ 解き直しリストをリセット</button>
+  </div>
+
+  <div id="screen-theme" class="hidden">
+    <button class="back-btn" onclick="showHome()">← もどる</button>
+    <div class="select-title">テーマを選んでください</div>
+    <div id="theme-list"></div>
+  </div>
+
+  <div id="screen-round" class="hidden">
+    <button class="back-btn" onclick="showHome()">← もどる</button>
+    <div class="select-title">回を選んでください</div>
+    <div id="round-list"></div>
+  </div>
+
+  <div id="screen-quiz" class="hidden">
+    <div class="prog-bar"><div class="prog-fill" id="prog-fill"></div></div>
+    <div class="quiz-meta">
+      <span class="badge" id="q-theme"></span>
+      <span class="counter" id="q-counter"></span>
+    </div>
+    <div class="q-box"><p class="q-text" id="q-text"></p></div>
+    <div id="options"></div>
+    <button class="quit-btn" id="quit-btn" onclick="quitQuiz()">終了する →</button>
+    <div id="exp-area" class="hidden">
+      <div class="exp-box">
+        <div class="result-tag" id="result-tag"></div>
+        <div class="exp-text" id="exp-text"></div>
+        <div class="ai-hint hidden" id="ai-hint-box"><span class="ai-hint-label">💡 ポイント</span><span id="ai-hint-text"></span></div>
+        <button class="next-btn" id="next-btn" onclick="nextQuestion()">次の問題 →</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="screen-result" class="hidden">
+    <button class="back-btn" onclick="showHome()">← もどる</button>
+    <div class="score-box">
+      <div class="score-num" id="score-num"></div>
+      <div class="score-msg" id="score-msg"></div>
+    </div>
+    <div id="answer-list"></div>
+    <div class="result-actions">
+      <button class="retry-btn" onclick="retryQuiz()">もう一度</button>
+      <button class="home-btn2" onclick="showHome()">トップへ</button>
+    </div>
+    <button class="redo-result-btn hidden" id="redo-result-btn" onclick="startRedoQuiz()">🔁 間違えた問題を解き直す</button>
+  </div>
+</div>
+
+<script>
+const Q = [
+
+  // ===== 第18回 =====
+
+  // 問1 敬語の種類（識別）
+  {id:'18-1-1', round:18, theme:'敬語',
+   question:'【第18回 問1】\n「明日私がこちらにまいります。」\n\n線をつけた「まいります」は、どの敬語ですか？\n\nア 尊敬語　イ 謙譲語　ウ 丁寧語',
+   options:['ア 尊敬語','イ 謙譲語','ウ 丁寧語'],
+   answer:1,
+   explanation:'「まいる」は「行く・来る」の謙譲語。自分（私）の動作をへりくだって表す。「先生がいらっしゃいます（尊敬）」との対比で覚えよう。'},
+
+  {id:'18-1-2', round:18, theme:'敬語',
+   question:'【第18回 問1】\n「校長先生が教室にいらっしゃいました。」\n\n線をつけた「いらっしゃいました」は、どの敬語ですか？\n\nア 尊敬語　イ 謙譲語　ウ 丁寧語',
+   options:['ア 尊敬語','イ 謙譲語','ウ 丁寧語'],
+   answer:0,
+   explanation:'「いらっしゃる」は「いる・行く・来る」の尊敬語。相手（校長先生）の動作を高めて表す。'},
+
+  {id:'18-1-3', round:18, theme:'敬語',
+   question:'【第18回 問1】\n「私の作品を来賓の先生方がご覧になる。」\n\n線をつけた「ご覧になる」は、どの敬語ですか？\n\nア 尊敬語　イ 謙譲語　ウ 丁寧語',
+   options:['ア 尊敬語','イ 謙譲語','ウ 丁寧語'],
+   answer:0,
+   explanation:'「ご覧になる」は「見る」の尊敬語。相手（先生方）の動作を高めて表す。「拝見する（謙譲）」との対比で覚えよう。'},
+
+  {id:'18-1-4', round:18, theme:'敬語',
+   question:'【第18回 問1】\n「お菓子の代金はじいちゃんに請求してください。」\n\n線をつけた「お菓子」は、どの敬語ですか？\n\nア 尊敬語　イ 謙譲語　ウ 丁寧語',
+   options:['ア 尊敬語','イ 謙譲語','ウ 丁寧語'],
+   answer:2,
+   explanation:'「お菓子」の「お」は物を丁寧に言うときにつける丁寧語の接頭語。相手の物を高めているわけでも、自分をへりくだっているわけでもない。'},
+
+  {id:'18-1-5', round:18, theme:'敬語',
+   question:'【第18回 問1】\n「スープが冷めないうちに、めしあがってください。」\n\n線をつけた「めしあがって」は、どの敬語ですか？\n\nア 尊敬語　イ 謙譲語　ウ 丁寧語',
+   options:['ア 尊敬語','イ 謙譲語','ウ 丁寧語'],
+   answer:0,
+   explanation:'「めしあがる」は「食べる・飲む」の尊敬語。相手の動作（食べること）を高めて表す。自分が食べる場合は「いただく（謙譲語）」。'},
+
+  {id:'18-1-6', round:18, theme:'敬語',
+   question:'【第18回 問1】\n「ご入学、おめでとうございます。」\n\n線をつけた「ご入学」は、どの敬語ですか？\n\nア 尊敬語　イ 謙譲語　ウ 丁寧語',
+   options:['ア 尊敬語','イ 謙譲語','ウ 丁寧語'],
+   answer:0,
+   explanation:'「ご入学」の「ご」は相手（入学する人）の行為を高めて表す尊敬語の接頭語。「ご〇〇」が相手の行為なら尊敬語になる。'},
+
+  {id:'18-1-7', round:18, theme:'敬語',
+   question:'【第18回 問1】\n「総理大臣に私の考えを申してまいりました。」\n\n線をつけた「申して」は、どの敬語ですか？\n\nア 尊敬語　イ 謙譲語　ウ 丁寧語',
+   options:['ア 尊敬語','イ 謙譲語','ウ 丁寧語'],
+   answer:1,
+   explanation:'「申す」は「言う」の謙譲語。自分（私）の動作をへりくだって、相手（総理大臣）を立てる表現。「おっしゃる（尊敬語）」との対比で覚えよう。'},
+
+  {id:'18-1-8', round:18, theme:'敬語',
+   question:'【第18回 問1】\n「全力を尽くして優勝するためにがんばります。」\n\n線をつけた「がんばります」は、どの敬語ですか？\n\nア 尊敬語　イ 謙譲語　ウ 丁寧語',
+   options:['ア 尊敬語','イ 謙譲語','ウ 丁寧語'],
+   answer:2,
+   explanation:'「がんばります」の「ます」は丁寧語。相手を高めたり自分をへりくだったりしているわけではなく、丁寧に言っているだけ。'},
+
+  // 問2 敬語の書き換え（18回）
+  {id:'18-2-1', round:18, theme:'敬語',
+   question:'【第18回 問2】\n「校長先生の言うとおりに準備を進めた。」\n\n「言う」を5字の敬語に書き改めると？',
+   options:['おっしゃる','いわれる','おもうしになる','もうされる','ごいけんの'],
+   answer:0,
+   explanation:'「言う」の尊敬語は「おっしゃる」（5字）。校長先生（目上の人）の言葉を高めて表す。「申す（謙譲語）」との対比で覚えよう。'},
+
+  {id:'18-2-2', round:18, theme:'敬語',
+   question:'【第18回 問2】\n「私は、秘蔵の名画を見る機会を与えられた。」\n\n「見る」を6字の謙譲語に書き改めると？',
+   options:['はいけんする','ごらんになる','おみせになる','みせていただく','おながめになる'],
+   answer:0,
+   explanation:'「見る」の謙譲語は「拝見する（はいけんする）」（6字）。自分が見る動作をへりくだって表す。「ご覧になる（尊敬語）」との対比で覚えよう。'},
+
+  {id:'18-2-3', round:18, theme:'敬語',
+   question:'【第18回 問2】\n「王様は将棋をするとのことでした。」\n\n「する」を3字の尊敬語に書き改めると？',
+   options:['なさる','されます','いたされる','いたします','ごなさる'],
+   answer:0,
+   explanation:'「する」の尊敬語は「なさる」（3字）。王様（目上の人）の動作を高めて表す。「いたす（謙譲語）」との対比で覚えよう。'},
+
+  {id:'18-2-4', round:18, theme:'敬語',
+   question:'【第18回 問2】\n「殿のお供をして私も湯豆腐を食べた。」\n\n「食べた」を4字の謙譲語に書き改めると？',
+   options:['いただいた','めしあがった','おたべした','ごえんりょした','おくちにした'],
+   answer:0,
+   explanation:'「食べる」の謙譲語は「いただく」（4字）。自分が食べる動作をへりくだって表す。「めしあがる（尊敬語）」との対比で覚えよう。'},
+
+  {id:'18-2-5', round:18, theme:'敬語',
+   question:'【第18回 問2】\n「私が新しい城の中を案内する。」\n\n「案内する」を7字の謙譲語に書き改めると？',
+   options:['ごあんないする','おあんないします','ごあんないします','あんないいたす','ごあんないいたします'],
+   answer:2,
+   explanation:'「案内する」の謙譲語は「ご案内します（ごあんないします）」（7字）。自分の動作に「ご〜します」をつけて謙譲語にする。'},
+
+  {id:'18-2-6', round:18, theme:'敬語',
+   question:'【第18回 問2】\n「微力ながら殿を助ける。」\n\n「助ける」を6字の謙譲語に書き改めると？',
+   options:['おたすけします','おたすけする','おたすけいたす','たすけさせます','たすけまいらす'],
+   answer:2,
+   explanation:'「助ける」の謙譲語は「お助けいたす（おたすけいたす）」（6字）。「お〜いたす」の形で謙譲語になる。'},
+
+  {id:'18-2-7', round:18, theme:'敬語',
+   question:'【第18回 問2】\n「たしなむ程度ですが、私も将棋をします。」\n\n「します」を3字の謙譲語に書き改めると？',
+   options:['いたす','なさる','されます','もうす','まいる'],
+   answer:0,
+   explanation:'「する」の謙譲語は「いたす」（3字）。自分の動作をへりくだって表す。「なさる（尊敬語）」との対比で覚えよう。'},
+
+  // 問3 対義語（選択）
+  {id:'18-3-1', round:18, theme:'対義語・熟語',
+   question:'【第18回 問3】\n「質（しつ）」の対義語はどれですか？\n\nア 裏　イ 模倣　ウ 延長　オ 量　カ 敵対　キ 複雑',
+   options:['ア 裏','イ 模倣','ウ 延長','オ 量','カ 敵対','キ 複雑'],
+   answer:3,
+   explanation:'「質（しつ）」は物事の性質・内容のこと。対義語は「量（りょう）」（数・量の多少）。「質より量」「質と量」のようにセットで使われる。'},
+
+  {id:'18-3-2', round:18, theme:'対義語・熟語',
+   question:'【第18回 問3】\n「友好（ゆうこう）」の対義語はどれですか？\n\nア 裏　イ 模倣　ウ 延長　オ 量　カ 敵対　キ 複雑',
+   options:['ア 裏','イ 模倣','ウ 延長','オ 量','カ 敵対','キ 複雑'],
+   answer:4,
+   explanation:'「友好」は仲よく親しくすること。対義語は「敵対（てきたい）」（敵として向かい合うこと）。「友好国」⇔「敵対国」のように使う。'},
+
+  {id:'18-3-3', round:18, theme:'対義語・熟語',
+   question:'【第18回 問3】\n「簡単（かんたん）」の対義語はどれですか？\n\nア 裏　イ 模倣　ウ 延長　オ 量　カ 敵対　キ 複雑',
+   options:['ア 裏','イ 模倣','ウ 延長','オ 量','カ 敵対','キ 複雑'],
+   answer:5,
+   explanation:'「簡単」は手間がかからず容易なこと。対義語は「複雑（ふくざつ）」（入り組んでいてわかりにくいこと）。'},
+
+  {id:'18-3-4', round:18, theme:'対義語・熟語',
+   question:'【第18回 問3】\n「創造（そうぞう）」の対義語はどれですか？\n\nア 裏　イ 模倣　ウ 延長　オ 量　カ 敵対　キ 複雑',
+   options:['ア 裏','イ 模倣','ウ 延長','オ 量','カ 敵対','キ 複雑'],
+   answer:1,
+   explanation:'「創造」は新しいものを作り出すこと。対義語は「模倣（もほう）」（他のものをまねること）。「創造的」⇔「模倣的」。'},
+
+  // 問4 熟語の意味と対義語
+  {id:'18-4-1', round:18, theme:'対義語・熟語',
+   question:'【第18回 問4】\n「偶然（ぐうぜん）」の意味はどれですか？\n\nア そのとおりであると認めること。\nイ 他との因果関係がはっきりせず、予期できないような仕方で物事が起こること。\nウ いつでもどこでも誰にでもあてはまること。',
+   options:['ア：そのとおりであると認めること。','イ：因果関係がはっきりせず予期できないような仕方で物事が起こること。','ウ：いつでもどこでも誰にでもあてはまること。'],
+   answer:1,
+   explanation:'「偶然」は原因・結果の関係がはっきりせず、思いがけず起こること。対義語は「必然（ひつぜん）」（必ずそうなること）。'},
+
+  {id:'18-4-1b', round:18, theme:'対義語・熟語',
+   question:'【第18回 問4】\n「偶然（ぐうぜん）」の対義語はどれですか？',
+   options:['必然（ひつぜん）','特殊（とくしゅ）','否定（ひてい）','具体（ぐたい）','相対（そうたい）'],
+   answer:0,
+   explanation:'「偶然」（たまたま起こること）の対義語は「必然（ひつぜん）」（必ずそうなること・当然の結果）。「必然的な結果」のように使う。'},
+
+  {id:'18-4-2', round:18, theme:'対義語・熟語',
+   question:'【第18回 問4】\n「肯定（こうてい）」の意味はどれですか？\n\nア そのとおりであると認めること。\nイ 他との因果関係がはっきりせず、予期できないような仕方で物事が起こること。\nウ いつでもどこでも誰にでもあてはまること。',
+   options:['ア：そのとおりであると認めること。','イ：因果関係がはっきりせず予期できないような仕方で物事が起こること。','ウ：いつでもどこでも誰にでもあてはまること。'],
+   answer:0,
+   explanation:'「肯定（こうてい）」はそのとおりであると認めること・賛成すること。対義語は「否定（ひてい）」（そうでないと打ち消すこと）。'},
+
+  {id:'18-4-2b', round:18, theme:'対義語・熟語',
+   question:'【第18回 問4】\n「肯定（こうてい）」の対義語はどれですか？',
+   options:['必然（ひつぜん）','特殊（とくしゅ）','否定（ひてい）','具体（ぐたい）','相対（そうたい）'],
+   answer:2,
+   explanation:'「肯定」（そうだと認めること）の対義語は「否定（ひてい）」（そうではないと打ち消すこと）。「肯定的・否定的」のように使う。'},
+
+  {id:'18-4-3', round:18, theme:'対義語・熟語',
+   question:'【第18回 問4】\n「普遍（ふへん）」の意味はどれですか？\n\nア そのとおりであると認めること。\nイ 他との因果関係がはっきりせず、予期できないような仕方で物事が起こること。\nウ いつでもどこでも誰にでもあてはまること。',
+   options:['ア：そのとおりであると認めること。','イ：因果関係がはっきりせず予期できないような仕方で物事が起こること。','ウ：いつでもどこでも誰にでもあてはまること。'],
+   answer:2,
+   explanation:'「普遍（ふへん）」はいつでも・どこでも・誰にでもあてはまること。対義語は「特殊（とくしゅ）」（ある場合・ある人だけにあてはまること）。'},
+
+  {id:'18-4-3b', round:18, theme:'対義語・熟語',
+   question:'【第18回 問4】\n「普遍（ふへん）」の対義語はどれですか？',
+   options:['必然（ひつぜん）','特殊（とくしゅ）','否定（ひてい）','具体（ぐたい）','相対（そうたい）'],
+   answer:1,
+   explanation:'「普遍」（誰にでも当てはまる）の対義語は「特殊（とくしゅ）」（ある限られた場合や人だけに当てはまること）。「普遍的⇔特殊的」。'},
+
+  // 問5 一字を変えて対義語
+  {id:'18-5-1', round:18, theme:'対義語・熟語',
+   question:'【第18回 問5】\n「異常（いじょう）」の漢字一字を変えて対義語を作ります。正しい対義語はどれですか？',
+   options:['正常（せいじょう）','異常（いじょう）のまま','非常（ひじょう）','以上（いじょう）','異様（いよう）'],
+   answer:0,
+   explanation:'「異常」（普通でない状態）の対義語は、「異」を「正」に変えた「正常（せいじょう）」（普通・正常な状態）。「正常に動いている」のように使う。'},
+
+  {id:'18-5-2', round:18, theme:'対義語・熟語',
+   question:'【第18回 問5】\n「時間（じかん）」の漢字一字を変えて対義語を作ります。正しい対義語はどれですか？',
+   options:['空間（くうかん）','時期（じき）','瞬間（しゅんかん）','時刻（じこく）','空白（くうはく）'],
+   answer:0,
+   explanation:'「時間」（時の流れ・経過）の対義語は、「時」を「空」に変えた「空間（くうかん）」（広がり・場所）。「時間と空間」はセットで宇宙を表す概念。'},
+
+  {id:'18-5-3', round:18, theme:'対義語・熟語',
+   question:'【第18回 問5】\n「就任（しゅうにん）」の漢字一字を変えて対義語を作ります。正しい対義語はどれですか？',
+   options:['辞任（じにん）','退任（たいにん）','離任（りにん）','就職（しゅうしょく）','任務（にんむ）'],
+   answer:0,
+   explanation:'「就任」（職に就くこと）の対義語は、「就」を「辞」に変えた「辞任（じにん）」（職を辞めること）。「就任式」⇔「辞任会見」のように使う。'},
+
+  // ===== 第19回 =====
+
+  // 問1 敬語の種類（識別）
+  {id:'19-1-1', round:19, theme:'敬語',
+   question:'【第19回 問1】\n「今朝はずいぶん寒うございますね。」\n\n線をつけた「ございます」は、どの敬語ですか？\n\nア 尊敬語　イ 謙譲語　ウ 丁寧語',
+   options:['ア 尊敬語','イ 謙譲語','ウ 丁寧語'],
+   answer:2,
+   explanation:'「ございます」は「ある・です」の丁寧語。相手を高めたり自分をへりくだったりしているのではなく、丁寧に言っているだけ。'},
+
+  {id:'19-1-2', round:19, theme:'敬語',
+   question:'【第19回 問1】\n「ご注文は、私が承りました。」\n\n線をつけた「承りました」は、どの敬語ですか？\n\nア 尊敬語　イ 謙譲語　ウ 丁寧語',
+   options:['ア 尊敬語','イ 謙譲語','ウ 丁寧語'],
+   answer:1,
+   explanation:'「承る（うけたまわる）」は「聞く・引き受ける」の謙譲語。自分（私）の動作をへりくだって、相手（お客様）を立てる表現。'},
+
+  {id:'19-1-3', round:19, theme:'敬語',
+   question:'【第19回 問1】\n「殿の無事を伝えるために全力で走りました。」\n\n線をつけた「走りました」は、どの敬語ですか？\n\nア 尊敬語　イ 謙譲語　ウ 丁寧語',
+   options:['ア 尊敬語','イ 謙譲語','ウ 丁寧語'],
+   answer:2,
+   explanation:'「走りました」の「ました」は丁寧語。相手を高めたり自分をへりくだったりしているわけではなく、丁寧に言っているだけ。'},
+
+  {id:'19-1-4', round:19, theme:'敬語',
+   question:'【第19回 問1】\n「お茶にしますか、それとも、お酒にしますか。」\n\n線をつけた「お茶」は、どの敬語ですか？\n\nア 尊敬語　イ 謙譲語　ウ 丁寧語',
+   options:['ア 尊敬語','イ 謙譲語','ウ 丁寧語'],
+   answer:2,
+   explanation:'「お茶」の「お」は物を丁寧に言う丁寧語の接頭語。相手の物を高めているわけでも、自分をへりくだっているわけでもない。'},
+
+  {id:'19-1-5', round:19, theme:'敬語',
+   question:'【第19回 問1】\n「ご健康にはくれぐれもご注意ください。」\n\n線をつけた「ご健康」は、どの敬語ですか？\n\nア 尊敬語　イ 謙譲語　ウ 丁寧語',
+   options:['ア 尊敬語','イ 謙譲語','ウ 丁寧語'],
+   answer:0,
+   explanation:'「ご健康」の「ご」は相手の状態を高める尊敬語の接頭語。相手（あなた）の健康を高めて言っている。'},
+
+  {id:'19-1-6', round:19, theme:'敬語',
+   question:'【第19回 問1】\n「その問題については存じあげております。」\n\n線をつけた「存じあげております」は、どの敬語ですか？\n\nア 尊敬語　イ 謙譲語　ウ 丁寧語',
+   options:['ア 尊敬語','イ 謙譲語','ウ 丁寧語'],
+   answer:1,
+   explanation:'「存じあげる」は「知る・思う」の謙譲語。自分（私）の動作をへりくだって表す。「ご存知ですか（尊敬語）」との対比で覚えよう。'},
+
+  // 問2 敬語の書き換え（19回）
+  {id:'19-2-1', round:19, theme:'敬語',
+   question:'【第19回 問2】\n「特大のハンバーグを私は食べた。」\n\n「食べた」を4字の謙譲語に書き改めると？',
+   options:['いただいた','めしあがった','たべました','ごちそうした','おくちにした'],
+   answer:0,
+   explanation:'「食べる」の謙譲語は「いただく」（4字：いただいた）。自分が食べる動作をへりくだって表す。「めしあがる（尊敬語）」との対比で覚えよう。'},
+
+  {id:'19-2-2', round:19, theme:'敬語',
+   question:'【第19回 問2】\n「勇気を出して改革についての意見を私は言った。」\n\n「言った」を5字の謙譲語に書き改めると？',
+   options:['もうした','おっしゃった','いわれた','おもうした','ごいけんした'],
+   answer:0,
+   explanation:'「言う」の謙譲語は「申す（もうす）」（5字：もうした）。自分の発言をへりくだって表す。「おっしゃる（尊敬語）」との対比で覚えよう。'},
+
+  {id:'19-2-3', round:19, theme:'敬語',
+   question:'【第19回 問2】\n「王様に会うためにはるばる峠を越えてやってきた。」\n\n「やってきた」を6字の謙譲語に書き改めると？',
+   options:['まいりました','いらっしゃった','おこしになった','おいでになった','ごじゃいました'],
+   answer:0,
+   explanation:'「来る」の謙譲語は「まいる」（6字：まいりました）。自分が来る動作をへりくだって表す。「いらっしゃる（尊敬語）」との対比で覚えよう。'},
+
+  {id:'19-2-4', round:19, theme:'敬語',
+   question:'【第19回 問2】\n「私の作品を見るために先生が会場にやってきた。」\n\n「やってきた」を6字の尊敬語に書き改めると？',
+   options:['おいでになった','まいりました','おこしになった','いらっしゃった','いらっしゃいました'],
+   answer:3,
+   explanation:'「来る」の尊敬語は「いらっしゃる」（6字：いらっしゃった）。先生（目上の人）が来る動作を高めて表す。「まいる（謙譲語）」との対比で覚えよう。'},
+
+  // 問3 場面にふさわしい表現
+  {id:'19-3-1', round:19, theme:'敬語',
+   question:'【第19回 問3】\n【駅員が乗客に対して】\n「（　　）車内の奥へおつめください。」\n\n（　　）にふさわしい表現はどれですか？\n\nア 乗ったら　イ 乗りましたら　ウ お乗りになったら',
+   options:['ア 乗ったら','イ 乗りましたら','ウ お乗りになったら'],
+   answer:2,
+   explanation:'駅員（自分側）→乗客（相手）への丁寧な呼びかけなので、乗客の動作「乗る」を「お乗りになる（尊敬語）」と高める。「ウ お乗りになったら」が正しい。'},
+
+  {id:'19-3-2', round:19, theme:'敬語',
+   question:'【第19回 問3】\n【役所の窓口で来訪者に】\n「この用紙に（　　）ください。」\n\n（　　）にふさわしい表現はどれですか？\n\nア お書き　イ お書きして　ウ お書きになられて',
+   options:['ア お書き（お書きください）','イ お書きして（お書きしてください）','ウ お書きになられて（お書きになられてください）'],
+   answer:0,
+   explanation:'「お書きください」は相手への丁寧なお願いの正しい形。「お書きになられて」は「お〜になる」と「られる」が二重敬語で不自然。「ア お書き」（お書きください）が正しい。'},
+
+  // 問4 季節の言葉（■に春・夏）
+  {id:'19-4-1', round:19, theme:'季節の言葉',
+   question:'【第19回 問4】\n「うららかな■の日差し」\n\n■に入る季節はどれですか？',
+   options:['春（１）','夏（２）','それ以外（３）'],
+   answer:0,
+   explanation:'「うららか」は春の穏やかで晴れやかな様子を表す言葉。「春うらら」という表現もある。「うららかな春の日差し」は春の季語。'},
+
+  {id:'19-4-2', round:19, theme:'季節の言葉',
+   question:'【第19回 問4】\n「■の日はつるべ落とし」\n\n■に入る季節はどれですか？',
+   options:['春（１）','夏（２）','それ以外（３）'],
+   answer:2,
+   explanation:'「つるべ落とし」は秋の言葉。秋は日が沈む速さが速いことを、井戸のつるべが素早く落ちることにたとえた表現。「秋の日はつるべ落とし」。'},
+
+  {id:'19-4-3', round:19, theme:'季節の言葉',
+   question:'【第19回 問4】\n「■至には柚子湯に入る」\n\n■に入る季節はどれですか？',
+   options:['春（１）','夏（２）','それ以外（３）'],
+   answer:2,
+   explanation:'「冬至（とうじ）には柚子湯に入る」。冬至は12月21日頃、一年で最も昼が短い日。柚子（ゆず）湯に入ると風邪をひかないという習慣がある。'},
+
+  {id:'19-4-4', round:19, theme:'季節の言葉',
+   question:'【第19回 問4】\n「■眠暁を覚えず」\n\n■に入る季節はどれですか？',
+   options:['春（１）','夏（２）','それ以外（３）'],
+   answer:0,
+   explanation:'「春眠暁を覚えず（しゅんみんあかつきをおぼえず）」は春の有名な詩の一節。春は眠りが気持ちよくて夜明けに気づかない、という意味。'},
+
+  // 問5 四季の言葉（食べ物）
+  {id:'19-5-1', round:19, theme:'季節の言葉',
+   question:'【第19回 問5】\n「大根」は春・夏・それ以外、どの季節の言葉ですか？',
+   options:['春（１）','夏（２）','それ以外（３）'],
+   answer:2,
+   explanation:'大根は冬の代表的な野菜。「冬大根」とも言い、寒い時期に甘くなる。俳句では冬の季語。'},
+
+  {id:'19-5-2', round:19, theme:'季節の言葉',
+   question:'【第19回 問5】\n「素麺（そうめん）」は春・夏・それ以外、どの季節の言葉ですか？',
+   options:['春（１）','夏（２）','それ以外（３）'],
+   answer:1,
+   explanation:'素麺（そうめん）は夏の食べ物。冷やして食べる夏の風物詩で、俳句でも夏の季語。七夕に素麺を食べる習慣もある。'},
+
+  {id:'19-5-3', round:19, theme:'季節の言葉',
+   question:'【第19回 問5】\n「さんま」は春・夏・それ以外、どの季節の言葉ですか？',
+   options:['春（１）','夏（２）','それ以外（３）'],
+   answer:2,
+   explanation:'さんま（秋刀魚）は秋の代表的な食べ物。「秋刀魚」という漢字の通り、秋が旬。「目黒のさんま」という落語でも有名。'},
+
+  {id:'19-5-4', round:19, theme:'季節の言葉',
+   question:'【第19回 問5】\n「わさび」は春・夏・それ以外、どの季節の言葉ですか？',
+   options:['春（１）','夏（２）','それ以外（３）'],
+   answer:0,
+   explanation:'わさびは春の山菜。春に白い花を咲かせ、山の清流沿いで育つ。俳句では春の季語。「山葵（わさび）の花」とも言う。'},
+];
+
+const THEMES = ['敬語','対義語・熟語','季節の言葉'];
+const ROUNDS = [18,19];
+const STORAGE_KEY = 'gengo18_redo';
+let questions=[], idx=0, score=0, answers=[], lastFilter=null, lastMode=null;
+
+function loadRedo(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');}catch{return[];}}
+function saveRedo(ids){localStorage.setItem(STORAGE_KEY,JSON.stringify(ids));}
+function updateRedoHomeBtn(){
+  const r=loadRedo(), btn=document.getElementById('redo-home-btn'), cnt=document.getElementById('redo-home-count');
+  if(r.length>0){btn.style.display='flex';cnt.textContent=r.length+'問';}
+  else{btn.style.display='none';}
+}
+function doReset(){
+  saveRedo([]);updateRedoHomeBtn();
+  const btn=document.getElementById('reset-btn');
+  btn.textContent='✅ リセットしました';
+  setTimeout(()=>{btn.textContent='🗑️ 解き直しリストをリセット';},2000);
+}
+function startRedoQuiz(){
+  const r=loadRedo();
+  if(!r.length){alert('解き直しの問題がありません');return;}
+  lastFilter='redo';lastMode='redo';
+  questions=shuffle(Q.filter(q=>r.includes(q.id)));
+  idx=0;score=0;answers=[];renderQ();showScreen('quiz');
+}
+function shuffle(a){return[...a].sort(()=>Math.random()-.5);}
+function showScreen(id){
+  ['home','theme','round','quiz','result'].forEach(s=>document.getElementById('screen-'+s).classList.add('hidden'));
+  document.getElementById('screen-'+id).classList.remove('hidden');
+}
+function showHome(){updateRedoHomeBtn();showScreen('home');}
+function showThemeSelect(){
+  document.getElementById('theme-list').innerHTML=THEMES.map(t=>{
+    const c=Q.filter(q=>q.theme===t).length;
+    return`<button class="select-btn" onclick="startQuiz('${t}','theme')"><span class="select-name">${t}</span><span class="select-count">${c}問</span></button>`;
+  }).join('');showScreen('theme');
+}
+function showRoundSelect(){
+  document.getElementById('round-list').innerHTML=ROUNDS.map(r=>{
+    const c=Q.filter(q=>q.round===r).length;
+    return`<button class="select-btn" onclick="startQuiz(${r},'round')"><span class="select-name">第${r}回</span><span class="select-count">${c}問</span></button>`;
+  }).join('');showScreen('round');
+}
+function startQuiz(filter,mode){
+  lastFilter=filter;lastMode=mode;
+  questions=shuffle(Q.filter(q=>mode==='theme'?q.theme===filter:q.round===filter));
+  idx=0;score=0;answers=[];renderQ();showScreen('quiz');
+}
+function renderQ(){
+  const q=questions[idx];
+  document.getElementById('prog-fill').style.width=(idx/questions.length*100)+'%';
+  document.getElementById('q-theme').textContent=q.theme;
+  document.getElementById('q-counter').textContent=(idx+1)+' / '+questions.length;
+  document.getElementById('q-text').textContent=q.question;
+  document.getElementById('exp-area').classList.add('hidden');
+  document.getElementById('ai-hint-box').classList.add('hidden');
+  document.getElementById('ai-hint-text').textContent='';
+  document.getElementById('quit-btn').style.display='block';
+  document.getElementById('options').innerHTML=q.options.map((o,i)=>
+    `<button class="opt-btn" id="opt-${i}" onclick="selectAns(${i})"><span class="opt-num">${i+1}</span><span>${o}</span></button>`
+  ).join('');
+  document.getElementById('next-btn').textContent=(idx+1>=questions.length)?'結果を見る →':'次の問題 →';
+}
+function selectAns(i){
+  const q=questions[idx], ok=i===q.answer;
+  if(ok)score++;
+  answers.push({question:q,userAnswer:i,correct:ok});
+  q.options.forEach((_,j)=>{
+    const b=document.getElementById('opt-'+j);b.disabled=true;
+    if(j===q.answer)b.classList.add('opt-ok');
+    else if(j===i)b.classList.add('opt-ng');
+    else b.classList.add('opt-dim');
+  });
+  document.getElementById('result-tag').textContent=ok?'✅ 正解！':'❌ 不正解　正解：'+q.options[q.answer];
+  document.getElementById('exp-text').textContent=q.explanation;
+  document.getElementById('exp-area').classList.remove('hidden');
+  document.getElementById('quit-btn').style.display='none';
+  document.getElementById('prog-fill').style.width=((idx+1)/questions.length*100)+'%';
+  fetchHint(q);
+}
+async function fetchHint(q){
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:200,
+        messages:[{role:'user',content:`小学5年生向け国語の解説です。以下の解説をもとに、子どもにわかりやすく30〜50字で「覚え方のポイント」を一言添えてください。解説：${q.explanation}`}]})});
+    const d=await r.json(),h=d.content?.[0]?.text;
+    if(h){document.getElementById('ai-hint-text').textContent=h;document.getElementById('ai-hint-box').classList.remove('hidden');}
+  }catch(e){}
+}
+function nextQuestion(){
+  if(idx+1>=questions.length){showResult();return;}
+  idx++;renderQ();
+}
+function quitQuiz(){
+  questions.forEach(q=>{
+    if(!answers.find(a=>a.question.id===q.id)){
+      answers.push({question:q,userAnswer:-1,correct:false});
+    }
+  });
+  showResult();
+}
+function showResult(){
+  questions.forEach(q=>{
+    if(!answers.find(a=>a.question.id===q.id)){
+      answers.push({question:q,userAnswer:-1,correct:false});
+    }
+  });
+  const wrongIds=answers.filter(a=>!a.correct).map(a=>a.question.id);
+  const correctIds=answers.filter(a=>a.correct).map(a=>a.question.id);
+  const existing=loadRedo();
+  const merged=[...new Set([...existing,...wrongIds])].filter(id=>!correctIds.includes(id));
+  saveRedo(merged);
+
+  document.getElementById('score-num').innerHTML=score+'<span class="score-total">/'+questions.length+'</span>';
+  const p=score/questions.length;
+  document.getElementById('score-msg').textContent=
+    score===questions.length?'🎉 満点！すばらしい！':p>=0.8?'👏 よくできました！':p>=0.6?'😊 もう少し！':'📖 もう一度挑戦しよう';
+  document.getElementById('answer-list').innerHTML=answers.map(a=>{
+    const w=!a.correct&&a.userAnswer>=0?'<span class="res-wrong">（あなた：'+a.question.options[a.userAnswer]+'）</span>':
+            !a.correct?'<span class="res-wrong">（未回答）</span>':'';
+    return`<div class="res-item" style="border-left-color:${a.correct?'#22c55e':'#ef4444'}">
+      <div class="res-q">${a.question.question.split('\n')[0]}</div>
+      <div class="res-a">${a.correct?'✅':'❌'} ${a.question.options[a.question.answer]}${w}</div></div>`;
+  }).join('');
+
+  showScreen('result');
+  const btn=document.getElementById('redo-result-btn');
+  if(merged.length>0){btn.textContent='🔁 間違えた'+merged.length+'問を解き直す';btn.style.display='block';}
+  else{btn.style.display='none';}
+  updateRedoHomeBtn();
+}
+function retryQuiz(){
+  if(lastMode==='redo'){startRedoQuiz();}else{startQuiz(lastFilter,lastMode);}
+}
+updateRedoHomeBtn();showHome();
+</script>
+</body>
+</html>
