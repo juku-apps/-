@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>漢コト 18-19回</title>
+<style>
+:root {
+  --bg:#0f172a;--surface:rgba(255,255,255,0.05);--border:rgba(255,255,255,0.1);
+  --accent:#f472b6;--accent2:#be185d;--green:#22c55e;--red:#ef4444;
+  --orange:#f97316;--text:#f1f5f9;--muted:#94a3b8;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{background:linear-gradient(135deg,#0f172a 0%,#1e293b 60%,#0f3460 100%);min-height:100vh;font-family:'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif;color:var(--text);padding:16px;}
+.wrap{max-width:600px;margin:0 auto;}
+.home-title{text-align:center;padding:36px 0 28px;}
+.home-title-main{font-size:36px;font-weight:900;letter-spacing:0.1em;color:var(--accent);text-shadow:0 0 40px rgba(244,114,182,0.5);}
+.home-title-sub{font-size:13px;color:var(--muted);margin-top:6px;}
+.section-label{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.1em;margin:20px 0 10px;}
+.home-btn{display:flex;align-items:center;gap:14px;width:100%;padding:20px 18px;border-radius:16px;border:1px solid var(--border);cursor:pointer;margin-bottom:12px;text-align:left;color:var(--text);font-family:inherit;}
+.home-btn-pink{background:linear-gradient(135deg,#4a1236,#9d174d);box-shadow:0 6px 24px rgba(244,114,182,0.2);}
+.home-btn-purple{background:linear-gradient(135deg,#2e1065,#5b21b6);box-shadow:0 6px 24px rgba(139,92,246,0.2);}
+.home-btn-teal{background:linear-gradient(135deg,#0f3460,#0e7490);box-shadow:0 6px 24px rgba(6,182,212,0.2);}
+.home-btn-orange{background:linear-gradient(135deg,#7c2d12,#c2410c);box-shadow:0 6px 24px rgba(249,115,22,0.2);}
+.btn-icon{font-size:30px;flex-shrink:0;}
+.btn-name{font-size:17px;font-weight:800;margin-bottom:3px;}
+.btn-note{font-size:12px;color:var(--muted);}
+.redo-count{font-size:11px;color:#fed7aa;background:rgba(249,115,22,0.2);padding:2px 8px;border-radius:99px;margin-left:6px;}
+.reset-btn{width:100%;padding:10px;border-radius:10px;background:none;border:1px solid rgba(239,68,68,0.3);color:rgba(239,68,68,0.6);font-size:12px;cursor:pointer;margin-top:8px;font-family:inherit;}
+.select-wrap{padding-top:8px;}
+.back-btn{background:none;border:none;color:var(--accent);font-size:14px;cursor:pointer;margin-bottom:16px;padding:4px 0;display:block;font-family:inherit;}
+.select-title{font-size:18px;font-weight:800;margin-bottom:16px;}
+.select-btn{display:flex;justify-content:space-between;align-items:center;width:100%;padding:18px;border-radius:14px;border:1px solid var(--border);background:var(--surface);cursor:pointer;color:var(--text);margin-bottom:10px;font-family:inherit;}
+.select-name{font-size:16px;font-weight:700;text-align:left;}
+.select-badge{font-size:12px;color:var(--accent);background:rgba(244,114,182,0.12);padding:3px 10px;border-radius:99px;white-space:nowrap;}
+.quiz-wrap{padding-top:8px;}
+.prog-bar{height:5px;background:rgba(255,255,255,0.08);border-radius:99px;margin-bottom:14px;overflow:hidden;}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:99px;transition:width 0.3s;}
+.quiz-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
+.quiz-badge{font-size:11px;font-weight:700;color:var(--accent);background:rgba(244,114,182,0.12);padding:3px 10px;border-radius:99px;}
+.quiz-counter{font-size:12px;color:var(--muted);}
+.q-box{background:var(--surface);border-radius:16px;padding:18px;margin-bottom:14px;border:1px solid var(--border);}
+.q-label{font-size:11px;font-weight:700;color:var(--accent);margin-bottom:8px;}
+.q-text{font-size:0.97rem;line-height:1.9;font-weight:600;white-space:pre-wrap;}
+.choices{display:flex;flex-direction:column;gap:8px;margin-bottom:10px;}
+.choice-btn{display:flex;align-items:flex-start;gap:10px;width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--border);background:rgba(255,255,255,0.04);cursor:pointer;color:var(--text);text-align:left;font-size:13px;font-weight:600;font-family:inherit;line-height:1.6;}
+.choice-btn:disabled{cursor:default;}
+.choice-num{width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;color:var(--accent);min-width:24px;margin-top:2px;}
+.choice-ok{border-color:var(--green)!important;background:rgba(34,197,94,0.12)!important;color:#86efac;}
+.choice-ng{border-color:var(--red)!important;background:rgba(239,68,68,0.12)!important;color:#fca5a5;}
+.choice-dim{opacity:0.35;}
+.exp-box{background:var(--surface);border-radius:14px;padding:16px;border:1px solid var(--border);margin-top:4px;}
+.exp-tag{font-size:14px;font-weight:800;margin-bottom:8px;}
+.exp-text{font-size:12px;color:var(--muted);line-height:1.8;margin-bottom:12px;}
+.ai-hint{background:rgba(96,165,250,0.07);border:1px solid rgba(96,165,250,0.2);border-radius:10px;padding:10px 12px;font-size:12px;color:#bfdbfe;line-height:1.7;margin-bottom:12px;}
+.ai-hint-label{font-size:10px;font-weight:700;color:#60a5fa;display:block;margin-bottom:3px;}
+.next-btn{width:100%;padding:13px;border-radius:12px;background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff;font-weight:800;font-size:15px;border:none;cursor:pointer;font-family:inherit;}
+.quit-btn{width:100%;padding:10px;border-radius:10px;background:none;border:1px solid var(--border);color:var(--muted);font-size:13px;cursor:pointer;margin-top:8px;margin-bottom:14px;font-family:inherit;}
+.result-score{text-align:center;background:var(--surface);border-radius:18px;padding:28px 20px;border:1px solid var(--border);margin-bottom:24px;}
+.score-num{font-size:60px;font-weight:900;line-height:1;margin-bottom:6px;}
+.score-total{font-size:24px;color:var(--muted);}
+.score-msg{font-size:16px;color:var(--accent);font-weight:700;}
+.res-item{padding:10px 12px;margin-bottom:8px;border-radius:10px;background:var(--surface);border-left:4px solid transparent;}
+.res-q{font-size:11px;color:var(--muted);margin-bottom:3px;line-height:1.5;}
+.res-a{font-size:13px;font-weight:700;}
+.res-wrong{color:#f87171;font-weight:400;font-size:11px;}
+.result-actions{display:flex;gap:10px;margin-bottom:14px;}
+.again-btn{flex:1;padding:13px;border-radius:12px;background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff;font-weight:800;font-size:15px;border:none;cursor:pointer;font-family:inherit;}
+.top-btn{flex:1;padding:13px;border-radius:12px;background:rgba(255,255,255,0.07);color:#fff;font-weight:800;font-size:15px;border:1px solid var(--border);cursor:pointer;font-family:inherit;}
+.redo-result-btn{width:100%;padding:13px;border-radius:12px;background:linear-gradient(135deg,#7c2d12,#c2410c);color:#fff;font-weight:800;font-size:15px;border:none;cursor:pointer;margin-bottom:32px;font-family:inherit;}
+.word-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:28px 22px;margin-bottom:16px;position:relative;overflow:hidden;}
+.word-card::before{content:'';position:absolute;top:-40px;right:-40px;width:160px;height:160px;background:radial-gradient(circle,rgba(244,114,182,0.07),transparent 70%);pointer-events:none;}
+.word-card-main{font-size:1.7rem;font-weight:900;color:var(--accent);text-align:center;margin-bottom:6px;letter-spacing:0.04em;}
+.word-card-read{font-size:0.78rem;color:var(--muted);text-align:center;margin-bottom:18px;}
+.word-card-divider{height:1px;background:var(--border);margin-bottom:18px;}
+.word-card-label{font-size:0.65rem;color:var(--muted);letter-spacing:0.12em;margin-bottom:8px;}
+.word-card-meaning{font-size:0.9rem;line-height:1.85;margin-bottom:12px;}
+.word-card-ex{font-size:0.82rem;color:var(--accent);line-height:1.7;padding:10px 14px;background:rgba(244,114,182,0.06);border-radius:10px;}
+.card-nav-row{display:flex;gap:10px;align-items:center;margin-bottom:16px;}
+.prev-card-btn{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 18px;color:var(--muted);font-family:inherit;font-size:0.9rem;cursor:pointer;}
+.next-card-btn{flex:1;background:linear-gradient(135deg,#1d4ed8,#2563eb);border:none;border-radius:12px;padding:16px;color:white;font-family:inherit;font-size:1rem;font-weight:700;cursor:pointer;}
+.study-complete-box{background:rgba(34,197,94,0.07);border:1px solid rgba(34,197,94,0.25);border-radius:16px;padding:24px;text-align:center;margin-bottom:16px;}
+.study-complete-icon{font-size:2.5rem;margin-bottom:8px;}
+.study-complete-msg{font-size:1rem;font-weight:700;color:var(--green);margin-bottom:4px;}
+.study-complete-sub{font-size:0.8rem;color:var(--muted);margin-bottom:16px;}
+.goto-quiz-btn{width:100%;background:linear-gradient(135deg,var(--accent2),#9d174d);border:none;border-radius:14px;padding:15px;color:white;font-family:inherit;font-size:1rem;font-weight:700;cursor:pointer;}
+.hidden{display:none!important;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- HOME -->
+  <div id="screen-home">
+    <div class="home-title">
+      <div class="home-title-main">漢コト 18-19</div>
+      <div class="home-title-sub">対義語② · 四季の言葉（春・夏）</div>
+    </div>
+    <div class="section-label">📖 まず言葉を復習する</div>
+    <button class="home-btn home-btn-teal" onclick="showSelect('study')">
+      <span class="btn-icon">📖</span>
+      <div><div class="btn-name">言葉カードで復習</div><div class="btn-note">対義語②・四季の言葉を一語ずつ確認</div></div>
+    </button>
+    <div class="section-label">📚 テーマ別</div>
+    <button class="home-btn home-btn-pink" onclick="showSelect('theme')">
+      <span class="btn-icon">📚</span>
+      <div><div class="btn-name">テーマ別で練習</div><div class="btn-note">対義語②・四季の言葉ごとに学ぶ</div></div>
+    </button>
+    <div class="section-label">📝 回数別</div>
+    <button class="home-btn home-btn-purple" onclick="showSelect('round')">
+      <span class="btn-icon">📝</span>
+      <div><div class="btn-name">回数別で確認</div><div class="btn-note">第18回・第19回をテスト形式で解く</div></div>
+    </button>
+    <div class="section-label">🔁 復習</div>
+    <button class="home-btn home-btn-orange" id="redo-home-btn" onclick="startRedoQuiz()" style="display:none">
+      <span class="btn-icon">🔁</span>
+      <div><div class="btn-name">解き直し <span class="redo-count" id="redo-home-count"></span></div><div class="btn-note">間違えた問題を累積復習</div></div>
+    </button>
+    <button class="reset-btn" id="reset-btn1" onclick="doReset()">🗑️ 解き直しリストをリセット</button>
+  </div>
+
+  <!-- STUDY CARD -->
+  <div id="screen-study" class="hidden">
+    <div class="quiz-wrap">
+      <button class="back-btn" onclick="showHome()">← もどる</button>
+      <div class="prog-bar"><div class="prog-fill" id="study-prog"></div></div>
+      <div class="quiz-meta">
+        <span class="quiz-badge" id="study-badge"></span>
+        <span class="quiz-counter" id="study-counter"></span>
+      </div>
+      <div id="study-card-area"></div>
+      <div id="study-nav-area"></div>
+    </div>
+  </div>
+
+  <!-- SELECT -->
+  <div id="screen-select" class="hidden">
+    <div class="select-wrap">
+      <button class="back-btn" onclick="showHome()">← もどる</button>
+      <div class="select-title" id="select-title"></div>
+      <div id="select-list"></div>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div id="screen-quiz" class="hidden">
+    <div class="quiz-wrap">
+      <button class="back-btn" onclick="showHome()">← もどる</button>
+      <div class="prog-bar"><div class="prog-fill" id="quiz-prog"></div></div>
+      <div class="quiz-meta">
+        <span class="quiz-badge" id="quiz-badge"></span>
+        <span class="quiz-counter" id="quiz-counter"></span>
+      </div>
+      <div class="q-box">
+        <div class="q-label" id="q-label">問題</div>
+        <div class="q-text" id="q-text"></div>
+      </div>
+      <div class="choices" id="choices"></div>
+      <button class="quit-btn" id="quit-btn" onclick="quitQuiz()">終了する →</button>
+      <div id="exp-area" class="hidden">
+        <div class="exp-box">
+          <div class="exp-tag" id="exp-tag"></div>
+          <div class="exp-text" id="exp-text"></div>
+          <div class="ai-hint hidden" id="ai-hint-box"><span class="ai-hint-label">💡 ポイント</span><span id="ai-hint-text"></span></div>
+          <button class="next-btn" id="next-btn" onclick="quizNext()">次の問題 →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULT -->
+  <div id="screen-result" class="hidden">
+    <button class="back-btn" onclick="showHome()">← もどる</button>
+    <div class="result-score">
+      <div class="score-num" id="score-num"></div>
+      <div class="score-msg" id="score-msg"></div>
+    </div>
+    <div id="answer-list"></div>
+    <div class="result-actions">
+      <button class="again-btn" onclick="retryQuiz()">もう一度</button>
+      <button class="top-btn" onclick="showHome()">トップへ</button>
+    </div>
+    <button class="redo-result-btn hidden" id="redo-result-btn" onclick="startRedoQuiz()">🔁 間違えた問題を解き直す</button>
+  </div>
+
+</div>
+<script>
+// ===== 学習カードデータ =====
+const CARDS = [
+  // --- 対義語②（第18回）---
+  {cat:'対義語②',word:'正常 ⇔ 異常',read:'せいじょう ⇔ いじょう',
+   meaning:'正常：正しいとされる状態にあること。特に変わったところがなく、普通であること。\n異常：普通とちがうこと。特に変わったこと。',
+   ex:'「バイタルサインが正常に戻った」「異常な暑さが続いている」'},
+  {cat:'対義語②',word:'就任 ⇔ 辞任',read:'しゅうにん ⇔ じにん',
+   meaning:'就任：ある任務・職務につくこと。\n辞任：就いていた任務・職務を、自分から申し出て辞めること。',
+   ex:'「新社長が就任した」「責任をとって辞任する」'},
+  {cat:'対義語②',word:'油断 ⇔ 警戒',read:'ゆだん ⇔ けいかい',
+   meaning:'油断：たいしたことはないと気を許し、注意を怠ること。\n警戒：危険や災害に備えて、あらかじめ注意し、用心すること。',
+   ex:'「油断大敵」「警戒レベルを引き上げる」'},
+  {cat:'対義語②',word:'複雑 ⇔ 単純（簡単）',read:'ふくざつ ⇔ たんじゅん',
+   meaning:'複雑：物事の事情や関係がこみいっていて、一面的ではないこと。\n単純（簡単）：物事が大ざっぱで手数がかからないこと。',
+   ex:'「複雑な事情がある」「単純な作業を繰り返す」'},
+  {cat:'対義語②',word:'創造 ⇔ 模倣',read:'そうぞう ⇔ もほう',
+   meaning:'創造：新しいものを初めてつくり出すこと。\n模倣：他のものをまねること。似せること。',
+   ex:'「独創的な作品を創造する」「人の作品を模倣してはいけない」'},
+  {cat:'対義語②',word:'時間 ⇔ 空間',read:'じかん ⇔ くうかん',
+   meaning:'時間：ある時刻と他の時刻との間の長さ。\n空間：物が存在しないで空いている所。あらゆる方向への広がり。',
+   ex:'「時間と空間を超えた物語」'},
+  {cat:'対義語②',word:'表 ⇔ 裏',read:'おもて ⇔ うら',
+   meaning:'表：物の二つの面のうち、主だったほう。表面。\n裏：物の二つの面のうち、主だったほうの反対側の面。',
+   ex:'「表と裏、両面を確認する」「話には裏がある」'},
+  {cat:'対義語②',word:'質 ⇔ 量',read:'しつ ⇔ りょう',
+   meaning:'質：物事の良否を決めることになる性質。クオリティー。\n量：計って決まる体積・大小・多少などの大きさ。',
+   ex:'「量より質を重視する」「質と量のバランスが大切だ」'},
+  {cat:'対義語②',word:'偶然 ⇔ 必然',read:'ぐうぜん ⇔ ひつぜん',
+   meaning:'偶然：他のものとの因果関係がはっきりせず、予期できない仕方で物事が起こること。\n必然：かならずそうなるに違いないこと。',
+   ex:'「偶然の出会いが人生を変えることがある」「なまけたのだから結果が悪いのは必然だよ」'},
+  {cat:'対義語②',word:'日常 ⇔ 非日常',read:'にちじょう ⇔ ひにちじょう',
+   meaning:'日常：いつも繰り返されていること。あたりまえのこと。\n非日常：いつもとは違うこと。あたりまえではないこと。',
+   ex:'「日常の生活に戻る」「旅行は非日常の体験だ」'},
+  {cat:'対義語②',word:'普遍 ⇔ 特殊',read:'ふへん ⇔ とくしゅ',
+   meaning:'普遍：いつでもどこでも誰にでもあてはまること（もの）。\n特殊：全体ではなく狭い範囲に例外的にあてはまること。',
+   ex:'「普遍的な真理を追い求める」「これは特殊なケースだ」'},
+  {cat:'対義語②',word:'肯定 ⇔ 否定',read:'こうてい ⇔ ひてい',
+   meaning:'肯定：そのとおりであると認めること。また、積極的に認めること。外来語では「ポジティブ」。\n否定：そうではないと打ち消すこと。また、非として積極的に認めないこと。外来語では「ネガティブ」。',
+   ex:'「A案に賛成して肯定的な人と否定的な人がいる」'},
+  {cat:'対義語②',word:'西洋 ⇔ 東洋',read:'せいよう ⇔ とうよう',
+   meaning:'西洋：ヨーロッパ・アメリカなど欧米の国々をさす総称。\n東洋：日本・中国・朝鮮・インドなどのアジアの国々。',
+   ex:'「西洋と東洋の文化が融合した料理」'},
+  {cat:'対義語②',word:'延長 ⇔ 短縮',read:'えんちょう ⇔ たんしゅく',
+   meaning:'延長：長さや期間を延ばすこと。また、延びること。\n短縮：時間・距離などの長さをちぢめて短くすること。',
+   ex:'「試合が延長戦に入った」「作業時間を短縮する方法を考える」'},
+  {cat:'対義語②',word:'友好 ⇔ 敵対',read:'ゆうこう ⇔ てきたい',
+   meaning:'友好：友人としての親しい交わり。\n敵対：相手を敵とみなして対抗すること。',
+   ex:'「日中友好を深める」「二国が敵対関係になる」'},
+
+  // --- 四季の言葉・春（第19回）---
+  {cat:'四季の言葉・春',word:'春の気象',read:'',
+   meaning:'【節気】立春（二月四日頃）・啓蟄（三月五日頃）・春分（三月二十一日頃）\n\n春雷（しゅんらい）・朧月夜（おぼろづきよ）・水温む（みずぬるむ）・日永（ひなが）・雪崩（なだれ）・春霞（はるがすみ）・うらら か・長閑（のどか）・日和（ひより）',
+   ex:'「水温む」「朧月夜にうらら かな春がきた」'},
+  {cat:'四季の言葉・春',word:'春の植物・食物',read:'',
+   meaning:'【植物】桜草・ツツジ・チューリップ・アンズの花・沈丁花・ヒヤシンス・梨の花・林檎の花・しだれ桜・八重桜・山桜・柳の芽・芹・タラの芽・ウド・アスパラガス・わさび・ワラビ・ニラ\n\n【食物】ニシン・桜鯛・メバル・ホタルイカ・ハマグリ・木の芽和え・わらびもち・草餅・ひなあられ・菜飯・田楽',
+   ex:'「春の山菜＝タラの芽・ウド・わらび」「春の魚＝桜鯛・ニシン・メバル」'},
+  {cat:'四季の言葉・春',word:'春の生活',read:'',
+   meaning:'入学式・卒業式・植木市・種蒔き（たねまき）・剪定（せんてい）・朝寝・春眠\n\n春眠暁を覚えず（しゅんみんあかつきをおぼえず）：春の夜は気持ちよくて、夜明けになっても気づかず眠ってしまうという意味の漢詩の一節。',
+   ex:'「うらら かな春の日差し」「春眠暁を覚えず」'},
+
+  // --- 四季の言葉・夏（第19回）---
+  {cat:'四季の言葉・夏',word:'夏の気象',read:'',
+   meaning:'【節気】立夏（五月六日頃）・夏至（六月二十二日頃）・小暑（七月七日頃）・大暑（七月二十三日頃）〜小暑から立秋（八月七日頃）の間が暑中見舞い\n\n西日・炎天・逃げ水・夕凪（ゆうなぎ）・短夜（みじかよ）・雷鳴・雷雨・スコール・夕立・入道雲（にゅうどうぐも）・遠雷',
+   ex:'「入道雲が夏空に浮かぶ」「夕立のあとは涼しくなった」'},
+  {cat:'四季の言葉・夏',word:'夏の植物・食物',read:'',
+   meaning:'【植物】青葉・夏木立・月見草・蒲の花（がまのはな）・蓮の花（はすのはな）・夕顔・百合（ゆり）\n\n【食物】素麺（そうめん）・冷や奴・くず餅・水ようかん・ところてん・冷やし中華・かき氷・アイスクリーム・ラムネ・サイダー・インゲン・エンドウ・ソラマメ・ピーマン・スモモ・枇杷（びわ）',
+   ex:'「百合は夏の花（夏の季語）」「ところてん・素麺・かき氷は夏の食べ物」'},
+  {cat:'四季の言葉・夏',word:'夏の生活',read:'',
+   meaning:'田植え・扇子・麦わら帽子・日傘・扇風機・金魚鉢・日射病・プール・海の家・登山・肝試し・花火・夜店・臨海学校・林間学校・暑中見舞い',
+   ex:'「プール・花火・かき氷・麦わら帽子は夏の生活の言葉」'},
+];
+
+const STUDY_CATS = ['対義語②','四季の言葉・春','四季の言葉・夏'];
+
+// ===== 問題データ =====
+const OPTS8 = ['ア 正常','イ 辞任','ウ 西洋','エ 空間','オ 延長','カ 非日常','キ 量','ク 友好'];
+const Q = [
+  // ===== 第18回：対義語② =====
+
+  // 問一（8問）対義語を記号で選ぶ
+  {id:'18-1-1',round:18,theme:'対義語②',
+   question:'問一　次の(1)〜(8)の熟語の対義語を後のア〜クから選び、記号で答えなさい。\n\nア 正常　イ 辞任　ウ 西洋\nエ 空間　オ 延長　カ 非日常\nキ 量　ク 友好\n\n(1)「東洋」の対義語はどれですか？',
+   options:OPTS8,answer:2,
+   explanation:'「東洋（とうよう）」は日本・中国・インドなどアジアの国々。対義語は「西洋（せいよう）」（ヨーロッパ・アメリカなど欧米の国々）。'},
+  {id:'18-1-2',round:18,theme:'対義語②',
+   question:'問一　次の(1)〜(8)の熟語の対義語を後のア〜クから選び、記号で答えなさい。\n\nア 正常　イ 辞任　ウ 西洋\nエ 空間　オ 延長　カ 非日常\nキ 量　ク 友好\n\n(2)「異常」の対義語はどれですか？',
+   options:OPTS8,answer:0,
+   explanation:'「異常（いじょう）」は普通とちがうこと・特に変わったこと。対義語は「正常（せいじょう）」（特に変わったところがなく、普通であること）。'},
+  {id:'18-1-3',round:18,theme:'対義語②',
+   question:'問一　次の(1)〜(8)の熟語の対義語を後のア〜クから選び、記号で答えなさい。\n\nア 正常　イ 辞任　ウ 西洋\nエ 空間　オ 延長　カ 非日常\nキ 量　ク 友好\n\n(3)「就任」の対義語はどれですか？',
+   options:OPTS8,answer:1,
+   explanation:'「就任（しゅうにん）」はある任務・職務につくこと。対義語は「辞任（じにん）」（就いていた任務・職務を、自分から申し出て辞めること）。'},
+  {id:'18-1-4',round:18,theme:'対義語②',
+   question:'問一　次の(1)〜(8)の熟語の対義語を後のア〜クから選び、記号で答えなさい。\n\nア 正常　イ 辞任　ウ 西洋\nエ 空間　オ 延長　カ 非日常\nキ 量　ク 友好\n\n(4)「時間」の対義語はどれですか？',
+   options:OPTS8,answer:3,
+   explanation:'「時間（じかん）」はある時刻と他の時刻との間の長さ。対義語は「空間（くうかん）」（物が存在しないで空いている所・あらゆる方向への広がり）。'},
+  {id:'18-1-5',round:18,theme:'対義語②',
+   question:'問一　次の(1)〜(8)の熟語の対義語を後のア〜クから選び、記号で答えなさい。\n\nア 正常　イ 辞任　ウ 西洋\nエ 空間　オ 延長　カ 非日常\nキ 量　ク 友好\n\n(5)「短縮」の対義語はどれですか？',
+   options:OPTS8,answer:4,
+   explanation:'「短縮（たんしゅく）」は時間・距離などをちぢめて短くすること。対義語は「延長（えんちょう）」（長さや期間を延ばすこと）。'},
+  {id:'18-1-6',round:18,theme:'対義語②',
+   question:'問一　次の(1)〜(8)の熟語の対義語を後のア〜クから選び、記号で答えなさい。\n\nア 正常　イ 辞任　ウ 西洋\nエ 空間　オ 延長　カ 非日常\nキ 量　ク 友好\n\n(6)「日常」の対義語はどれですか？',
+   options:OPTS8,answer:5,
+   explanation:'「日常（にちじょう）」はいつも繰り返されていること・あたりまえのこと。対義語は「非日常（ひにちじょう）」（いつもとは違うこと・あたりまえではないこと）。'},
+  {id:'18-1-7',round:18,theme:'対義語②',
+   question:'問一　次の(1)〜(8)の熟語の対義語を後のア〜クから選び、記号で答えなさい。\n\nア 正常　イ 辞任　ウ 西洋\nエ 空間　オ 延長　カ 非日常\nキ 量　ク 友好\n\n(7)「質」の対義語はどれですか？',
+   options:OPTS8,answer:6,
+   explanation:'「質（しつ）」は物事の良否を決めることになる性質（クオリティー）。対義語は「量（りょう）」（計って決まる体積・大小・多少など）。「量より質を重視する」のように使う。'},
+  {id:'18-1-8',round:18,theme:'対義語②',
+   question:'問一　次の(1)〜(8)の熟語の対義語を後のア〜クから選び、記号で答えなさい。\n\nア 正常　イ 辞任　ウ 西洋\nエ 空間　オ 延長　カ 非日常\nキ 量　ク 友好\n\n(8)「敵対」の対義語はどれですか？',
+   options:OPTS8,answer:7,
+   explanation:'「敵対（てきたい）」は相手を敵とみなして対抗すること。対義語は「友好（ゆうこう）」（友人としての親しい交わり）。「日中友好」のように使う。'},
+
+  // 問二（6問）意味と対義語
+  {id:'18-2-1',round:18,theme:'対義語②',
+   question:'問二　次の熟語の意味を後のア〜エから選び、記号で答えなさい。\n\n「偶然（ぐうぜん）」の意味はどれですか？\n\nア かならずそうなるに違いないこと\nイ そのとおりであると認めること\nウ 他のものとの因果関係がはっきりせず、予期できない仕方で物事が起こること\nエ いつでもどこでも誰にでもあてはまること',
+   options:['ア かならずそうなること','イ そのとおりだと認めること','ウ 因果関係がなく、予期できない仕方で起こること','エ いつでもどこでも誰にでもあてはまること'],
+   answer:2,
+   explanation:'「偶然（ぐうぜん）」は他のものとの因果関係がはっきりせず、予期できない仕方で物事が起こること。「たまたま」に近い意味。対義語は「必然（ひつぜん）」。'},
+  {id:'18-2-1b',round:18,theme:'対義語②',
+   question:'問二　次の熟語の対義語を選びなさい。\n\n「偶然（ぐうぜん）」の対義語はどれですか？',
+   options:['必然（ひつぜん）','故意（こい）','人為（じんい）','意図（いと）'],
+   answer:0,
+   explanation:'「偶然」の対義語は「必然（ひつぜん）」。「かならずそうなるに違いないこと」という意味。「なまけたのだから、テストの結果が悪いのは必然だよ」のように使う。'},
+  {id:'18-2-2',round:18,theme:'対義語②',
+   question:'問二　次の熟語の意味を後のア〜エから選び、記号で答えなさい。\n\n「肯定（こうてい）」の意味はどれですか？\n\nア かならずそうなるに違いないこと\nイ そのとおりであると認めること。また、積極的に認めること\nウ 他のものとの因果関係がはっきりせず、予期できないこと\nエ いつでもどこでも誰にでもあてはまること',
+   options:['ア かならずそうなること','イ そのとおりだと認めること（積極的に認めること）','ウ 因果関係がなく、予期できない仕方で起こること','エ いつでもどこでも誰にでもあてはまること'],
+   answer:1,
+   explanation:'「肯定（こうてい）」はそのとおりであると認めること・積極的に認めること。外来語では「ポジティブ」。対義語は「否定（ひてい）」。'},
+  {id:'18-2-2b',round:18,theme:'対義語②',
+   question:'問二　次の熟語の対義語を選びなさい。\n\n「肯定（こうてい）」の対義語はどれですか？',
+   options:['否定（ひてい）','拒絶（きょぜつ）','反論（はんろん）','批判（ひはん）'],
+   answer:0,
+   explanation:'「肯定」の対義語は「否定（ひてい）」。「そうではないと打ち消すこと・非として積極的に認めないこと」。外来語では「ネガティブ」。'},
+  {id:'18-2-3',round:18,theme:'対義語②',
+   question:'問二　次の熟語の意味を後のア〜エから選び、記号で答えなさい。\n\n「普遍（ふへん）」の意味はどれですか？\n\nア いつでもどこでも誰にでもあてはまること（もの）\nイ 全体ではなく狭い範囲に例外的にあてはまること\nウ 例外はあるが、多くに共通していること\nエ かならずそうなるに違いないこと',
+   options:['ア いつでもどこでも誰にでもあてはまること','イ 狭い範囲に例外的にあてはまること','ウ 例外はあるが、多くに共通していること','エ かならずそうなること'],
+   answer:0,
+   explanation:'「普遍（ふへん）」はいつでもどこでも誰にでもあてはまること（もの）。「普遍的な真理」のように使う。対義語は「特殊（とくしゅ）」。'},
+  {id:'18-2-3b',round:18,theme:'対義語②',
+   question:'問二　次の熟語の対義語を選びなさい。\n\n「普遍（ふへん）」の対義語はどれですか？',
+   options:['特殊（とくしゅ）','個別（こべつ）','例外（れいがい）','特別（とくべつ）'],
+   answer:0,
+   explanation:'「普遍」の対義語は「特殊（とくしゅ）」。「全体ではなく狭い範囲に例外的にあてはまること」。普遍と特殊はセットで覚えよう。'},
+
+  // 問三（4問）漢字一字を変えて対義語を作る
+  {id:'18-3-1',round:18,theme:'対義語②',
+   question:'問三　次の熟語の漢字一字を別の一字にかえると対義語になります。かえた後の熟語はどれですか？\n\n「東洋」の「東」を別の漢字にかえると？',
+   options:['西洋（せいよう）','南洋（なんよう）','北洋（ほくよう）','中洋（ちゅうよう）'],
+   answer:0,
+   explanation:'「東洋（とうよう）」の「東」を「西」に変えると「西洋（せいよう）」。東洋→アジア、西洋→ヨーロッパ・アメリカ。「東→西」で方角の対義語になっている。'},
+  {id:'18-3-2',round:18,theme:'対義語②',
+   question:'問三　次の熟語の漢字一字を別の一字にかえると対義語になります。かえた後の熟語はどれですか？\n\n「異常」の「異」を別の漢字にかえると？',
+   options:['正常（せいじょう）','日常（にちじょう）','通常（つうじょう）','平常（へいじょう）'],
+   answer:0,
+   explanation:'「異常（いじょう）」の「異」を「正」に変えると「正常（せいじょう）」。「異」はちがう・異なるという意味、「正」はただしいという意味。「異→正」で対義語になる。'},
+  {id:'18-3-3',round:18,theme:'対義語②',
+   question:'問三　次の熟語の漢字一字を別の一字にかえると対義語になります。かえた後の熟語はどれですか？\n\n「就任」の「就」を別の漢字にかえると？',
+   options:['辞任（じにん）','退任（たいにん）','離任（りにん）','解任（かいにん）'],
+   answer:0,
+   explanation:'「就任（しゅうにん）」の「就」を「辞」に変えると「辞任（じにん）」。「就」はつく、「辞」はやめるという意味。「就→辞」で対義語になる。'},
+  {id:'18-3-4',round:18,theme:'対義語②',
+   question:'問三　次の熟語の漢字一字を別の一字にかえると対義語になります。かえた後の熟語はどれですか？\n\n「時間」の「時」を別の漢字にかえると？',
+   options:['空間（くうかん）','期間（きかん）','瞬間（しゅんかん）','昼間（ひるま）'],
+   answer:0,
+   explanation:'「時間（じかん）」の「時」を「空」に変えると「空間（くうかん）」。「時」は時刻・時の流れ、「空」は空間・広がりという意味。時間と空間はセットで覚えよう。'},
+
+  // ===== 第19回：四季の言葉（春・夏）=====
+
+  // 問一（4問）春A・夏Bを判断
+  {id:'19-1-1',round:19,theme:'四季の言葉',
+   question:'問一　次の(1)〜(4)の文章は、春を描いたものにはA、夏を描いたものにはBと答えなさい。\n\n(1)「自分もその海水浴のときに『玉ラムネ』という生まれて初めてのものを飲んで新しい感覚の世界を経験した」\n（寺田寅彦「海水浴」）\n\nA（春）か B（夏）か？',
+   options:['A（春）','B（夏）'],
+   answer:1,
+   explanation:'「海水浴」「ラムネ」はいずれも夏の言葉・夏の季語。ラムネは夏の飲み物として定番。→ B（夏）'},
+  {id:'19-1-2',round:19,theme:'四季の言葉',
+   question:'問一　次の(1)〜(4)の文章は、春を描いたものにはA、夏を描いたものにはBと答えなさい。\n\n(2)「水が温み、草が萌えるころになった。あすからは外の仕事が始まるという日に、三の木戸の小屋に来た」\n（森鴎外「山椒大夫」）\n\nA（春）か B（夏）か？',
+   options:['A（春）','B（夏）'],
+   answer:0,
+   explanation:'「水が温む（みずがぬるむ）」は春の季語。「草が萌える（もえる）」も春に草が芽吹く様子を表す。→ A（春）'},
+  {id:'19-1-3',round:19,theme:'四季の言葉',
+   question:'問一　次の(1)〜(4)の文章は、春を描いたものにはA、夏を描いたものにはBと答えなさい。\n\n(3)「机の上の百合の花を眺める。いいにおいがする。こうしてひとりで退屈していて、においをかいでいると、決してきたない気持ちが起きない」\n（太宰治「女生徒」）\n\nA（春）か B（夏）か？',
+   options:['A（春）','B（夏）'],
+   answer:1,
+   explanation:'「百合（ゆり）」は夏の花・夏の季語。夏の植物リストに「百合」が含まれている。室内で百合の香りを楽しむ情景は夏の風景。→ B（夏）'},
+  {id:'19-1-4',round:19,theme:'四季の言葉',
+   question:'問一　次の(1)〜(4)の文章は、春を描いたものにはA、夏を描いたものにはBと答えなさい。\n\n(4)「昆布の干し場にならんだこんな染め物の行列は、少し決してきたない気持ちが起きない」\n（太宰治「女生徒」）\n\nA（春）か B（夏）か？',
+   options:['A（春）','B（夏）'],
+   answer:0,
+   explanation:'染め物の行列が並ぶ情景は春の長閑（のどか）な風景を連想させる。文章全体の穏やかな雰囲気が春を描いている。→ A（春）'},
+
+  // 問二（4問）□に入る季節
+  {id:'19-2-1',round:19,theme:'四季の言葉',
+   question:'問二　次の(1)〜(4)の□に「春」があてはまるものには1、「夏」があてはまるものには2、それ以外なら3で答えなさい。\n\n(1)「うらら かな□の日差し」\n\n□に入る言葉は何ですか？（答えは1・2・3）',
+   options:['春　→　答え：1','夏　→　答え：2','秋　→　答え：3','冬　→　答え：3'],
+   answer:0,
+   explanation:'「うらら か（麗らか）」は春の言葉・春の季語。「うらら かな春の日差し」で春らしい穏やかで明るい日差しを表す。答えは 1（春）。'},
+  {id:'19-2-2',round:19,theme:'四季の言葉',
+   question:'問二　次の(1)〜(4)の□に「春」があてはまるものには1、「夏」があてはまるものには2、それ以外なら3で答えなさい。\n\n(2)「□眠暁を覚えず」\n\n□に入る言葉は何ですか？（答えは1・2・3）',
+   options:['春　→　答え：1','夏　→　答え：2','秋　→　答え：3','冬　→　答え：3'],
+   answer:0,
+   explanation:'「春眠暁を覚えず（しゅんみんあかつきをおぼえず）」は有名な漢詩の一節。春の夜は気持ちよくて夜明けになっても気づかず眠ってしまうという意味。答えは 1（春）。'},
+  {id:'19-2-3',round:19,theme:'四季の言葉',
+   question:'問二　次の(1)〜(4)の□に「春」があてはまるものには1、「夏」があてはまるものには2、それ以外なら3で答えなさい。\n\n(3)「□のあかつきはつるべ落とし」\n\n□に入る言葉は何ですか？（答えは1・2・3）',
+   options:['春　→　答え：1','夏　→　答え：2','秋　→　答え：3','冬　→　答え：3'],
+   answer:2,
+   explanation:'「秋のあかつきはつるべ落とし」は「秋の日はつるべ落とし」をもとにした表現。「つるべ落とし」とは、井戸のつるべが勢いよく落ちるように、日が暮れるのが早い秋を表す。答えは 3（それ以外：秋）。'},
+  {id:'19-2-4',round:19,theme:'四季の言葉',
+   question:'問二　次の(1)〜(4)の□に「春」があてはまるものには1、「夏」があてはまるものには2、それ以外なら3で答えなさい。\n\n(4)「□至には柚子湯に入る」\n\n□に入る言葉は何ですか？（答えは1・2・3）',
+   options:['春　→　答え：1','夏　→　答え：2','秋　→　答え：3','冬　→　答え：3'],
+   answer:3,
+   explanation:'「冬至（とうじ）には柚子湯に入る」。冬至は一年で昼が最も短い日（12月22日頃）。柚子湯に入ると風邪をひかないという日本の習慣。答えは 3（それ以外：冬）。'},
+
+  // 問三（8問）食べ物の季節分類
+  {id:'19-3-1',round:19,theme:'四季の言葉',
+   question:'問三　次の(1)〜(8)の言葉について、春の言葉であれば1、夏の言葉であれば2、それ以外なら3で答えなさい。\n\n(1)「わさび」',
+   options:['1（春）','2（夏）','3（それ以外）'],
+   answer:0,
+   explanation:'「わさび（山葵）」は春の食べ物・春の季語。春に旬を迎えるさわやかな辛みのある食材。テキストの春の食物リストに載っている。答えは 1（春）。'},
+  {id:'19-3-2',round:19,theme:'四季の言葉',
+   question:'問三　次の(1)〜(8)の言葉について、春の言葉であれば1、夏の言葉であれば2、それ以外なら3で答えなさい。\n\n(2)「大根（だいこん）」',
+   options:['1（春）','2（夏）','3（それ以外）'],
+   answer:2,
+   explanation:'「大根（だいこん）」は秋・冬の食べ物。冬が旬で、おでんや漬物などに使われる。春でも夏でもないので答えは 3（それ以外）。'},
+  {id:'19-3-3',round:19,theme:'四季の言葉',
+   question:'問三　次の(1)〜(8)の言葉について、春の言葉であれば1、夏の言葉であれば2、それ以外なら3で答えなさい。\n\n(3)「ところてん」',
+   options:['1（春）','2（夏）','3（それ以外）'],
+   answer:1,
+   explanation:'「ところてん（心太）」は夏の食べ物・夏の季語。暑い夏に食べる涼しいデザート。テキストの夏の食物リストに載っている。答えは 2（夏）。'},
+  {id:'19-3-4',round:19,theme:'四季の言葉',
+   question:'問三　次の(1)〜(8)の言葉について、春の言葉であれば1、夏の言葉であれば2、それ以外なら3で答えなさい。\n\n(4)「柿（かき）」',
+   options:['1（春）','2（夏）','3（それ以外）'],
+   answer:2,
+   explanation:'「柿（かき）」は秋の食べ物・秋の季語。「柿食えば鐘が鳴るなり法隆寺」（正岡子規）という有名な俳句もある。答えは 3（それ以外：秋）。'},
+  {id:'19-3-5',round:19,theme:'四季の言葉',
+   question:'問三　次の(1)〜(8)の言葉について、春の言葉であれば1、夏の言葉であれば2、それ以外なら3で答えなさい。\n\n(5)「ピーマン」',
+   options:['1（春）','2（夏）','3（それ以外）'],
+   answer:1,
+   explanation:'「ピーマン」は夏の食べ物・夏の季語。夏が旬の野菜。テキストの夏の食物リストに載っている。答えは 2（夏）。'},
+  {id:'19-3-6',round:19,theme:'四季の言葉',
+   question:'問三　次の(1)〜(8)の言葉について、春の言葉であれば1、夏の言葉であれば2、それ以外なら3で答えなさい。\n\n(6)「素麺（そうめん）」',
+   options:['1（春）','2（夏）','3（それ以外）'],
+   answer:1,
+   explanation:'「素麺（そうめん）」は夏の食べ物・夏の季語。冷たく冷やして食べる夏の麺料理。テキストの夏の食物リストに載っている。答えは 2（夏）。'},
+  {id:'19-3-7',round:19,theme:'四季の言葉',
+   question:'問三　次の(1)〜(8)の言葉について、春の言葉であれば1、夏の言葉であれば2、それ以外なら3で答えなさい。\n\n(7)「菜飯（なめし）」',
+   options:['1（春）','2（夏）','3（それ以外）'],
+   answer:0,
+   explanation:'「菜飯（なめし）」は春の食べ物・春の季語。春の菜（菜の花や大根の葉など）を入れて炊いたご飯。テキストの春の食物リストに載っている。答えは 1（春）。'},
+  {id:'19-3-8',round:19,theme:'四季の言葉',
+   question:'問三　次の(1)〜(8)の言葉について、春の言葉であれば1、夏の言葉であれば2、それ以外なら3で答えなさい。\n\n(8)「さんま（秋刀魚）」',
+   options:['1（春）','2（夏）','3（それ以外）'],
+   answer:2,
+   explanation:'「さんま（秋刀魚）」は秋の食べ物・秋の季語。名前に「秋」は入っていないが、秋の味覚の代表格。答えは 3（それ以外：秋）。'},
+];
+
+const THEMES = ['対義語②','四季の言葉'];
+const ROUNDS = [18,19];
+const STORAGE_KEY = 'kankoto18_redo';
+
+function loadRedo(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');}catch{return[];}}
+function saveRedo(ids){localStorage.setItem(STORAGE_KEY,JSON.stringify(ids));}
+function updateRedoBtn(){
+  const r=loadRedo(),btn=document.getElementById('redo-home-btn'),cnt=document.getElementById('redo-home-count');
+  if(r.length>0){btn.style.display='flex';cnt.textContent=r.length+'問';}
+  else{btn.style.display='none';}
+}
+function showScreen(id){
+  ['home','select','study','quiz','result'].forEach(s=>document.getElementById('screen-'+s).classList.add('hidden'));
+  document.getElementById('screen-'+id).classList.remove('hidden');
+}
+function showHome(){updateRedoBtn();showScreen('home');}
+function doReset(){
+  saveRedo([]);updateRedoBtn();
+  const btn=document.getElementById('reset-btn1');
+  btn.textContent='✅ リセットしました';
+  setTimeout(()=>{btn.textContent='🗑️ 解き直しリストをリセット';},2000);
+}
+
+// ===== 学習カード =====
+let studyCards=[],studyIdx=0,studyCat='';
+function startStudy(cat){
+  studyCat=cat;studyCards=CARDS.filter(c=>c.cat===cat);studyIdx=0;
+  renderStudyCard();showScreen('study');
+}
+function renderStudyCard(){
+  const c=studyCards[studyIdx],total=studyCards.length;
+  document.getElementById('study-prog').style.width=(studyIdx/total*100)+'%';
+  document.getElementById('study-badge').textContent=studyCat;
+  document.getElementById('study-counter').textContent=(studyIdx+1)+' / '+total;
+  document.getElementById('study-card-area').innerHTML=`
+    <div class="word-card">
+      <div class="word-card-main">${c.word}</div>
+      ${c.read?`<div class="word-card-read">${c.read}</div>`:''}
+      <div class="word-card-divider"></div>
+      <div class="word-card-label">意　味</div>
+      <div class="word-card-meaning">${c.meaning.replace(/\n/g,'<br>')}</div>
+      ${c.ex?`<div class="word-card-ex">例）${c.ex}</div>`:''}
+    </div>`;
+  const isLast=studyIdx===total-1;
+  if(isLast){
+    document.getElementById('study-nav-area').innerHTML=`
+      <div class="study-complete-box">
+        <div class="study-complete-icon">🎉</div>
+        <div class="study-complete-msg">${studyCat}の学習完了！</div>
+        <div class="study-complete-sub">次は問題にチャレンジしよう</div>
+        <button class="goto-quiz-btn" onclick="goToQuizFromStudy()">📝 問題を解く →</button>
+      </div>
+      <div class="card-nav-row">
+        <button class="prev-card-btn" onclick="prevCard()">← 前へ</button>
+        <button class="next-card-btn" style="background:rgba(255,255,255,0.07);border:1px solid var(--border);color:var(--muted);" disabled>最後のカード</button>
+      </div>`;
+  } else {
+    document.getElementById('study-nav-area').innerHTML=`
+      <div class="card-nav-row">
+        ${studyIdx>0?'<button class="prev-card-btn" onclick="prevCard()">← 前へ</button>':'<div></div>'}
+        <button class="next-card-btn" onclick="nextCard()">次のカード →</button>
+      </div>`;
+  }
+  window.scrollTo(0,0);
+}
+function nextCard(){if(studyIdx<studyCards.length-1){studyIdx++;renderStudyCard();}}
+function prevCard(){if(studyIdx>0){studyIdx--;renderStudyCard();}}
+function goToQuizFromStudy(){
+  const themeMap={'対義語②':'対義語②','四季の言葉・春':'四季の言葉','四季の言葉・夏':'四季の言葉'};
+  const t=themeMap[studyCat]||studyCat;
+  startQuiz(t,'theme');
+}
+
+// ===== 選択画面 =====
+function showSelect(mode){
+  const titleEl=document.getElementById('select-title');
+  const listEl=document.getElementById('select-list');
+  if(mode==='study'){
+    titleEl.textContent='復習するテーマを選んでください';
+    listEl.innerHTML=STUDY_CATS.map(t=>{
+      const c=CARDS.filter(x=>x.cat===t).length;
+      return`<button class="select-btn" onclick="startStudy('${t}')">
+        <span class="select-name">📖 ${t}</span><span class="select-badge">${c}語</span></button>`;
+    }).join('');
+  } else if(mode==='theme'){
+    titleEl.textContent='テーマを選んでください';
+    listEl.innerHTML=THEMES.map(t=>{
+      const c=Q.filter(q=>q.theme===t).length;
+      return`<button class="select-btn" onclick="startQuiz('${t}','theme')">
+        <span class="select-name">${t}</span><span class="select-badge">${c}問</span></button>`;
+    }).join('');
+  } else {
+    titleEl.textContent='回を選んでください';
+    listEl.innerHTML=ROUNDS.map(r=>{
+      const c=Q.filter(q=>q.round===r).length;
+      return`<button class="select-btn" onclick="startQuiz(${r},'round')">
+        <span class="select-name">第${r}回</span><span class="select-badge">${c}問</span></button>`;
+    }).join('');
+  }
+  showScreen('select');
+}
+
+// ===== クイズ =====
+let quizWords=[],quizIdx=0,quizScore=0,quizAnswers=[],lastFilter=null,lastMode=null;
+function shuffle(a){return[...a].sort(()=>Math.random()-.5);}
+function startQuiz(filter,mode){
+  lastFilter=filter;lastMode=mode;
+  quizWords=shuffle(Q.filter(q=>mode==='theme'?q.theme===filter:q.round===filter));
+  quizIdx=0;quizScore=0;quizAnswers=[];
+  renderQuiz();showScreen('quiz');
+}
+function startRedoQuiz(){
+  const r=loadRedo();
+  if(!r.length){alert('解き直しの問題がありません');return;}
+  lastFilter='redo';lastMode='redo';
+  quizWords=shuffle(Q.filter(q=>q&&r.includes(q.id)));
+  if(!quizWords.length){alert('解き直しの問題が見つかりません');saveRedo([]);updateRedoBtn();return;}
+  quizIdx=0;quizScore=0;quizAnswers=[];
+  renderQuiz();showScreen('quiz');
+}
+function renderQuiz(){
+  const q=quizWords[quizIdx];
+  document.getElementById('quiz-prog').style.width=(quizIdx/quizWords.length*100)+'%';
+  document.getElementById('quiz-badge').textContent=q.theme;
+  document.getElementById('quiz-counter').textContent=(quizIdx+1)+' / '+quizWords.length;
+  document.getElementById('q-label').textContent='問題';
+  document.getElementById('q-text').textContent=q.question;
+  document.getElementById('exp-area').classList.add('hidden');
+  document.getElementById('ai-hint-box').classList.add('hidden');
+  document.getElementById('ai-hint-text').textContent='';
+  document.getElementById('quit-btn').style.display='block';
+  document.getElementById('choices').innerHTML=q.options.map((o,i)=>
+    `<button class="choice-btn" id="ch-${i}" onclick="answerQuiz(${i})">
+      <span class="choice-num">${i+1}</span><span>${o}</span></button>`
+  ).join('');
+  document.getElementById('next-btn').textContent=(quizIdx+1>=quizWords.length)?'結果を見る →':'次の問題 →';
+}
+function answerQuiz(i){
+  const q=quizWords[quizIdx],ok=(i===q.answer);
+  if(ok)quizScore++;
+  quizAnswers.push({q,userIdx:i,correct:ok});
+  q.options.forEach((_,j)=>{
+    const b=document.getElementById('ch-'+j);b.disabled=true;
+    if(j===q.answer)b.classList.add('choice-ok');
+    else if(j===i)b.classList.add('choice-ng');
+    else b.classList.add('choice-dim');
+  });
+  document.getElementById('exp-tag').textContent=ok?'✅ 正解！':'❌ 不正解　正解：'+q.options[q.answer];
+  document.getElementById('exp-text').textContent=q.explanation;
+  document.getElementById('exp-area').classList.remove('hidden');
+  document.getElementById('quiz-prog').style.width=((quizIdx+1)/quizWords.length*100)+'%';
+  document.getElementById('quit-btn').style.display='none';
+  fetchHint(q);
+}
+async function fetchHint(q){
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:200,
+        messages:[{role:'user',content:`小学5年生向け国語の解説です。以下の解説をもとに、子どもにわかりやすく30〜50字で「覚え方のポイント」を一言添えてください。解説：${q.explanation}`}]})});
+    const d=await r.json(),h=d.content?.[0]?.text;
+    if(h){document.getElementById('ai-hint-text').textContent=h;document.getElementById('ai-hint-box').classList.remove('hidden');}
+  }catch(e){}
+}
+function quizNext(){
+  if(quizIdx+1>=quizWords.length){showResult();return;}
+  quizIdx++;renderQuiz();
+}
+function quitQuiz(){
+  quizWords.forEach(q=>{if(!quizAnswers.find(a=>a.q.id===q.id))quizAnswers.push({q,userIdx:-1,correct:false});});
+  showResult();
+}
+function retryQuiz(){
+  if(lastMode==='redo')startRedoQuiz();
+  else startQuiz(lastFilter,lastMode);
+}
+function showResult(){
+  quizWords.forEach(q=>{if(!quizAnswers.find(a=>a.q.id===q.id))quizAnswers.push({q,userIdx:-1,correct:false});});
+  const wrongIds=quizAnswers.filter(a=>!a.correct).map(a=>a.q.id);
+  const correctIds=quizAnswers.filter(a=>a.correct).map(a=>a.q.id);
+  const existing=loadRedo();
+  const merged=[...new Set([...existing,...wrongIds])].filter(id=>!correctIds.includes(id));
+  saveRedo(merged);
+  const total=quizAnswers.length;
+  document.getElementById('score-num').innerHTML=quizScore+'<span class="score-total">/'+total+'</span>';
+  const pct=quizScore/total;
+  document.getElementById('score-msg').textContent=
+    quizScore===total?'🎉 満点！すばらしい！':pct>=0.8?'👏 よくできました！':pct>=0.6?'😊 もう少し！':'📖 もう一度挑戦しよう';
+  document.getElementById('answer-list').innerHTML=quizAnswers.filter(a=>a&&a.q).map(a=>{
+    const wrong=!a.correct&&a.userIdx>=0
+      ?`<span class="res-wrong">（あなた：${a.q.options[a.userIdx]||'?'}）</span>`
+      :!a.correct?'<span class="res-wrong">（未回答）</span>':'';
+    return`<div class="res-item" style="border-left-color:${a.correct?'#22c55e':'#ef4444'}">
+      <div class="res-q">${a.q.question.split('\n')[0]}</div>
+      <div class="res-a">${a.correct?'✅':'❌'} ${a.q.options[a.q.answer]} ${wrong}</div></div>`;
+  }).join('');
+  showScreen('result');
+  const btn=document.getElementById('redo-result-btn');
+  if(merged.length>0){btn.textContent='🔁 間違えた'+merged.length+'問を解き直す';btn.style.display='block';}
+  else{btn.style.display='none';}
+  updateRedoBtn();
+}
+updateRedoBtn();showHome();
+</script>
+</body>
+</html>
