@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>中国・四国地方テスト</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --accent:#3468a6;
+  --accent-light:#e8f0fa;
+  --ref:#7a5ea8;
+  --ref-light:#f1ecf8;
+  --good:#2f9e5b;
+  --good-light:#e6f6ec;
+  --bad:#d1453b;
+  --bad-light:#fbe9e8;
+  --ink:#22303f;
+  --sub:#5c6b7a;
+  --line:#dbe3ec;
+  --bg:#f5f7fa;
+  --card:#ffffff;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  font-family:"Zen Kaku Gothic New",sans-serif;
+  background:var(--bg);
+  color:var(--ink);
+  display:flex;
+  justify-content:center;
+}
+#app{
+  width:100%;
+  max-width:480px;
+  min-height:100vh;
+  background:var(--bg);
+  display:flex;
+  flex-direction:column;
+  position:relative;
+}
+.header{
+  padding:16px 18px 12px;
+  background:linear-gradient(135deg,var(--accent),#4d7dbf);
+  color:#fff;
+  position:sticky;
+  top:0;
+  z-index:5;
+}
+.header h1{
+  margin:0;
+  font-size:18px;
+  font-weight:900;
+  letter-spacing:.02em;
+}
+.header .sub{
+  margin-top:2px;
+  font-size:12px;
+  opacity:.9;
+}
+.content{
+  flex:1;
+  padding:14px 16px 90px;
+}
+.stage-card{
+  background:var(--card);
+  border-radius:14px;
+  box-shadow:0 2px 8px rgba(30,50,80,.08);
+  padding:16px;
+  margin-bottom:14px;
+  border:1px solid var(--line);
+  cursor:pointer;
+  transition:transform .1s;
+}
+.stage-card:active{transform:scale(.98);}
+.stage-card.ref{
+  border-color:var(--ref);
+  background:linear-gradient(180deg,#fff,var(--ref-light));
+}
+.stage-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+.stage-name{
+  font-size:16px;
+  font-weight:700;
+}
+.stage-badge{
+  font-size:11px;
+  background:var(--accent);
+  color:#fff;
+  padding:3px 8px;
+  border-radius:999px;
+  font-weight:700;
+}
+.stage-card.ref .stage-badge{background:var(--ref);}
+.stage-desc{
+  font-size:12.5px;
+  color:var(--sub);
+  margin-top:6px;
+  line-height:1.5;
+}
+.stage-meta{
+  display:flex;
+  gap:10px;
+  margin-top:10px;
+  font-size:12px;
+  color:var(--sub);
+}
+.retry-btn{
+  margin-top:10px;
+  display:inline-block;
+  background:var(--bad-light);
+  color:var(--bad);
+  border:1px solid var(--bad);
+  border-radius:8px;
+  padding:6px 10px;
+  font-size:12.5px;
+  font-weight:700;
+  cursor:pointer;
+}
+.progress-bar{
+  height:6px;
+  background:var(--line);
+  border-radius:99px;
+  overflow:hidden;
+  margin-top:8px;
+}
+.progress-fill{
+  height:100%;
+  background:var(--accent);
+  border-radius:99px;
+}
+.lead-badge{
+  display:inline-block;
+  background:var(--accent);
+  color:#fff;
+  font-size:12px;
+  font-weight:700;
+  padding:4px 10px;
+  border-radius:999px;
+  margin-bottom:10px;
+}
+.sub-badge{
+  display:inline-block;
+  background:#fff;
+  color:var(--accent);
+  border:1px solid var(--accent);
+  font-size:11px;
+  font-weight:700;
+  padding:2px 8px;
+  border-radius:999px;
+  margin-left:6px;
+}
+.play-topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-size:12.5px;
+  color:var(--sub);
+  margin-bottom:10px;
+}
+.qcard{
+  background:var(--card);
+  border-radius:14px;
+  padding:18px 16px;
+  box-shadow:0 2px 8px rgba(30,50,80,.08);
+  border:1px solid var(--line);
+}
+.qcard.info{
+  border-color:var(--ref);
+  background:linear-gradient(180deg,#fff,var(--ref-light));
+}
+.qtitle{
+  font-weight:900;
+  font-size:16px;
+  margin-bottom:8px;
+}
+.qtext{
+  font-size:15.5px;
+  line-height:1.7;
+  margin-bottom:14px;
+  white-space:pre-wrap;
+}
+.qtext.wide{font-size:14.5px;}
+.info-body{
+  font-size:14.5px;
+  line-height:1.85;
+}
+.info-body b{color:var(--accent);}
+.src-tag{
+  margin-top:14px;
+  font-size:11.5px;
+  color:var(--ref);
+  border-top:1px dashed var(--line);
+  padding-top:8px;
+}
+.choice-list{display:flex;flex-direction:column;gap:9px;}
+.choice-btn{
+  text-align:left;
+  padding:12px 14px;
+  border-radius:10px;
+  border:1.5px solid var(--line);
+  background:#fff;
+  font-size:14.5px;
+  font-family:inherit;
+  cursor:pointer;
+  line-height:1.5;
+}
+.choice-btn:active{background:var(--accent-light);}
+.choice-btn.correct{
+  border-color:var(--good);
+  background:var(--good-light);
+  font-weight:700;
+}
+.choice-btn.wrong{
+  border-color:var(--bad);
+  background:var(--bad-light);
+  font-weight:700;
+}
+.choice-btn.dim{opacity:.55;}
+.fill-input{
+  width:100%;
+  padding:12px 14px;
+  font-size:16px;
+  border-radius:10px;
+  border:1.5px solid var(--line);
+  font-family:inherit;
+  margin-bottom:10px;
+}
+.fill-input.correct{border-color:var(--good);background:var(--good-light);}
+.fill-input.wrong{border-color:var(--bad);background:var(--bad-light);}
+.btn{
+  width:100%;
+  padding:13px;
+  border-radius:10px;
+  border:none;
+  font-size:15px;
+  font-weight:700;
+  font-family:inherit;
+  cursor:pointer;
+  margin-top:6px;
+}
+.btn-primary{background:var(--accent);color:#fff;}
+.btn-ref{background:var(--ref);color:#fff;}
+.btn-outline{background:#fff;color:var(--accent);border:1.5px solid var(--accent);}
+.btn-outline.ref{color:var(--ref);border-color:var(--ref);}
+.result-box{
+  text-align:center;
+  padding:6px 0 18px;
+}
+.result-score{
+  font-size:40px;
+  font-weight:900;
+  color:var(--accent);
+  margin:6px 0;
+}
+.explain-box{
+  margin-top:14px;
+  background:var(--accent-light);
+  border-radius:10px;
+  padding:12px 14px;
+  font-size:13.5px;
+  line-height:1.7;
+}
+.explain-box.bad{background:var(--bad-light);}
+.explain-box.good{background:var(--good-light);}
+.hint-box{
+  margin-top:10px;
+  background:#fff8e6;
+  border:1px solid #e8cf8a;
+  border-radius:10px;
+  padding:10px 12px;
+  font-size:13px;
+  line-height:1.6;
+}
+.mark-icon{font-size:18px;margin-right:4px;vertical-align:-2px;}
+.missed-list{
+  text-align:left;
+  margin-top:16px;
+  font-size:13px;
+}
+.missed-item{
+  padding:8px 10px;
+  background:var(--bad-light);
+  border-radius:8px;
+  margin-bottom:6px;
+  color:#8a2f28;
+}
+.home-title{
+  font-size:13px;
+  font-weight:700;
+  color:var(--sub);
+  margin:18px 0 8px 2px;
+}
+.footer-note{
+  text-align:center;
+  font-size:11px;
+  color:var(--sub);
+  padding:10px 0 26px;
+}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+/* ===================== データ（予習シリーズ5年上 第12回 中国・四国地方 より転記） ===================== */
+
+const PILLARS = {
+  0:{label:"県別まとめ", full:"今回のポイント（9県別まとめ）"},
+  1:{label:"①自然", full:"中国・四国地方の自然（地形・気候）"},
+  2:{label:"②農林水産業", full:"中国・四国地方の農林水産業"},
+  3:{label:"③工業", full:"中国・四国地方の工業"},
+  4:{label:"④人口", full:"中国・四国地方の人口"},
+  5:{label:"⑤交通", full:"中国・四国地方の交通"},
+  6:{label:"⑥世界平和", full:"世界平和を求めて"}
+};
+function pillarBadge(p){ return PILLARS[p] ? PILLARS[p].label : ""; }
+
+/* ---------- 第1段階：構造テスト（kihon） ---------- */
+
+const kihonOverviewScreens = [
+  {
+    type:"info",
+    title:"はじめに",
+    body:`第12回のテーマは「中国・四国地方」です。<br>
+今回のポイントは大きく分けて<b>6つ</b>あります。<br><br>
+①自然（地形・気候）<br>
+②農林水産業<br>
+③工業<br>
+④人口<br>
+⑤交通<br>
+⑥世界平和を求めて（広島と世界文化遺産）<br><br>
+まずはこの6本柱の全体像をつかんでから、それぞれの中身（黒太字・ひとくちメモ）を確認していきましょう。`
+  },
+  {
+    type:"info",
+    title:"全体像：中国・四国地方の6本柱",
+    wide:true,
+    body:`<b>①自然</b>：なだらかな中国山地、けわしい四国山地。日本海側は鳥取砂丘、瀬戸内海には小豆島など多くの島、南四国はリアス海岸。気候は太平洋側（高知）・瀬戸内（高松）・日本海側（鳥取）の3タイプ。<br><br>
+<b>②農林水産業</b>：山陰の日本なし・らっきょう、瀬戸内のため池と香川用水・段々畑のみかん、南四国の促成栽培。水産業は境港・宍道湖のしじみ、広島湾のかき・宇和海の真珠、南四国のかつお・まぐろ。<br><br>
+<b>③工業</b>：瀬戸内工業地域（化学工業の割合が高い）、自動車（広島）・鉄鋼（倉敷・福山）・造船（呉・坂出）・セメント（宇部・山陽小野田）、伝統的工芸品（土佐和紙・因州和紙・萩焼・備前焼・熊野筆）。<br><br>
+<b>④人口</b>：高度経済成長期の人口移動で山陰・南四国の山間部が過疎化。上勝町の「つまもの」と六次産業化。<br><br>
+<b>⑤交通</b>：本州四国連絡橋の3ルート（瀬戸大橋・神戸－鳴門ルート・瀬戸内しまなみ海道）、ストロー効果、診療船。<br><br>
+<b>⑥世界平和を求めて</b>：広島市への原爆投下、原爆ドーム・厳島神社・石見銀山遺跡・明治日本の産業革命遺産などの世界文化遺産。`
+  }
+];
+
+const kihonFillRaw = [
+  // pillar 1
+  {pillar:1, q:"中国地方の中央部に広がる、なだらかな高原のような山地を（　）という。", answer:"中国山地", accept:["中国山地"], explain:"中国山地は、なだらかな高原のような山地です。"},
+  {pillar:1, q:"日本海に面した中国地方にある、日本最大級の砂丘を（　）という。", answer:"鳥取砂丘", accept:["鳥取砂丘"], explain:"日本海に面した海岸線は単調で、日本最大級の鳥取砂丘があります。"},
+  {pillar:1, q:"中国山地西部にある、カルスト地形で有名な地形を（　）という。", answer:"秋吉台", accept:["秋吉台"], explain:"西部には、カルスト地形で有名な秋吉台があります。"},
+  {pillar:1, q:"四国山地から流れ出た吉野川の下流域に広がる平野を（　）という。", answer:"徳島平野", accept:["徳島平野"], explain:"四国山地から流れ出た吉野川の下流域に、徳島平野があります。"},
+  {pillar:1, q:"佐田岬から宇和海沿岸にかけて見られる、複雑に入り組んだ海岸地形を（　）という。", answer:"リアス海岸", accept:["リアス海岸","リアス式海岸"], explain:"佐田岬から宇和海沿岸にかけては、リアス海岸（リアス式海岸）になっています。"},
+  // pillar 2
+  {pillar:2, q:"鳥取砂丘周辺で、風に飛ばされてくる砂の害をおさえるために植えられているものを（　）という。", answer:"防砂林", accept:["防砂林"], explain:"風に飛ばされてくる砂の害をおさえるために防砂林を植えています。"},
+  {pillar:2, q:"高知県を水源とする吉野川の水を、讃岐平野に引く用水を（　）という。", answer:"香川用水", accept:["香川用水"], explain:"高知県を水源とする吉野川の水が、香川用水によって讃岐平野に引かれています。"},
+  {pillar:2, q:"高知平野でさかんな、なすやピーマンなどを冬から春にかけて栽培する農法を（　）という。", answer:"促成栽培", accept:["促成栽培"], explain:"高知平野では、野菜の促成栽培がさかんです。"},
+  {pillar:2, q:"香川県小豆島で100年あまり前から栽培が始まった、油をとるための作物は（　）である。", answer:"オリーブ", accept:["オリーブ"], explain:"小豆島では、100年あまり前にオリーブ栽培が始まりました。"},
+  {pillar:2, q:"鳥取県境港市にある、日本海沿岸で水揚げ量1位の漁港を（　）という。", answer:"境港", accept:["境港"], explain:"境港は、日本海沿岸では水揚げ量が1位の漁港です。"},
+  // pillar 3
+  {pillar:3, q:"岡山・広島・山口・香川・愛媛の瀬戸内海沿岸に広がる工業地域を（　）という。", answer:"瀬戸内工業地域", accept:["瀬戸内工業地域"], explain:"瀬戸内海に面した地域に、瀬戸内工業地域が広がっています。"},
+  {pillar:3, q:"瀬戸内工業地域で、しめる割合が比較的多いのが特色の工業は（　）である。", answer:"化学工業", accept:["化学工業"], explain:"瀬戸内工業地域は、化学工業のしめる割合が比較的多いのが特色です。"},
+  {pillar:3, q:"倉敷市（水島地区）や周南市にある、石油関連の工場群を（　）という。", answer:"石油化学コンビナート", accept:["石油化学コンビナート"], explain:"倉敷市（水島地区）や周南市に石油化学コンビナートがあります。"},
+  {pillar:3, q:"山口県秋吉台周辺でとれる石灰岩を原料に、宇部市・山陽小野田市でつくられる製品は（　）である。", answer:"セメント", accept:["セメント"], explain:"宇部市・山陽小野田市では、秋吉台周辺でとれる石灰岩を原料にセメントがつくられます。"},
+  // pillar 4
+  {pillar:4, q:"高度経済成長期に人口が都市に流出し、地域の人口が大きく減少する問題を（　）という。", answer:"過疎", accept:["過疎","過疎化"], explain:"山陰や四国の山間部を中心に、過疎（過疎化）の問題が深刻になっています。"},
+  {pillar:4, q:"徳島県上勝町で、地域の葉や花を日本料理に添えるものとして全国へ売り出している商品を（　）という。", answer:"つまもの", accept:["つまもの"], explain:"上勝町では、地域の野山でとった葉や花を「つまもの」として全国へ売り始めました。"},
+  {pillar:4, q:"地元の農水産物を加工し、地域ブランドとして販売する動きを（　）という。", answer:"六次産業化", accept:["六次産業化"], explain:"地元の農水産物を加工し、地域ブランドとして販売する動きを六次産業化といいます。"},
+  // pillar 5
+  {pillar:5, q:"本州と四国を結ぶ3つのルートをまとめて（　）という。", answer:"本州四国連絡橋", accept:["本州四国連絡橋"], explain:"3つのルートをまとめて、本州四国連絡橋といいます。"},
+  {pillar:5, q:"1988年に開通した、児島－坂出を結ぶルートの通称は（　）である。", answer:"瀬戸大橋", accept:["瀬戸大橋"], explain:"児島－坂出ルートは瀬戸大橋とよばれ、1988年に開通しました。"},
+  {pillar:5, q:"1999年に開通した、尾道－今治を結ぶルートの通称は（　）である。", answer:"瀬戸内しまなみ海道", accept:["瀬戸内しまなみ海道"], explain:"尾道－今治ルートは瀬戸内しまなみ海道とよばれ、1999年に開通しました。"},
+  {pillar:5, q:"交通網の整備で人やものが大都市に吸い寄せられる現象を（　）という。", answer:"ストロー効果", accept:["ストロー効果"], explain:"新たに交通網が整備されて大都市に人やものが吸い寄せられることをストロー効果といいます。"},
+  // pillar 6
+  {pillar:6, q:"1945年8月6日、アメリカによって広島市に投下されたものを（　）という。", answer:"原子爆弾", accept:["原子爆弾","原爆"], explain:"1945年8月6日、アメリカによって広島市に原子爆弾（原爆）が落とされました。"},
+  {pillar:6, q:"平安時代の終わりごろ、瀬戸内海の航海の守り神として信仰された、広島県の世界文化遺産は（　）である。", answer:"厳島神社", accept:["厳島神社"], explain:"厳島神社は瀬戸内海の航海の守り神としてあつく信仰されてきました。"},
+  {pillar:6, q:"450年以上前から多くの銀を産出してきた、島根県にある世界文化遺産は（　）である。", answer:"石見銀山遺跡", accept:["石見銀山遺跡"], explain:"石見銀山遺跡は、450年以上前から数百年間にわたって多くの銀を産出してきた鉱山を中心とする遺跡です。"}
+];
+
+const kihonFinalRaw = [
+  {pillar:1, q:"中国・四国地方の地形について、正しいものはどれですか。",
+    choices:["中国山地はなだらかな高原状の山地で、四国山地は高くけわしい山地である","中国山地は高くけわしく、四国山地はなだらかである","鳥取砂丘は瀬戸内海に面している","秋吉台は徳島県にある"],
+    answer:0, explain:"中国山地はなだらかな高原のような山地、四国山地は高くけわしい山地です。"},
+  {pillar:2, q:"中国・四国地方の農林水産業について、正しいものはどれですか。",
+    choices:["高知平野では野菜の促成栽培がさかんである","愛媛県は日本一のりんごの産地である","鳥取砂丘周辺では稲作がさかんである","瀬戸内海沿岸は降水量が多いためため池は少ない"],
+    answer:0, explain:"高知平野では、あたたかく日照時間の長い気候を生かし、なすやピーマンなどの促成栽培がさかんです。"},
+  {pillar:3, q:"中国・四国地方の工業について、正しいものはどれですか。",
+    choices:["瀬戸内工業地域は化学工業のしめる割合が比較的多い","瀬戸内工業地域は軽工業が中心である","セメント工業は広島県でさかんである","石油化学コンビナートは鳥取県に集中している"],
+    answer:0, explain:"瀬戸内工業地域は重化学工業が中心で、化学工業のしめる割合が比較的多いのが特色です。"},
+  {pillar:4, q:"中国・四国地方の人口について、正しいものはどれですか。",
+    choices:["山陰や四国の山間部を中心に人口が大きく減少し、過疎化が深刻になっている","中国・四国地方は人口が急増している","高知県は都道府県の中で最も森林の割合が低い","徳島県上勝町は人口が増加し続けている"],
+    answer:0, explain:"高度経済成長期に人々が都市に移り住み、山陰や四国の山間部を中心に人口が大きく減少しました。"},
+  {pillar:5, q:"中国・四国地方の交通について、正しいものはどれですか。",
+    choices:["本州四国連絡橋は3つのルートすべてで自動車がわたることができる","本州四国連絡橋は1つのルートしかない","瀬戸大橋は自動車専用で鉄道は通っていない","本州四国連絡橋の開通で地方から大都市への人の流れは止まった"],
+    answer:0, explain:"本州四国連絡橋の3つのルートは、すべて自動車でわたることができます。"},
+  {pillar:6, q:"「世界平和を求めて」について、正しいものはどれですか。",
+    choices:["広島市は太田川の三角州に発達した都市で、人口100万人をこえる","広島市は瀬戸内海沿岸の埋め立て地に発達した都市である","原爆ドームは厳島神社と同じ島にある","広島に原爆が投下されたのは1945年8月15日である"],
+    answer:0, explain:"太田川の三角州に広がる広島市は、人口が100万人をこえ、中国・四国地方の中心都市として発展しています。"}
+];
+
+/* ---------- 第2段階：黒太字テスト（kuroji） ---------- */
+
+const kurojiBlocks = [
+{ pillar:1, sub:"2-1｜①自然（地形・気候）の黒太字", items:[
+  {q:"なだらかな高原のような山地で、日本海に面した海岸線が単調な中国地方中央部の山地は？", choices:["中国山地","四国山地","筑紫山地","紀伊山地"], answer:0, explain:"中国山地は、なだらかな高原のような山地です。"},
+  {q:"日本最大級の砂丘で、日本海に面する鳥取県の砂丘は？", choices:["鳥取砂丘","中田島砂丘","九十九里浜","吹上浜"], answer:0, explain:"日本海に面した海岸線は単調で、日本最大級の鳥取砂丘があります。"},
+  {q:"中国山地西部にある、カルスト地形で有名な地形は？", choices:["秋吉台","四国カルスト","平尾台","カルスト台地"], answer:0, explain:"中国山地西部には、カルスト地形で有名な秋吉台があります。"},
+  {q:"瀬戸内海にある多くの島の一つで、香川県に属する島は？", choices:["小豆島","種子島","佐渡島","壱岐"], answer:0, explain:"瀬戸内海には小豆島など多くの島があります。"},
+  {q:"瀬戸内海に面して広がる、岡山県の平野は？", choices:["岡山平野","讃岐平野","広島平野","濃尾平野"], answer:0, explain:"瀬戸内海に面して広島平野・岡山平野・讃岐平野などが広がっています。"},
+  {q:"高くてけわしい、四国中央部にある山地は？", choices:["四国山地","中国山地","九州山地","紀伊山地"], answer:0, explain:"高くてけわしい四国山地があります。"},
+  {q:"四国山地から流れ出て、徳島平野をつくる川は？", choices:["吉野川","四万十川","仁淀川","那賀川"], answer:0, explain:"四国山地から流れ出た吉野川の下流域に、徳島平野があります。"},
+  {q:"佐田岬から宇和海沿岸にかけて見られる、複雑に入り組んだ海岸地形は？", choices:["リアス海岸","砂浜海岸","三角州","干潟"], answer:0, explain:"佐田岬から宇和海沿岸にかけては、リアス海岸（リアス式海岸）になっています。"},
+  {q:"太平洋側（高知）の気候の特徴として正しいのは？", choices:["年間の降水量が多く、温暖な気候","一年を通して降水量が少ない気候","冬に雨や雪の日が多い気候","降水量が非常に少ない乾燥した気候"], answer:0, explain:"太平洋側（高知）は年間の降水量が多く、温暖な気候です。降水量はとくに夏に多くなります。"},
+  {q:"瀬戸内（高松）で降水量が少ない理由として正しいのは？", choices:["中国山地と四国山地が季節風をさえぎるため","黒潮の影響を受けにくいため","標高が高いため","内陸に位置するため"], answer:0, explain:"中国山地が冬の季節風を、四国山地が夏の季節風をさえぎるため、瀬戸内は降水量が少ない気候です。"},
+  {q:"日本海側（鳥取）で冬に雨や雪の日が多くなる理由は？", choices:["北西の季節風の影響を受けるため","黒潮の影響を受けるため","台風の通り道になるため","中国山地に近いため"], answer:0, explain:"冬は、北西の季節風の影響を受けて、雨や雪の日が多くなります。"},
+  {q:"大山の別名で、鳥取県西部の旧国名にちなむ呼び名は？", choices:["伯耆富士","出雲富士","石見富士","長門富士"], answer:0, explain:"伯耆富士は大山の別名で、伯耆は鳥取県西部の旧国名です。"}
+]},
+{ pillar:2, sub:"2-2｜②農林水産業の黒太字", items:[
+  {q:"鳥取平野の丘陵地で栽培されている果物は？", choices:["日本なし","りんご","ぶどう","もも"], answer:0, explain:"鳥取平野の丘陵地では日本なしが栽培されています。"},
+  {q:"鳥取砂丘周辺で栽培されている、代表的な野菜は？", choices:["らっきょう","じゃがいも","とうもろこし","だいこん"], answer:0, explain:"鳥取砂丘の周辺では、らっきょう・すいか・長いもなどがつくられています。"},
+  {q:"鳥取砂丘周辺で、砂の害をおさえるために植えられているものは？", choices:["防砂林","防風林","街路樹","果樹園"], answer:0, explain:"風に飛ばされてくる砂の害をおさえるために防砂林を植えています。"},
+  {q:"瀬戸内地方で、降水量が少ないため昔からつくられてきた水をためる施設は？", choices:["ため池","ダム","地下ダム","貯水池"], answer:0, explain:"瀬戸内は降水量が少ないため、昔から各地にため池がつくられてきました。"},
+  {q:"高知県を水源とする吉野川の水を讃岐平野に引く用水路は？", choices:["香川用水","愛知用水","豊川用水","那須疏水"], answer:0, explain:"吉野川の水が、香川用水によって讃岐平野に引かれています。"},
+  {q:"愛媛県の宇和海沿岸に広がる、傾斜地を利用した農地は？", choices:["段々畑","棚田","干拓地","扇状地"], answer:0, explain:"愛媛県には、宇和海に面して段々畑が広がっています。"},
+  {q:"みかんの生産量が全国1位の県は？", choices:["和歌山県","愛媛県","静岡県","熊本県"], answer:0, explain:"みかんの生産量は和歌山県が22.4%で全国1位、愛媛県が16.0%で2位です。"},
+  {q:"日本有数のみかんの生産県で、宇和海沿岸に段々畑が広がる県は？", choices:["愛媛県","和歌山県","静岡県","広島県"], answer:0, explain:"日本有数のみかんの生産県である愛媛県には、宇和海に面して段々畑が広がっています。"},
+  {q:"高知平野でさかんな、なすやピーマンなどを冬から春に栽培する農法は？", choices:["促成栽培","抑制栽培","二毛作","輪作"], answer:0, explain:"高知平野では、本来は夏にとれるなすやピーマンなどを冬から春にかけて栽培する促成栽培がさかんです。"},
+  {q:"香川県小豆島で100年あまり前から栽培されている作物は？", choices:["オリーブ","オレンジ","ぶどう","レモン"], answer:0, explain:"小豆島では、100年あまり前にオリーブ栽培が始まりました。"},
+  {q:"生産量日本一を誇る、広島県のかんきつ類は？", choices:["レモン","みかん","いよかん","ゆず"], answer:0, explain:"広島県のレモンの生産量は日本一です。"},
+  {q:"生産量日本一を誇る、愛媛県のくだものは？", choices:["キウイフルーツ","もも","マスカット","びわ"], answer:0, explain:"愛媛県はキウイフルーツの生産量が日本一です。"},
+  {q:"鳥取県境港市にある、日本海沿岸で水揚げ量1位の漁港は？", choices:["境港","下関港","浜田港","唐津港"], answer:0, explain:"境港は、日本海沿岸では水揚げ量が1位の漁港です。"},
+  {q:"境港の沖合いを流れ、あじ・さばなどのよい漁場をつくる暖流は？", choices:["対馬海流","黒潮","親潮","リマン海流"], answer:0, explain:"境港の沖合いには対馬海流が流れ、あじ・さばなどのよい漁場となっています。"},
+  {q:"しじみがとれることで有名な、島根県東部の湖は？", choices:["宍道湖","中海","琵琶湖","浜名湖"], answer:0, explain:"宍道湖は、しじみがとれることで有名です。"},
+  {q:"広島湾で養殖されている貝は？", choices:["かき","ほたて","あさり","しじみ"], answer:0, explain:"瀬戸内では、広島湾でかきが養殖されています。"},
+  {q:"愛媛県宇和海沿岸で養殖されているものは？", choices:["真珠","のり","わかめ","こんぶ"], answer:0, explain:"宇和海沿岸では真珠やたいが養殖されています。"},
+  {q:"四国の沖合いで、黒潮にのってやってくる魚を対象にした漁業は？", choices:["かつお・まぐろ漁","さけ・ます漁","にしん漁","たら漁"], answer:0, explain:"四国の沖合いは、黒潮にのってやってくるかつお・まぐろなどの漁場となっています。"}
+]},
+{ pillar:3, sub:"2-3｜③工業の黒太字", items:[
+  {q:"岡山・広島・山口・香川・愛媛の瀬戸内海沿岸に広がる工業地域は？", choices:["瀬戸内工業地域","北九州工業地域","中京工業地帯","京葉工業地域"], answer:0, explain:"瀬戸内海に面した地域に、瀬戸内工業地域が広がっています。"},
+  {q:"瀬戸内工業地域で、しめる割合が比較的高い工業は？", choices:["化学工業","繊維工業","食料品工業","印刷業"], answer:0, explain:"瀬戸内工業地域は、化学工業のしめる割合が比較的多いのが特色です。"},
+  {q:"倉敷市（水島地区）や周南市にある、石油関連工場が集まった地域を何という？", choices:["石油化学コンビナート","製鉄コンビナート","工業団地","経済特区"], answer:0, explain:"倉敷市（水島地区）や周南市に石油化学コンビナートがあります。"},
+  {q:"広島県で自動車工場がある都市は？", choices:["広島市・府中町","倉敷市・福山市","呉市・坂出市","今治市・松山市"], answer:0, explain:"広島県では、広島市や府中町に自動車工場があります。"},
+  {q:"倉敷市（水島地区）や福山市で発達している工業は？", choices:["鉄鋼業","造船業","セメント工業","製紙業"], answer:0, explain:"倉敷市（水島地区）や福山市で鉄鋼業が発達しています。"},
+  {q:"呉市や坂出市などで発達している工業は？", choices:["造船業","鉄鋼業","化学工業","自動車工業"], answer:0, explain:"造船業は、呉市や坂出市などで発達しています。"},
+  {q:"宇部市・山陽小野田市でつくられる、石灰岩を原料とする製品は？", choices:["セメント","ガラス","陶磁器","肥料"], answer:0, explain:"セメントは宇部市・山陽小野田市でつくられます。原料は秋吉台周辺でとれる石灰岩です。"},
+  {q:"今治市の地場産業として全国的に知られる製品は？", choices:["タオル","ジーンズ","陶磁器","和紙"], answer:0, explain:"今治市のタオルは、全国的に知られる質の高い製品です。"},
+  {q:"倉敷市（児島地区）の地場産業として全国的に知られる製品は？", choices:["ジーンズ","タオル","陶磁器","筆"], answer:0, explain:"倉敷市（児島地区）のジーンズは、全国的に知られる質の高い製品です。"},
+  {q:"高知県でつくられる伝統的工芸品の和紙は？", choices:["土佐和紙","因州和紙","美濃和紙","越前和紙"], answer:0, explain:"高知県で土佐和紙がつくられています。"},
+  {q:"鳥取県でつくられる伝統的工芸品の和紙は？", choices:["因州和紙","土佐和紙","美濃和紙","越前和紙"], answer:0, explain:"鳥取県で因州和紙がつくられています。"},
+  {q:"山口県萩市でつくられる伝統的工芸品の陶磁器は？", choices:["萩焼","備前焼","有田焼","九谷焼"], answer:0, explain:"山口県の萩市などで萩焼がつくられています。"},
+  {q:"岡山県備前市などでつくられる伝統的工芸品の陶磁器は？", choices:["備前焼","萩焼","有田焼","唐津焼"], answer:0, explain:"岡山県の備前市・岡山市などでは備前焼がつくられています。"},
+  {q:"広島県の伝統的工芸品である筆は？", choices:["熊野筆","奈良筆","豊橋筆","川尻筆"], answer:0, explain:"筆は、広島県の熊野筆があります。"}
+]},
+{ pillar:4, sub:"2-4｜④人口の黒太字", items:[
+  {q:"高度経済成長期に人口が都市に流出し、地域の人口が大きく減少する問題を何という？", choices:["過疎（過疎化）","過密","限界集落","ドーナツ化現象"], answer:0, explain:"山陰や四国の山間部を中心に、人口が大きく減少する過疎（過疎化）の問題が深刻になっています。"},
+  {q:"都道府県の中で、県の面積にしめる森林の割合が最も多い県は？", choices:["高知県","島根県","徳島県","愛媛県"], answer:0, explain:"高知県は、県の面積にしめる森林の割合が80%をこえていて、都道府県の中で最も多くなっています。"},
+  {q:"2023年で、人口が最も少ない都道府県は？", choices:["鳥取県","島根県","高知県","徳島県"], answer:0, explain:"人口の少ない都道府県は、44位徳島県、45位高知県、46位島根県、47位鳥取県の順です。"},
+  {q:"徳島県上勝町で、地域の葉や花を日本料理に添えるものとして売り出している商品は？", choices:["つまもの","山菜セット","地場野菜","郷土料理"], answer:0, explain:"上勝町では、地域の野山でとった葉や花を「つまもの」として全国へ売り始めました。"},
+  {q:"上勝町のように、農水産物を加工し地域ブランドとして販売する動きを何という？", choices:["六次産業化","地産地消","産業の空洞化","地域おこし"], answer:0, explain:"地元の農水産物を原材料にして加工し、地域ブランドとして販売する動きを六次産業化といいます。"},
+  {q:"人口が減った地域で、高齢者の割合が高くなり共同生活の維持が困難になった集落を何という？", choices:["限界集落","過密集落","ニュータウン","ベッドタウン"], answer:0, explain:"人口減少が進む地域では、限界集落が増えることが心配されています。"},
+  {q:"太平洋ベルトにふくまれない地域で、とくに人口が減っているのは山陰と何？", choices:["南四国","北四国","瀬戸内","山陽"], answer:0, explain:"太平洋ベルトにふくまれない山陰・南四国の県では、とくに人口が減っています。"}
+]},
+{ pillar:5, sub:"2-5｜⑤交通の黒太字", items:[
+  {q:"本州と四国を結ぶ3つのルートをまとめて何という？", choices:["本州四国連絡橋","瀬戸内大橋","四国架橋","本四架橋"], answer:0, explain:"3つのルートをまとめて、本州四国連絡橋といいます。"},
+  {q:"1988年に開通した、児島－坂出を結ぶルートの通称は？", choices:["瀬戸大橋","明石海峡大橋","瀬戸内しまなみ海道","大鳴門橋"], answer:0, explain:"児島－坂出ルート（瀬戸大橋）は1988年に開通し、自動車・鉄道が通ります。"},
+  {q:"1998年に開通した、神戸－鳴門を結ぶルートに含まれる橋は？", choices:["明石海峡大橋","瀬戸大橋","関門橋","来島海峡大橋"], answer:0, explain:"神戸－鳴門ルートには明石海峡大橋・大鳴門橋がふくまれ、1998年に開通しました。"},
+  {q:"1999年に開通した、尾道－今治を結ぶルートの通称は？", choices:["瀬戸内しまなみ海道","瀬戸大橋","本州四国連絡橋","大鳴門橋"], answer:0, explain:"尾道－今治ルート（瀬戸内しまなみ海道）は1999年に開通し、自動車・自転車・徒歩で渡れます。"},
+  {q:"本州四国連絡橋の3つのルートに共通して利用できる交通手段は？", choices:["自動車","鉄道のみ","徒歩のみ","船のみ"], answer:0, explain:"3つのルートは、すべて自動車でわたることができます。"},
+  {q:"病院のない島が多い瀬戸内海で、船内で診察が受けられる船を何という？", choices:["診療船","救急船","巡回船","給水船"], answer:0, explain:"瀬戸内海では、船内で診察が受けられる診療船が昔から運航されています。"},
+  {q:"交通網の整備で人やものが大都市に吸い寄せられる現象を何という？", choices:["ストロー効果","ドーナツ化現象","都市化","過密化"], answer:0, explain:"新たに交通網が整備されて大都市に人やものが吸い寄せられることをストロー効果といいます。"},
+  {q:"400年以上前から干拓が行われ、干拓地が水田などになっている岡山県の湾は？", choices:["児島湾","広島湾","宇和海","児島湖"], answer:0, explain:"児島湾では400年以上前から干拓が行われ、干拓地は水田などになっています。"},
+  {q:"児島湾の奥が閉め切られてできた湖は？", choices:["児島湖","宍道湖","中海","浜名湖"], answer:0, explain:"児島湾の奥は閉め切られて児島湖となり、その水は農業用水などに利用されています。"},
+  {q:"広島市に地下鉄がなく、市内に多く見られる交通機関は？", choices:["路面電車","モノレール","地下鉄","新交通システムのみ"], answer:0, explain:"広島市内にはバスのほかに、多くの路面電車が走り、市民の重要な交通手段になっています。"}
+]},
+{ pillar:6, sub:"2-6｜⑥世界平和を求めての黒太字", items:[
+  {q:"太田川の三角州に発達した、中国・四国地方の中心都市は？", choices:["広島市","岡山市","高松市","松山市"], answer:0, explain:"太田川の三角州に広がる広島市は、中国・四国地方の中心都市として発展しています。"},
+  {q:"1945年8月6日、アメリカによって広島市に投下されたものは？", choices:["原子爆弾（原爆）","焼夷弾","水素爆弾","模擬爆弾"], answer:0, explain:"戦争が終わる直前の1945年8月6日、アメリカによって広島市に原子爆弾（原爆）が落とされました。"},
+  {q:"戦後、広島市が宣言した都市の姿は？", choices:["平和記念都市","国際文化都市","世界遺産都市","非核宣言都市"], answer:0, explain:"戦後、広島市は平和記念都市となることを宣言しました。"},
+  {q:"1996年に世界文化遺産に登録された、原爆の被害を伝える建物は？", choices:["原爆ドーム","平和記念資料館","広島城","平和記念公園"], answer:0, explain:"原爆ドームは、戦争のおそろしさを伝える建物として、1996年に世界文化遺産に登録されました。"},
+  {q:"平安時代の終わりごろ、瀬戸内海の航海の守り神として信仰された、広島県の世界文化遺産は？", choices:["厳島神社","出雲大社","石見銀山遺跡","原爆ドーム"], answer:0, explain:"厳島神社は、瀬戸内海の航海の守り神としてあつく信仰されてきました。"},
+  {q:"厳島神社がある、日本三景の1つに数えられる島は？", choices:["宮島（安芸の宮島）","小豆島","江田島","能美島"], answer:0, explain:"厳島神社は、日本三景の1つである安芸の宮島にあります。"},
+  {q:"450年以上前から多くの銀を産出してきた、島根県の世界文化遺産は？", choices:["石見銀山遺跡","出雲大社","原爆ドーム","厳島神社"], answer:0, explain:"石見銀山遺跡は、450年以上前から数百年間にわたって多くの銀を産出してきた鉱山を中心とする遺跡です。"},
+  {q:"松下村塾や反射炉などが登録されている、山口県の世界文化遺産は？", choices:["明治日本の産業革命遺産","石見銀山遺跡","厳島神社","原爆ドーム"], answer:0, explain:"明治日本の産業革命遺産には、松下村塾や反射炉など、萩市にある5つの史跡が登録されています。"},
+  {q:"瀬戸内海を中心に11の府県に広がる、日本で最初に指定された国立公園の1つは？", choices:["瀬戸内海国立公園","山陰海岸国立公園","足摺宇和海国立公園","西海国立公園"], answer:0, explain:"瀬戸内海国立公園は、瀬戸内海を中心に北九州市から和歌山市まで11の府県に広がる国立公園です。"}
+]},
+{ pillar:2, sub:"2-7｜統計ランキング（農林水産業・工業）", items:[
+  {q:"みかんの生産量割合（2022年）で、全国1位の県は？", choices:["和歌山県","愛媛県","静岡県","熊本県"], answer:0, explain:"みかんは和歌山22.4%、愛媛16.0%、静岡15.1%の順で、和歌山県が1位です。"},
+  {q:"なすの生産量割合（2022年）で、全国1位の県は？", choices:["高知県","熊本県","群馬県","福岡県"], answer:0, explain:"なすは高知13.8%、熊本11.3%、群馬9.7%の順で、高知県が1位です。"},
+  {q:"ピーマンの生産量割合（2022年）で、全国1位の県は？", choices:["茨城県","宮崎県","高知県","鹿児島県"], answer:0, explain:"ピーマンは茨城22.2%、宮崎18.7%、高知9.2%の順で、茨城県が1位です。"},
+  {q:"かきの収獲量割合（2022年）で、全国1位の県は？", choices:["広島県","宮城県","岡山県","兵庫県"], answer:0, explain:"かきは広島58.5%、宮城15.5%、岡山8.9%の順で、広島県が圧倒的1位です。"},
+  {q:"真珠の収獲量割合（2022年）で、全国1位の県は？", choices:["長崎県","愛媛県","三重県","広島県"], answer:0, explain:"真珠は長崎41.6%、愛媛31.8%、三重17.2%の順で、長崎県が1位、宇和海で有名な愛媛県は2位です。"},
+  {q:"瀬戸内工業地域の生産額割合（2021年）で、最も高い工業は？", choices:["機械","化学","金属","食料品"], answer:0, explain:"瀬戸内工業地域は金属20.5%、機械31.3%、化学24.6%の順で、機械工業が最も高くなっています。"}
+]},
+{ pillar:0, sub:"2-8｜県当てクイズ（今回のポイント）", items:[
+  {q:"「カルスト地形の秋吉台」「宇部・山陽小野田のセメント」「伝統的工芸品の萩焼」が特色の県は？", choices:["山口県","岡山県","広島県","島根県"], answer:0, explain:"山口県は秋吉台のカルスト地形、宇部・山陽小野田のセメント、萩焼が特色です。"},
+  {q:"「マスカット、もも」「倉敷の鉄鋼・石油化学」「日本三名園の後楽園」が特色の県は？", choices:["岡山県","広島県","山口県","香川県"], answer:0, explain:"岡山県はマスカット・ももの農業、倉敷の鉄鋼・石油化学工業、後楽園が特色です。"},
+  {q:"「レモン、かき」「瀬戸内しまなみ海道」「世界遺産の厳島神社・原爆ドーム」が特色の県は？", choices:["広島県","愛媛県","岡山県","山口県"], answer:0, explain:"広島県はレモン・かきの農林水産業、瀬戸内しまなみ海道、厳島神社・原爆ドームが特色です。"},
+  {q:"「宍道湖のしじみ」「県庁所在地は水の都・松江」「世界文化遺産の石見銀山遺跡」が特色の県は？", choices:["島根県","鳥取県","山口県","広島県"], answer:0, explain:"島根県は宍道湖のしじみ、県庁所在地の松江、石見銀山遺跡が特色です。"},
+  {q:"「日本最大級の鳥取砂丘」「らっきょう・長いも、日本なし」「水揚げ量の多い境港」が特色の県は？", choices:["鳥取県","島根県","岡山県","山口県"], answer:0, explain:"鳥取県は鳥取砂丘、らっきょう・長いも・日本なしの農業、境港が特色です。"},
+  {q:"「一年中雨の少ない気候」「瀬戸大橋」「讃岐うどん、面積が日本で最小」が特色の県は？", choices:["香川県","愛媛県","高知県","徳島県"], answer:0, explain:"香川県は瀬戸内の少雨気候、瀬戸大橋、讃岐うどん、面積が日本最小であることが特色です。"},
+  {q:"「西部はリアス海岸」「段々畑のみかん栽培」「宇和海の真珠の養殖」が特色の県は？", choices:["愛媛県","高知県","香川県","徳島県"], answer:0, explain:"愛媛県はリアス海岸、段々畑のみかん栽培、宇和海の真珠の養殖が特色です。"},
+  {q:"「四万十川の清流」「なすの生産が日本有数」「伝統的工芸品の土佐和紙」が特色の県は？", choices:["高知県","愛媛県","徳島県","香川県"], answer:0, explain:"高知県は四万十川、なすの促成栽培、土佐和紙が特色です。"},
+  {q:"「香川用水の水源・吉野川」「淡路島との間に大鳴門橋」「阿波おどり、鳴門のうず潮」が特色の県は？", choices:["徳島県","高知県","香川県","愛媛県"], answer:0, explain:"徳島県は吉野川、大鳴門橋、阿波おどり・鳴門のうず潮が特色です。"},
+  {q:"面積が最も大きい県は？（2023年）", choices:["広島県","岡山県","高知県","愛媛県"], answer:0, explain:"面積は広島県8479km²が最大で、次いで高知県7102km²、岡山県7115km²の順です。"},
+  {q:"人口が最も多い県は？（2023年、約274万人）", choices:["広島県","岡山県","愛媛県","山口県"], answer:0, explain:"人口は広島県が約274万人と最も多くなっています。"},
+  {q:"面積が日本で最も小さい都道府県は？", choices:["香川県","大阪府","東京都","沖縄県"], answer:0, explain:"香川県は面積が日本で最小の都道府県です。"},
+  {q:"島根県の県庁所在地は？", choices:["松江市","出雲市","浜田市","益田市"], answer:0, explain:"島根県の県庁所在地は松江市です。"},
+  {q:"香川県の県庁所在地は？", choices:["高松市","丸亀市","坂出市","観音寺市"], answer:0, explain:"香川県の県庁所在地は高松市です。"}
+]}
+];
+
+/* ---------- 第3段階：ひとくちメモテスト（mame） ---------- */
+
+const mameQuizRaw = [
+  {pillar:1, q:"大山の別名は？", choices:["伯耆富士","出雲富士","石見富士","長門富士"], answer:0, explain:"伯耆富士は大山の別名です。伯耆は鳥取県西部の旧国名で、薩摩富士（開聞岳）・南部富士（岩手山）など、富士の名がつけられた山が各地にあります。"},
+  {pillar:2, q:"みかんのような実をつけるくだものの総称は？", choices:["かんきつ類","仁果類","核果類","漿果類"], answer:0, explain:"みかんのような実をつけるくだものをかんきつ類といいます。みかんのほかにも、オレンジやいよかん、レモンなどがふくまれます。"},
+  {pillar:2, q:"宍道湖のように、淡水と海水がまじりあっている湖を何という？", choices:["汽水湖","潟湖","断層湖","カルデラ湖"], answer:0, explain:"宍道湖や中海のように、淡水と海水がまじりあっている湖を汽水湖といいます。"},
+  {pillar:3, q:"かつて軍の港が置かれ、戦後は造船業と鉄鋼業がさかんになった広島県の都市は？", choices:["呉市","福山市","尾道市","府中町"], answer:0, explain:"呉市はかつて軍の港が置かれ、第二次世界大戦後は造船業と鉄鋼業がさかんになりました。しかし2021年に鉄を取り出すための高炉が休止されました。"},
+  {pillar:4, q:"県の面積にしめる森林の割合が80%をこえ、都道府県の中で最も多い県は？", choices:["高知県","島根県","徳島県","愛媛県"], answer:0, explain:"高知県は、県の面積にしめる森林の割合が80%をこえていて、都道府県の中で最も森林の割合が多くなっています。"},
+  {pillar:5, q:"400年以上前から干拓が行われた、岡山県の湾は？", choices:["児島湾","広島湾","宇和海","児島湖"], answer:0, explain:"児島湾は400年以上前から干拓が行われ、干拓地は水田などになっています。湾の奥は閉め切られて児島湖となりました。"},
+  {pillar:6, q:"瀬戸内海を中心に11の府県に広がる、日本最初の国立公園の1つは？", choices:["瀬戸内海国立公園","山陰海岸国立公園","足摺宇和海国立公園","西海国立公園"], answer:0, explain:"瀬戸内海国立公園は、瀬戸内海を中心に、北九州市から和歌山市まで11の府県に広がる国立公園で、日本で最初に指定された国立公園の1つです。"}
+];
+
+/* ---------- 第4段階：気をつけたいポイント（sanko／読みもの・採点なし） ---------- */
+
+const sankoNotes = [
+  {
+    title:"広島市には地下鉄がない？",
+    body:`広島市には、すべて地下を走るような地下鉄の路線はありません。その代わりに、街には多くの路面電車が見られます。<br><br>
+三角州の河口付近の地盤には水分が多くふくまれているため、地下を掘って地下鉄を通す工事は難しく、費用が多くかかります。広島市でも高度経済成長期以降、何回か地下鉄の建設が計画されましたが、路面電車を廃止することに反対する声が強く、実現しませんでした。<br><br>
+広島市内にはバスのほかに多くの路面電車が走り、市民の重要な交通手段になっています。1990年代には、ゴムタイヤで専用のルートを走る新交通システムが利用されるようになり、その一部は地下を走行しています。`,
+    src:"予習シリーズ5年上 第12回 Q&A"
+  },
+  {
+    title:"オリーブの島・小豆島",
+    body:`香川県の小豆島は、淡路島に次いで瀬戸内海で2番目に大きな島です。雨の少ないおだやかな気候を生かし、100年あまり前にオリーブ栽培が始まりました。油をとるオリーブは、香川県の県の木や県の花になっています。<br><br>
+また、島でとれる塩と、船で九州などから運ばれてきた大豆を原料に、約400年前からつくられてきたしょうゆも特産品の1つです。`,
+    src:"予習シリーズ5年上 第12回 コラム"
+  },
+  {
+    title:"瀬戸内のくだもの",
+    body:`瀬戸内海にある生口島はレモンの産地として知られ、広島県のレモンの生産量は日本一です。愛媛県はキウイフルーツの生産量が日本一です。また、岡山県の白桃やマスカットはアジアの国々に向けて航空機で輸出されています。`,
+    src:"予習シリーズ5年上 第12回 関連することがら"
+  },
+  {
+    title:"過疎の町を元気づける試み",
+    body:`徳島県上勝町は、山間部にあり、町民の半数以上が65歳以上の町です。この町では、地域の野山でとった葉や花を、日本料理に添える「つまもの」として1980年代に全国へ売り始めました。今では会社をつくり、300種類をこえる「つまもの」をICT（情報通信技術）を活用して販売しています。<br><br>
+多くの高齢者がかかわり、収入を上げていることで、六次産業化の例としても紹介されています。上勝町は、このほかにも町への移住者の募集などのさまざまな試みが評価され、SDGs未来都市に選ばれました。<br><br>
+地元の農水産物を原材料にして加工し、地域ブランドとして販売する動きを六次産業化といいます。`,
+    src:"予習シリーズ5年上 第12回 コラム／関連することがら"
+  },
+  {
+    title:"ストロー効果",
+    body:`新たに交通網が整備されて地方都市と大都市の結びつきが強まり、人やものが大都市にすいよせられるように集まることをストロー効果といいます。本州四国連絡橋の開通とともに、中国・四国地方の高速道路が整備されると、人々の生活にも変化が生まれました。`,
+    src:"予習シリーズ5年上 第12回 関連することがら"
+  },
+  {
+    title:"きれいになりすぎた瀬戸内海",
+    body:`高度経済成長期には、工業の発展が優先され、工場排水などによって瀬戸内海の水の汚れが問題になりました。汚れた瀬戸内海では、プランクトンが異常発生し海が赤くなる赤潮が見られるようになり、養殖業は大きな被害を受けました。国は法律を整え、県は条例を定めて、工場からの排水をきびしく制限しました。<br><br>
+瀬戸内海の水質は大きく改善しましたが、同時に海水にふくまれる栄養分も少なくなったため、やせた魚が目立ったり、のりの色が落ちたりするなどの問題が報告されるようになりました。海水の栄養分をほどよいものにするための新たな基準がつくられるなど、豊かな瀬戸内海をめざす努力が続けられています。<br><br>
+また、みかんやすだちなど、かんきつ類のくだものの皮などを混ぜたえさで育てる「フルーツ魚」の養殖が、瀬戸内海をはじめとする西日本の各地で行われています。魚の生臭さをおさえられ、特産品を使うことで地域ブランドとして売り出すねらいもあり、くだものの皮を有効活用してごみの削減にもつながっています。`,
+    src:"予習シリーズ5年上 第12回 ちょっとくわしく"
+  },
+  {
+    title:"みかんの生産量1位は愛媛県ではない",
+    body:`愛媛県は宇和海沿岸の段々畑でみかん栽培がさかんなことで有名ですが、都道府県別の生産量では和歌山県が1位（22.4%）で、愛媛県は2位（16.0%）です。「有名＝1位」とは限らない典型的な例なので、注意しておきましょう。`,
+    src:"入試でまちがえやすいポイント（一般知識）"
+  },
+  {
+    title:"中国山地はなだらか、四国山地はけわしい",
+    body:`中国山地は「なだらかな高原のような山地」、四国山地は「高くてけわしい山地」です。名前が似ているため逆に覚えてしまいがちなので、対比させてセットで覚えましょう。`,
+    src:"入試でまちがえやすいポイント（一般知識）"
+  },
+  {
+    title:"瀬戸内工業地域と瀬戸内海国立公園の違い",
+    body:`「瀬戸内工業地域」（岡山・広島・山口・香川・愛媛の沿岸に広がる工業地域）と、「瀬戸内海国立公園」（瀬戸内海を中心に11の府県に広がる自然公園）は、名前が似ていますが別の言葉です。また、本州と四国を結ぶ「本州四国連絡橋」とも混同しないよう、それぞれの範囲を整理しておきましょう。`,
+    src:"入試でまちがえやすいポイント（一般知識）"
+  },
+  {
+    title:"広島の世界文化遺産は2つ",
+    body:`広島県には「原爆ドーム」と「厳島神社」という2つの世界文化遺産があります。原爆ドームだけを覚えて満足せず、平安時代からの信仰の対象である厳島神社（安芸の宮島）もあわせて覚えておきましょう。`,
+    src:"入試でまちがえやすいポイント（一般知識）"
+  },
+  {
+    title:"高知県は森林割合1位だが人口最少ではない",
+    body:`高知県は森林の割合が都道府県で最も高い県ですが、人口が最も少ない都道府県は鳥取県です（人口の少ない順：44位徳島、45位高知、46位島根、47位鳥取）。「過疎が深刻＝人口最少」と早合点しないよう、順位まで正確に確認しておきましょう。`,
+    src:"入試でまちがえやすいポイント（一般知識）"
+  }
+];
+
+/* ===================== 共通ビルド関数 ===================== */
+
+function shuffleArr(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+function finalize(q){
+  const correctText = q.choices[q.answer];
+  const order = shuffleArr(q.choices.map((c,i)=>i));
+  const newChoices = order.map(i=>q.choices[i]);
+  const newAnswer = newChoices.indexOf(correctText);
+  const out = Object.assign({}, q, {choices:newChoices, answer:newAnswer});
+  return out;
+}
+
+function normalizeAnswer(str){
+  if(str===undefined || str===null) return "";
+  let s = String(str).trim();
+  s = s.replace(/[０-９]/g, ch => String.fromCharCode(ch.charCodeAt(0)-0xFEE0));
+  s = s.replace(/\s+/g,"");
+  return s;
+}
+
+function checkFillAnswer(item, userInput){
+  const norm = normalizeAnswer(userInput);
+  if(norm==="") return false;
+  const candidates = [item.answer].concat(item.accept||[]);
+  return candidates.some(c => normalizeAnswer(c)===norm);
+}
+
+/* kihon の穴埋め item 生成 */
+function buildKihonFillItems(){
+  return kihonFillRaw.map((r,idx)=>({
+    type:"fill",
+    id:"kihonFill_"+idx,
+    q:r.q,
+    answer:r.answer,
+    accept:r.accept,
+    explain:r.explain,
+    lead:PILLARS[r.pillar].label,
+    sub:PILLARS[r.pillar].full,
+    pillar:r.pillar
+  }));
+}
+
+function buildKihonFinalItems(){
+  return kihonFinalRaw.map((r,idx)=>{
+    const fq = finalize({q:r.q, choices:r.choices, answer:r.answer, explain:r.explain});
+    return Object.assign({type:"choice", id:"kihonFinal_"+idx, pillar:r.pillar}, fq);
+  });
+}
+
+function buildKihonItems(){
+  const overview = kihonOverviewScreens.map((s,idx)=>Object.assign({id:"kihonOv_"+idx}, s));
+  const fills = shuffleArrKeepBlocks();
+  const finals = shuffleArr(buildKihonFinalItems());
+  return overview.concat(fills, finals);
+}
+// 穴埋めはブロック（pillar）順は固定、ブロック内はシャッフル
+function shuffleArrKeepBlocks(){
+  const byPillar = {};
+  kihonFillRaw.forEach((r,idx)=>{
+    if(!byPillar[r.pillar]) byPillar[r.pillar]=[];
+    byPillar[r.pillar].push(idx);
+  });
+  let out = [];
+  [1,2,3,4,5,6].forEach(p=>{
+    const idxs = shuffleArr(byPillar[p]||[]);
+    idxs.forEach(idx=>{
+      const r = kihonFillRaw[idx];
+      out.push({
+        type:"fill", id:"kihonFill_"+idx, q:r.q, answer:r.answer, accept:r.accept,
+        explain:r.explain, lead:PILLARS[r.pillar].label, sub:PILLARS[r.pillar].full, pillar:r.pillar
+      });
+    });
+  });
+  return out;
+}
+
+/* kuroji item 生成：ブロック順固定、ブロック内シャッフル */
+function buildKurojiItems(){
+  let out = [];
+  kurojiBlocks.forEach((block,bi)=>{
+    const shuffledItems = shuffleArr(block.items);
+    shuffledItems.forEach((it,ii)=>{
+      const fq = finalize(it);
+      out.push(Object.assign({
+        type:"choice",
+        id:"kuroji_"+bi+"_"+ii,
+        pillar:block.pillar,
+        sub:block.sub
+      }, fq));
+    });
+  });
+  return out;
+}
+
+/* mame item 生成 */
+function buildMameItems(){
+  const shuffled = shuffleArr(mameQuizRaw);
+  return shuffled.map((r,idx)=>{
+    const fq = finalize(r);
+    return Object.assign({type:"choice", id:"mame_"+idx, pillar:r.pillar}, fq);
+  });
+}
+
+/* sanko item 生成（採点なし） */
+function buildSankoItems(){
+  return sankoNotes.map((n,idx)=>({
+    type:"info", id:"sanko_"+idx, title:n.title, body:n.body, src:n.src, wide:true
+  }));
+}
+
+const STAGES = [
+  {id:"kihon", name:"① 構造テスト", desc:"6本柱（自然・農林水産業・工業・人口・交通・世界平和）の骨組みを確認。概要2画面＋穴埋め24問＋まとめ選択6問。", scored:true, ref:false, build:buildKihonItems},
+  {id:"kuroji", name:"② 黒太字テスト", desc:"各分野の重要語句・統計ランキング・9県別まとめを4択で確認します。", scored:true, ref:false, build:buildKurojiItems},
+  {id:"mame", name:"③ ひとくちメモテスト", desc:"教科書のひとくちメモから出題します。", scored:true, ref:false, build:buildMameItems},
+  {id:"sanko", name:"④ 気をつけたいポイント", desc:"教科書コラム＋入試でまちがえやすい注意点の読みもの。採点はありません。", scored:false, ref:true, build:buildSankoItems}
+];
+
+/* ===================== 状態管理／localStorage ===================== */
+
+const STORAGE_KEY = "chugokushikoku_missed_v1";
+
+function loadMissedStore(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : {};
+  }catch(e){ return {}; }
+}
+function saveMissedStore(store){
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(store)); }catch(e){ /* 保存できない環境は無視 */ }
+}
+
+const state = {
+  screen:"home",
+  stageId:null,
+  isRetry:false,
+  items:[],
+  currentIndex:0,
+  scoreTotal:0,
+  scoreCorrect:0,
+  answerLog:[],
+  results:{},
+  missedStore: loadMissedStore(),
+  answered:false,
+  userInput:""
+};
+
+function startStage(stageId){
+  const stage = STAGES.find(s=>s.id===stageId);
+  state.stageId = stageId;
+  state.isRetry = false;
+  state.items = stage.build();
+  state.currentIndex = 0;
+  state.scoreTotal = state.items.filter(i=>i.type!=="info").length;
+  state.scoreCorrect = 0;
+  state.answerLog = [];
+  state.answered = false;
+  state.userInput = "";
+  state.screen = "play";
+  render();
+}
+
+function startRetry(stageId){
+  const missed = state.missedStore[stageId] || {};
+  const items = Object.values(missed);
+  if(items.length===0) return;
+  state.stageId = stageId;
+  state.isRetry = true;
+  state.items = shuffleArr(items);
+  state.currentIndex = 0;
+  state.scoreTotal = state.items.length;
+  state.scoreCorrect = 0;
+  state.answerLog = [];
+  state.answered = false;
+  state.userInput = "";
+  state.screen = "play";
+  render();
+}
+
+function currentItem(){ return state.items[state.currentIndex]; }
+
+function submitChoice(idx){
+  if(state.answered) return;
+  const item = currentItem();
+  const correct = idx === item.answer;
+  state.answered = true;
+  state.userChoiceIdx = idx;
+  if(correct) state.scoreCorrect++;
+  state.answerLog.push({item, wasCorrect:correct});
+}
+
+function submitFill(){
+  if(state.answered) return;
+  const item = currentItem();
+  const correct = checkFillAnswer(item, state.userInput);
+  state.answered = true;
+  if(correct) state.scoreCorrect++;
+  state.answerLog.push({item, wasCorrect:correct});
+}
+
+function nextItem(){
+  state.answered = false;
+  state.userInput = "";
+  state.userChoiceIdx = null;
+  state.hintShown = false;
+  if(state.currentIndex < state.items.length-1){
+    state.currentIndex++;
+    render();
+  }else{
+    finishStage();
+  }
+}
+
+function finishStage(){
+  const stage = STAGES.find(s=>s.id===state.stageId);
+  state.results[state.stageId] = {
+    correct: state.scoreCorrect,
+    total: state.scoreTotal,
+    at: Date.now()
+  };
+  if(stage.scored){
+    const missed = state.missedStore[state.stageId] || {};
+    state.answerLog.forEach(log=>{
+      const key = log.item.q;
+      if(!log.wasCorrect){
+        missed[key] = log.item;
+      }else{
+        if(missed[key]) delete missed[key];
+      }
+    });
+    state.missedStore[state.stageId] = missed;
+    saveMissedStore(state.missedStore);
+  }
+  state.screen = "result";
+  render();
+}
+
+function backHome(){
+  state.screen = "home";
+  render();
+}
+
+/* ===================== レンダリング ===================== */
+
+const app = document.getElementById("app");
+
+function render(){
+  if(state.screen==="home") renderHome();
+  else if(state.screen==="play") renderPlay();
+  else if(state.screen==="result") renderResult();
+}
+
+function esc(s){
+  return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+
+function renderHome(){
+  let html = `
+    <div class="header">
+      <h1>中国・四国地方テスト</h1>
+      <div class="sub">予習シリーズ5年上　第12回　中国・四国地方</div>
+    </div>
+    <div class="content">
+  `;
+  const scoredStages = STAGES.filter(s=>s.scored);
+  const refStages = STAGES.filter(s=>!s.scored);
+
+  html += `<div class="home-title">確認テスト</div>`;
+  scoredStages.forEach(stage=>{
+    const res = state.results[stage.id];
+    const missedCount = Object.keys(state.missedStore[stage.id]||{}).length;
+    html += `<div class="stage-card" onclick="startStage('${stage.id}')">
+      <div class="stage-top">
+        <div class="stage-name">${esc(stage.name)}</div>
+        <div class="stage-badge">${res ? res.correct+"/"+res.total : "未挑戦"}</div>
+      </div>
+      <div class="stage-desc">${esc(stage.desc)}</div>
+      ${res ? `<div class="progress-bar"><div class="progress-fill" style="width:${Math.round(res.correct/res.total*100)}%"></div></div>` : ""}
+      ${missedCount>0 ? `<div class="retry-btn" onclick="event.stopPropagation(); startRetry('${stage.id}')">🔁 苦手${missedCount}問を復習</div>` : ""}
+    </div>`;
+  });
+
+  html += `<div class="home-title">参考情報（読みもの）</div>`;
+  refStages.forEach(stage=>{
+    html += `<div class="stage-card ref" onclick="startStage('${stage.id}')">
+      <div class="stage-top">
+        <div class="stage-name">${esc(stage.name)}</div>
+        <div class="stage-badge">読みもの</div>
+      </div>
+      <div class="stage-desc">${esc(stage.desc)}</div>
+    </div>`;
+  });
+
+  html += `<div class="footer-note">単一HTMLファイル・localStorageに端末内で保存されます</div>`;
+  html += `</div>`;
+  app.innerHTML = html;
+}
+
+function renderPlay(){
+  const item = currentItem();
+  const stage = STAGES.find(s=>s.id===state.stageId);
+  const isInfo = item.type==="info";
+
+  let html = `
+    <div class="header">
+      <h1>${esc(stage.name)}${state.isRetry?"（復習）":""}</h1>
+      <div class="sub">${item.sub ? esc(item.sub) : esc(stage.desc)}</div>
+    </div>
+    <div class="content">
+      <div class="play-topbar">
+        <span>問題 ${state.currentIndex+1} / ${state.items.length}</span>
+        <span onclick="backHome()" style="text-decoration:underline; cursor:pointer;">中断してホームへ</span>
+      </div>
+  `;
+
+  if(isInfo){
+    html += `<div class="qcard info">
+      <div class="qtitle">${esc(item.title)}</div>
+      <div class="info-body ${item.wide?'wide':''}">${item.body}</div>
+      ${item.src ? `<div class="src-tag">出典：${esc(item.src)}</div>` : ""}
+      <button class="btn btn-ref" onclick="nextItem()">${state.currentIndex < state.items.length-1 ? "次へ" : "結果を見る"}</button>
+    </div>`;
+  } else if(item.type==="fill"){
+    html += `<div class="qcard">`;
+    if(item.lead) html += `<div class="lead-badge">${esc(item.lead)}</div>`;
+    html += `<div class="qtext">${esc(item.q)}</div>`;
+    const inputClass = state.answered ? (checkFillAnswer(item, state.userInput) ? "correct":"wrong") : "";
+    html += `<input type="text" id="fillInput" class="fill-input ${inputClass}" placeholder="答えを入力" value="${esc(state.userInput)}" ${state.answered?"disabled":""} onkeydown="if(event.key==='Enter'){document.getElementById('fillInput').value=this.value; state.userInput=this.value; submitFillUI();}">`;
+    if(!state.answered){
+      html += `<button class="btn btn-primary" onclick="submitFillUI()">こたえる</button>`;
+    }else{
+      const correct = checkFillAnswer(item, state.userInput);
+      html += `<div class="explain-box ${correct?'good':'bad'}">
+        <span class="mark-icon">${correct?"⭕":"❌"}</span><b>正解：${esc(item.answer)}</b><br>${item.explain||""}
+      </div>`;
+      html += `<button class="btn btn-primary" onclick="nextItem()">${state.currentIndex < state.items.length-1 ? "次の問題へ" : "結果を見る"}</button>`;
+    }
+    html += `</div>`;
+  } else if(item.type==="choice"){
+    html += `<div class="qcard">`;
+    if(item.pillar!==undefined && item.pillar!==null) html += `<div class="lead-badge">${esc(pillarBadge(item.pillar))}</div>`;
+    html += `<div class="qtext">${esc(item.q)}</div>`;
+    html += `<div class="choice-list">`;
+    item.choices.forEach((c,idx)=>{
+      let cls = "choice-btn";
+      if(state.answered){
+        if(idx===item.answer) cls += " correct";
+        else if(idx===state.userChoiceIdx) cls += " wrong";
+        else cls += " dim";
+      }
+      html += `<button class="${cls}" ${state.answered?"disabled":""} onclick="submitChoiceUI(${idx})">${esc(c)}</button>`;
+    });
+    html += `</div>`;
+    if(state.answered){
+      const correct = state.userChoiceIdx===item.answer;
+      html += `<div class="explain-box ${correct?'good':'bad'}">
+        <span class="mark-icon">${correct?"⭕":"❌"}</span>${item.explain||""}
+      </div>`;
+      html += `<button class="btn btn-primary" onclick="nextItem()">${state.currentIndex < state.items.length-1 ? "次の問題へ" : "結果を見る"}</button>`;
+    }
+    html += `</div>`;
+  }
+
+  html += `</div>`;
+  app.innerHTML = html;
+  if(item.type==="fill" && !state.answered){
+    const el = document.getElementById("fillInput");
+    if(el) el.focus();
+  }
+}
+
+function submitChoiceUI(idx){
+  submitChoice(idx);
+  renderPlay();
+}
+function submitFillUI(){
+  const el = document.getElementById("fillInput");
+  if(el) state.userInput = el.value;
+  submitFill();
+  renderPlay();
+}
+function toggleHint(){
+  state.hintShown = !state.hintShown;
+  renderPlay();
+}
+
+function renderResult(){
+  const stage = STAGES.find(s=>s.id===state.stageId);
+  const wrongItems = state.answerLog.filter(l=>!l.wasCorrect).map(l=>l.item);
+  const missedCount = Object.keys(state.missedStore[state.stageId]||{}).length;
+
+  let html = `
+    <div class="header">
+      <h1>結果</h1>
+      <div class="sub">${esc(stage.name)}${state.isRetry?"（復習）":""}</div>
+    </div>
+    <div class="content">
+      <div class="qcard result-box">
+        <div>できた問題</div>
+        <div class="result-score">${state.scoreCorrect} / ${state.scoreTotal}</div>
+        ${wrongItems.length>0 ? `<div class="missed-list">${wrongItems.map(it=>`<div class="missed-item">${esc(it.q)}</div>`).join("")}</div>` : `<div style="color:var(--good); font-weight:700;">全問正解です！</div>`}
+      </div>
+  `;
+  if(wrongItems.length>0){
+    html += `<button class="btn btn-primary" onclick="startRetry('${state.stageId}')">🔁 まちがえた問題だけ復習する（${wrongItems.length}問）</button>`;
+  } else if(missedCount>0){
+    html += `<button class="btn btn-primary" onclick="startRetry('${state.stageId}')">🔁 残っている苦手${missedCount}問を復習する</button>`;
+  }
+  html += `<button class="btn btn-outline" onclick="backHome()">ホームにもどる</button>`;
+  html += `</div>`;
+  app.innerHTML = html;
+}
+
+render();
+</script>
+</body>
+</html>
