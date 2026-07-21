@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>九州地方テスト</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --accent:#3468a6;
+  --accent-light:#e8f0fa;
+  --ref:#7a5ea8;
+  --ref-light:#f1ecf8;
+  --good:#2f9e5b;
+  --good-light:#e6f6ec;
+  --bad:#d1453b;
+  --bad-light:#fbe9e8;
+  --ink:#22303f;
+  --sub:#5c6b7a;
+  --line:#dbe3ec;
+  --bg:#f5f7fa;
+  --card:#ffffff;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  font-family:"Zen Kaku Gothic New",sans-serif;
+  background:var(--bg);
+  color:var(--ink);
+  display:flex;
+  justify-content:center;
+}
+#app{
+  width:100%;
+  max-width:480px;
+  min-height:100vh;
+  background:var(--bg);
+  display:flex;
+  flex-direction:column;
+  position:relative;
+}
+.header{
+  padding:16px 18px 12px;
+  background:linear-gradient(135deg,var(--accent),#4d7dbf);
+  color:#fff;
+  position:sticky;
+  top:0;
+  z-index:5;
+}
+.header h1{
+  margin:0;
+  font-size:18px;
+  font-weight:900;
+  letter-spacing:.02em;
+}
+.header .sub{
+  margin-top:2px;
+  font-size:12px;
+  opacity:.9;
+}
+.content{
+  flex:1;
+  padding:14px 16px 90px;
+}
+.stage-card{
+  background:var(--card);
+  border-radius:14px;
+  box-shadow:0 2px 8px rgba(30,50,80,.08);
+  padding:16px;
+  margin-bottom:14px;
+  border:1px solid var(--line);
+  cursor:pointer;
+  transition:transform .1s;
+}
+.stage-card:active{transform:scale(.98);}
+.stage-card.ref{
+  border-color:var(--ref);
+  background:linear-gradient(180deg,#fff,var(--ref-light));
+}
+.stage-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+.stage-name{
+  font-size:16px;
+  font-weight:700;
+}
+.stage-badge{
+  font-size:11px;
+  background:var(--accent);
+  color:#fff;
+  padding:3px 8px;
+  border-radius:999px;
+  font-weight:700;
+}
+.stage-card.ref .stage-badge{background:var(--ref);}
+.stage-desc{
+  font-size:12.5px;
+  color:var(--sub);
+  margin-top:6px;
+  line-height:1.5;
+}
+.stage-meta{
+  display:flex;
+  gap:10px;
+  margin-top:10px;
+  font-size:12px;
+  color:var(--sub);
+}
+.retry-btn{
+  margin-top:10px;
+  display:inline-block;
+  background:var(--bad-light);
+  color:var(--bad);
+  border:1px solid var(--bad);
+  border-radius:8px;
+  padding:6px 10px;
+  font-size:12.5px;
+  font-weight:700;
+  cursor:pointer;
+}
+.progress-bar{
+  height:6px;
+  background:var(--line);
+  border-radius:99px;
+  overflow:hidden;
+  margin-top:8px;
+}
+.progress-fill{
+  height:100%;
+  background:var(--accent);
+  border-radius:99px;
+}
+.lead-badge{
+  display:inline-block;
+  background:var(--accent);
+  color:#fff;
+  font-size:12px;
+  font-weight:700;
+  padding:4px 10px;
+  border-radius:999px;
+  margin-bottom:10px;
+}
+.sub-badge{
+  display:inline-block;
+  background:#fff;
+  color:var(--accent);
+  border:1px solid var(--accent);
+  font-size:11px;
+  font-weight:700;
+  padding:2px 8px;
+  border-radius:999px;
+  margin-left:6px;
+}
+.play-topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-size:12.5px;
+  color:var(--sub);
+  margin-bottom:10px;
+}
+.qcard{
+  background:var(--card);
+  border-radius:14px;
+  padding:18px 16px;
+  box-shadow:0 2px 8px rgba(30,50,80,.08);
+  border:1px solid var(--line);
+}
+.qcard.info{
+  border-color:var(--ref);
+  background:linear-gradient(180deg,#fff,var(--ref-light));
+}
+.qtitle{
+  font-weight:900;
+  font-size:16px;
+  margin-bottom:8px;
+}
+.qtext{
+  font-size:15.5px;
+  line-height:1.7;
+  margin-bottom:14px;
+  white-space:pre-wrap;
+}
+.qtext.wide{font-size:14.5px;}
+.info-body{
+  font-size:14.5px;
+  line-height:1.85;
+}
+.info-body b{color:var(--accent);}
+.src-tag{
+  margin-top:14px;
+  font-size:11.5px;
+  color:var(--ref);
+  border-top:1px dashed var(--line);
+  padding-top:8px;
+}
+.choice-list{display:flex;flex-direction:column;gap:9px;}
+.choice-btn{
+  text-align:left;
+  padding:12px 14px;
+  border-radius:10px;
+  border:1.5px solid var(--line);
+  background:#fff;
+  font-size:14.5px;
+  font-family:inherit;
+  cursor:pointer;
+  line-height:1.5;
+}
+.choice-btn:active{background:var(--accent-light);}
+.choice-btn.correct{
+  border-color:var(--good);
+  background:var(--good-light);
+  font-weight:700;
+}
+.choice-btn.wrong{
+  border-color:var(--bad);
+  background:var(--bad-light);
+  font-weight:700;
+}
+.choice-btn.dim{opacity:.55;}
+.fill-input{
+  width:100%;
+  padding:12px 14px;
+  font-size:16px;
+  border-radius:10px;
+  border:1.5px solid var(--line);
+  font-family:inherit;
+  margin-bottom:10px;
+}
+.fill-input.correct{border-color:var(--good);background:var(--good-light);}
+.fill-input.wrong{border-color:var(--bad);background:var(--bad-light);}
+.btn{
+  width:100%;
+  padding:13px;
+  border-radius:10px;
+  border:none;
+  font-size:15px;
+  font-weight:700;
+  font-family:inherit;
+  cursor:pointer;
+  margin-top:6px;
+}
+.btn-primary{background:var(--accent);color:#fff;}
+.btn-ref{background:var(--ref);color:#fff;}
+.btn-outline{background:#fff;color:var(--accent);border:1.5px solid var(--accent);}
+.btn-outline.ref{color:var(--ref);border-color:var(--ref);}
+.result-box{
+  text-align:center;
+  padding:6px 0 18px;
+}
+.result-score{
+  font-size:40px;
+  font-weight:900;
+  color:var(--accent);
+  margin:6px 0;
+}
+.explain-box{
+  margin-top:14px;
+  background:var(--accent-light);
+  border-radius:10px;
+  padding:12px 14px;
+  font-size:13.5px;
+  line-height:1.7;
+}
+.explain-box.bad{background:var(--bad-light);}
+.explain-box.good{background:var(--good-light);}
+.hint-box{
+  margin-top:10px;
+  background:#fff8e6;
+  border:1px solid #e8cf8a;
+  border-radius:10px;
+  padding:10px 12px;
+  font-size:13px;
+  line-height:1.6;
+}
+.mark-icon{font-size:18px;margin-right:4px;vertical-align:-2px;}
+.missed-list{
+  text-align:left;
+  margin-top:16px;
+  font-size:13px;
+}
+.missed-item{
+  padding:8px 10px;
+  background:var(--bad-light);
+  border-radius:8px;
+  margin-bottom:6px;
+  color:#8a2f28;
+}
+.home-title{
+  font-size:13px;
+  font-weight:700;
+  color:var(--sub);
+  margin:18px 0 8px 2px;
+}
+.footer-note{
+  text-align:center;
+  font-size:11px;
+  color:var(--sub);
+  padding:10px 0 26px;
+}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+/* ===================== データ（予習シリーズ5年上 第11回 九州地方 より転記） ===================== */
+
+const PILLARS = {
+  0:{label:"県別まとめ", full:"今回のポイント（8県別まとめ）"},
+  1:{label:"①自然", full:"九州地方の自然（地形・気候）"},
+  2:{label:"②農林水産業", full:"九州地方の農林水産業"},
+  3:{label:"③工業", full:"九州地方の工業"},
+  4:{label:"④交通", full:"九州地方の交通"},
+  5:{label:"⑤沖縄", full:"沖縄の自然と産業"},
+  6:{label:"⑥世界遺産", full:"九州地方の世界文化遺産"}
+};
+function pillarBadge(p){ return PILLARS[p] ? PILLARS[p].label : ""; }
+
+/* ---------- 第1段階：構造テスト（kihon） ---------- */
+
+const kihonOverviewScreens = [
+  {
+    type:"info",
+    title:"はじめに",
+    body:`第11回のテーマは「九州地方」です。<br>
+今回のポイントは大きく分けて<b>6つ</b>あります。<br><br>
+①自然（地形・気候）<br>
+②農林水産業<br>
+③工業<br>
+④交通<br>
+⑤沖縄の自然と産業<br>
+⑥世界文化遺産<br><br>
+まずはこの6本柱の全体像をつかんでから、それぞれの中身（黒太字・ひとくちメモ）を確認していきましょう。`
+  },
+  {
+    type:"info",
+    title:"全体像：九州地方の6本柱",
+    wide:true,
+    body:`<b>①自然</b>：中央に九州山地、北部に筑紫山地。桜島・阿蘇山などの火山が多く、シラス台地が広がる。気候は太平洋側（宮崎）・日本海側（福岡）・南西諸島（那覇）の3タイプ。<br><br>
+<b>②農林水産業</b>：筑紫平野の二毛作、宮崎平野の促成栽培、八代平野のいぐさ、鹿児島県・宮崎県の畜産、福岡県のいちご。水産業は東シナ海の好漁場、有明海ののり、大村湾の真珠、鹿児島県のうなぎ養殖。<br><br>
+<b>③工業</b>：北九州工業地域（現在は機械工業が中心）、大分の鉄鋼・石油化学、長崎・佐世保の造船、有田・伊万里・唐津の陶磁器、シリコンアイランド／カーアイランド。<br><br>
+<b>④交通</b>：関門海峡でむすばれる九州と本州、九州新幹線・西九州新幹線、福岡空港。<br><br>
+<b>⑤沖縄</b>：さんご由来の水はけのよい土地、太平洋戦争と27年間のアメリカ統治、残るアメリカ軍基地、さとうきび・観光業。<br><br>
+<b>⑥世界文化遺産</b>：琉球王国のグスク、明治日本の産業革命遺産（八幡製鉄所など）、神宿る島・沖ノ島、長崎と天草地方の潜伏キリシタン関連遺産。`
+  }
+];
+
+const kihonFillRaw = [
+  // pillar 1
+  {pillar:1, q:"九州の中央部にある、高くけわしい山地を（　）という。", answer:"九州山地", accept:["九州山地"], explain:"九州の中央部には高くけわしい九州山地が、北部には低くなだらかな筑紫山地があります。"},
+  {pillar:1, q:"阿蘇山は広大な（　）で知られている。", answer:"カルデラ", accept:["カルデラ"], explain:"阿蘇山は広大なカルデラで知られています。"},
+  {pillar:1, q:"鹿児島県から宮崎県にかけて広がる、火山の噴出物が積もってできた台地を（　）という。", answer:"シラス台地", accept:["シラス台地","しらす台地"], explain:"広がるシラス台地は、Q&Aでも取り上げられている九州地方の代表的な地形です。"},
+  {pillar:1, q:"筑後川は別名（　）とよばれる。", answer:"筑紫次郎", accept:["筑紫次郎"], explain:"筑紫次郎とよばれる筑後川の流域に、筑紫平野が広がっています。"},
+  {pillar:1, q:"気候は3タイプに分けられ、太平洋側（宮崎）・日本海側（福岡）・（　）（那覇）に分類される。", answer:"南西諸島", accept:["南西諸島"], explain:"南西諸島（那覇）は一年を通して降水量が多く温暖で、夏と冬の気温差（年較差）が小さいのが特徴です。"},
+  // pillar 2
+  {pillar:2, q:"筑紫平野でさかんな、米と麦を1年に2回栽培する農法を（　）という。", answer:"二毛作", accept:["二毛作"], explain:"筑紫平野の農業は二毛作がさかんです。"},
+  {pillar:2, q:"宮崎平野で、ビニールハウスを用いて夏野菜を時期をずらして栽培する方法を（　）という。", answer:"促成栽培", accept:["促成栽培"], explain:"宮崎平野の促成栽培では、ピーマン・きゅうりなどが栽培されています。"},
+  {pillar:2, q:"八代平野で栽培され、たたみ表の材料となる植物は（　）である。", answer:"いぐさ", accept:["いぐさ","イグサ"], explain:"八代平野のいぐさは、国内産としては熊本県で生産されたものがほとんどです。"},
+  {pillar:2, q:"大陸棚が広がる（　）は、よい漁場になっている。", answer:"東シナ海", accept:["東シナ海"], explain:"大陸棚が広がる東シナ海は、よい漁場です。長崎県は水揚げ量が全国有数の県です。"},
+  {pillar:2, q:"（　）ではのりの養殖が、大村湾では真珠の養殖がさかんである。", answer:"有明海", accept:["有明海"], explain:"有明海ではのりの養殖が、大村湾では真珠の養殖がさかんです。"},
+  // pillar 3
+  {pillar:3, q:"福岡県北部を中心とする工業地域を（　）という。", answer:"北九州工業地域", accept:["北九州工業地域","北九州工業地帯"], explain:"北九州工業地域（北九州工業地帯）は福岡県北部を中心とする工業地域です。"},
+  {pillar:3, q:"1901年に現在の北九州市で生産を始め、日本の鉄鋼業の中心となった製鉄所を（　）という。", answer:"八幡製鉄所", accept:["八幡製鉄所"], explain:"八幡製鉄所は1901年に生産を始め、日本の鉄鋼業の中心となりました。"},
+  {pillar:3, q:"有田町・伊万里市・唐津市（佐賀県）では、（　）の生産がさかんである。", answer:"陶磁器", accept:["陶磁器"], explain:"有田町・伊万里市・唐津市では陶磁器の生産がさかんです。"},
+  {pillar:3, q:"1970年代、電子部品工場の進出により、半導体の材料の名から九州は（　）とよばれた。", answer:"シリコンアイランド", accept:["シリコンアイランド"], explain:"1970年代、九州は半導体の材料の名からシリコンアイランドとよばれました。"},
+  // pillar 4
+  {pillar:4, q:"九州と本州を隔てる海峡を（　）という。", answer:"関門海峡", accept:["関門海峡"], explain:"関門海峡でへだてられている九州と本州は、3つのトンネルと1つの橋によって結ばれています。"},
+  {pillar:4, q:"博多駅と鹿児島中央駅を結ぶ新幹線を（　）という。", answer:"九州新幹線", accept:["九州新幹線"], explain:"九州新幹線は博多駅と鹿児島中央駅を結んでいます。"},
+  {pillar:4, q:"アジア各国からの玄関口となっている福岡県の空港は（　）である。", answer:"福岡空港", accept:["福岡空港"], explain:"福岡空港はアジア各国からの玄関口で、数分で博多駅に行ける便利な空港です。"},
+  // pillar 5
+  {pillar:5, q:"1945年、太平洋戦争で日本と戦っていた（　）が沖縄島に上陸した。", answer:"アメリカ軍", accept:["アメリカ軍","アメリカ"], explain:"1945年4月、太平洋戦争でアメリカ軍が沖縄島に上陸しました。"},
+  {pillar:5, q:"沖縄が日本に復帰したのは、戦争終結の27年後の（　）年である。", answer:"1972", accept:["1972","1972年"], explain:"沖縄が日本に復帰したのは、27年後の1972年のことでした。"},
+  {pillar:5, q:"沖縄県には、日本にあるアメリカ軍基地の約（　）％が集中している。", answer:"70", accept:["70","70%","70％"], explain:"沖縄県には、日本にあるアメリカ軍基地の約70％が集中しています。"},
+  {pillar:5, q:"沖縄の代表的な農作物は、さとうきびと（　）であったが、近年はマンゴーやきくの栽培に力が入れられている。", answer:"パイナップル", accept:["パイナップル"], explain:"さとうきびやパイナップルが代表的な作物でしたが、近年はマンゴーやきくの栽培に力が入れられています。"},
+  // pillar 6
+  {pillar:6, q:"首里城跡などが登録されている世界文化遺産を「（　）のグスク及び関連遺産群」という。", answer:"琉球王国", accept:["琉球王国"], explain:"「琉球王国のグスク及び関連遺産群」には首里城跡などが登録されています。"},
+  {pillar:6, q:"八幡製鉄所をはじめとする23の施設が登録された世界遺産を（　）という。", answer:"明治日本の産業革命遺産", accept:["明治日本の産業革命遺産"], explain:"明治日本の産業革命遺産には八幡製鉄所をはじめとする23の施設が登録されています。"},
+  {pillar:6, q:"長崎と天草地方の（　）関連遺産には、大浦天主堂などが含まれる。", answer:"潜伏キリシタン", accept:["潜伏キリシタン"], explain:"長崎と天草地方の潜伏キリシタン関連遺産には、大浦天主堂（長崎市）などが登録されています。"}
+];
+
+const kihonFinalRaw = [
+  {pillar:1, q:"九州地方の地形について、正しいものはどれですか。",
+    choices:["九州の中央部には九州山地、北部には筑紫山地がある","九州の中央部には筑紫山地、北部には九州山地がある","九州には活動中の火山はない","阿蘇山は九州地方で最も高い山である"],
+    answer:0, explain:"九州の中央部には高くけわしい九州山地が、北部には低くなだらかな筑紫山地があります。"},
+  {pillar:2, q:"九州地方の農林水産業について、正しいものはどれですか。",
+    choices:["宮崎平野では促成栽培でピーマンやきゅうりを栽培している","筑紫平野では二期作がさかんである","八代平野はさとうきびの産地として知られる","鹿児島県はいぐさの生産量日本一である"],
+    answer:0, explain:"宮崎平野の促成栽培では、ビニールハウスを用いてピーマン・きゅうりなどの夏野菜を時期をずらして栽培しています。"},
+  {pillar:3, q:"九州地方の工業について、正しいものはどれですか。",
+    choices:["北九州工業地域は現在、機械工業が中心となっている","北九州工業地域は現在も鉄鋼業が中心である","シリコンアイランドは九州の石炭産業に由来する呼び名である","有田焼は福岡県の伝統的工芸品である"],
+    answer:0, explain:"鉄鉱石の輸入先の変化などにより鉄鋼業はふるわなくなり、現在は自動車などの機械工業が中心です。"},
+  {pillar:4, q:"九州地方の交通について、正しいものはどれですか。",
+    choices:["九州新幹線は博多駅と鹿児島中央駅を結んでいる","九州新幹線は博多駅と那覇市を結んでいる","関門海峡は九州と沖縄をへだてる海峡である","福岡空港は国内線専用の空港である"],
+    answer:0, explain:"九州新幹線は博多駅（福岡県）と鹿児島中央駅（鹿児島県）を結んでいます。"},
+  {pillar:5, q:"沖縄について、正しいものはどれですか。",
+    choices:["沖縄が日本に復帰したのは1972年である","沖縄はアメリカの統治を受けたことがない","沖縄の島々の多くは稲作に適した土地である","沖縄県のアメリカ軍基地の割合は全国の約10％である"],
+    answer:0, explain:"沖縄は1945年の戦争終結後もアメリカ軍の支配が続き、27年後の1972年に日本に復帰しました。"},
+  {pillar:6, q:"九州地方の世界文化遺産について、正しいものはどれですか。",
+    choices:["「神宿る島」とよばれるのは沖ノ島である","「神宿る島」とよばれるのは種子島である","軍艦島は屋久島の別名である","琉球王国のグスクは長崎県にある"],
+    answer:0, explain:"「神宿る島」宗像・沖ノ島と関連遺産群では、沖ノ島が「神宿る島」とよばれています。"}
+];
+
+/* ---------- 第2段階：黒太字テスト（kuroji） ---------- */
+
+const kurojiBlocks = [
+{ pillar:1, sub:"2-1｜①自然（地形・気候）の黒太字", items:[
+  {q:"九州の中央部にある、高くけわしい山地は？", choices:["九州山地","筑紫山地","中国山地","紀伊山地"], answer:0, explain:"九州の中央部には高くけわしい九州山地があります。"},
+  {q:"九州の北部にある、低くなだらかな山地は？", choices:["筑紫山地","九州山地","奥羽山脈","四国山地"], answer:0, explain:"北部には低くなだらかな筑紫山地があります。"},
+  {q:"今も噴火をくり返す、鹿児島湾にある火山は？", choices:["桜島","阿蘇山","雲仙岳","開聞岳"], answer:0, explain:"桜島は今も噴火をくり返す火山です。"},
+  {q:"広大なカルデラで知られる火山は？", choices:["阿蘇山","桜島","霧島山","開聞岳"], answer:0, explain:"阿蘇山は広大なカルデラで知られています。"},
+  {q:"1991年に火砕流が発生し大きな被害が生じた、雲仙岳にふくまれる山は？", choices:["普賢岳","阿蘇山","桜島","開聞岳"], answer:0, explain:"雲仙岳にふくまれる普賢岳では、1991年に火砕流が発生し、大きな被害が生じました。"},
+  {q:"火山灰などの噴出物が降り積もってできた、鹿児島県から宮崎県にかけて広がる台地は？", choices:["シラス台地","筑紫平野","八代平野","関東ローム層"], answer:0, explain:"シラス台地は、火山灰などの火山の噴出物が降り積もってできた台地です。"},
+  {q:"「筑紫次郎」とよばれる川は？", choices:["筑後川","球磨川","大淀川","遠賀川"], answer:0, explain:"筑紫次郎とよばれる筑後川の流域に、筑紫平野が広がっています。"},
+  {q:"筑後川の流域に広がる平野は？", choices:["筑紫平野","八代平野","宮崎平野","濃尾平野"], answer:0, explain:"筑紫次郎とよばれる筑後川の流域に、筑紫平野が広がっています。"},
+  {q:"日本三大急流の一つで、下流に八代平野が広がる川は？", choices:["球磨川","筑後川","大淀川","最上川"], answer:0, explain:"三大急流の球磨川の下流には八代平野が広がっています。"},
+  {q:"大淀川下流に広がる平野は？", choices:["宮崎平野","八代平野","筑紫平野","越後平野"], answer:0, explain:"大淀川下流には宮崎平野が広がっています。"},
+  {q:"太平洋側（宮崎）の気候に影響を与える、沖合を流れる暖流は？", choices:["黒潮","親潮","リマン海流","対馬海流"], answer:0, explain:"沖合いを流れる黒潮の影響で、太平洋側は温暖です。"},
+  {q:"温帯と熱帯の中間の気候帯を何という？", choices:["亜熱帯","冷帯","乾燥帯","寒帯"], answer:0, explain:"太平洋に面した海岸などでは、そてつなど亜熱帯（温帯と熱帯の中間）の植物が見られます。"},
+  {q:"世界自然遺産に登録され、樹齢2000年をこえるすぎでも知られる鹿児島県の島は？", choices:["屋久島","種子島","奄美大島","対馬"], answer:0, explain:"屋久島は世界自然遺産の島で、樹齢2000年をこえるすぎでも知られています。"},
+  {q:"屋久島にある、九州地方で最も高い山は？", choices:["宮之浦岳","阿蘇山","開聞岳","霧島山"], answer:0, explain:"屋久島には、九州地方で最も高い宮之浦岳があります。"},
+  {q:"イリオモテヤマネコがすむことで知られる島は？", choices:["西表島","奄美大島","種子島","対馬"], answer:0, explain:"奄美大島，徳之島，沖縄島北部及び西表島は、イリオモテヤマネコなどその島にしかいない動物で知られています。"},
+  {q:"沖縄島北部に広がる、貴重な生態系で知られる森林は何とよばれる？", choices:["やんばる","シラス","カルデラ","グスク"], answer:0, explain:"沖縄島北部には、やんばるとよばれる森林が広がっています。"},
+  {q:"宇宙ロケットの発射基地があり、日本に初めて鉄砲が伝わった鹿児島県の島は？", choices:["種子島","屋久島","奄美大島","対馬"], answer:0, explain:"種子島には宇宙ロケットの発射基地があり、日本に初めて鉄砲が伝わった島としても知られています。"},
+  {q:"昔から朝鮮半島との橋渡し役をつとめてきた、長崎県の島は？", choices:["対馬","壱岐","五島列島","種子島"], answer:0, explain:"対馬は昔から朝鮮半島との橋渡し役をつとめてきました。海流の名にも用いられています。"}
+]},
+{ pillar:2, sub:"2-2｜②農林水産業の黒太字", items:[
+  {q:"筑紫平野で、大型機械を使いやすくするため埋め立てられた、水路がはりめぐらされた仕組みは？", choices:["クリーク","シラス台地","グスク","ダム"], answer:0, explain:"クリークとよばれる水路がはりめぐらされていましたが、大型機械を使いやすくするため埋め立てられました。"},
+  {q:"筑紫平野でさかんな、米と麦を交互に栽培する農法は？", choices:["二毛作","二期作","促成栽培","抑制栽培"], answer:0, explain:"筑紫平野の農業は二毛作がさかんです。"},
+  {q:"宮崎平野でさかんな、ビニールハウスを使い夏野菜を時期をずらして栽培する方法は？", choices:["促成栽培","二毛作","抑制栽培","輪作"], answer:0, explain:"宮崎平野の促成栽培では、ピーマン・きゅうりなどの夏野菜を時期をずらして栽培しています。"},
+  {q:"八代平野で栽培され、たたみ表の材料となる植物は？", choices:["いぐさ","さとうきび","てんさい","とうもろこし"], answer:0, explain:"八代平野のいぐさは、たたみ表の材料となります。"},
+  {q:"鹿児島県・宮崎県で、茶とともに栽培されている、やせた土地でも育つ作物は？", choices:["さつまいも","じゃがいも","てんさい","こんにゃくいも"], answer:0, explain:"鹿児島県・宮崎県では茶やさつまいもが栽培されています。"},
+  {q:"福岡県で、「あまおう」という品種で知られる果物は？", choices:["いちご","みかん","ぶどう","もも"], answer:0, explain:"福岡県のいちごは、「あまおう」という品種が栽培されています。"},
+  {q:"大陸棚が広がり、よい漁場となっている、九州西方の海は？", choices:["東シナ海","日本海","瀬戸内海","太平洋"], answer:0, explain:"大陸棚が広がる東シナ海は、よい漁場です。"},
+  {q:"のりの養殖がさかんな、福岡・佐賀・長崎・熊本の4県に囲まれた海は？", choices:["有明海","大村湾","八代海","響灘"], answer:0, explain:"有明海ではのりの養殖がさかんです。"},
+  {q:"真珠の養殖がさかんな、長崎県の湾は？", choices:["大村湾","有明海","鹿児島湾","東京湾"], answer:0, explain:"大村湾では真珠の養殖がさかんです。"},
+  {q:"養殖のうなぎの収穫量が日本一の県は？", choices:["鹿児島県","宮崎県","愛知県","静岡県"], answer:0, explain:"鹿児島県は、養殖のうなぎの収穫量が日本一です。"},
+  {q:"シラス台地で、稲作に代わり古くから栽培されてきた作物は？", choices:["さつまいも","米","小麦","てんさい"], answer:0, explain:"水もちが悪いシラス台地は稲作には適していないため、やせた土地でも育つさつまいもの産地として知られてきました。"},
+  {q:"鹿児島県産の茶が多く使われるようになり、生産量が伸びるきっかけとなった飲料は？", choices:["ペットボトル用の緑茶","缶コーヒー","果汁飲料","炭酸飲料"], answer:0, explain:"鹿児島県産の茶は、売り上げをのばしたペットボトル用の緑茶に用いられたことなどから、生産量が増えました。"}
+]},
+{ pillar:3, sub:"2-3｜③工業の黒太字", items:[
+  {q:"福岡県北部を中心とする工業地域は？", choices:["北九州工業地域","京葉工業地域","中京工業地帯","瀬戸内工業地域"], answer:0, explain:"北九州工業地域（北九州工業地帯）は福岡県北部を中心とする工業地域です。"},
+  {q:"1901年に現在の北九州市で生産を始めた製鉄所は？", choices:["八幡製鉄所","室蘭製鉄所","釜石製鉄所","川崎製鉄所"], answer:0, explain:"1901年に現在の北九州市で八幡製鉄所が生産を始めました。"},
+  {q:"北九州工業地域で現在、中心となっている工業は？", choices:["機械工業","鉄鋼業","化学工業","繊維工業"], answer:0, explain:"鉄鋼業はふるわなくなり、現在は自動車などの機械工業が中心です。"},
+  {q:"製鉄と石油化学工業がさかんな大分県の都市は？", choices:["大分市","別府市","中津市","日田市"], answer:0, explain:"大分市は製鉄と石油化学工業がさかんです。"},
+  {q:"造船業が発達している長崎県の2つの都市は？", choices:["長崎市・佐世保市","長崎市・諫早市","佐世保市・大村市","島原市・雲仙市"], answer:0, explain:"長崎市・佐世保市では造船業が発達しています。"},
+  {q:"タイヤなどのゴム製品と久留米がすりの生産で有名な福岡県の都市は？", choices:["久留米市","北九州市","大牟田市","飯塚市"], answer:0, explain:"久留米市はタイヤなどのゴム製品と伝統的工芸品の久留米がすりの生産で有名です。"},
+  {q:"陶磁器の生産がさかんな佐賀県の3つの町・市は？", choices:["有田町・伊万里市・唐津市","唐津市・佐賀市・鳥栖市","有田町・武雄市・多久市","伊万里市・嬉野市・鹿島市"], answer:0, explain:"有田町・伊万里市・唐津市（佐賀県）では陶磁器の生産がさかんです。"},
+  {q:"1970年代、電子部品工場が進出し、半導体の材料の名からよばれた呼び名は？", choices:["シリコンアイランド","カーアイランド","テクノアイランド","エコアイランド"], answer:0, explain:"1970年代、九州は半導体の材料の名からシリコンアイランドとよばれました。"},
+  {q:"2000年代、自動車の組立・部品工場が結びついてよばれた呼び名は？", choices:["カーアイランド","シリコンアイランド","マシンアイランド","オートアイランド"], answer:0, explain:"2000年代にはカーアイランドとよばれました。"},
+  {q:"福岡県の伝統的工芸品である人形は？", choices:["博多人形","有田焼","大島つむぎ","琉球びんがた"], answer:0, explain:"博多人形は福岡県の伝統的工芸品です。"},
+  {q:"佐賀県の伝統的工芸品で、伊万里焼ともよばれる陶磁器は？", choices:["有田焼","博多人形","大島つむぎ","琉球びんがた"], answer:0, explain:"有田焼は佐賀県の伝統的工芸品で、伊万里焼ともよばれます。"},
+  {q:"鹿児島県の伝統的工芸品である絹織物は？", choices:["大島つむぎ","有田焼","博多織","琉球びんがた"], answer:0, explain:"大島つむぎは鹿児島県の伝統的工芸品です。"}
+]},
+{ pillar:4, sub:"2-4｜④交通の黒太字", items:[
+  {q:"九州と本州を隔てる海峡は？", choices:["関門海峡","豊予海峡","鳴門海峡","明石海峡"], answer:0, explain:"関門海峡でへだてられている九州と本州は、3つのトンネルと1つの橋で結ばれています。"},
+  {q:"新関門トンネルを通り、東京と博多を結ぶ新幹線は？", choices:["東海道・山陽新幹線","九州新幹線","東北新幹線","上越新幹線"], answer:0, explain:"東海道・山陽新幹線（東京－博多）は新関門トンネルを通ります。"},
+  {q:"博多駅と鹿児島中央駅を結ぶ新幹線は？", choices:["九州新幹線","東海道・山陽新幹線","西九州新幹線","山形新幹線"], answer:0, explain:"九州新幹線は博多駅（福岡県）－鹿児島中央駅（鹿児島県）を結んでいます。"},
+  {q:"佐賀県の武雄温泉と長崎間で一部開業している新幹線は？", choices:["西九州新幹線","九州新幹線","東海道新幹線","山陽新幹線"], answer:0, explain:"西九州新幹線は一部のルート（武雄温泉－長崎間）が開業しています。"},
+  {q:"アジア各国からの玄関口となっている福岡県の空港は？", choices:["福岡空港","長崎空港","大分空港","鹿児島空港"], answer:0, explain:"福岡空港はアジア各国からの玄関口で、数分で博多駅に行ける便利な空港です。"},
+  {q:"北九州と鹿児島を結ぶ高速道路は？", choices:["九州自動車道","東九州自動車道","中国自動車道","山陽自動車道"], answer:0, explain:"九州自動車道は北九州－鹿児島を結んでいます。"},
+  {q:"那珂川の東側にあり、福岡市と合併したのちも区や駅の名として残った地名は？", choices:["博多","太宰府","小倉","門司"], answer:0, explain:"那珂川の東側の博多と西側の福岡が合併して福岡市が誕生し、博多の名は区や駅の名に残されました。"},
+  {q:"福岡空港を訪れた外国人（2023年）は、地域別で約何％がアジアからか？", choices:["約97%","約74%","約50%","約30%"], answer:0, explain:"福岡空港を訪れた外国人は、アジアが約97％を占めます（成田国際空港は約74％）。"},
+  {q:"福岡空港を訪れた外国人（2023年）のうち、国・地域別で最も割合が多いのは？", choices:["韓国","台湾","中国","アメリカ"], answer:0, explain:"福岡空港を訪れた外国人は、韓国が60％と最も多くなっています。"}
+]},
+{ pillar:5, sub:"2-5｜⑤沖縄の黒太字", items:[
+  {q:"1945年、沖縄島に上陸したのは何という国の軍隊か？", choices:["アメリカ軍","イギリス軍","ソ連軍","中国軍"], answer:0, explain:"1945年4月、太平洋戦争でアメリカ軍が沖縄島に上陸しました。"},
+  {q:"沖縄が日本に復帰したのは西暦何年か？", choices:["1972年","1952年","1968年","1975年"], answer:0, explain:"沖縄が日本に復帰したのは、27年後の1972年のことでした。"},
+  {q:"沖縄県に集中している、日本にあるアメリカ軍基地の割合はおよそ何％か？", choices:["70%","30%","50%","90%"], answer:0, explain:"沖縄県には、日本にあるアメリカ軍基地の約70％が集中しています。"},
+  {q:"沖縄の島々の多くを形成する、水を通しやすい岩のもとになったものは？", choices:["さんご","火山灰","花こう岩","粘土"], answer:0, explain:"島々の多くは、さんごなどが変化した水を通しやすい岩でできています。"},
+  {q:"沖縄で水不足解消のために建設された、地下水をせき止める施設は？", choices:["地下ダム","用水路","ダム湖","貯水池"], answer:0, explain:"近年はダムの建設や、地下ダムの利用で水不足の心配は少なくなっています。"},
+  {q:"沖縄の伝統的な農作物で、さとうきびとともに代表的なものは？", choices:["パイナップル","りんご","さつまいも","てんさい"], answer:0, explain:"さとうきびやパイナップルなどが代表的な作物でした。"},
+  {q:"近年、沖縄で栽培に力が入れられている作物・花は？", choices:["マンゴーやきく","ぶどうとばら","りんごとゆり","ももとチューリップ"], answer:0, explain:"近年はマンゴーやきくの栽培に力が入れられています。"},
+  {q:"沖縄県の第三次産業人口の割合は、およそ何％をこえている？", choices:["80%","50%","60%","90%"], answer:0, explain:"沖縄県の第三次産業人口の割合は80％をこえています。"},
+  {q:"東経123度付近にあり、日本の最西端の島は？", choices:["与那国島","西表島","石垣島","波照間島"], answer:0, explain:"与那国島は東経123度付近にある、日本の最西端の島です。"},
+  {q:"沖縄県の人口のうち、0～14歳の割合は全国でどうなっているか？", choices:["最も高い","最も低い","全国平均並み","東京都に次いで高い"], answer:0, explain:"沖縄県は生まれてくる子どもが割合的に多く、0～14歳の割合が全国で最も高くなっています。"},
+  {q:"沖縄県の人口のうち、65歳以上の高齢者の割合はどうなっているか？", choices:["東京都に次いで低い","全国で最も高い","全国平均並み","全国で最も低い"], answer:0, explain:"沖縄県の65歳以上の高齢者の割合は24％ほどで、東京都に次いで低い県です。"},
+  {q:"沖縄島の面積のうち、アメリカ軍基地はおよそ何％を占めるか？", choices:["約15%","約8%","約30%","約50%"], answer:0, explain:"沖縄島の面積の約15％、沖縄県の面積の約8％がアメリカ軍基地です。"},
+  {q:"沖縄県の面積のうち、アメリカ軍基地はおよそ何％を占めるか？", choices:["約8%","約15%","約20%","約3%"], answer:0, explain:"沖縄県の面積の約8％がアメリカ軍基地です（沖縄島の面積では約15％）。"},
+  {q:"沖縄県の島々は、東西・南北にどれくらいの広がりの中に位置しているか？", choices:["東西約800km・南北約400km","東西約400km・南北約800km","東西約1000km・南北約600km","東西約600km・南北約300km"], answer:0, explain:"沖縄島をはじめとする700近くの島々は、東西約800km、南北約400kmの広がりの中に位置しています。"}
+]},
+{ pillar:6, sub:"2-6｜⑥世界文化遺産の黒太字", items:[
+  {q:"首里城跡などが登録されている世界文化遺産は？", choices:["琉球王国のグスク及び関連遺産群","明治日本の産業革命遺産","神宿る島宗像・沖ノ島","長崎と天草地方の潜伏キリシタン関連遺産"], answer:0, explain:"「琉球王国のグスク及び関連遺産群」には首里城跡などが登録されています。"},
+  {q:"八幡製鉄所をはじめとする23の施設が登録された世界遺産は？", choices:["明治日本の産業革命遺産","琉球王国のグスク及び関連遺産群","神宿る島宗像・沖ノ島","長崎と天草地方の潜伏キリシタン関連遺産"], answer:0, explain:"明治日本の産業革命遺産には、八幡製鉄所をはじめとする23の施設が登録されました。"},
+  {q:"約500年もの間、航海の安全を祈る儀式が行われていた島は？", choices:["沖ノ島","種子島","対馬","屋久島"], answer:0, explain:"沖ノ島では約500年もの間、航海の安全や外国との交流の成功をいのる儀式が行われていました。"},
+  {q:"キリスト教が禁止されていた時代の信仰のあとを示す、長崎市にある教会は？", choices:["大浦天主堂","首里城","出島和蘭商館跡","平和記念像"], answer:0, explain:"大浦天主堂（長崎市）など、キリスト教が禁止されていた時代の信仰のあとを示す施設が登録されています。"},
+  {q:"「軍艦島」ともよばれる、明治日本の産業革命遺産の1つである炭坑は？", choices:["端島炭坑","三池炭鉱","池島炭鉱","高島炭鉱"], answer:0, explain:"端島炭坑は「軍艦島」ともよばれる、明治日本の産業革命遺産の1つです。"},
+  {q:"明治日本の産業革命遺産の登録地がある、九州地方以外の県は？", choices:["山口県・静岡県・岩手県","広島県・岡山県・鳥取県","愛媛県・香川県・徳島県","大阪府・京都府・兵庫県"], answer:0, explain:"九州地方の5県のほか、山口県・静岡県・岩手県にも登録地があります。"}
+]},
+{ pillar:2, sub:"2-7｜統計ランキング（農林水産業）", items:[
+  {q:"肉牛の飼育頭数の割合（2023年）で、北海道に次いで全国2位の県は？", choices:["鹿児島県","宮崎県","岩手県","熊本県"], answer:0, explain:"肉牛は北海道21.1%、鹿児島13.3%、宮崎9.7%の順です。"},
+  {q:"ぶたの飼育頭数の割合（2023年）で、全国1位の県は？", choices:["鹿児島県","宮崎県","北海道","群馬県"], answer:0, explain:"ぶたは鹿児島12.9%、宮崎9.1%、北海道8.5%の順で、鹿児島県が1位です。"},
+  {q:"肉用若鶏の飼育羽数の割合（2023年）で、全国1位の県は？", choices:["鹿児島県","宮崎県","岩手県","青森県"], answer:0, explain:"肉用若鶏は鹿児島22.1%、宮崎20.0%、岩手14.7%の順で、鹿児島県が1位です。"},
+  {q:"ピーマンの生産量割合（2022年）で、全国1位の県は？", choices:["茨城県","宮崎県","高知県","鹿児島県"], answer:0, explain:"促成栽培で有名な宮崎県は2位（18.7%）で、1位は茨城県（22.2%）です。まちがえやすいので注意しましょう。"},
+  {q:"なすの生産量割合（2022年）で、全国1位の県は？", choices:["高知県","熊本県","群馬県","福岡県"], answer:0, explain:"なすは高知13.8%、熊本11.3%、群馬9.7%の順です。"},
+  {q:"トマトの生産量割合（2022年）で、全国1位の県は？", choices:["熊本県","北海道","愛知県","茨城県"], answer:0, explain:"トマトは熊本18.4%、北海道8.9%、愛知6.7%の順で、熊本県が1位です。"},
+  {q:"いちごの生産量割合（2022年）で、全国1位の県は？", choices:["栃木県","福岡県","熊本県","佐賀県"], answer:0, explain:"「あまおう」で有名な福岡県は2位（10.4%）で、1位は栃木県（15.1%）です。まちがえやすいので注意しましょう。"},
+  {q:"養殖うなぎの収穫量割合（2022年）で、全国1位の県は？", choices:["鹿児島県","愛知県","宮崎県","静岡県"], answer:0, explain:"養殖うなぎは鹿児島41.0%、愛知21.9%、宮崎18.6%の順で、鹿児島県が1位です。"},
+  {q:"茶の生産量割合（2022年）で、全国1位の県は？", choices:["静岡県","鹿児島県","三重県","宮崎県"], answer:0, explain:"茶は静岡37.0%、鹿児島34.6%の順で、静岡県が1位、鹿児島県が僅差の2位です。"}
+]},
+{ pillar:0, sub:"2-8｜県当てクイズ（今回のポイント）", items:[
+  {q:"「長い海岸線（リアス海岸と多くの島）」「原子爆弾の被害」が特色の県は？", choices:["長崎県","佐賀県","熊本県","鹿児島県"], answer:0, explain:"長崎県は長い海岸線（リアス海岸と多くの島）が特色で、水産業の水揚げ量も全国有数です。"},
+  {q:"「地熱発電、別府などの温泉」が特色の県は？", choices:["大分県","宮崎県","熊本県","佐賀県"], answer:0, explain:"大分県は製鉄・石油化学工業のほか、地熱発電や別府などの温泉で知られています。"},
+  {q:"「トマト・すいかなどの野菜、阿蘇山のカルデラ、三大急流の球磨川」が特色の県は？", choices:["熊本県","大分県","宮崎県","鹿児島県"], answer:0, explain:"熊本県はトマト・すいかなどの野菜やいぐさの栽培、阿蘇山のカルデラ、三大急流の球磨川が特色です。"},
+  {q:"「百万都市の福岡、北九州工業地域」が特色の県は？", choices:["福岡県","佐賀県","長崎県","熊本県"], answer:0, explain:"福岡県は百万都市の福岡市があり、北九州工業地域で自動車などの機械工業がさかんです。"},
+  {q:"「伝統的工芸品の有田焼・伊万里焼」が特色の県は？", choices:["佐賀県","福岡県","長崎県","熊本県"], answer:0, explain:"佐賀県は筑紫平野の二毛作・たまねぎ、有明海ののり養殖、有田焼・伊万里焼が特色です。"},
+  {q:"「シラス台地、桜島、種子島・屋久島・奄美大島などの観光」が特色の県は？", choices:["鹿児島県","宮崎県","熊本県","長崎県"], answer:0, explain:"鹿児島県はシラス台地・桜島や、種子島・屋久島・奄美大島などの観光が特色です。"},
+  {q:"「アメリカ軍基地、与那国島は日本の西の端」が特色の県は？", choices:["沖縄県","鹿児島県","長崎県","福岡県"], answer:0, explain:"沖縄県はさとうきび・きくの農業、1972年のアメリカからの復帰、アメリカ軍基地が特色です。"},
+  {q:"面積が最も大きい県は？（2023年）", choices:["鹿児島県","大分県","宮崎県","熊本県"], answer:0, explain:"面積は鹿児島県9186km²が最大で、次いで宮崎県7734km²、熊本県7409km²の順です。"},
+  {q:"人口が最も多い県は？（2023年、約510万人）", choices:["福岡県","熊本県","鹿児島県","沖縄県"], answer:0, explain:"人口は福岡県が約510万人と最も多くなっています。"},
+  {q:"人口が最も少ない県は？（2023年、約80万人）", choices:["佐賀県","大分県","宮崎県","長崎県"], answer:0, explain:"人口は佐賀県が約80万人と最も少なくなっています。"},
+  {q:"佐賀県の県庁所在地は？", choices:["佐賀市","唐津市","鳥栖市","伊万里市"], answer:0, explain:"佐賀県の県庁所在地は佐賀市です。"},
+  {q:"大分県の県庁所在地は？", choices:["大分市","別府市","中津市","日田市"], answer:0, explain:"大分県の県庁所在地は大分市です。"}
+]}
+];
+
+/* ---------- 第3段階：ひとくちメモテスト（mame） ---------- */
+
+const mameQuizRaw = [
+  {pillar:2, q:"福岡・佐賀・長崎・熊本の4つの県に囲まれた、潮の干満の差が大きい海は？", choices:["有明海","東シナ海","大村湾","響灘"], answer:0, explain:"有明海は福岡・佐賀・長崎・熊本の4つの県に囲まれた海です。潮の干満の差が大きく、昔から干拓が行われてきました。"},
+  {pillar:1, q:"「九州」の名の由来となった昔の国に含まれないものはどれ？", choices:["出雲","筑前","薩摩","日向"], answer:0, explain:"九州という島には、かつて筑前・筑後・肥前・肥後・豊前・豊後・日向・薩摩・大隅という9つの国がありました。出雲は含まれません。"},
+  {pillar:3, q:"有田焼は、積み出された港の名から別名何とよばれる？", choices:["伊万里焼","唐津焼","万古焼","九谷焼"], answer:0, explain:"有田焼は、各地に送るときに積み出された港の名から、伊万里焼ともよばれてきました。"},
+  {pillar:4, q:"福岡市は、那珂川の東側の「博多」と西側の何が合併してできた？", choices:["福岡","天神","太宰府","小倉"], answer:0, explain:"市の中心を流れる那珂川の東側の博多と西側の福岡が合併して、福岡市が誕生しました。"},
+  {pillar:5, q:"沖縄県のきくの生産量は、全国で何位か？", choices:["2位","1位","3位","5位"], answer:0, explain:"沖縄県のきくの生産量は、愛知県に次いで全国第2位です。お正月用や春の彼岸用として、おもに航空機で運ばれています。"},
+  {pillar:5, q:"宮古島の地下ダムの水は、おもに何に用いられる？", choices:["農業","工業用水","発電","飲料水専用"], answer:0, explain:"宮古島の地下ダムは、水を通しやすい土地の性質を利用してつくられ、水はおもに農業に用いられます。"}
+];
+
+/* ---------- 第4段階：気をつけたいポイント（sanko／読みもの・採点なし） ---------- */
+
+const sankoNotes = [
+  {
+    title:"シラス台地は茶の産地？",
+    body:`茶は温暖な気候と、水はけのよい土地を好む作物です。鹿児島県から宮崎県にかけて広がるシラス台地は、この条件にあてはまります。鹿児島県産の茶は、売り上げをのばしたペットボトル用の緑茶に用いられたことなどから生産量が増え、50年にわたって生産量日本一の静岡県と1・2位を争うほどです。<br><br>
+水もちが悪いシラス台地は稲作には適していないため、やせた土地でも育つさつまいもの産地として古くから知られてきました。今でも鹿児島県のさつまいもの生産量は日本一です。鹿児島県では、ほかの地域より1か月早い4月上旬に新茶がとれます。`,
+    src:"予習シリーズ5年上 第11回 Q&A"
+  },
+  {
+    title:"北九州市の昔と今",
+    body:`北九州市はかつて「鉄の町、八幡」とよばれ、筑豊炭田の石炭・地元の石灰石・中国から輸入した鉄鉱石によって鉄鋼業が発展しました。1963年、関門海峡に面した門司や八幡など5つの市が合併して北九州市が誕生し、九州地方で初めての政令指定都市となりました。<br><br>
+高度経済成長期には、工場からの煙や排水による公害に悩まされましたが、現在はごみゼロを目指すエコタウン事業を進め、SDGsの推進に向けたモデル都市に選ばれています。`,
+    src:"予習シリーズ5年上 第11回 コラム"
+  },
+  {
+    title:"九州地方の島々",
+    body:`九州地方には特色ある島が多くあります。屋久島（鹿児島県）は海岸部が亜熱帯の気候を示し、樹齢2000年をこえるすぎでも知られる世界自然遺産の島です。奄美大島・徳之島・沖縄島北部及び西表島は、アマミノクロウサギやイリオモテヤマネコなど、その島にしかいない動物で知られています。<br><br>
+特色ある島としては、宇宙ロケットの発射基地があり日本に初めて鉄砲が伝わった種子島（鹿児島県）、昔から朝鮮半島との橋渡し役をつとめてきた対馬（長崎県）、日本の最西端に位置する与那国島（沖縄県）があります。観光客が増え地域がにぎわう一方で、自然が荒らされる問題も起きており、観光と環境保護を両立させる取り組みが行われています。`,
+    src:"予習シリーズ5年上 第11回 ちょっとくわしく"
+  },
+  {
+    title:"政令指定都市は「2つ」",
+    body:`九州地方の政令指定都市は、福岡市と北九州市の2つです。福岡県には県庁所在地の福岡市（百万都市）と、鉄鋼業で発展した北九州市の両方があるため、混同しないように注意しましょう。`,
+    src:"入試でまちがえやすいポイント（一般知識）"
+  },
+  {
+    title:"シラス台地＝稲作に不向き",
+    body:`シラス台地は水はけがよいため、稲作には向きません。「水はけがよい＝農業がさかん」というイメージから、稲作の産地と誤答してしまうケースが見られます。シラス台地ではさつまいもや畜産、茶の栽培がさかんである点を正しく覚えておきましょう。`,
+    src:"入試でまちがえやすいポイント（一般知識）"
+  },
+  {
+    title:"有明海ののりと大村湾の真珠",
+    body:`「養殖」というキーワードから、有明海ののり養殖と大村湾の真珠養殖を取り違えてしまうことがあります。有明海＝のり、大村湾＝真珠と、海の名前とセットで覚えましょう。`,
+    src:"入試でまちがえやすいポイント（一般知識）"
+  },
+  {
+    title:"「神宿る島」は沖ノ島",
+    body:`世界文化遺産「神宿る島」宗像・沖ノ島と関連遺産群は、宗像大社そのものではなく、沖ノ島を中心とした遺産群の名称です。「宗像」だけを覚えて満足せず、中心となる島が「沖ノ島」であることまで確認しておきましょう。`,
+    src:"入試でまちがえやすいポイント（一般知識）"
+  },
+  {
+    title:"対馬海流と対馬（島）は別物",
+    body:`「対馬」は長崎県にある島の名前ですが、「対馬海流」は日本海を流れる暖流の名前です。海流の名は対馬にちなんでつけられていますが、島そのものと海流を混同しないように注意しましょう。`,
+    src:"入試でまちがえやすいポイント（一般知識）"
+  }
+];
+
+/* ===================== 共通ビルド関数 ===================== */
+
+function shuffleArr(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+function finalize(q){
+  const correctText = q.choices[q.answer];
+  const order = shuffleArr(q.choices.map((c,i)=>i));
+  const newChoices = order.map(i=>q.choices[i]);
+  const newAnswer = newChoices.indexOf(correctText);
+  const out = Object.assign({}, q, {choices:newChoices, answer:newAnswer});
+  return out;
+}
+
+function normalizeAnswer(str){
+  if(str===undefined || str===null) return "";
+  let s = String(str).trim();
+  s = s.replace(/[０-９]/g, ch => String.fromCharCode(ch.charCodeAt(0)-0xFEE0));
+  s = s.replace(/\s+/g,"");
+  return s;
+}
+
+function checkFillAnswer(item, userInput){
+  const norm = normalizeAnswer(userInput);
+  if(norm==="") return false;
+  const candidates = [item.answer].concat(item.accept||[]);
+  return candidates.some(c => normalizeAnswer(c)===norm);
+}
+
+/* kihon の穴埋め item 生成 */
+function buildKihonFillItems(){
+  return kihonFillRaw.map((r,idx)=>({
+    type:"fill",
+    id:"kihonFill_"+idx,
+    q:r.q,
+    answer:r.answer,
+    accept:r.accept,
+    explain:r.explain,
+    lead:PILLARS[r.pillar].label,
+    sub:PILLARS[r.pillar].full,
+    pillar:r.pillar
+  }));
+}
+
+function buildKihonFinalItems(){
+  return kihonFinalRaw.map((r,idx)=>{
+    const fq = finalize({q:r.q, choices:r.choices, answer:r.answer, explain:r.explain});
+    return Object.assign({type:"choice", id:"kihonFinal_"+idx, pillar:r.pillar}, fq);
+  });
+}
+
+function buildKihonItems(){
+  const overview = kihonOverviewScreens.map((s,idx)=>Object.assign({id:"kihonOv_"+idx}, s));
+  const fills = shuffleArrKeepBlocks();
+  const finals = shuffleArr(buildKihonFinalItems());
+  return overview.concat(fills, finals);
+}
+// 穴埋めはブロック（pillar）順は固定、ブロック内はシャッフル
+function shuffleArrKeepBlocks(){
+  const byPillar = {};
+  kihonFillRaw.forEach((r,idx)=>{
+    if(!byPillar[r.pillar]) byPillar[r.pillar]=[];
+    byPillar[r.pillar].push(idx);
+  });
+  let out = [];
+  [1,2,3,4,5,6].forEach(p=>{
+    const idxs = shuffleArr(byPillar[p]||[]);
+    idxs.forEach(idx=>{
+      const r = kihonFillRaw[idx];
+      out.push({
+        type:"fill", id:"kihonFill_"+idx, q:r.q, answer:r.answer, accept:r.accept,
+        explain:r.explain, lead:PILLARS[r.pillar].label, sub:PILLARS[r.pillar].full, pillar:r.pillar
+      });
+    });
+  });
+  return out;
+}
+
+/* kuroji item 生成：ブロック順固定、ブロック内シャッフル */
+function buildKurojiItems(){
+  let out = [];
+  kurojiBlocks.forEach((block,bi)=>{
+    const shuffledItems = shuffleArr(block.items);
+    shuffledItems.forEach((it,ii)=>{
+      const fq = finalize(it);
+      out.push(Object.assign({
+        type:"choice",
+        id:"kuroji_"+bi+"_"+ii,
+        pillar:block.pillar,
+        sub:block.sub
+      }, fq));
+    });
+  });
+  return out;
+}
+
+/* mame item 生成 */
+function buildMameItems(){
+  const shuffled = shuffleArr(mameQuizRaw);
+  return shuffled.map((r,idx)=>{
+    const fq = finalize(r);
+    return Object.assign({type:"choice", id:"mame_"+idx, pillar:r.pillar}, fq);
+  });
+}
+
+/* sanko item 生成（採点なし） */
+function buildSankoItems(){
+  return sankoNotes.map((n,idx)=>({
+    type:"info", id:"sanko_"+idx, title:n.title, body:n.body, src:n.src, wide:true
+  }));
+}
+
+const STAGES = [
+  {id:"kihon", name:"① 構造テスト", desc:"6本柱（自然・農林水産業・工業・交通・沖縄・世界遺産）の骨組みを確認。概要2画面＋穴埋め23問＋まとめ選択6問。", scored:true, ref:false, build:buildKihonItems},
+  {id:"kuroji", name:"② 黒太字テスト", desc:"各分野の重要語句・統計ランキング・8県別まとめを4択で確認します。", scored:true, ref:false, build:buildKurojiItems},
+  {id:"mame", name:"③ ひとくちメモテスト", desc:"教科書のひとくちメモから出題します。", scored:true, ref:false, build:buildMameItems},
+  {id:"sanko", name:"④ 気をつけたいポイント", desc:"教科書コラム＋入試でまちがえやすい注意点の読みもの。採点はありません。", scored:false, ref:true, build:buildSankoItems}
+];
+
+/* ===================== 状態管理／localStorage ===================== */
+
+const STORAGE_KEY = "kyushu_missed_v1";
+
+function loadMissedStore(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : {};
+  }catch(e){ return {}; }
+}
+function saveMissedStore(store){
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(store)); }catch(e){ /* 保存できない環境は無視 */ }
+}
+
+const state = {
+  screen:"home",
+  stageId:null,
+  isRetry:false,
+  items:[],
+  currentIndex:0,
+  scoreTotal:0,
+  scoreCorrect:0,
+  answerLog:[],
+  results:{},
+  missedStore: loadMissedStore(),
+  answered:false,
+  userInput:""
+};
+
+function startStage(stageId){
+  const stage = STAGES.find(s=>s.id===stageId);
+  state.stageId = stageId;
+  state.isRetry = false;
+  state.items = stage.build();
+  state.currentIndex = 0;
+  state.scoreTotal = state.items.filter(i=>i.type!=="info").length;
+  state.scoreCorrect = 0;
+  state.answerLog = [];
+  state.answered = false;
+  state.userInput = "";
+  state.screen = "play";
+  render();
+}
+
+function startRetry(stageId){
+  const missed = state.missedStore[stageId] || {};
+  const items = Object.values(missed);
+  if(items.length===0) return;
+  state.stageId = stageId;
+  state.isRetry = true;
+  state.items = shuffleArr(items);
+  state.currentIndex = 0;
+  state.scoreTotal = state.items.length;
+  state.scoreCorrect = 0;
+  state.answerLog = [];
+  state.answered = false;
+  state.userInput = "";
+  state.screen = "play";
+  render();
+}
+
+function currentItem(){ return state.items[state.currentIndex]; }
+
+function submitChoice(idx){
+  if(state.answered) return;
+  const item = currentItem();
+  const correct = idx === item.answer;
+  state.answered = true;
+  state.userChoiceIdx = idx;
+  if(correct) state.scoreCorrect++;
+  state.answerLog.push({item, wasCorrect:correct});
+}
+
+function submitFill(){
+  if(state.answered) return;
+  const item = currentItem();
+  const correct = checkFillAnswer(item, state.userInput);
+  state.answered = true;
+  if(correct) state.scoreCorrect++;
+  state.answerLog.push({item, wasCorrect:correct});
+}
+
+function nextItem(){
+  state.answered = false;
+  state.userInput = "";
+  state.userChoiceIdx = null;
+  state.hintShown = false;
+  if(state.currentIndex < state.items.length-1){
+    state.currentIndex++;
+    render();
+  }else{
+    finishStage();
+  }
+}
+
+function finishStage(){
+  const stage = STAGES.find(s=>s.id===state.stageId);
+  state.results[state.stageId] = {
+    correct: state.scoreCorrect,
+    total: state.scoreTotal,
+    at: Date.now()
+  };
+  if(stage.scored && !state.isRetry===false || stage.scored){
+    // まちがえた問題リストへのマージ（第1〜3段階のみ／sankoは対象外）
+    if(stage.scored){
+      const missed = state.missedStore[state.stageId] || {};
+      state.answerLog.forEach(log=>{
+        const key = log.item.q;
+        if(!log.wasCorrect){
+          missed[key] = log.item;
+        }else{
+          if(missed[key]) delete missed[key];
+        }
+      });
+      state.missedStore[state.stageId] = missed;
+      saveMissedStore(state.missedStore);
+    }
+  }
+  state.screen = "result";
+  render();
+}
+
+function backHome(){
+  state.screen = "home";
+  render();
+}
+
+/* ===================== レンダリング ===================== */
+
+const app = document.getElementById("app");
+
+function render(){
+  if(state.screen==="home") renderHome();
+  else if(state.screen==="play") renderPlay();
+  else if(state.screen==="result") renderResult();
+}
+
+function esc(s){
+  return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+
+function renderHome(){
+  let html = `
+    <div class="header">
+      <h1>九州地方テスト</h1>
+      <div class="sub">予習シリーズ5年上　第11回　九州地方</div>
+    </div>
+    <div class="content">
+  `;
+  const scoredStages = STAGES.filter(s=>s.scored);
+  const refStages = STAGES.filter(s=>!s.scored);
+
+  html += `<div class="home-title">確認テスト</div>`;
+  scoredStages.forEach(stage=>{
+    const res = state.results[stage.id];
+    const missedCount = Object.keys(state.missedStore[stage.id]||{}).length;
+    html += `<div class="stage-card" onclick="startStage('${stage.id}')">
+      <div class="stage-top">
+        <div class="stage-name">${esc(stage.name)}</div>
+        <div class="stage-badge">${res ? res.correct+"/"+res.total : "未挑戦"}</div>
+      </div>
+      <div class="stage-desc">${esc(stage.desc)}</div>
+      ${res ? `<div class="progress-bar"><div class="progress-fill" style="width:${Math.round(res.correct/res.total*100)}%"></div></div>` : ""}
+      ${missedCount>0 ? `<div class="retry-btn" onclick="event.stopPropagation(); startRetry('${stage.id}')">🔁 苦手${missedCount}問を復習</div>` : ""}
+    </div>`;
+  });
+
+  html += `<div class="home-title">参考情報（読みもの）</div>`;
+  refStages.forEach(stage=>{
+    html += `<div class="stage-card ref" onclick="startStage('${stage.id}')">
+      <div class="stage-top">
+        <div class="stage-name">${esc(stage.name)}</div>
+        <div class="stage-badge">読みもの</div>
+      </div>
+      <div class="stage-desc">${esc(stage.desc)}</div>
+    </div>`;
+  });
+
+  html += `<div class="footer-note">単一HTMLファイル・localStorageに端末内で保存されます</div>`;
+  html += `</div>`;
+  app.innerHTML = html;
+}
+
+function renderPlay(){
+  const item = currentItem();
+  const stage = STAGES.find(s=>s.id===state.stageId);
+  const isInfo = item.type==="info";
+  const progressLabel = isInfo ? "" : `${state.answerLog.filter(l=>true).length + (state.answered?0:0)}`;
+  const answeredCount = state.answerLog.length;
+
+  let html = `
+    <div class="header">
+      <h1>${esc(stage.name)}${state.isRetry?"（復習）":""}</h1>
+      <div class="sub">${item.sub ? esc(item.sub) : esc(stage.desc)}</div>
+    </div>
+    <div class="content">
+      <div class="play-topbar">
+        <span>問題 ${state.currentIndex+1} / ${state.items.length}</span>
+        <span onclick="backHome()" style="text-decoration:underline; cursor:pointer;">中断してホームへ</span>
+      </div>
+  `;
+
+  if(isInfo){
+    html += `<div class="qcard info">
+      <div class="qtitle">${esc(item.title)}</div>
+      <div class="info-body ${item.wide?'wide':''}">${item.body}</div>
+      ${item.src ? `<div class="src-tag">出典：${esc(item.src)}</div>` : ""}
+      <button class="btn btn-ref" onclick="nextItem()">${state.currentIndex < state.items.length-1 ? "次へ" : "結果を見る"}</button>
+    </div>`;
+  } else if(item.type==="fill"){
+    html += `<div class="qcard">`;
+    if(item.lead) html += `<div class="lead-badge">${esc(item.lead)}</div>`;
+    html += `<div class="qtext">${esc(item.q)}</div>`;
+    const inputClass = state.answered ? (checkFillAnswer(item, state.userInput) ? "correct":"wrong") : "";
+    html += `<input type="text" id="fillInput" class="fill-input ${inputClass}" placeholder="答えを入力" value="${esc(state.userInput)}" ${state.answered?"disabled":""} onkeydown="if(event.key==='Enter'){document.getElementById('fillInput').value=this.value; state.userInput=this.value; submitFillUI();}">`;
+    if(!state.answered){
+      html += `<button class="btn btn-primary" onclick="submitFillUI()">こたえる</button>`;
+    }else{
+      const correct = checkFillAnswer(item, state.userInput);
+      html += `<div class="explain-box ${correct?'good':'bad'}">
+        <span class="mark-icon">${correct?"⭕":"❌"}</span><b>正解：${esc(item.answer)}</b><br>${item.explain||""}
+      </div>`;
+      html += `<button class="btn btn-primary" onclick="nextItem()">${state.currentIndex < state.items.length-1 ? "次の問題へ" : "結果を見る"}</button>`;
+    }
+    html += `</div>`;
+  } else if(item.type==="choice"){
+    html += `<div class="qcard">`;
+    if(item.pillar) html += `<div class="lead-badge">${esc(pillarBadge(item.pillar))}</div>`;
+    html += `<div class="qtext">${esc(item.q)}</div>`;
+    html += `<div class="choice-list">`;
+    item.choices.forEach((c,idx)=>{
+      let cls = "choice-btn";
+      if(state.answered){
+        if(idx===item.answer) cls += " correct";
+        else if(idx===state.userChoiceIdx) cls += " wrong";
+        else cls += " dim";
+      }
+      html += `<button class="${cls}" ${state.answered?"disabled":""} onclick="submitChoiceUI(${idx})">${esc(c)}</button>`;
+    });
+    html += `</div>`;
+    if(item.hint && !state.answered){
+      html += `<button class="btn btn-outline" style="margin-top:10px;" onclick="toggleHint()">${item.hintLabel||"ヒントを見る"}</button>`;
+      if(state.hintShown){
+        html += `<div class="hint-box">${item.hint.map(h=>"・"+esc(h)).join("<br>")}</div>`;
+      }
+    }
+    if(state.answered){
+      const correct = state.userChoiceIdx===item.answer;
+      html += `<div class="explain-box ${correct?'good':'bad'}">
+        <span class="mark-icon">${correct?"⭕":"❌"}</span>${item.explain||""}
+      </div>`;
+      html += `<button class="btn btn-primary" onclick="nextItem()">${state.currentIndex < state.items.length-1 ? "次の問題へ" : "結果を見る"}</button>`;
+    }
+    html += `</div>`;
+  }
+
+  html += `</div>`;
+  app.innerHTML = html;
+  if(item.type==="fill" && !state.answered){
+    const el = document.getElementById("fillInput");
+    if(el) el.focus();
+  }
+}
+
+function submitChoiceUI(idx){
+  submitChoice(idx);
+  renderPlay();
+}
+function submitFillUI(){
+  const el = document.getElementById("fillInput");
+  if(el) state.userInput = el.value;
+  submitFill();
+  renderPlay();
+}
+function toggleHint(){
+  state.hintShown = !state.hintShown;
+  renderPlay();
+}
+
+function renderResult(){
+  const stage = STAGES.find(s=>s.id===state.stageId);
+  const wrongItems = state.answerLog.filter(l=>!l.wasCorrect).map(l=>l.item);
+  const missedCount = Object.keys(state.missedStore[state.stageId]||{}).length;
+
+  let html = `
+    <div class="header">
+      <h1>結果</h1>
+      <div class="sub">${esc(stage.name)}${state.isRetry?"（復習）":""}</div>
+    </div>
+    <div class="content">
+      <div class="qcard result-box">
+        <div>できた問題</div>
+        <div class="result-score">${state.scoreCorrect} / ${state.scoreTotal}</div>
+        ${wrongItems.length>0 ? `<div class="missed-list">${wrongItems.map(it=>`<div class="missed-item">${esc(it.q)}</div>`).join("")}</div>` : `<div style="color:var(--good); font-weight:700;">全問正解です！</div>`}
+      </div>
+  `;
+  if(wrongItems.length>0){
+    html += `<button class="btn btn-primary" onclick="startRetry('${state.stageId}')">🔁 まちがえた問題だけ復習する（${wrongItems.length}問）</button>`;
+  } else if(missedCount>0){
+    html += `<button class="btn btn-primary" onclick="startRetry('${state.stageId}')">🔁 残っている苦手${missedCount}問を復習する</button>`;
+  }
+  html += `<button class="btn btn-outline" onclick="backHome()">ホームにもどる</button>`;
+  html += `</div>`;
+  app.innerHTML = html;
+}
+
+render();
+</script>
+</body>
+</html>
