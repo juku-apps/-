@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>逆算の階段 — 中学受験・穴埋め計算トレーニング</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F6F8FB;
+    --grid:#DCE7F3;
+    --ink:#1E3A5C;
+    --ink-soft:#5B7392;
+    --card:#FFFFFF;
+    --red:#DE4630;
+    --green:#2E9E68;
+    --gold:#E3A23C;
+    --blank-bg:#FFE9A8;
+    --shadow: 0 6px 18px rgba(30,58,92,0.10);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Zen Kaku Gothic New', sans-serif;
+    color:var(--ink);
+    background:
+      linear-gradient(var(--grid) 1px, transparent 1px) 0 0/28px 28px,
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px) 0 0/28px 28px,
+      var(--paper);
+    min-height:100vh;
+    padding:18px 14px 60px;
+  }
+  .wrap{max-width:640px;margin:0 auto;}
+  header{text-align:center;margin-bottom:14px;}
+  h1{
+    font-family:'Zen Maru Gothic',sans-serif;
+    font-weight:900;
+    font-size:1.5rem;
+    margin:0 0 4px;
+    letter-spacing:0.02em;
+  }
+  h1 span{color:var(--red);}
+  .sub{font-size:0.82rem;color:var(--ink-soft);margin:0;}
+
+  .challenge-cta{
+    display:flex;
+    justify-content:center;
+    margin:14px 0 18px;
+  }
+  .challenge-cta button{
+    font-family:'Zen Maru Gothic',sans-serif;
+    font-weight:700;
+    font-size:0.9rem;
+    background:linear-gradient(135deg,var(--gold),#d9862a);
+    color:#fff;
+    border:none;
+    border-radius:999px;
+    padding:12px 22px;
+    box-shadow:var(--shadow);
+    cursor:pointer;
+  }
+  .challenge-cta button:active{transform:scale(0.97);}
+
+  .stairs{
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    gap:6px;
+    margin:6px 0 10px;
+    padding:0 4px;
+  }
+  .stair-btn{
+    flex:1;
+    border:none;
+    border-radius:10px 10px 4px 4px;
+    background:#fff;
+    color:var(--ink-soft);
+    font-family:'Zen Maru Gothic',sans-serif;
+    font-weight:700;
+    cursor:pointer;
+    box-shadow:var(--shadow);
+    padding:10px 4px;
+    font-size:0.78rem;
+    transition:transform .15s ease, background .15s ease, color .15s ease;
+    border:2px solid transparent;
+  }
+  .stair-btn:disabled{opacity:0.5;cursor:not-allowed;}
+  .stair-btn b{display:block;font-size:1.05rem;margin-bottom:2px;}
+  .stair-btn.active{
+    background:var(--gold);
+    color:#fff;
+    border-color:#c9862a;
+    transform:translateY(-6px);
+  }
+  .stair-1{margin-bottom:0px;}
+  .stair-2{margin-bottom:8px;}
+  .stair-3{margin-bottom:16px;}
+  .stair-4{margin-bottom:24px;}
+  .stair-5{margin-bottom:32px;}
+
+  .level-desc{
+    text-align:center;
+    font-size:0.8rem;
+    color:var(--ink-soft);
+    margin-bottom:18px;
+    min-height:1.2em;
+  }
+
+  .challenge-header{
+    display:none;
+    background:var(--ink);
+    color:#fff;
+    border-radius:14px;
+    padding:14px 16px;
+    margin-bottom:14px;
+    box-shadow:var(--shadow);
+  }
+  .challenge-header .row1{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    font-family:'Zen Maru Gothic',sans-serif;
+    font-weight:700;
+    margin-bottom:10px;
+  }
+  .challenge-header .lvbadge{
+    background:var(--gold);
+    border-radius:999px;
+    padding:4px 12px;
+    font-size:0.85rem;
+  }
+  .challenge-header .timer{
+    font-size:1.05rem;
+    letter-spacing:0.03em;
+  }
+  .challenge-header .qcount{font-size:0.78rem;opacity:0.85;}
+  .set-dots{display:flex;gap:6px;justify-content:center;}
+  .dot{
+    width:16px;height:16px;border-radius:50%;
+    border:2px solid rgba(255,255,255,0.5);
+    background:transparent;
+  }
+  .dot.correct{background:var(--green);border-color:var(--green);}
+  .dot.wrong{background:var(--red);border-color:var(--red);}
+  .exit-challenge{
+    display:block;
+    text-align:center;
+    font-size:0.72rem;
+    color:var(--ink-soft);
+    margin:-8px 0 14px;
+    cursor:pointer;
+    text-decoration:underline;
+  }
+
+  .card{
+    background:var(--card);
+    border-radius:16px;
+    box-shadow:var(--shadow);
+    padding:26px 18px 22px;
+    margin-bottom:16px;
+    position:relative;
+  }
+  .stats-row{
+    display:flex;
+    justify-content:space-between;
+    font-size:0.75rem;
+    color:var(--ink-soft);
+    margin-bottom:14px;
+    padding-bottom:10px;
+    border-bottom:1px dashed var(--grid);
+  }
+  .stats-row b{color:var(--ink);font-size:0.9rem;}
+
+  .equation{
+    font-family:'Zen Maru Gothic', sans-serif;
+    font-size:1.45rem;
+    font-weight:700;
+    text-align:center;
+    line-height:2;
+    word-break:break-word;
+    padding:10px 4px 18px;
+  }
+  .blank{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-width:1.3em;
+    min-height:0.95em;
+    background:var(--blank-bg);
+    border:2px solid var(--ink);
+    border-radius:7px;
+    margin:0 2px;
+    padding:1px 4px;
+    color:var(--ink);
+    vertical-align:middle;
+  }
+  .op{margin:0 6px;color:var(--red);font-weight:900;}
+  .eq{margin:0 10px;color:var(--red);font-weight:900;}
+  .paren{color:var(--ink-soft);font-weight:400;padding:0 1px;}
+  .paren.b1{color:#8B6A2E;}
+  .paren.b2{color:#7A4A9C;}
+  .num{padding:0 1px;}
+  .frac{
+    display:inline-flex;
+    flex-direction:column;
+    align-items:center;
+    vertical-align:middle;
+    font-size:0.68em;
+    line-height:1.15;
+    margin:0 3px;
+    transform:translateY(-1px);
+  }
+  .fn{border-bottom:2px solid currentColor;padding:0 5px 1px;}
+  .fd{padding:1px 5px 0;}
+
+  .answer-row{
+    display:flex;
+    gap:8px;
+    margin-top:6px;
+  }
+  .answer-row input{
+    flex:1;
+    font-family:'Zen Maru Gothic',sans-serif;
+    font-size:1.05rem;
+    padding:12px 14px;
+    border-radius:10px;
+    border:2px solid var(--grid);
+    color:var(--ink);
+    outline:none;
+    background:#FBFDFF;
+  }
+  .answer-row input:focus{border-color:var(--gold);}
+  .hint{font-size:0.72rem;color:var(--ink-soft);margin-top:6px;}
+
+  .btn-row{display:flex;gap:8px;margin-top:14px;}
+  button.action{
+    font-family:'Zen Maru Gothic',sans-serif;
+    font-weight:700;
+    font-size:0.92rem;
+    border:none;
+    border-radius:10px;
+    padding:12px 14px;
+    cursor:pointer;
+    transition:filter .15s ease, transform .1s ease;
+  }
+  button.action:active{transform:scale(0.97);}
+  .btn-check{background:var(--ink);color:#fff;flex:2;}
+  .btn-hint{background:#fff;color:var(--ink-soft);border:2px solid var(--grid) !important;flex:1;}
+  .btn-next{background:var(--green);color:#fff;flex:2;display:none;}
+
+  .feedback{
+    margin-top:14px;
+    padding:12px 14px;
+    border-radius:10px;
+    font-size:0.9rem;
+    font-weight:700;
+    display:none;
+  }
+  .feedback.correct{display:block;background:#E7F6EE;color:var(--green);}
+  .feedback.wrong{display:block;background:#FCEAE6;color:var(--red);}
+
+  .explain{
+    margin-top:16px;
+    display:none;
+  }
+  .explain-title{
+    font-size:0.8rem;
+    font-weight:700;
+    color:var(--ink-soft);
+    margin-bottom:8px;
+  }
+  .explain-title span{color:var(--red);}
+  .step-line{
+    background:#FBFAF5;
+    border-left:4px solid var(--red);
+    border-radius:0 8px 8px 0;
+    padding:8px 12px;
+    margin-bottom:6px;
+    font-family:'Zen Maru Gothic',sans-serif;
+    font-size:0.95rem;
+    font-weight:700;
+    color:var(--ink);
+  }
+  .step-line .circ{color:var(--red);margin-right:6px;}
+  .step-arrow{
+    text-align:center;
+    color:var(--ink-soft);
+    font-size:0.85rem;
+    margin:2px 0;
+  }
+
+  .result-panel{
+    display:none;
+    text-align:center;
+    padding:20px 6px 6px;
+  }
+  .result-emoji{font-size:2.6rem;margin-bottom:6px;}
+  .result-title{
+    font-family:'Zen Maru Gothic',sans-serif;
+    font-weight:900;
+    font-size:1.25rem;
+    margin-bottom:6px;
+  }
+  .result-sub{color:var(--ink-soft);font-size:0.95rem;margin-bottom:4px;}
+  .result-note{color:var(--ink-soft);font-size:0.82rem;margin-bottom:16px;}
+  .result-panel .action{width:100%;margin-top:10px;}
+
+  footer{
+    text-align:center;
+    font-size:0.72rem;
+    color:var(--ink-soft);
+    margin-top:6px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>逆算の<span>階段</span></h1>
+    <p class="sub">□を求める練習 — 中学受験レベルの四則混合・分数対応</p>
+  </header>
+
+  <div class="challenge-cta" id="challengeCta">
+    <button id="startChallengeBtn">🏁 5問セットで階段のぼりチャレンジ(目標6分)</button>
+  </div>
+
+  <div class="challenge-header" id="challengeHeader">
+    <div class="row1">
+      <span class="lvbadge" id="chLevelBadge">Lv.1</span>
+      <span class="qcount" id="chQCount">問題 1/5</span>
+      <span class="timer" id="chTimer">0:00</span>
+    </div>
+    <div class="set-dots" id="chDots"></div>
+  </div>
+  <span class="exit-challenge" id="exitChallenge" style="display:none;">チャレンジをやめて自由練習にもどる</span>
+
+  <div class="stairs" id="stairs"></div>
+  <p class="level-desc" id="levelDesc"></p>
+
+  <div class="card">
+    <div id="cardContent">
+      <div class="stats-row" id="statsRow">
+        <div>今の連続正解 <b id="streakVal">0</b></div>
+        <div>これまでの最高 <b id="bestVal">0</b></div>
+        <div>正解数 <b id="correctVal">0</b>/<span id="solvedVal">0</span></div>
+      </div>
+
+      <div class="equation" id="equation"></div>
+
+      <div class="answer-row">
+        <input id="answerInput" type="text" placeholder="例: 12 / 3/4 / 0.75" autocomplete="off">
+      </div>
+      <p class="hint">分数は「3/4」、答えが仮分数になるときは帯分数「2 1/2」(半角スペース区切り)で、小数は「0.75」のように入力してね</p>
+
+      <div class="btn-row">
+        <button class="action btn-hint" id="btnHint">こたえを見る</button>
+        <button class="action btn-check" id="btnCheck">こたえあわせ</button>
+        <button class="action btn-next" id="btnNext">つぎの問題 →</button>
+      </div>
+
+      <div class="feedback" id="feedback"></div>
+
+      <div class="explain" id="explain">
+        <div class="explain-title"><span>逆算階段</span>で確認しよう(外側から順にもどす)</div>
+        <div id="explainSteps"></div>
+      </div>
+    </div>
+
+    <div class="result-panel" id="resultPanel"></div>
+  </div>
+
+  <footer>がんばれ!少しずつレベルを上げていこう。</footer>
+</div>
+
+<script>
+function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){[a,b]=[b,a%b];}return a||1;}
+class Frac{
+  constructor(n,d=1){
+    if(d===0) d=1;
+    if(d<0){n=-n;d=-d;}
+    const g=gcd(n,d)||1;
+    this.n=n/g; this.d=d/g;
+  }
+  add(o){return new Frac(this.n*o.d+o.n*this.d,this.d*o.d);}
+  sub(o){return new Frac(this.n*o.d-o.n*this.d,this.d*o.d);}
+  mul(o){return new Frac(this.n*o.n,this.d*o.d);}
+  div(o){return new Frac(this.n*o.d,this.d*o.n);}
+  isInt(){return this.d===1;}
+  val(){return this.n/this.d;}
+  eq(o){return this.n*o.d===o.n*this.d;}
+  toString(){return this.d===1?`${this.n}`:`${this.n}/${this.d}`;}
+}
+function F(n,d=1){return new Frac(n,d);}
+function randInt(a,b){return Math.floor(Math.random()*(b-a+1))+a;}
+function choice(arr){return arr[randInt(0,arr.length-1)];}
+
+function isFiniteDecimal(f){
+  let dd=f.d;
+  while(dd%2===0) dd/=2;
+  while(dd%5===0) dd/=5;
+  return dd===1;
+}
+function toDecimalStr(f){
+  let dd=f.d, c2=0, c5=0;
+  while(dd%2===0){dd/=2;c2++;}
+  while(dd%5===0){dd/=5;c5++;}
+  const k=Math.max(c2,c5);
+  const scale=Math.pow(10,k);
+  const scaledNum=Math.round(f.n*(scale/f.d));
+  let s=scaledNum.toString();
+  if(k===0) return s;
+  while(s.length<=k) s='0'+s;
+  const intPart=s.slice(0,s.length-k)||'0';
+  const fracPart=s.slice(s.length-k);
+  return `${intPart}.${fracPart}`;
+}
+
+const OPS = {
+  add:{sym:'+', fwd:(x,a)=>x.add(a)},
+  sub:{sym:'-', fwd:(x,a)=>x.sub(a)},
+  rsub:{sym:'-', fwd:(x,a)=>a.sub(x), rev:true},
+  mul:{sym:'×', fwd:(x,a)=>x.mul(a)},
+  div:{sym:'÷', fwd:(x,a)=>x.div(a)},
+  rdiv:{sym:'÷', fwd:(x,a)=>a.div(x), rev:true},
+};
+
+const LEVEL_CFG = {
+  1:{k:()=>1, useFrac:false, opsAllowed:['add','sub','rsub','mul','div','rdiv'], addMax:20, mulMax:9, maxVal:200,
+     label:'1段階(整数)', desc:'たし算・ひき算・かけ算・わり算 いずれか1回で□を求める'},
+  2:{k:()=>2, useFrac:false, opsAllowed:['add','sub','rsub','mul','div','rdiv'], addMax:15, mulMax:9, maxVal:400,
+     label:'2段階(かっこあり)', desc:'かっこを使った2段の逆算に挑戦'},
+  3:{k:()=>choice([3,4]), useFrac:false, opsAllowed:['add','sub','rsub','mul','div','rdiv'], addMax:12, mulMax:6, maxVal:1500,
+     label:'3〜4段階(複合)', desc:'かっこが重なる複合逆算。順番に外側からもどす'},
+  4:{k:()=>2, useFrac:true, opsAllowed:['add','sub','rsub','mul','div'], denomMax:6, mulMax:5, denomCap:18, maxVal:14,
+     label:'分数(基礎)', desc:'分数を含む1〜2段階の逆算'},
+  5:{k:()=>choice([3,4]), useFrac:true, opsAllowed:['add','sub','rsub','mul','div','rdiv'], denomMax:8, mulMax:5, denomCap:30, maxVal:25,
+     label:'分数×複合(受験)', desc:'分数・小数+かっこの複合。入試本番レベル'},
+};
+
+function pickOperand(type, cur, cfg){
+  switch(type){
+    case 'add':{
+      if(cfg.useFrac){
+        const d=randInt(2,cfg.denomMax); const n=randInt(1,d-1);
+        return F(n,d);
+      }
+      return F(randInt(1,cfg.addMax));
+    }
+    case 'sub':{
+      if(cfg.useFrac){
+        for(let t=0;t<25;t++){
+          const d=randInt(2,cfg.denomMax); const n=randInt(1,d-1); const a=F(n,d);
+          if(cur.sub(a).val() > 0.0001) return a;
+        }
+        return null;
+      } else {
+        if(cur.n<=1) return null;
+        const maxA=Math.min(cur.n-1, cfg.addMax);
+        if(maxA<1) return null;
+        return F(randInt(1,maxA));
+      }
+    }
+    case 'rsub':{
+      if(cfg.useFrac){
+        const d=randInt(2,cfg.denomMax); const extra=F(randInt(1,d-1),d);
+        return cur.add(extra);
+      }
+      return cur.add(F(randInt(1,cfg.addMax)));
+    }
+    case 'mul':{
+      return F(randInt(2,cfg.mulMax));
+    }
+    case 'div':{
+      if(cfg.useFrac){
+        return F(randInt(2,cfg.mulMax));
+      } else {
+        const divisors=[];
+        const cap=Math.min(cur.n,12);
+        for(let d=2; d<=cap; d++) if(cur.n%d===0) divisors.push(d);
+        if(divisors.length===0) return null;
+        return F(choice(divisors));
+      }
+    }
+    case 'rdiv':{
+      const m=randInt(2,cfg.mulMax);
+      return cur.mul(F(m));
+    }
+  }
+  return null;
+}
+
+function validVal(v, cfg){
+  if(v.n<=0) return false;
+  if(!cfg.useFrac){
+    if(!v.isInt()) return false;
+    if(v.n > cfg.maxVal) return false;
+  } else {
+    if(v.d > cfg.denomCap) return false;
+    if(v.val() > cfg.maxVal) return false;
+  }
+  return true;
+}
+
+function genChain(level){
+  const cfg = LEVEL_CFG[level];
+  const k = cfg.k();
+  let x0;
+  if(cfg.useFrac){
+    if(Math.random()<0.5){
+      const d=randInt(2,cfg.denomMax); const n=randInt(1,d-1);
+      x0=F(n,d);
+    } else {
+      x0=F(randInt(1,10));
+    }
+  } else {
+    x0=F(randInt(1,20));
+  }
+  let cur=x0;
+  const values=[x0];
+  const steps=[];
+  for(let i=0;i<k;i++){
+    let done=false;
+    for(let attempt=0; attempt<50 && !done; attempt++){
+      const type=choice(cfg.opsAllowed);
+      const a=pickOperand(type,cur,cfg);
+      if(a===null) continue;
+      const nv=OPS[type].fwd(cur,a);
+      if(!validVal(nv,cfg)) continue;
+      cur=nv; values.push(cur); steps.push({type,a});
+      done=true;
+    }
+    if(!done){
+      const a=F(1);
+      cur=cur.add(a); values.push(cur); steps.push({type:'add',a});
+    }
+  }
+  return {x0, steps, values, target:cur};
+}
+
+function buildTree(steps, level){
+  let node={type:'blank'};
+  for(let i=0;i<steps.length;i++){
+    const s=steps[i];
+    const info=OPS[s.type];
+    const asDecimal = (level===5 && isFiniteDecimal(s.a) && Math.random()<0.45);
+    const aNode={type:'num', value:s.a, asDecimal};
+    if(info.rev){
+      node={type:'op', opKey:s.type, left:aNode, right:node, depthIndex:i};
+    } else {
+      node={type:'op', opKey:s.type, left:node, right:aNode, depthIndex:i};
+    }
+  }
+  return node;
+}
+const BRACKETS=[['(',')'],['[',']'],['{','}']];
+const BRACKET_CLASS=['','b1','b2'];
+function renderFrac(f, preferDecimal){
+  if(f.d===1) return `<span class="num">${f.n}</span>`;
+  if(preferDecimal && isFiniteDecimal(f)) return `<span class="num">${toDecimalStr(f)}</span>`;
+  return `<span class="frac"><span class="fn">${f.n}</span><span class="fd">${f.d}</span></span>`;
+}
+function renderNode(node, top){
+  if(node.type==='blank') return `<span class="blank">□</span>`;
+  if(node.type==='num') return renderFrac(node.value, node.asDecimal);
+  const l=renderNode(node.left,false);
+  const r=renderNode(node.right,false);
+  const inner=`${l}<span class="op">${OPS[node.opKey].sym}</span>${r}`;
+  if(top) return inner;
+  const style=BRACKETS[node.depthIndex % 3];
+  const cls=BRACKET_CLASS[node.depthIndex % 3];
+  return `<span class="paren ${cls}">${style[0]}</span>${inner}<span class="paren ${cls}">${style[1]}</span>`;
+}
+
+const CIRC=['①','②','③','④','⑤','⑥'];
+function buildExplanation(steps, values){
+  const lines=[];
+  for(let i=steps.length; i>=1; i--){
+    const type=steps[i-1].type;
+    const a=toMixedDisplay(steps[i-1].a);
+    const x=toMixedDisplay(values[i-1]);
+    const y=toMixedDisplay(values[i]);
+    let line;
+    switch(type){
+      case 'add': line=`${y} − ${a} = ${x}`; break;
+      case 'sub': line=`${y} + ${a} = ${x}`; break;
+      case 'rsub': line=`${a} − ${y} = ${x}`; break;
+      case 'mul': line=`${y} ÷ ${a} = ${x}`; break;
+      case 'div': line=`${y} × ${a} = ${x}`; break;
+      case 'rdiv': line=`${a} ÷ ${y} = ${x}`; break;
+    }
+    lines.push(line);
+  }
+  return lines;
+}
+
+function detectFormat(str){
+  str=(str||'').trim();
+  if(/^\d+\s+\d+\s*\/\s*\d+$/.test(str)) return 'mixed';
+  if(/^\d+\s*\/\s*\d+$/.test(str)) return 'fraction';
+  if(/^\d+\.\d+$/.test(str)) return 'decimal';
+  if(/^\d+$/.test(str)) return 'integer';
+  return 'unknown';
+}
+function toMixedDisplay(f){
+  if(f.d===1) return `${f.n}`;
+  if(f.n > f.d){
+    const whole=Math.floor(f.n/f.d);
+    const rem=f.n - whole*f.d;
+    if(rem===0) return `${whole}`;
+    return `${whole} ${rem}/${f.d}`;
+  }
+  return `${f.n}/${f.d}`;
+}
+
+function parseAnswer(str){
+  str=(str||'').trim();
+  if(str==='') return null;
+  // mixed number: "2 2/3" (whole number, space, fraction)
+  const mixedMatch = str.match(/^(\d+)\s+(\d+)\s*\/\s*(\d+)$/);
+  if(mixedMatch){
+    const whole=parseInt(mixedMatch[1],10);
+    const n=parseInt(mixedMatch[2],10);
+    const d=parseInt(mixedMatch[3],10);
+    if(isNaN(whole)||isNaN(n)||isNaN(d)||d===0) return null;
+    return F(whole,1).add(F(n,d));
+  }
+  if(str.includes('/')){
+    const parts=str.split('/');
+    if(parts.length!==2) return null;
+    const n=parseInt(parts[0].trim(),10);
+    const d=parseInt(parts[1].trim(),10);
+    if(isNaN(n)||isNaN(d)||d===0) return null;
+    return F(n,d);
+  }
+  if(str.includes('.')){
+    const parts=str.split('.');
+    if(parts.length!==2) return null;
+    const intPart=parts[0]===''?'0':parts[0];
+    const fracPart=parts[1];
+    if(!/^\d+$/.test(fracPart) || !/^-?\d+$/.test(intPart)) return null;
+    const denom=Math.pow(10,fracPart.length);
+    const numer=parseInt(intPart+fracPart,10);
+    return F(numer,denom);
+  }
+  const n=parseInt(str,10);
+  if(isNaN(n)) return null;
+  return F(n,1);
+}
+
+let currentLevel = 1;
+let currentProblem = null;
+let stats = {};
+for(let i=1;i<=5;i++) stats[i]={solved:0, correct:0, streak:0, best:0};
+
+const SET_CONFIG = {1:{size:5,need:5},2:{size:5,need:5},3:{size:5,need:5},4:{size:2,need:2},5:{size:2,need:2}};
+let challenge = null;
+let timerInterval = null;
+
+async function loadStats(){
+  try{
+    const res = await window.storage.get('gyakusan-stats', false);
+    if(res && res.value){
+      const parsed = JSON.parse(res.value);
+      for(let i=1;i<=5;i++) if(parsed[i]) stats[i]=parsed[i];
+    }
+  }catch(e){ }
+}
+async function saveStats(){
+  try{ await window.storage.set('gyakusan-stats', JSON.stringify(stats), false); }
+  catch(e){ console.error('save failed', e); }
+}
+
+const stairsEl=document.getElementById('stairs');
+const levelDescEl=document.getElementById('levelDesc');
+const equationEl=document.getElementById('equation');
+const answerInput=document.getElementById('answerInput');
+const feedbackEl=document.getElementById('feedback');
+const explainEl=document.getElementById('explain');
+const explainStepsEl=document.getElementById('explainSteps');
+const btnCheck=document.getElementById('btnCheck');
+const btnHint=document.getElementById('btnHint');
+const btnNext=document.getElementById('btnNext');
+const streakVal=document.getElementById('streakVal');
+const bestVal=document.getElementById('bestVal');
+const correctVal=document.getElementById('correctVal');
+const solvedVal=document.getElementById('solvedVal');
+const cardContent=document.getElementById('cardContent');
+const resultPanel=document.getElementById('resultPanel');
+const challengeCta=document.getElementById('challengeCta');
+const challengeHeader=document.getElementById('challengeHeader');
+const exitChallengeEl=document.getElementById('exitChallenge');
+const chLevelBadge=document.getElementById('chLevelBadge');
+const chQCount=document.getElementById('chQCount');
+const chTimer=document.getElementById('chTimer');
+const chDots=document.getElementById('chDots');
+
+function renderStairs(){
+  stairsEl.innerHTML='';
+  for(let i=1;i<=5;i++){
+    const b=document.createElement('button');
+    b.className='stair-btn stair-'+i + (i===currentLevel?' active':'');
+    b.innerHTML=`<b>Lv.${i}</b>${LEVEL_CFG[i].label}`;
+    b.disabled = !!challenge;
+    b.onclick=()=>{ if(challenge) return; currentLevel=i; renderStairs(); updateStatsPanel(); newProblem(); };
+    stairsEl.appendChild(b);
+  }
+  levelDescEl.textContent = LEVEL_CFG[currentLevel].desc;
+}
+
+function updateStatsPanel(){
+  const s=stats[currentLevel];
+  streakVal.textContent=s.streak;
+  bestVal.textContent=s.best;
+  correctVal.textContent=s.correct;
+  solvedVal.textContent=s.solved;
+}
+
+function newProblem(){
+  cardContent.style.display='block';
+  resultPanel.style.display='none';
+  currentProblem = genChain(currentLevel);
+  const tree = buildTree(currentProblem.steps, currentLevel);
+  const targetDecimal = (currentLevel===5 && isFiniteDecimal(currentProblem.target) && Math.random()<0.45);
+  equationEl.innerHTML = renderNode(tree,true) + `<span class="eq">=</span>` + renderFrac(currentProblem.target, targetDecimal);
+  answerInput.value='';
+  feedbackEl.className='feedback';
+  feedbackEl.textContent='';
+  explainEl.style.display='none';
+  btnCheck.style.display='block';
+  btnHint.style.display='block';
+  btnNext.style.display='none';
+  updateChallengeHeader();
+  answerInput.focus();
+}
+
+function showExplanation(){
+  const lines = buildExplanation(currentProblem.steps, currentProblem.values);
+  explainStepsEl.innerHTML = lines.map((line,idx)=>
+    `<div class="step-line"><span class="circ">${CIRC[idx]||(idx+1)}</span>${line}</div>`
+  ).join('<div class="step-arrow">↓</div>');
+  explainEl.style.display='block';
+}
+
+function recordResult(isCorrect){
+  const s = stats[currentLevel];
+  s.solved++;
+  if(isCorrect){ s.correct++; s.streak++; if(s.streak>s.best) s.best=s.streak; }
+  else { s.streak=0; }
+  updateStatsPanel();
+  saveStats();
+  if(challenge){
+    challenge.qIndex++;
+    if(isCorrect) challenge.correct++;
+    challenge.results.push(isCorrect);
+  }
+}
+
+function afterAnswerUI(){
+  btnCheck.style.display='none';
+  btnHint.style.display='none';
+  btnNext.style.display='block';
+  if(challenge){
+    const cfg=SET_CONFIG[challenge.level];
+    btnNext.textContent = challenge.qIndex >= cfg.size ? 'けっかを見る →' : 'つぎの問題 →';
+    updateChallengeHeader();
+  } else {
+    btnNext.textContent = 'つぎの問題 →';
+  }
+}
+
+function checkAnswer(){
+  const parsed = parseAnswer(answerInput.value);
+  if(parsed===null){
+    feedbackEl.className='feedback wrong';
+    feedbackEl.textContent='数字を入力してね(例: 12 や 3/4 や 2 1/2 や 0.75)';
+    return;
+  }
+  const isValueCorrect = parsed.eq(currentProblem.x0);
+  const needsMixed = currentProblem.x0.d>1 && currentProblem.x0.n>currentProblem.x0.d;
+  const fmt = detectFormat(answerInput.value);
+  const formatWarning = isValueCorrect && needsMixed && fmt==='fraction';
+  const isCorrect = isValueCorrect && !formatWarning;
+  recordResult(isCorrect);
+  if(isCorrect){
+    feedbackEl.className='feedback correct';
+    feedbackEl.textContent='正解!よくできました 🎉';
+  } else if(formatWarning){
+    feedbackEl.className='feedback wrong';
+    feedbackEl.textContent=`おしい!数はあっているよ。帯分数で書いてね → ${toMixedDisplay(currentProblem.x0)}`;
+  } else {
+    feedbackEl.className='feedback wrong';
+    feedbackEl.textContent=`ちがうよ。正しい答えは □ = ${toMixedDisplay(currentProblem.x0)} でした`;
+  }
+  showExplanation();
+  afterAnswerUI();
+}
+
+function revealAnswer(){
+  feedbackEl.className='feedback wrong';
+  feedbackEl.textContent=`答え: □ = ${toMixedDisplay(currentProblem.x0)}`;
+  recordResult(false);
+  showExplanation();
+  afterAnswerUI();
+}
+
+function updateChallengeHeader(){
+  if(!challenge) return;
+  const cfg=SET_CONFIG[challenge.level];
+  chLevelBadge.textContent='Lv.'+challenge.level;
+  chQCount.textContent=`問題 ${Math.min(challenge.qIndex+1,cfg.size)}/${cfg.size}`;
+  chDots.innerHTML='';
+  for(let i=0;i<cfg.size;i++){
+    const d=document.createElement('div');
+    let cls='dot';
+    if(i < challenge.results.length) cls += challenge.results[i] ? ' correct' : ' wrong';
+    d.className=cls;
+    chDots.appendChild(d);
+  }
+  const sec=Math.floor((Date.now()-challenge.startTime)/1000);
+  const m=Math.floor(sec/60), s=sec%60;
+  chTimer.textContent=`⏱ ${m}:${s.toString().padStart(2,'0')}`;
+}
+
+function startTimer(){
+  clearInterval(timerInterval);
+  timerInterval=setInterval(updateChallengeHeader, 500);
+}
+function stopTimer(){ clearInterval(timerInterval); }
+
+function startChallenge(){
+  challenge = {level:1, qIndex:0, correct:0, results:[], startTime:Date.now()};
+  currentLevel=1;
+  challengeCta.style.display='none';
+  challengeHeader.style.display='block';
+  exitChallengeEl.style.display='block';
+  renderStairs();
+  startTimer();
+  newProblem();
+}
+
+function endChallenge(){
+  stopTimer();
+  challenge=null;
+  challengeCta.style.display='flex';
+  challengeHeader.style.display='none';
+  exitChallengeEl.style.display='none';
+  renderStairs();
+  updateStatsPanel();
+  newProblem();
+}
+
+function nextAction(){
+  if(challenge){
+    const cfg=SET_CONFIG[challenge.level];
+    if(challenge.qIndex >= cfg.size){
+      showSetResult();
+      return;
+    }
+  }
+  newProblem();
+}
+
+function showSetResult(){
+  const cfg=SET_CONFIG[challenge.level];
+  const pass = challenge.correct >= cfg.need;
+  cardContent.style.display='none';
+  resultPanel.style.display='block';
+
+  if(pass && challenge.level===5){
+    stopTimer();
+    const sec=Math.floor((Date.now()-challenge.startTime)/1000);
+    const m=Math.floor(sec/60), s=sec%60;
+    resultPanel.innerHTML = `
+      <div class="result-emoji">🏆</div>
+      <div class="result-title">ゴール!全5レベル制覇</div>
+      <div class="result-sub">タイム ${m}:${s.toString().padStart(2,'0')}</div>
+      <div class="result-note">${challenge.correct}/${cfg.size}問 正解でクリア</div>
+      <button class="action btn-check" id="restartBtn">もう一度チャレンジ</button>
+      <button class="action btn-hint" id="backBtn">チャレンジ終了して自由練習にもどる</button>
+    `;
+    document.getElementById('restartBtn').onclick=()=>{ startChallenge(); };
+    document.getElementById('backBtn').onclick=()=>{ endChallenge(); };
+    return;
+  }
+
+  if(pass){
+    resultPanel.innerHTML = `
+      <div class="result-emoji">🎉</div>
+      <div class="result-title">Lv.${challenge.level} クリア!</div>
+      <div class="result-sub">${challenge.correct}/${cfg.size}問 正解</div>
+      <button class="action btn-check" id="nextLevelBtn">つぎのレベルへ →</button>
+    `;
+    document.getElementById('nextLevelBtn').onclick=()=>{
+      challenge.level++; challenge.qIndex=0; challenge.correct=0; challenge.results=[];
+      currentLevel=challenge.level;
+      renderStairs();
+      newProblem();
+    };
+  } else {
+    resultPanel.innerHTML = `
+      <div class="result-emoji">💪</div>
+      <div class="result-title">もう少し!</div>
+      <div class="result-sub">${challenge.correct}/${cfg.size}問 正解(目標 ${cfg.need}/${cfg.size})</div>
+      <div class="result-note">Lv.${challenge.level}をもう一度チャレンジしよう</div>
+      <button class="action btn-check" id="retryBtn">もう一度挑戦</button>
+    `;
+    document.getElementById('retryBtn').onclick=()=>{
+      challenge.qIndex=0; challenge.correct=0; challenge.results=[];
+      newProblem();
+    };
+  }
+}
+
+document.getElementById('startChallengeBtn').addEventListener('click', startChallenge);
+exitChallengeEl.addEventListener('click', endChallenge);
+btnCheck.addEventListener('click', checkAnswer);
+btnHint.addEventListener('click', revealAnswer);
+btnNext.addEventListener('click', nextAction);
+answerInput.addEventListener('keydown', (e)=>{
+  if(e.key==='Enter'){
+    if(btnCheck.style.display!=='none') checkAnswer();
+    else nextAction();
+  }
+});
+
+(async function init(){
+  await loadStats();
+  renderStairs();
+  updateStatsPanel();
+  newProblem();
+})();
+</script>
+</body>
+</html>
