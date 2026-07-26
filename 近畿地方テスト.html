@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>近畿地方テスト</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --accent:#3468a6;
+  --accent-light:#e8f0fa;
+  --ref:#7a5ea8;
+  --ref-light:#f1ecf8;
+  --good:#2f9e5b;
+  --good-light:#e6f6ec;
+  --bad:#d1453b;
+  --bad-light:#fbe9e8;
+  --ink:#22303f;
+  --sub:#5c6b7a;
+  --line:#dbe3ec;
+  --bg:#f5f7fa;
+  --card:#ffffff;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  font-family:"Zen Kaku Gothic New",sans-serif;
+  background:var(--bg);
+  color:var(--ink);
+  display:flex;
+  justify-content:center;
+}
+#app{
+  width:100%;
+  max-width:480px;
+  min-height:100vh;
+  background:var(--bg);
+  display:flex;
+  flex-direction:column;
+  position:relative;
+}
+.header{
+  padding:16px 18px 12px;
+  background:linear-gradient(135deg,var(--accent),#4d7dbf);
+  color:#fff;
+  position:sticky;
+  top:0;
+  z-index:5;
+}
+.header h1{
+  margin:0;
+  font-size:18px;
+  font-weight:900;
+  letter-spacing:.02em;
+}
+.header .sub{
+  margin-top:2px;
+  font-size:12px;
+  opacity:.9;
+}
+.content{
+  flex:1;
+  padding:14px 16px 90px;
+}
+.stage-card{
+  background:var(--card);
+  border-radius:14px;
+  box-shadow:0 2px 8px rgba(30,50,80,.08);
+  padding:16px;
+  margin-bottom:14px;
+  border:1px solid var(--line);
+  cursor:pointer;
+  transition:transform .1s;
+}
+.stage-card:active{transform:scale(.98);}
+.stage-card.ref{
+  border-color:var(--ref);
+  background:linear-gradient(180deg,#fff,var(--ref-light));
+}
+.stage-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+.stage-name{
+  font-size:16px;
+  font-weight:700;
+}
+.stage-badge{
+  font-size:11px;
+  background:var(--accent);
+  color:#fff;
+  padding:3px 8px;
+  border-radius:999px;
+  font-weight:700;
+}
+.stage-card.ref .stage-badge{background:var(--ref);}
+.stage-desc{
+  font-size:12.5px;
+  color:var(--sub);
+  margin-top:6px;
+  line-height:1.5;
+}
+.stage-meta{
+  display:flex;
+  gap:10px;
+  margin-top:10px;
+  font-size:12px;
+  color:var(--sub);
+}
+.retry-btn{
+  margin-top:10px;
+  display:inline-block;
+  background:var(--bad-light);
+  color:var(--bad);
+  border:1px solid var(--bad);
+  border-radius:8px;
+  padding:6px 10px;
+  font-size:12.5px;
+  font-weight:700;
+  cursor:pointer;
+}
+.progress-bar{
+  height:6px;
+  background:var(--line);
+  border-radius:99px;
+  overflow:hidden;
+  margin-top:8px;
+}
+.progress-fill{
+  height:100%;
+  background:var(--accent);
+  border-radius:99px;
+}
+.lead-badge{
+  display:inline-block;
+  background:var(--accent);
+  color:#fff;
+  font-size:12px;
+  font-weight:700;
+  padding:4px 10px;
+  border-radius:999px;
+  margin-bottom:10px;
+}
+.sub-badge{
+  display:inline-block;
+  background:#fff;
+  color:var(--accent);
+  border:1px solid var(--accent);
+  font-size:11px;
+  font-weight:700;
+  padding:2px 8px;
+  border-radius:999px;
+  margin-left:6px;
+}
+.play-topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-size:12.5px;
+  color:var(--sub);
+  margin-bottom:10px;
+}
+.qcard{
+  background:var(--card);
+  border-radius:14px;
+  padding:18px 16px;
+  box-shadow:0 2px 8px rgba(30,50,80,.08);
+  border:1px solid var(--line);
+}
+.qcard.info{
+  border-color:var(--ref);
+  background:linear-gradient(180deg,#fff,var(--ref-light));
+}
+.qtitle{
+  font-weight:900;
+  font-size:16px;
+  margin-bottom:8px;
+}
+.qtext{
+  font-size:15.5px;
+  line-height:1.7;
+  margin-bottom:14px;
+  white-space:pre-wrap;
+}
+.qtext.wide{font-size:14.5px;}
+.info-body{
+  font-size:14.5px;
+  line-height:1.85;
+}
+.info-body b{color:var(--accent);}
+.src-tag{
+  margin-top:14px;
+  font-size:11.5px;
+  color:var(--ref);
+  border-top:1px dashed var(--line);
+  padding-top:8px;
+}
+.choice-list{display:flex;flex-direction:column;gap:9px;}
+.choice-btn{
+  text-align:left;
+  padding:12px 14px;
+  border-radius:10px;
+  border:1.5px solid var(--line);
+  background:#fff;
+  font-size:14.5px;
+  font-family:inherit;
+  cursor:pointer;
+  line-height:1.5;
+}
+.choice-btn:active{background:var(--accent-light);}
+.choice-btn.correct{
+  border-color:var(--good);
+  background:var(--good-light);
+  font-weight:700;
+}
+.choice-btn.wrong{
+  border-color:var(--bad);
+  background:var(--bad-light);
+  font-weight:700;
+}
+.choice-btn.dim{opacity:.55;}
+.fill-input{
+  width:100%;
+  padding:12px 14px;
+  font-size:16px;
+  border-radius:10px;
+  border:1.5px solid var(--line);
+  font-family:inherit;
+  margin-bottom:10px;
+}
+.fill-input.correct{border-color:var(--good);background:var(--good-light);}
+.fill-input.wrong{border-color:var(--bad);background:var(--bad-light);}
+.btn{
+  width:100%;
+  padding:13px;
+  border-radius:10px;
+  border:none;
+  font-size:15px;
+  font-weight:700;
+  font-family:inherit;
+  cursor:pointer;
+  margin-top:6px;
+}
+.btn-primary{background:var(--accent);color:#fff;}
+.btn-ref{background:var(--ref);color:#fff;}
+.btn-outline{background:#fff;color:var(--accent);border:1.5px solid var(--accent);}
+.btn-outline.ref{color:var(--ref);border-color:var(--ref);}
+.result-box{
+  text-align:center;
+  padding:6px 0 18px;
+}
+.result-score{
+  font-size:40px;
+  font-weight:900;
+  color:var(--accent);
+  margin:6px 0;
+}
+.explain-box{
+  margin-top:14px;
+  background:var(--accent-light);
+  border-radius:10px;
+  padding:12px 14px;
+  font-size:13.5px;
+  line-height:1.7;
+}
+.explain-box.bad{background:var(--bad-light);}
+.explain-box.good{background:var(--good-light);}
+.hint-box{
+  margin-top:10px;
+  background:#fff8e6;
+  border:1px solid #e8cf8a;
+  border-radius:10px;
+  padding:10px 12px;
+  font-size:13px;
+  line-height:1.6;
+}
+.mark-icon{font-size:18px;margin-right:4px;vertical-align:-2px;}
+.missed-list{
+  text-align:left;
+  margin-top:16px;
+  font-size:13px;
+}
+.missed-item{
+  padding:8px 10px;
+  background:var(--bad-light);
+  border-radius:8px;
+  margin-bottom:6px;
+  color:#8a2f28;
+}
+.home-title{
+  font-size:13px;
+  font-weight:700;
+  color:var(--sub);
+  margin:18px 0 8px 2px;
+}
+.footer-note{
+  text-align:center;
+  font-size:11px;
+  color:var(--sub);
+  padding:10px 0 26px;
+}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+/* ===================== データ（予習シリーズ5年上 第13回 近畿地方 より転記） ===================== */
+
+const PILLARS = {
+  0:{label:"府県別まとめ", full:"今回のポイント（7府県別まとめ）"},
+  1:{label:"①自然", full:"近畿地方の自然（地形・気候）"},
+  2:{label:"②農林水産業", full:"近畿地方の農林水産業"},
+  3:{label:"③工業", full:"近畿地方の工業"},
+  4:{label:"④交通と運輸", full:"近畿地方の交通と運輸"},
+  5:{label:"⑤観光", full:"近畿地方の観光"}
+};
+function pillarBadge(p){ return PILLARS[p] ? PILLARS[p].label : ""; }
+
+/* ---------- 第1段階：構造テスト（kihon） ---------- */
+
+const kihonOverviewScreens = [
+  {
+    type:"info",
+    title:"はじめに",
+    body:`第13回のテーマは「近畿地方」です。<br>
+今回のポイントは大きく分けて<b>5つ</b>あります。<br><br>
+①自然（地形・気候）<br>
+②農林水産業<br>
+③工業<br>
+④交通と運輸<br>
+⑤観光（世界文化遺産）<br><br>
+まずはこの5本柱の全体像をつかんでから、それぞれの中身（黒太字・ひとくちメモ）を確認していきましょう。`
+  },
+  {
+    type:"info",
+    title:"全体像：近畿地方の5本柱",
+    wide:true,
+    body:`<b>①自然</b>：北部はなだらかな丹波高地とリアス海岸の若狭湾、中央部は京都盆地・奈良盆地・大阪平野と琵琶湖・淀川、南部は紀伊山地とリアス海岸の志摩半島。<br><br>
+<b>②農林水産業</b>：宇治茶、淡路島の近郊農業、和歌山県のみかん・かき・うめ（生産量日本一）、神戸ビーフ・松阪牛、吉野すぎの林業、志摩半島の真珠養殖、淡路島周辺ののり養殖。<br><br>
+<b>③工業</b>：阪神工業地帯（沿岸部の重化学工業、内陸部の電気機器、多い中小工場）、京都の伝統工業（西陣織・清水焼など）、奈良の筆。<br><br>
+<b>④交通と運輸</b>：新大阪と名神高速道路、明石海峡大橋、神戸港、関西国際空港。<br><br>
+<b>⑤観光</b>：法隆寺・姫路城・古都京都の文化財・古都奈良の文化財・紀伊山地の霊場と参詣道・百舌鳥古市古墳群など、多くの世界文化遺産。`
+  }
+];
+
+const kihonFillRaw = [
+  // pillar 1
+  {pillar:1, q:"北部にある、中国山地から続くなだらかな山地を（　）という。", answer:"丹波高地", accept:["丹波高地"], explain:"北部には、中国山地から続くなだらかな丹波高地があります。"},
+  {pillar:1, q:"丹後半島のつけ根にある、日本三景の1つを（　）という。", answer:"天橋立", accept:["天橋立"], explain:"若狭湾沿岸はリアス海岸で、丹後半島のつけ根には日本三景の1つ、天橋立があります。"},
+  {pillar:1, q:"紀伊半島にある、高くてけわしい山地を（　）という。", answer:"紀伊山地", accept:["紀伊山地"], explain:"紀伊半島には、高くてけわしい紀伊山地があります。"},
+  {pillar:1, q:"琵琶湖から流れ出て大阪湾に注ぐ、大阪府では淀川とよばれる川を（　）という。", answer:"淀川", accept:["淀川"], explain:"琵琶湖から流れ出て、大阪湾に注ぐ川は淀川とよばれています。"},
+  // pillar 2
+  {pillar:2, q:"京都府宇治市周辺でつくられる、高級な茶を（　）という。", answer:"宇治茶", accept:["宇治茶"], explain:"京都府の宇治市周辺では、高級な茶として有名な宇治茶がつくられています。"},
+  {pillar:2, q:"淡路島で栽培されている、近郊農業でつくられる代表的な野菜は（　）である。", answer:"たまねぎ", accept:["たまねぎ"], explain:"淡路島では、たまねぎなどの野菜や花が栽培され、近郊農業がさかんです。"},
+  {pillar:2, q:"和歌山県で生産量が日本一の、紀の川・有田川流域で栽培される果物は（　）である。", answer:"みかん", accept:["みかん"], explain:"和歌山県では、紀の川・有田川流域の傾斜地を利用したみかんの栽培がさかんです。"},
+  {pillar:2, q:"奈良県の吉野川流域で育てられ、昔から質がよいことで知られるすぎを（　）という。", answer:"吉野すぎ", accept:["吉野すぎ"], explain:"奈良県の吉野川（紀の川の上流）流域で育てられた吉野すぎは、昔から質がよいことで知られています。"},
+  // pillar 3
+  {pillar:3, q:"大阪府・兵庫県の沿岸部を中心とした工業地帯を（　）という。", answer:"阪神工業地帯", accept:["阪神工業地帯"], explain:"阪神工業地帯は、大阪府・兵庫県の沿岸部を中心とした工業地帯です。"},
+  {pillar:3, q:"堺市で発達している工業は（　）である。", answer:"石油化学工業", accept:["石油化学工業","石油化学"], explain:"堺市では石油化学工業が発達してきました。"},
+  {pillar:3, q:"門真市など淀川に沿った内陸の地域で発達した工業は（　）である。", answer:"電気機器", accept:["電気機器"], explain:"門真市など、淀川に沿った内陸の地域では、電気機器の生産が発達しました。"},
+  {pillar:3, q:"かつて都がおかれ、伝統工業が発達している近畿地方の都市は（　）である。", answer:"京都", accept:["京都","京都市"], explain:"かつて都がおかれていた京都は、長い間日本の文化の中心地だったため、伝統工業が発達しています。"},
+  // pillar 4
+  {pillar:4, q:"東海道新幹線の下りの終点で、山陽新幹線の起点となる駅を（　）という。", answer:"新大阪", accept:["新大阪"], explain:"新大阪は、東海道新幹線の下りの終点で、山陽新幹線の起点となる駅です。"},
+  {pillar:4, q:"神戸市から淡路島を通って四国地方へ自動車で行けるようにした橋を（　）という。", answer:"明石海峡大橋", accept:["明石海峡大橋"], explain:"明石海峡大橋は世界有数の長いつり橋で、神戸市から淡路島を通って四国地方に行くことができます。"},
+  {pillar:4, q:"西日本を代表する日本有数の貿易港を（　）という。", answer:"神戸港", accept:["神戸港"], explain:"神戸港は、西日本を代表する日本有数の貿易港です。"},
+  {pillar:4, q:"大阪府泉佐野市などの沖合いに建設された、海上の空港を（　）という。", answer:"関西国際空港", accept:["関西国際空港"], explain:"関西国際空港は、大阪府泉佐野市などの沖合いの大阪湾に埋め立て地をつくって建設されました。"},
+  // pillar 5
+  {pillar:5, q:"今から1400年あまり前に開かれ、世界で最も古い木造建築がある奈良県の世界文化遺産を（　）という。", answer:"法隆寺", accept:["法隆寺"], explain:"法隆寺は今から1400年あまり前に開かれた寺で、世界で最も古い木造建築があります。"},
+  {pillar:5, q:"白いしっくいの美しさから白鷺城ともよばれる兵庫県の世界文化遺産を（　）という。", answer:"姫路城", accept:["姫路城"], explain:"姫路城は400年ほど前につくられ、白いしっくいの美しさから白鷺城ともよばれます。"},
+  {pillar:5, q:"空海（弘法大師）が開いた、紀伊山地の霊場と参詣道に含まれる寺を（　）という。", answer:"高野山金剛峯寺", accept:["高野山金剛峯寺","金剛峯寺"], explain:"弘法大師とよばれた空海が開いた高野山金剛峯寺も、紀伊山地の霊場と参詣道の登録地の1つです。"},
+  {pillar:5, q:"最も大きな古墳が堺市にある大仙古墳である、大阪府の世界文化遺産を（　）という。", answer:"百舌鳥・古市古墳群", accept:["百舌鳥・古市古墳群","百舌鳥古市古墳群"], explain:"百舌鳥・古市古墳群に登録された古墳は、今から1500年ほど前に築造されました。"}
+];
+
+const kihonFinalRaw = [
+  {pillar:1, q:"近畿地方の地形について、正しいものはどれですか。",
+    choices:["紀伊半島には高くてけわしい紀伊山地がある","北部の丹波高地は険しい山地である","淀川は淡路島から流れ出ている","志摩半島は近畿地方の北部にある"],
+    answer:0, explain:"紀伊半島には、高くてけわしい紀伊山地があります。"},
+  {pillar:2, q:"近畿地方の農林水産業について、正しいものはどれですか。",
+    choices:["和歌山県はみかん・かき・うめの生産量が日本一である","近畿地方の北部は農業が最もさかんな地域である","志摩半島ではのりの養殖が中心である","淡路島は真珠の養殖で世界的に有名である"],
+    answer:0, explain:"和歌山県は、みかんとかき、うめの生産量が日本一です。"},
+  {pillar:3, q:"近畿地方の工業について、正しいものはどれですか。",
+    choices:["阪神工業地帯は大阪府・兵庫県の沿岸部を中心とした工業地帯である","阪神工業地帯は近年、生産額のしめる割合を大きく伸ばしている","電気機器の生産は堺市の臨海部で発達した","京都には伝統工業はほとんど見られない"],
+    answer:0, explain:"阪神工業地帯は大阪府・兵庫県の沿岸部を中心とした工業地帯です。"},
+  {pillar:4, q:"近畿地方の交通と運輸について、正しいものはどれですか。",
+    choices:["関西国際空港は騒音問題を解消するため海上に建設された","新大阪は東海道新幹線の起点（上りの終点）である","神戸港は日本海側を代表する貿易港である","明石海峡大橋は本州と九州を結んでいる"],
+    answer:0, explain:"市街地にある大阪国際空港（伊丹空港）の騒音問題を解消するため、関西国際空港は海上に建設されました。"},
+  {pillar:5, q:"近畿地方の観光について、正しいものはどれですか。",
+    choices:["法隆寺は世界で最も古い木造建築で知られる","姫路城は世界で最も古い木造建築で知られる","伊勢神宮は近畿地方のユネスコ世界文化遺産の1つである","百舌鳥・古市古墳群は奈良県にある"],
+    answer:0, explain:"法隆寺には、世界で最も古い木造建築があります。伊勢神宮は多くの観光客が訪れますが、ユネスコの世界文化遺産には登録されていません。"}
+];
+
+/* ---------- 第2段階：黒太字テスト（kuroji） ---------- */
+
+const kurojiBlocks = [
+{ pillar:1, sub:"2-1｜①自然（地形・気候）の黒太字", items:[
+  {q:"北部にある、中国山地から続くなだらかな山地は？", choices:["丹波高地","紀伊山地","中国山地","四国山地"], answer:0, explain:"北部には、中国山地から続くなだらかな丹波高地があります。"},
+  {q:"リアス海岸になっている、福井県・京都府にまたがる湾は？", choices:["若狭湾","大阪湾","駿河湾","伊勢湾"], answer:0, explain:"若狭湾沿岸はリアス海岸です。"},
+  {q:"丹後半島のつけ根にある、日本三景の1つは？", choices:["天橋立","松島","宮島","三保の松原"], answer:0, explain:"丹後半島のつけ根には、日本三景の1つ、天橋立があります。"},
+  {q:"いくつかの山地にはさまれた、中央部にある京都府の盆地は？", choices:["京都盆地","奈良盆地","近江盆地","大阪盆地"], answer:0, explain:"中央部にはいくつかの山地にはさまれて、京都盆地・奈良盆地・大阪平野などがあります。"},
+  {q:"瀬戸内海で最大の島で、阪神・淡路大震災の震源地の近くにある島は？", choices:["淡路島","小豆島","家島","甑島"], answer:0, explain:"淡路島は瀬戸内海で最大の島で、阪神・淡路大震災の震源地はその近くでした。"},
+  {q:"紀伊半島にある、高くてけわしい山地は？", choices:["紀伊山地","丹波高地","中国山地","四国山地"], answer:0, explain:"紀伊半島には、高くてけわしい紀伊山地があります。"},
+  {q:"紀伊山地から流れ出て、和歌山県を流れる川は？", choices:["紀の川","淀川","熊野川","吉野川"], answer:0, explain:"紀伊山地から、紀の川や熊野川が流れ出ています。"},
+  {q:"紀伊半島の東にある、リアス海岸が見られる半島は？", choices:["志摩半島","丹後半島","知多半島","房総半島"], answer:0, explain:"紀伊半島の東にはリアス海岸の見られる志摩半島があります。"},
+  {q:"琵琶湖から流れ出て大阪湾に注ぐ川は？", choices:["淀川","紀の川","熊野川","加古川"], answer:0, explain:"淀川は、琵琶湖から流れ出て、大阪湾に注ぐ川です。"},
+  {q:"太平洋側（尾鷲）の気候をあたたかくしている暖流は？", choices:["黒潮","対馬海流","親潮","リマン海流"], answer:0, explain:"沖合いを流れる黒潮の影響で、太平洋側は温暖です。"},
+  {q:"日本海側（舞鶴）で冬でも気温があまり下がらない理由となる暖流は？", choices:["対馬海流","黒潮","親潮","リマン海流"], answer:0, explain:"暖流の対馬海流の影響で、冬でも気温はそれほど下がりません。"},
+  {q:"紀伊半島の南端に位置し、本州最南端でもある岬は？", choices:["潮岬","足摺岬","室戸岬","佐田岬"], answer:0, explain:"潮岬は紀伊半島の南端に位置している岬で、本州の最南端でもあります。"}
+]},
+{ pillar:2, sub:"2-2｜②農林水産業の黒太字", items:[
+  {q:"京都府宇治市周辺でつくられる高級な茶は？", choices:["宇治茶","静岡茶","狭山茶","八女茶"], answer:0, explain:"京都府の宇治市周辺では、高級な茶として有名な宇治茶がつくられています。"},
+  {q:"淡路島で、たまねぎなどの野菜や花を都市向けに栽培する農業を何という？", choices:["近郊農業","促成栽培","抑制栽培","二毛作"], answer:0, explain:"淡路島では、たまねぎなどの野菜や花が栽培され、近郊農業がさかんです。"},
+  {q:"和歌山県で紀の川・有田川流域の傾斜地を利用して栽培されている、生産量日本一の果物は？", choices:["みかん","りんご","ぶどう","もも"], answer:0, explain:"和歌山県では、紀の川・有田川流域の傾斜地を利用したみかんの栽培がさかんです。"},
+  {q:"和歌山県が生産量日本一を誇る、みかん以外の果物は？（うめとあと1つ）", choices:["かき","ぶどう","もも","りんご"], answer:0, explain:"和歌山県は、みかんとかき、うめの生産量が日本一です。"},
+  {q:"兵庫県で生産された牛肉のうち、一定の品質に達したものにつけられるブランド名は？", choices:["神戸ビーフ","松阪牛","近江牛","但馬牛"], answer:0, explain:"神戸ビーフは、兵庫県で生産された牛肉のうち、一定の品質に達したものにつけられるブランド名です。"},
+  {q:"三重県で生産される、高級な牛肉として有名なブランド牛は？", choices:["松阪牛","神戸ビーフ","近江牛","米沢牛"], answer:0, explain:"三重県で生産される松阪牛も、高級な牛肉として有名です。"},
+  {q:"奈良県の吉野川流域で育てられる、昔から質がよいことで知られるすぎは？", choices:["吉野すぎ","秋田すぎ","屋久すぎ","天竜すぎ"], answer:0, explain:"奈良県の吉野川（紀の川の上流）流域で育てられた吉野すぎは、昔から質がよいことで知られています。"},
+  {q:"森林で働く人を増やすために国などが行っている事業は？", choices:["緑の雇用","森林ボランティア","森づくり事業","林業再生事業"], answer:0, explain:"国などが行っている「緑の雇用」事業を利用して、山間部に移り住む人もでてくるようになりました。"},
+  {q:"三重県鳥羽市で、世界で初めて成功した養殖は？", choices:["真珠の養殖","かきの養殖","のりの養殖","うなぎの養殖"], answer:0, explain:"三重県鳥羽市は、真珠の養殖に世界で初めて成功したところです。"},
+  {q:"真珠の養殖が行われている三重県の湾は？（五ヶ所湾とあと1つ）", choices:["英虞湾","若狭湾","大阪湾","児島湾"], answer:0, explain:"真珠の養殖は、英虞湾や五ヶ所湾などで行われています。"},
+  {q:"兵庫県が全国有数の生産量を誇る、淡路島周辺で養殖されているものは？", choices:["のり","かき","わかめ","こんぶ"], answer:0, explain:"淡路島ではのりの養殖がさかんで、兵庫県はのりの生産量では全国有数の県です。"},
+  {q:"三重県と奈良県に囲まれた場所にある、和歌山県の飛び地は？", choices:["北山村","十津川村","下北山村","東吉野村"], answer:0, explain:"北山村は、三重県と奈良県に囲まれた場所にある和歌山県の飛び地です。"}
+]},
+{ pillar:3, sub:"2-3｜③工業の黒太字", items:[
+  {q:"大阪府・兵庫県の沿岸部を中心とした工業地帯は？", choices:["阪神工業地帯","中京工業地帯","瀬戸内工業地域","北九州工業地域"], answer:0, explain:"阪神工業地帯は、大阪府・兵庫県の沿岸部を中心とした工業地帯です。"},
+  {q:"堺市で発達している工業は？", choices:["石油化学工業","鉄鋼業","造船業","電気機器"], answer:0, explain:"堺市では石油化学工業が発達してきました。"},
+  {q:"和歌山市などで発達している工業は？", choices:["鉄鋼業","石油化学工業","造船業","繊維工業"], answer:0, explain:"和歌山市などでは鉄鋼業が発達してきました。"},
+  {q:"神戸市でさかんに行われてきた工業は？", choices:["造船業","石油化学工業","鉄鋼業","電気機器"], answer:0, explain:"神戸市では造船業がさかんに行われてきました。"},
+  {q:"門真市など淀川に沿った内陸で発達した工業は？", choices:["電気機器","石油化学工業","鉄鋼業","造船業"], answer:0, explain:"門真市など、淀川に沿った内陸の地域では、電気機器の生産が発達しました。"},
+  {q:"阪神工業地帯に多く見られる、大工場の関連工場や日用品・部品をつくる工場を何という？", choices:["中小工場","大規模工場","組立工場","コンビナート"], answer:0, explain:"阪神工業地帯には、大工場の関連工場や、日用品・衣類・部品などをつくる中小工場が多くあります。"},
+  {q:"東大阪市の中小工場で開発された「絶対にゆるまないねじ」のヒントになったものは？", choices:["神社の鳥居に使われているくさび","飛行機のボルト","橋のリベット","時計の歯車"], answer:0, explain:"「絶対にゆるまないねじ」は、神社の鳥居に使われているくさびをヒントに開発されました。"},
+  {q:"西宮市・神戸市（灘地区）でつくられる伝統的な特産品は？", choices:["酒","しょうゆ","みそ","茶"], answer:0, explain:"西宮市・神戸市（灘地区）では酒がつくられています。"},
+  {q:"丹後半島（京都府）でつくられる絹織物は？", choices:["丹後ちりめん","西陣織","大島つむぎ","結城つむぎ"], answer:0, explain:"丹後半島（京都府）では丹後ちりめん（絹織物）がつくられています。"},
+  {q:"高級な絹織物として知られ、最高裁判所の壁面の飾りにも使われている京都府の伝統的工芸品は？", choices:["西陣織","丹後ちりめん","友禅染","加賀友禅"], answer:0, explain:"西陣織は高級な絹織物として知られ、最高裁判所の壁面の飾りにも使われています。"},
+  {q:"清水寺に向かう坂道の周辺でつくられてきた京都の伝統的工芸品は？", choices:["清水焼","信楽焼","備前焼","萩焼"], answer:0, explain:"清水焼は、清水寺に向かう坂道の周辺でつくられてきた華やかな焼き物です。"},
+  {q:"たぬきの置き物で有名な、滋賀県甲賀市の伝統的工芸品は？", choices:["信楽焼","清水焼","備前焼","萩焼"], answer:0, explain:"信楽焼は、たぬきの置き物で有名な滋賀県甲賀市の陶器です。"},
+  {q:"奈良の伝統工業として知られる製品は？", choices:["筆","和紙","扇子","漆器"], answer:0, explain:"奈良の筆は、近畿地方のおもな伝統工業の1つです。"}
+]},
+{ pillar:4, sub:"2-4｜④交通と運輸の黒太字", items:[
+  {q:"東海道新幹線の下りの終点で、山陽新幹線の起点となる駅は？", choices:["新大阪","京都","三ノ宮","新神戸"], answer:0, explain:"新大阪は、東海道新幹線の下りの終点で、山陽新幹線の起点となる駅です。"},
+  {q:"新大阪を通り、愛知県と兵庫県を結ぶ、日本で初めての本格的な高速道路は？", choices:["名神高速道路","東名高速道路","山陽自動車道","中国自動車道"], answer:0, explain:"名神高速道路は、日本で初めての本格的な高速道路として、1965年に全線が開通しました。"},
+  {q:"神戸市から淡路島を通って四国地方へ自動車で行けるようにした、世界有数の長いつり橋は？", choices:["明石海峡大橋","瀬戸大橋","来島海峡大橋","関門橋"], answer:0, explain:"明石海峡大橋は世界有数の長いつり橋で、神戸市から淡路島を通って四国地方に行くことができます。"},
+  {q:"西日本を代表する日本有数の貿易港は？", choices:["神戸港","大阪港","堺泉北港","姫路港"], answer:0, explain:"神戸港は、西日本を代表する日本有数の貿易港です。"},
+  {q:"神戸港にある3つの人工島は、ポートアイランド・神戸空港とあと1つは？", choices:["六甲アイランド","夢洲","舞洲","咲洲"], answer:0, explain:"神戸港には、ポートアイランド、六甲アイランド、神戸空港と3つの人工島があります。"},
+  {q:"大阪府泉佐野市などの沖合いに建設された、海上の空港は？", choices:["関西国際空港","大阪国際空港","神戸空港","八尾空港"], answer:0, explain:"関西国際空港は、大阪府泉佐野市などの沖合いの大阪湾に埋め立て地をつくって建設されました。"},
+  {q:"関西国際空港が海上に建設された、最も大きな理由は？", choices:["騒音の心配がないため","土地が安いため","漁業権がないため","景色がよいため"], answer:0, explain:"市街地にある大阪国際空港（伊丹空港）の航空機の騒音に対する住民の不満が高まったため、騒音の心配がない海上に新しい空港が建設されました。"},
+  {q:"大阪府豊中市と兵庫県伊丹市などにまたがる、現在は国内線専用の空港は？", choices:["大阪国際空港（伊丹空港）","関西国際空港","神戸空港","八尾空港"], answer:0, explain:"大阪国際空港（伊丹空港）は、現在は国内線専用の空港として利用されています。"},
+  {q:"「畿」という漢字が意味するものは？", choices:["都","国境","海","山"], answer:0, explain:"「畿」とは都のことで、「近畿」とは都の近くという意味です。"},
+  {q:"昔、都に近い地域に使われた漢字は、「近」「上」とあと1つは？", choices:["前","後","下","遠"], answer:0, explain:"京都に近い地域に「前」「上」「近」の字が使われ、遠い地域に「後」「下」「遠」の字が使われました。"}
+]},
+{ pillar:5, sub:"2-5｜⑤観光（世界文化遺産）の黒太字", items:[
+  {q:"今から1400年あまり前に開かれ、世界で最も古い木造建築がある奈良県の寺は？", choices:["法隆寺","東大寺","高野山金剛峯寺","薬師寺"], answer:0, explain:"法隆寺は、今から1400年あまり前に開かれた寺で、世界で最も古い木造建築があります。"},
+  {q:"白いしっくいの美しさから白鷺城ともよばれる兵庫県の城は？", choices:["姫路城","大阪城","彦根城","二条城"], answer:0, explain:"姫路城は、白いしっくいの美しさから、白鷺城ともよばれます。"},
+  {q:"京都市・大津市・宇治市にある17の寺や神社がまとめて登録された世界文化遺産は？", choices:["古都京都の文化財","古都奈良の文化財","紀伊山地の霊場と参詣道","百舌鳥・古市古墳群"], answer:0, explain:"古都京都の文化財には、京都市・大津市・宇治市にある17の寺や神社などがまとめて登録されています。"},
+  {q:"十円玉の絵柄にもなっている、宇治市にある建物は？", choices:["平等院鳳凰堂","金閣寺","銀閣寺","清水寺"], answer:0, explain:"平等院鳳凰堂は、十円玉の絵柄にもなっている、京都府宇治市にある建物です。"},
+  {q:"大仏で有名な、古都奈良の文化財に含まれる寺は？", choices:["東大寺","法隆寺","高野山金剛峯寺","薬師寺"], answer:0, explain:"古都奈良の文化財には、大仏で有名な東大寺をはじめ、8か所の寺や神社などがまとめて登録されています。"},
+  {q:"弘法大師（空海）が開いた、紀伊山地の霊場と参詣道に含まれる寺は？", choices:["高野山金剛峯寺","法隆寺","東大寺","延暦寺"], answer:0, explain:"弘法大師とよばれた空海が開いた高野山金剛峯寺も、紀伊山地の霊場と参詣道の登録地の1つです。"},
+  {q:"今から1500年ほど前に築造された古墳群で、大阪府にある世界文化遺産は？", choices:["百舌鳥・古市古墳群","古都京都の文化財","古都奈良の文化財","紀伊山地の霊場と参詣道"], answer:0, explain:"百舌鳥・古市古墳群に登録された古墳は、今から1500年ほど前に築造された、当時の権力者のお墓です。"},
+  {q:"全長が500m近くある、堺市にある日本最大の古墳は？", choices:["大仙古墳","誉田御廟山古墳","石舞台古墳","高松塚古墳"], answer:0, explain:"最も大きな古墳は、仁徳天皇陵ともいわれてきた堺市にある大仙古墳で、全長が500m近くあります。"},
+  {q:"日本全体の守り神として、古くから信仰を集めてきた三重県の神社は？", choices:["伊勢神宮","出雲大社","春日大社","住吉大社"], answer:0, explain:"伊勢神宮は、日本全体の守り神として、古くから人々の信仰を集めてきた神社です。"},
+  {q:"毎年7月に京都市で行われる、1000年以上の歴史がある祭りは？", choices:["祇園祭","天神祭","ねぶた祭","阿波おどり"], answer:0, explain:"祇園祭は、毎年7月に京都市で行われる祭りで、1000年以上の歴史があります。"}
+]},
+{ pillar:2, sub:"2-6｜統計ランキング（農業・工業）", items:[
+  {q:"みかんの生産量割合（2022年）で、全国1位の県は？", choices:["和歌山県","愛媛県","静岡県","熊本県"], answer:0, explain:"みかんは和歌山22.4%、愛媛16.0%、静岡15.1%の順で、和歌山県が1位です。"},
+  {q:"かきの生産量割合（2022年）で、全国1位の県は？", choices:["和歌山県","奈良県","福岡県","広島県"], answer:0, explain:"かきは和歌山19.4%、奈良13.7%、福岡8.2%の順で、和歌山県が1位です。"},
+  {q:"うめの生産量割合（2022年）で、全国1位の県は？", choices:["和歌山県","群馬県","三重県","奈良県"], answer:0, explain:"うめは和歌山県が66.7%と、全国のうめの生産量の3分の2近くを占めています。"},
+  {q:"阪神工業地帯の生産額割合（2021年）で、最も高い工業は？", choices:["機械","金属","化学","食料品"], answer:0, explain:"阪神工業地帯は金属21.1%、機械38.8%、化学15.7%の順で、機械工業が最も高くなっています。"},
+  {q:"大阪府でつくられる自転車の全国シェア（2021年）は、約何％？", choices:["約93.5%","約50%","約70%","約30%"], answer:0, explain:"自転車は大阪府でつくられる割合が約93.5%と非常に高くなっています。"},
+  {q:"大阪府でつくられる毛布の全国シェア（2021年）は、約何％？", choices:["約82.0%","約50%","約60%","約95%"], answer:0, explain:"毛布は大阪府でつくられる割合が約82.0%です。"}
+]},
+{ pillar:0, sub:"2-7｜府県当てクイズ（今回のポイント）", items:[
+  {q:"「淀川河口の三角州」「堺の石油化学」「関西国際空港」が特色の府は？", choices:["大阪府","京都府","兵庫県","奈良県"], answer:0, explain:"大阪府は淀川河口の三角州、堺の石油化学・多い中小工場、関西国際空港が特色です。"},
+  {q:"「宇治茶」「西陣織、清水焼」「日本三景の天橋立」が特色の府は？", choices:["京都府","大阪府","兵庫県","滋賀県"], answer:0, explain:"京都府は宇治茶、西陣織・清水焼、かつて都がおかれた京都、天橋立が特色です。"},
+  {q:"「淡路島の近郊農業」「のりの養殖」「明石海峡大橋、姫路城」が特色の県は？", choices:["兵庫県","大阪府","京都府","三重県"], answer:0, explain:"兵庫県は淡路島の近郊農業、のりの養殖、明石海峡大橋・神戸港・姫路城が特色です。"},
+  {q:"「日本一広い琵琶湖」「伝統的工芸品の信楽焼」が特色の県は？", choices:["滋賀県","三重県","奈良県","京都府"], answer:0, explain:"滋賀県は日本一広い琵琶湖、信楽焼、南部は京都・大阪のベッドタウンであることが特色です。"},
+  {q:"「降水量の多い尾鷲」「志摩半島の真珠の養殖」「伊勢神宮」が特色の県は？", choices:["三重県","和歌山県","奈良県","滋賀県"], answer:0, explain:"三重県は尾鷲の多雨気候、志摩半島の真珠の養殖、四日市の石油化学、伊勢神宮が特色です。"},
+  {q:"「吉野すぎ」「筆などの伝統工業」「東大寺の大仏」が特色の県は？", choices:["奈良県","三重県","和歌山県","京都府"], answer:0, explain:"奈良県は吉野すぎの林業、筆などの伝統工業、東大寺の大仏、3つの世界文化遺産が特色です。"},
+  {q:"「みかん、かき、うめ」「和歌山の鉄鋼」が特色の県は？", choices:["和歌山県","奈良県","三重県","兵庫県"], answer:0, explain:"和歌山県はみかん・かき・うめの農業、紀の川や熊野川河口での製材業、和歌山の鉄鋼が特色です。"},
+  {q:"面積が最も大きい府県は？（2023年）", choices:["兵庫県","三重県","和歌山県","京都府"], answer:0, explain:"面積は兵庫県8401km²が最大で、次いで三重県5774km²の順です。"},
+  {q:"人口が最も多い府県は？（2023年、約876万人）", choices:["大阪府","兵庫県","京都府","三重県"], answer:0, explain:"人口は大阪府が約876万人と最も多くなっています。"},
+  {q:"面積が最も小さい府県は？（2023年、1905km²）", choices:["大阪府","滋賀県","奈良県","京都府"], answer:0, explain:"大阪府の面積は1905km²で、近畿地方の中で最も小さくなっています。"},
+  {q:"滋賀県の県庁所在地は？", choices:["大津市","彦根市","草津市","長浜市"], answer:0, explain:"滋賀県の県庁所在地は大津市です。"},
+  {q:"三重県の県庁所在地は？", choices:["津市","四日市市","伊勢市","鈴鹿市"], answer:0, explain:"三重県の県庁所在地は津市です。"}
+]}
+];
+
+/* ---------- 第3段階：ひとくちメモテスト（mame） ---------- */
+
+const mameQuizRaw = [
+  {pillar:1, q:"紀伊半島の南端に位置し、本州最南端でもある岬は？", choices:["潮岬","足摺岬","室戸岬","佐田岬"], answer:0, explain:"潮岬は紀伊半島の南端に位置している岬で、本州の最南端でもあります。台風が付近をよく通過するため、台風の位置を示す目安として使われます。"},
+  {pillar:2, q:"三重県と奈良県に囲まれた場所にある、和歌山県の飛び地は？", choices:["北山村","十津川村","下北山村","東吉野村"], answer:0, explain:"北山村は、三重県と奈良県に囲まれた場所にある和歌山県の飛び地です。熊野川の上流に位置し、河口にある和歌山県新宮市との結びつきが強い村です。"},
+  {pillar:3, q:"京都を代表する伝統的工芸品の1つで、清水寺に向かう坂道の周辺でつくられてきた焼き物は？", choices:["清水焼","信楽焼","備前焼","萩焼"], answer:0, explain:"清水焼は、京都を代表する伝統的工芸品の1つで、「清水の舞台」で知られる清水寺に向かう坂道の周辺でつくられてきた華やかな焼き物です。"},
+  {pillar:3, q:"大阪市の南に隣接する政令指定都市で、人口約82万人の都市は？", choices:["堺市","東大阪市","高槻市","豊中市"], answer:0, explain:"堺市は、大阪市の南に隣接する政令指定都市で、人口は約82万人です。臨海部の埋め立て地には、火力発電所や石油化学などの大工場があります。"},
+  {pillar:4, q:"六甲アイランドとともに、神戸港内につくられた人工島は？", choices:["ポートアイランド","夢洲","舞洲","咲洲"], answer:0, explain:"ポートアイランドは、六甲アイランドとともに、神戸市の北にある六甲山地の土を埋め立てて神戸港内につくられた人工島です。大規模なコンテナ埠頭があります。"},
+  {pillar:4, q:"「近畿」の「畿」とは何を意味する？", choices:["都","国境","海","山"], answer:0, explain:"「畿」とは都のことで、「近畿」とは都の近くという意味です。"},
+  {pillar:5, q:"毎年7月に京都市で行われる、1000年以上の歴史がある祭りは？", choices:["祇園祭","天神祭","阿波おどり","ねぶた祭"], answer:0, explain:"祇園祭は毎年7月に京都市で行われる祭りで、1000年以上の歴史があります。疫病などの災厄を防ぐために、山鉾とよばれる山車が市中を巡ります。"}
+];
+
+/* ---------- 第4段階：気をつけたいポイント（sanko／読みもの・採点なし） ---------- */
+
+const sankoNotes = [
+  {
+    title:"関西国際空港はなぜ海上に建設されたの？",
+    body:`大阪府豊中市と兵庫県伊丹市などにまたがる大阪国際空港（伊丹空港）は、市街地に位置しているため、航空機の騒音に対する周辺住民の不満が高まっていました。そこで、騒音の心配がない海上に新しい空港が建設されました。<br><br>
+関西国際空港には2本の長い滑走路があり、航空機が24時間離着陸できます。また、運賃の安いLCC（格安航空会社）専用のターミナルが設けられました。今後は、国際線と国内線の便数がさらに増やされ、ハブ空港としての機能が高まることが期待されています。<br><br>
+現在、大阪国際空港（伊丹空港）は国内線専用の空港として利用されており、騒音対策のため、空港の運用時間は朝7時から夜9時までに制限されています。`,
+    src:"予習シリーズ5年上 第13回 Q&A"
+  },
+  {
+    title:"大阪の今",
+    body:`①進む再開発：東京への一極集中が進み、「天下の台所」とよばれた大阪の経済的な地位は低下しています。そのため、大阪駅周辺などに建設したオフィスビルや商業施設を中心に、活気を取り戻そうとしています。大阪市の中心部に数多く建設された高層マンションに、郊外から移り住む人も増え、大阪市の人口は増加傾向にあります。<br><br>
+②臨海部の今：かつて臨海部の埋め立て地は阪神工業地帯の一角をしめ、製鉄所などの大工場が見られました。現在は、テーマパークや公園、国際的な展示場などが建設され、住宅地も見られます。淀川の河口付近にある夢洲は、2025年の万国博覧会の開催地となりました。<br><br>
+③ニュータウンの今：高度経済成長期、大都市の過密化の対策として、郊外に大規模な住宅団地をつくるニュータウンの建設が各地で行われました。大阪府でも、大阪市の北に位置する吹田市・豊中市で大規模なニュータウンの建設が始まり、多くの人々が暮らす住宅地となっていきました。しかし、開発から60年以上が経過し、建物の老朽化や住民の高齢化が進んでいます。そこで、新しい住宅への建てかえや、地域の子育て環境を整える取り組みが行われています。`,
+    src:"予習シリーズ5年上 第13回 ちょっとくわしく"
+  },
+  {
+    title:"独自の技術で世界と戦う中小工場",
+    body:`厳しい国際競争のなか、ほかの工場ではまねのできない独自の技術で生き残りをはかる中小工場があります。中小工場がとくに多い地域の1つである東大阪市に位置する工場では、「絶対にゆるまないねじ」がつくられています。神社の鳥居に使われているくさびをヒントに開発されたこのねじは、明石海峡大橋や東京スカイツリーにも使われています。`,
+    src:"予習シリーズ5年上 第13回 関連することがら"
+  },
+  {
+    title:"近畿とは",
+    body:`「畿」とは都のことで、「近畿」とは都の近くという意味です。現在の日本の首都は東京ですが、昔は1000年以上にわたって京都に都がおかれていました。昔、都とその周辺の5つの国は、畿内とよばれていました。畿内とそのまわりという意味で、大阪府・京都府などの7つの府県は近畿地方とされたのです。`,
+    src:"予習シリーズ5年上 第13回 コラム"
+  },
+  {
+    title:"昔の国名の一部",
+    body:`昔の交通路は京都を中心に考えられていました。このため、京都に近い地域に「前」「上」「近」の字が使われ、遠い地域に「後」「下」「遠」の字が使われました（例：豊前・豊後、上野・下野、近江・遠江）。`,
+    src:"予習シリーズ5年上 第13回 関連することがら"
+  },
+  {
+    title:"紀伊半島の製材都市",
+    body:`昔、紀伊山地で切り出された木材は、いかだに組まれて川を流され、紀の川河口の和歌山市や熊野川河口の新宮市などに集められました。製材業を中心に発達したこれらの都市では、現在、輸入木材の加工も行われています。`,
+    src:"予習シリーズ5年上 第13回 関連することがら"
+  },
+  {
+    title:"伊勢神宮は世界文化遺産ではない",
+    body:`伊勢神宮は近畿地方の代表的な観光地で、日本全体の守り神として古くから信仰を集めてきましたが、ユネスコの世界文化遺産には登録されていません。近畿地方の世界文化遺産は、法隆寺・姫路城・古都京都の文化財・古都奈良の文化財・紀伊山地の霊場と参詣道・百舌鳥古市古墳群の6件です。有名な観光地＝世界文化遺産とは限らないので、混同しないようにしましょう。`,
+    src:"入試でまちがえやすいポイント（一般知識）"
+  },
+  {
+    title:"法隆寺と姫路城の違い",
+    body:`「世界で最も古い木造建築」は法隆寺、「白鷺城」の別名を持つのは姫路城です。どちらも近畿地方の有名な世界文化遺産ですが、特徴が入れかわりやすいので、セットで整理しておきましょう。`,
+    src:"入試でまちがえやすいポイント（一般知識）"
+  },
+  {
+    title:"阪神工業地帯は現在、生産額日本一ではない",
+    body:`阪神工業地帯は第二次世界大戦前には生産額が日本一でしたが、その後は全国の生産額にしめる割合が低下しました。「工業地帯＝日本一」というイメージのまま覚えていると誤答しやすいので、現在の状況を正確に確認しておきましょう。`,
+    src:"入試でまちがえやすいポイント（一般知識）"
+  },
+  {
+    title:"近畿地方は2府5県",
+    body:`近畿地方は、大阪府・京都府の2府と、兵庫県・滋賀県・三重県・奈良県・和歌山県の5県、合わせて7つの府県からなります。「近畿地方＝2府5県」という数え方をセットで覚えておくと、府県の数を問う問題にも対応できます。`,
+    src:"入試でまちがえやすいポイント（一般知識）"
+  },
+  {
+    title:"志摩半島と紀伊半島の範囲",
+    body:`紀伊半島は三重県・奈良県・和歌山県にまたがる大きな半島で、志摩半島はその紀伊半島の東側にある、三重県のリアス海岸が見られる半島です。真珠の養殖で有名な英虞湾は志摩半島にあります。半島の名前と範囲を混同しないようにしましょう。`,
+    src:"入試でまちがえやすいポイント（一般知識）"
+  }
+];
+
+/* ===================== 共通ビルド関数 ===================== */
+
+function shuffleArr(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+function finalize(q){
+  const correctText = q.choices[q.answer];
+  const order = shuffleArr(q.choices.map((c,i)=>i));
+  const newChoices = order.map(i=>q.choices[i]);
+  const newAnswer = newChoices.indexOf(correctText);
+  const out = Object.assign({}, q, {choices:newChoices, answer:newAnswer});
+  return out;
+}
+
+function normalizeAnswer(str){
+  if(str===undefined || str===null) return "";
+  let s = String(str).trim();
+  s = s.replace(/[０-９]/g, ch => String.fromCharCode(ch.charCodeAt(0)-0xFEE0));
+  s = s.replace(/\s+/g,"");
+  return s;
+}
+
+function checkFillAnswer(item, userInput){
+  const norm = normalizeAnswer(userInput);
+  if(norm==="") return false;
+  const candidates = [item.answer].concat(item.accept||[]);
+  return candidates.some(c => normalizeAnswer(c)===norm);
+}
+
+/* kihon の穴埋め item 生成 */
+function buildKihonFillItems(){
+  return kihonFillRaw.map((r,idx)=>({
+    type:"fill",
+    id:"kihonFill_"+idx,
+    q:r.q,
+    answer:r.answer,
+    accept:r.accept,
+    explain:r.explain,
+    lead:PILLARS[r.pillar].label,
+    sub:PILLARS[r.pillar].full,
+    pillar:r.pillar
+  }));
+}
+
+function buildKihonFinalItems(){
+  return kihonFinalRaw.map((r,idx)=>{
+    const fq = finalize({q:r.q, choices:r.choices, answer:r.answer, explain:r.explain});
+    return Object.assign({type:"choice", id:"kihonFinal_"+idx, pillar:r.pillar}, fq);
+  });
+}
+
+function buildKihonItems(){
+  const overview = kihonOverviewScreens.map((s,idx)=>Object.assign({id:"kihonOv_"+idx}, s));
+  const fills = shuffleArrKeepBlocks();
+  const finals = shuffleArr(buildKihonFinalItems());
+  return overview.concat(fills, finals);
+}
+// 穴埋めはブロック（pillar）順は固定、ブロック内はシャッフル
+function shuffleArrKeepBlocks(){
+  const byPillar = {};
+  kihonFillRaw.forEach((r,idx)=>{
+    if(!byPillar[r.pillar]) byPillar[r.pillar]=[];
+    byPillar[r.pillar].push(idx);
+  });
+  let out = [];
+  [1,2,3,4,5].forEach(p=>{
+    const idxs = shuffleArr(byPillar[p]||[]);
+    idxs.forEach(idx=>{
+      const r = kihonFillRaw[idx];
+      out.push({
+        type:"fill", id:"kihonFill_"+idx, q:r.q, answer:r.answer, accept:r.accept,
+        explain:r.explain, lead:PILLARS[r.pillar].label, sub:PILLARS[r.pillar].full, pillar:r.pillar
+      });
+    });
+  });
+  return out;
+}
+
+/* kuroji item 生成：ブロック順固定、ブロック内シャッフル */
+function buildKurojiItems(){
+  let out = [];
+  kurojiBlocks.forEach((block,bi)=>{
+    const shuffledItems = shuffleArr(block.items);
+    shuffledItems.forEach((it,ii)=>{
+      const fq = finalize(it);
+      out.push(Object.assign({
+        type:"choice",
+        id:"kuroji_"+bi+"_"+ii,
+        pillar:block.pillar,
+        sub:block.sub
+      }, fq));
+    });
+  });
+  return out;
+}
+
+/* mame item 生成 */
+function buildMameItems(){
+  const shuffled = shuffleArr(mameQuizRaw);
+  return shuffled.map((r,idx)=>{
+    const fq = finalize(r);
+    return Object.assign({type:"choice", id:"mame_"+idx, pillar:r.pillar}, fq);
+  });
+}
+
+/* sanko item 生成（採点なし） */
+function buildSankoItems(){
+  return sankoNotes.map((n,idx)=>({
+    type:"info", id:"sanko_"+idx, title:n.title, body:n.body, src:n.src, wide:true
+  }));
+}
+
+const STAGES = [
+  {id:"kihon", name:"① 構造テスト", desc:"5本柱（自然・農林水産業・工業・交通と運輸・観光）の骨組みを確認。概要2画面＋穴埋め20問＋まとめ選択5問。", scored:true, ref:false, build:buildKihonItems},
+  {id:"kuroji", name:"② 黒太字テスト", desc:"各分野の重要語句・統計ランキング・7府県別まとめを4択で確認します。", scored:true, ref:false, build:buildKurojiItems},
+  {id:"mame", name:"③ ひとくちメモテスト", desc:"教科書のひとくちメモから出題します。", scored:true, ref:false, build:buildMameItems},
+  {id:"sanko", name:"④ 気をつけたいポイント", desc:"教科書コラム＋入試でまちがえやすい注意点の読みもの。採点はありません。", scored:false, ref:true, build:buildSankoItems}
+];
+
+/* ===================== 状態管理／localStorage ===================== */
+
+const STORAGE_KEY = "kinki_missed_v1";
+
+function loadMissedStore(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : {};
+  }catch(e){ return {}; }
+}
+function saveMissedStore(store){
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(store)); }catch(e){ /* 保存できない環境は無視 */ }
+}
+
+const state = {
+  screen:"home",
+  stageId:null,
+  isRetry:false,
+  items:[],
+  currentIndex:0,
+  scoreTotal:0,
+  scoreCorrect:0,
+  answerLog:[],
+  results:{},
+  missedStore: loadMissedStore(),
+  answered:false,
+  userInput:""
+};
+
+function startStage(stageId){
+  const stage = STAGES.find(s=>s.id===stageId);
+  state.stageId = stageId;
+  state.isRetry = false;
+  state.items = stage.build();
+  state.currentIndex = 0;
+  state.scoreTotal = state.items.filter(i=>i.type!=="info").length;
+  state.scoreCorrect = 0;
+  state.answerLog = [];
+  state.answered = false;
+  state.userInput = "";
+  state.screen = "play";
+  render();
+}
+
+function startRetry(stageId){
+  const missed = state.missedStore[stageId] || {};
+  const items = Object.values(missed);
+  if(items.length===0) return;
+  state.stageId = stageId;
+  state.isRetry = true;
+  state.items = shuffleArr(items);
+  state.currentIndex = 0;
+  state.scoreTotal = state.items.length;
+  state.scoreCorrect = 0;
+  state.answerLog = [];
+  state.answered = false;
+  state.userInput = "";
+  state.screen = "play";
+  render();
+}
+
+function currentItem(){ return state.items[state.currentIndex]; }
+
+function submitChoice(idx){
+  if(state.answered) return;
+  const item = currentItem();
+  const correct = idx === item.answer;
+  state.answered = true;
+  state.userChoiceIdx = idx;
+  if(correct) state.scoreCorrect++;
+  state.answerLog.push({item, wasCorrect:correct});
+}
+
+function submitFill(){
+  if(state.answered) return;
+  const item = currentItem();
+  const correct = checkFillAnswer(item, state.userInput);
+  state.answered = true;
+  if(correct) state.scoreCorrect++;
+  state.answerLog.push({item, wasCorrect:correct});
+}
+
+function nextItem(){
+  state.answered = false;
+  state.userInput = "";
+  state.userChoiceIdx = null;
+  state.hintShown = false;
+  if(state.currentIndex < state.items.length-1){
+    state.currentIndex++;
+    render();
+  }else{
+    finishStage();
+  }
+}
+
+function finishStage(){
+  const stage = STAGES.find(s=>s.id===state.stageId);
+  state.results[state.stageId] = {
+    correct: state.scoreCorrect,
+    total: state.scoreTotal,
+    at: Date.now()
+  };
+  if(stage.scored){
+    const missed = state.missedStore[state.stageId] || {};
+    state.answerLog.forEach(log=>{
+      const key = log.item.q;
+      if(!log.wasCorrect){
+        missed[key] = log.item;
+      }else{
+        if(missed[key]) delete missed[key];
+      }
+    });
+    state.missedStore[state.stageId] = missed;
+    saveMissedStore(state.missedStore);
+  }
+  state.screen = "result";
+  render();
+}
+
+function backHome(){
+  state.screen = "home";
+  render();
+}
+
+/* ===================== レンダリング ===================== */
+
+const app = document.getElementById("app");
+
+function render(){
+  if(state.screen==="home") renderHome();
+  else if(state.screen==="play") renderPlay();
+  else if(state.screen==="result") renderResult();
+}
+
+function esc(s){
+  return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+
+function renderHome(){
+  let html = `
+    <div class="header">
+      <h1>近畿地方テスト</h1>
+      <div class="sub">予習シリーズ5年上　第13回　近畿地方</div>
+    </div>
+    <div class="content">
+  `;
+  const scoredStages = STAGES.filter(s=>s.scored);
+  const refStages = STAGES.filter(s=>!s.scored);
+
+  html += `<div class="home-title">確認テスト</div>`;
+  scoredStages.forEach(stage=>{
+    const res = state.results[stage.id];
+    const missedCount = Object.keys(state.missedStore[stage.id]||{}).length;
+    html += `<div class="stage-card" onclick="startStage('${stage.id}')">
+      <div class="stage-top">
+        <div class="stage-name">${esc(stage.name)}</div>
+        <div class="stage-badge">${res ? res.correct+"/"+res.total : "未挑戦"}</div>
+      </div>
+      <div class="stage-desc">${esc(stage.desc)}</div>
+      ${res ? `<div class="progress-bar"><div class="progress-fill" style="width:${Math.round(res.correct/res.total*100)}%"></div></div>` : ""}
+      ${missedCount>0 ? `<div class="retry-btn" onclick="event.stopPropagation(); startRetry('${stage.id}')">🔁 苦手${missedCount}問を復習</div>` : ""}
+    </div>`;
+  });
+
+  html += `<div class="home-title">参考情報（読みもの）</div>`;
+  refStages.forEach(stage=>{
+    html += `<div class="stage-card ref" onclick="startStage('${stage.id}')">
+      <div class="stage-top">
+        <div class="stage-name">${esc(stage.name)}</div>
+        <div class="stage-badge">読みもの</div>
+      </div>
+      <div class="stage-desc">${esc(stage.desc)}</div>
+    </div>`;
+  });
+
+  html += `<div class="footer-note">単一HTMLファイル・localStorageに端末内で保存されます</div>`;
+  html += `</div>`;
+  app.innerHTML = html;
+}
+
+function renderPlay(){
+  const item = currentItem();
+  const stage = STAGES.find(s=>s.id===state.stageId);
+  const isInfo = item.type==="info";
+
+  let html = `
+    <div class="header">
+      <h1>${esc(stage.name)}${state.isRetry?"（復習）":""}</h1>
+      <div class="sub">${item.sub ? esc(item.sub) : esc(stage.desc)}</div>
+    </div>
+    <div class="content">
+      <div class="play-topbar">
+        <span>問題 ${state.currentIndex+1} / ${state.items.length}</span>
+        <span onclick="backHome()" style="text-decoration:underline; cursor:pointer;">中断してホームへ</span>
+      </div>
+  `;
+
+  if(isInfo){
+    html += `<div class="qcard info">
+      <div class="qtitle">${esc(item.title)}</div>
+      <div class="info-body ${item.wide?'wide':''}">${item.body}</div>
+      ${item.src ? `<div class="src-tag">出典：${esc(item.src)}</div>` : ""}
+      <button class="btn btn-ref" onclick="nextItem()">${state.currentIndex < state.items.length-1 ? "次へ" : "結果を見る"}</button>
+    </div>`;
+  } else if(item.type==="fill"){
+    html += `<div class="qcard">`;
+    if(item.lead) html += `<div class="lead-badge">${esc(item.lead)}</div>`;
+    html += `<div class="qtext">${esc(item.q)}</div>`;
+    const inputClass = state.answered ? (checkFillAnswer(item, state.userInput) ? "correct":"wrong") : "";
+    html += `<input type="text" id="fillInput" class="fill-input ${inputClass}" placeholder="答えを入力" value="${esc(state.userInput)}" ${state.answered?"disabled":""} onkeydown="if(event.key==='Enter'){document.getElementById('fillInput').value=this.value; state.userInput=this.value; submitFillUI();}">`;
+    if(!state.answered){
+      html += `<button class="btn btn-primary" onclick="submitFillUI()">こたえる</button>`;
+    }else{
+      const correct = checkFillAnswer(item, state.userInput);
+      html += `<div class="explain-box ${correct?'good':'bad'}">
+        <span class="mark-icon">${correct?"⭕":"❌"}</span><b>正解：${esc(item.answer)}</b><br>${item.explain||""}
+      </div>`;
+      html += `<button class="btn btn-primary" onclick="nextItem()">${state.currentIndex < state.items.length-1 ? "次の問題へ" : "結果を見る"}</button>`;
+    }
+    html += `</div>`;
+  } else if(item.type==="choice"){
+    html += `<div class="qcard">`;
+    if(item.pillar!==undefined && item.pillar!==null) html += `<div class="lead-badge">${esc(pillarBadge(item.pillar))}</div>`;
+    html += `<div class="qtext">${esc(item.q)}</div>`;
+    html += `<div class="choice-list">`;
+    item.choices.forEach((c,idx)=>{
+      let cls = "choice-btn";
+      if(state.answered){
+        if(idx===item.answer) cls += " correct";
+        else if(idx===state.userChoiceIdx) cls += " wrong";
+        else cls += " dim";
+      }
+      html += `<button class="${cls}" ${state.answered?"disabled":""} onclick="submitChoiceUI(${idx})">${esc(c)}</button>`;
+    });
+    html += `</div>`;
+    if(state.answered){
+      const correct = state.userChoiceIdx===item.answer;
+      html += `<div class="explain-box ${correct?'good':'bad'}">
+        <span class="mark-icon">${correct?"⭕":"❌"}</span>${item.explain||""}
+      </div>`;
+      html += `<button class="btn btn-primary" onclick="nextItem()">${state.currentIndex < state.items.length-1 ? "次の問題へ" : "結果を見る"}</button>`;
+    }
+    html += `</div>`;
+  }
+
+  html += `</div>`;
+  app.innerHTML = html;
+  if(item.type==="fill" && !state.answered){
+    const el = document.getElementById("fillInput");
+    if(el) el.focus();
+  }
+}
+
+function submitChoiceUI(idx){
+  submitChoice(idx);
+  renderPlay();
+}
+function submitFillUI(){
+  const el = document.getElementById("fillInput");
+  if(el) state.userInput = el.value;
+  submitFill();
+  renderPlay();
+}
+function toggleHint(){
+  state.hintShown = !state.hintShown;
+  renderPlay();
+}
+
+function renderResult(){
+  const stage = STAGES.find(s=>s.id===state.stageId);
+  const wrongItems = state.answerLog.filter(l=>!l.wasCorrect).map(l=>l.item);
+  const missedCount = Object.keys(state.missedStore[state.stageId]||{}).length;
+
+  let html = `
+    <div class="header">
+      <h1>結果</h1>
+      <div class="sub">${esc(stage.name)}${state.isRetry?"（復習）":""}</div>
+    </div>
+    <div class="content">
+      <div class="qcard result-box">
+        <div>できた問題</div>
+        <div class="result-score">${state.scoreCorrect} / ${state.scoreTotal}</div>
+        ${wrongItems.length>0 ? `<div class="missed-list">${wrongItems.map(it=>`<div class="missed-item">${esc(it.q)}</div>`).join("")}</div>` : `<div style="color:var(--good); font-weight:700;">全問正解です！</div>`}
+      </div>
+  `;
+  if(wrongItems.length>0){
+    html += `<button class="btn btn-primary" onclick="startRetry('${state.stageId}')">🔁 まちがえた問題だけ復習する（${wrongItems.length}問）</button>`;
+  } else if(missedCount>0){
+    html += `<button class="btn btn-primary" onclick="startRetry('${state.stageId}')">🔁 残っている苦手${missedCount}問を復習する</button>`;
+  }
+  html += `<button class="btn btn-outline" onclick="backHome()">ホームにもどる</button>`;
+  html += `</div>`;
+  app.innerHTML = html;
+}
+
+render();
+</script>
+</body>
+</html>
