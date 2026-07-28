@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>統計資料の読み方テスト</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --accent:#3468a6;
+  --accent-light:#e8f0fa;
+  --ref:#7a5ea8;
+  --ref-light:#f1ecf8;
+  --good:#2f9e5b;
+  --good-light:#e6f6ec;
+  --bad:#d1453b;
+  --bad-light:#fbe9e8;
+  --ink:#22303f;
+  --sub:#5c6b7a;
+  --line:#dbe3ec;
+  --bg:#f5f7fa;
+  --card:#ffffff;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  font-family:"Zen Kaku Gothic New",sans-serif;
+  background:var(--bg);
+  color:var(--ink);
+  display:flex;
+  justify-content:center;
+}
+#app{
+  width:100%;
+  max-width:480px;
+  min-height:100vh;
+  background:var(--bg);
+  display:flex;
+  flex-direction:column;
+  position:relative;
+}
+.header{
+  padding:16px 18px 12px;
+  background:linear-gradient(135deg,var(--accent),#4d7dbf);
+  color:#fff;
+  position:sticky;
+  top:0;
+  z-index:5;
+}
+.header h1{
+  margin:0;
+  font-size:18px;
+  font-weight:900;
+  letter-spacing:.02em;
+}
+.header .sub{
+  margin-top:2px;
+  font-size:12px;
+  opacity:.9;
+}
+.content{
+  flex:1;
+  padding:14px 16px 90px;
+}
+.stage-card{
+  background:var(--card);
+  border-radius:14px;
+  box-shadow:0 2px 8px rgba(30,50,80,.08);
+  padding:16px;
+  margin-bottom:14px;
+  border:1px solid var(--line);
+  cursor:pointer;
+  transition:transform .1s;
+}
+.stage-card:active{transform:scale(.98);}
+.stage-card.ref{
+  border-color:var(--ref);
+  background:linear-gradient(180deg,#fff,var(--ref-light));
+}
+.stage-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+.stage-name{
+  font-size:16px;
+  font-weight:700;
+}
+.stage-badge{
+  font-size:11px;
+  background:var(--accent);
+  color:#fff;
+  padding:3px 8px;
+  border-radius:999px;
+  font-weight:700;
+}
+.stage-card.ref .stage-badge{background:var(--ref);}
+.stage-desc{
+  font-size:12.5px;
+  color:var(--sub);
+  margin-top:6px;
+  line-height:1.5;
+}
+.stage-meta{
+  display:flex;
+  gap:10px;
+  margin-top:10px;
+  font-size:12px;
+  color:var(--sub);
+}
+.retry-btn{
+  margin-top:10px;
+  display:inline-block;
+  background:var(--bad-light);
+  color:var(--bad);
+  border:1px solid var(--bad);
+  border-radius:8px;
+  padding:6px 10px;
+  font-size:12.5px;
+  font-weight:700;
+  cursor:pointer;
+}
+.progress-bar{
+  height:6px;
+  background:var(--line);
+  border-radius:99px;
+  overflow:hidden;
+  margin-top:8px;
+}
+.progress-fill{
+  height:100%;
+  background:var(--accent);
+  border-radius:99px;
+}
+.lead-badge{
+  display:inline-block;
+  background:var(--accent);
+  color:#fff;
+  font-size:12px;
+  font-weight:700;
+  padding:4px 10px;
+  border-radius:999px;
+  margin-bottom:10px;
+}
+.sub-badge{
+  display:inline-block;
+  background:#fff;
+  color:var(--accent);
+  border:1px solid var(--accent);
+  font-size:11px;
+  font-weight:700;
+  padding:2px 8px;
+  border-radius:999px;
+  margin-left:6px;
+}
+.play-topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-size:12.5px;
+  color:var(--sub);
+  margin-bottom:10px;
+}
+.qcard{
+  background:var(--card);
+  border-radius:14px;
+  padding:18px 16px;
+  box-shadow:0 2px 8px rgba(30,50,80,.08);
+  border:1px solid var(--line);
+}
+.qcard.info{
+  border-color:var(--ref);
+  background:linear-gradient(180deg,#fff,var(--ref-light));
+}
+.qtitle{
+  font-weight:900;
+  font-size:16px;
+  margin-bottom:8px;
+}
+.qtext{
+  font-size:15.5px;
+  line-height:1.7;
+  margin-bottom:14px;
+  white-space:pre-wrap;
+}
+.qtext.wide{font-size:14.5px;}
+.info-body{
+  font-size:14.5px;
+  line-height:1.85;
+}
+.info-body b{color:var(--accent);}
+.src-tag{
+  margin-top:14px;
+  font-size:11.5px;
+  color:var(--ref);
+  border-top:1px dashed var(--line);
+  padding-top:8px;
+}
+.choice-list{display:flex;flex-direction:column;gap:9px;}
+.choice-btn{
+  text-align:left;
+  padding:12px 14px;
+  border-radius:10px;
+  border:1.5px solid var(--line);
+  background:#fff;
+  font-size:14.5px;
+  font-family:inherit;
+  cursor:pointer;
+  line-height:1.5;
+}
+.choice-btn:active{background:var(--accent-light);}
+.choice-btn.correct{
+  border-color:var(--good);
+  background:var(--good-light);
+  font-weight:700;
+}
+.choice-btn.wrong{
+  border-color:var(--bad);
+  background:var(--bad-light);
+  font-weight:700;
+}
+.choice-btn.dim{opacity:.55;}
+.fill-input{
+  width:100%;
+  padding:12px 14px;
+  font-size:16px;
+  border-radius:10px;
+  border:1.5px solid var(--line);
+  font-family:inherit;
+  margin-bottom:10px;
+}
+.fill-input.correct{border-color:var(--good);background:var(--good-light);}
+.fill-input.wrong{border-color:var(--bad);background:var(--bad-light);}
+.btn{
+  width:100%;
+  padding:13px;
+  border-radius:10px;
+  border:none;
+  font-size:15px;
+  font-weight:700;
+  font-family:inherit;
+  cursor:pointer;
+  margin-top:6px;
+}
+.btn-primary{background:var(--accent);color:#fff;}
+.btn-ref{background:var(--ref);color:#fff;}
+.btn-outline{background:#fff;color:var(--accent);border:1.5px solid var(--accent);}
+.btn-outline.ref{color:var(--ref);border-color:var(--ref);}
+.result-box{
+  text-align:center;
+  padding:6px 0 18px;
+}
+.result-score{
+  font-size:40px;
+  font-weight:900;
+  color:var(--accent);
+  margin:6px 0;
+}
+.explain-box{
+  margin-top:14px;
+  background:var(--accent-light);
+  border-radius:10px;
+  padding:12px 14px;
+  font-size:13.5px;
+  line-height:1.7;
+}
+.explain-box.bad{background:var(--bad-light);}
+.explain-box.good{background:var(--good-light);}
+.hint-box{
+  margin-top:10px;
+  background:#fff8e6;
+  border:1px solid #e8cf8a;
+  border-radius:10px;
+  padding:10px 12px;
+  font-size:13px;
+  line-height:1.6;
+}
+.mark-icon{font-size:18px;margin-right:4px;vertical-align:-2px;}
+.missed-list{
+  text-align:left;
+  margin-top:16px;
+  font-size:13px;
+}
+.missed-item{
+  padding:8px 10px;
+  background:var(--bad-light);
+  border-radius:8px;
+  margin-bottom:6px;
+  color:#8a2f28;
+}
+.home-title{
+  font-size:13px;
+  font-weight:700;
+  color:var(--sub);
+  margin:18px 0 8px 2px;
+}
+.footer-note{
+  text-align:center;
+  font-size:11px;
+  color:var(--sub);
+  padding:10px 0 26px;
+}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+/* ===================== データ（予習シリーズ5年上 第19回 統計資料の読み方 より転記） ===================== */
+
+const PILLARS = {
+  1:{label:"①読み方の基本", full:"統計資料を読みとってみよう！"},
+  2:{label:"②資料を使った作業", full:"統計資料を使って作業をしてみよう！"},
+  3:{label:"③入試問題の考え方", full:"統計資料の入試問題を解いてみよう！"},
+  4:{label:"④さまざまな統計資料", full:"さまざまな統計資料を見てみよう！"}
+};
+function pillarBadge(p){ return PILLARS[p] ? PILLARS[p].label : ""; }
+
+/* ---------- 第1段階：構造テスト（kihon） ---------- */
+
+const kihonOverviewScreens = [
+  {
+    type:"info",
+    title:"はじめに",
+    body:`第19回のテーマは「統計資料の読み方」です。<br>
+今回は地域学習ではなく、表やグラフをどう読みとるかという<b>技能</b>がテーマです。ポイントは大きく分けて<b>4つ</b>あります。<br><br>
+①統計資料を読みとってみよう（読み方の基本）<br>
+②統計資料を使って作業をしてみよう<br>
+③統計資料の入試問題を解いてみよう<br>
+④さまざまな統計資料を見てみよう<br><br>
+なお、今回は教科書の「ちょっとくわしく」「要点チェック」にあたるページがない特別な回です。まずは4本柱の全体像をつかんでから、それぞれの中身を確認していきましょう。`
+  },
+  {
+    type:"info",
+    title:"全体像：4本柱",
+    wide:true,
+    body:`<b>①読み方の基本</b>：表題を読みとる、いつの資料か確認する、折れ線グラフは長期の変化を読みとれる、割合(%)か実際の数値かを確認する、大きな数字・小さな数字に着目する。<br><br>
+<b>②資料を使った作業</b>：人口の多い都道府県・少ない都道府県を地図に書きこむ、京浜工業地帯と阪神工業地帯の工業別生産額をグラフにする。<br><br>
+<b>③入試問題の考え方</b>：グラフから数値を読みとる問題、都道府県に関する知識を使って解く問題、統計資料と選択肢の文を照合する問題。<br><br>
+<b>④さまざまな統計資料</b>：地域別の農業生産額割合（畜産・野菜・稲作がさかんな地域）、都道府県別の工業生産額の割合（自動車・化学工業・印刷業などがさかんな県）。`
+  }
+];
+
+const kihonFillRaw = [
+  // pillar 1
+  {pillar:1, q:"表やグラフの表題を読んで、まず確認すべきことは、何についての（　）であるかということである。", answer:"統計資料", accept:["統計資料"], explain:"表やグラフの表題を読んで、まず、何についての統計資料であるかを確認しましょう。"},
+  {pillar:1, q:"統計資料の数値は、ふつう時間とともに変化するため、（　）の資料であるかを確認することが大切である。", answer:"いつ", accept:["いつ"], explain:"統計資料の数値は、ふつう、時間とともに変化していきます。いつの資料であるかを確認することは、とても大切です。"},
+  {pillar:1, q:"長い間の変化がわかりやすいグラフの種類は（　）グラフである。", answer:"折れ線", accept:["折れ線","折れ線グラフ"], explain:"折れ線グラフは、長い間の変化がわかりやすいグラフです。"},
+  {pillar:1, q:"統計資料でよく使われる、全体に対する部分の比率を表す数値を（　）という。", answer:"割合", accept:["割合"], explain:"統計資料では、割合（％）が多く使われます。"},
+  {pillar:1, q:"大きな数字と小さな数字に着目すると、何の（　）を表しているかが見えてくる。", answer:"数値", accept:["数値"], explain:"大きな数字と小さな数字に着目すると、何の数値を表しているかが見えてきます。"},
+  // pillar 2
+  {pillar:2, q:"人口の多い都道府県のうち、人口600万人以上の都道府県で、東京都に次いで人口が多いのは（　）である。", answer:"神奈川県", accept:["神奈川県","神奈川"], explain:"人口の多い都道府県では、東京都に次いで神奈川県の人口が多くなっています。"},
+  {pillar:2, q:"人口が100万人未満の都道府県のうち、人口が最も少ないのは（　）である。", answer:"鳥取県", accept:["鳥取県","鳥取"], explain:"人口が100万人未満の都道府県のうち、鳥取県が最も人口が少なくなっています。"},
+  {pillar:2, q:"京浜工業地帯と阪神工業地帯のうち、工業別生産額の合計が多いのは（　）工業地帯である。", answer:"阪神", accept:["阪神","阪神工業地帯"], explain:"工業別生産額の合計は、京浜工業地帯が25兆円、阪神工業地帯が35兆円で、阪神工業地帯の方が多くなっています。"},
+  // pillar 3
+  {pillar:3, q:"統計資料の入試問題で、大阪港の貨物輸入量が最も多かった年は（　）年である。", answer:"2011", accept:["2011","2011年"], explain:"大阪港の貨物輸入量が最も多かった年は2011年です。"},
+  {pillar:3, q:"沖縄県で第三次産業人口割合が高い理由として挙げられる仕事は、ホテルやバスなど（　）に関連する仕事である。", answer:"観光客", accept:["観光客","観光"], explain:"沖縄県ではホテルやバスなど、観光客に関連する仕事に就いている人の割合が高くなっています。"},
+  {pillar:3, q:"小売業の販売額は、一般に（　）が多いほど多くなる傾向がある。", answer:"人口", accept:["人口"], explain:"小売業の販売額は、人口が多いと多くなる傾向があります。"},
+  {pillar:3, q:"日本における外国人入国者の割合を福岡と比べたとき、福岡で最も割合が高い国は（　）である。", answer:"韓国", accept:["韓国"], explain:"福岡における外国人入国者は、韓国からの割合が最も高く62%をしめています。"},
+  // pillar 4
+  {pillar:4, q:"地域別の農業生産額のうち、畜産がさかんな2つの地域は、北海道ともう1つは（　）地方である。", answer:"九州", accept:["九州","九州地方"], explain:"北海道と九州地方では、とくに畜産がさかんであることがわかります。"},
+  {pillar:4, q:"地域別の農業生産額のうち、稲作（米）がさかんで単作地帯となっている地域は（　）地方である。", answer:"北陸", accept:["北陸","北陸地方"], explain:"米は単作地帯となっている北陸地方でとくにさかんに生産されています。"},
+  {pillar:4, q:"都道府県別の工業生産額のうち、豊田市を中心に自動車工業がとくにさかんな県は（　）県である。", answer:"愛知", accept:["愛知","愛知県"], explain:"愛知県は、豊田市を中心に自動車工業がとくにさかんです。"},
+  {pillar:4, q:"都道府県別の工業生産額のうち、諏訪湖周辺などで電子工業がさかんな県は（　）県である。", answer:"長野", accept:["長野","長野県"], explain:"長野県は、諏訪湖周辺などで、電子工業がさかんです。"}
+];
+
+const kihonFinalRaw = [
+  {pillar:1, q:"統計資料の読み方について、正しいものはどれですか。",
+    choices:["表題を読み、何についての統計資料かをまず確認する","統計資料はいつの資料でも同じ意味を持つので確認は不要である","折れ線グラフは1時点の割合を見るのに適している","割合と実際の数値はつねに同じ結論になる"],
+    answer:0, explain:"表やグラフの表題を読んで、まず、何についての統計資料であるかを確認しましょう。"},
+  {pillar:2, q:"統計資料を使った作業について、正しいものはどれですか。",
+    choices:["人口の多い都道府県で最も人口が多いのは東京都である","人口が100万人未満の都道府県の中で秋田県が最も人口が少ない","阪神工業地帯より京浜工業地帯の方が生産額の合計が多い","人口が100万人未満の都道府県は日本に1つしかない"],
+    answer:0, explain:"人口の多い都道府県の表では、東京都が1409万人で最も人口が多くなっています。"},
+  {pillar:3, q:"統計資料の入試問題について、正しいものはどれですか。",
+    choices:["沖縄県は観光関連の仕事の割合が高く第三次産業人口割合が80%以上である","日本における外国人入国者の割合は福岡よりも韓国の割合が高い","北海道より秋田県の方が人口が多いため小売業販売額も多い","アメリカからの入国者の割合は中国よりも高い"],
+    answer:0, explain:"沖縄県ではホテルやバスなど、観光客に関連する仕事に就いている人の割合が高く、東京都とともに第三次産業人口割合が80%以上となっています。"},
+  {pillar:4, q:"さまざまな統計資料について、正しいものはどれですか。",
+    choices:["北海道と九州地方は畜産がさかんな地域である","北陸地方は米の生産額の割合が最も低い地域である","愛知県の工業生産額は輸送用機械の割合が最も低い","長野県では自動車工業が工業の中心である"],
+    answer:0, explain:"北海道と九州地方では、とくに畜産がさかんであることがわかります。"}
+];
+
+/* ---------- 第2段階：黒太字テスト（kuroji） ---------- */
+
+const kurojiBlocks = [
+{ pillar:1, sub:"2-1｜①統計資料を読みとってみよう！の黒太字", items:[
+  {q:"「発電のエネルギー源の割合」と「エネルギー供給の割合」のグラフで共通して示されている項目は？", choices:["水力","太陽光","原子力のみ","天然ガスのみ"], answer:0, explain:"次のI・IIのグラフには、どちらにも「水力」の割合が示されています。"},
+  {q:"火力発電の燃料としてあてはまるものは？", choices:["天然ガスや石炭・石油","水力のみ","原子力のみ","風力のみ"], answer:0, explain:"火力発電の燃料は、天然ガスや石炭・石油などです。"},
+  {q:"統計資料の数字の意味を確認するうえで大切な視点は、割合（％）か何かを見分けることか？", choices:["量や金額などの実際の数値","色や形","作成者の意図","グラフの大きさ"], answer:0, explain:"割合（％）なのか、量や金額などの実際の数値なのかなど、数字の意味を確認することが大切です。"},
+  {q:"折れ線グラフの大きな変化には、必ず何がある？", choices:["理由","誤り","例外","偶然"], answer:0, explain:"折れ線グラフは、長い間の変化がわかりやすいグラフです。大きな変化には、必ず理由があります。"},
+  {q:"1970年代に遠洋漁業の漁獲量が減少した理由の1つは？", choices:["石油危機による燃料代の上昇","冷害の発生","台風の増加","貿易摩擦"], answer:0, explain:"1970年代には、石油危機が起こり、漁船の燃料代が上がりました。"},
+  {q:"1970年代に遠洋漁業の漁獲量が減少したもう1つの理由は？", choices:["各国が200カイリ水域を設定したため","日本の漁船が減少したため","漁業技術が退化したため","魚が絶滅したため"], answer:0, explain:"各国が200カイリ水域を設定したため、日本の漁船の漁場がせばめられました。"},
+  {q:"1990年ごろに沖合漁業などの漁獲量に影響した、アメリカの政策は？", choices:["自国の水域で他国の漁船がさけなどをとることを禁止した","漁業への補助金を廃止した","漁船の入港を禁止した","関税を大幅に引き上げた"], answer:0, explain:"1990年ごろには、アメリカが規制を強め、自国の水域で他国の漁船がさけなどをとることを禁止しました。"},
+  {q:"化学工業の割合（％）は京葉工業地域の方が高いが、実際の生産額（円）が多いのはどちらの工業地域？", choices:["瀬戸内工業地域","京葉工業地域","どちらも同じ","比較できない"], answer:0, explain:"化学工業の割合をくらべると京葉工業地域の方が大きいですが、実際の化学工業の生産額（円）では、瀬戸内工業地域の方が多いのです。"},
+  {q:"統計資料で大きな数字と小さな数字に着目すると、何が見えてくる？", choices:["何の数値を表しているか","グラフの色使い","作成した年代の天気","調査した人の名前"], answer:0, explain:"大きな数字と小さな数字に着目すると、何の数値を表しているかが見えてきます。"},
+  {q:"内陸の県にまったくない統計データの例は？", choices:["海面漁獲量","米の生産量","人口","工業生産額"], answer:0, explain:"内陸の県の海面漁獲量は、まったくない（0）という特殊な数値パターンになります。"}
+]},
+{ pillar:2, sub:"2-2｜②統計資料を使って作業をしてみよう！の黒太字", items:[
+  {q:"人口の多い都道府県のうち、人口600万人以上の都道府県で東京都に次いで多いのは？", choices:["神奈川県","大阪府","愛知県","埼玉県"], answer:0, explain:"神奈川県は923万人で、東京都に次いで人口が多い都道府県です。"},
+  {q:"人口の多い都道府県のうち、人口600万人以上で3番目に多いのは？", choices:["大阪府","愛知県","埼玉県","千葉県"], answer:0, explain:"大阪府は876万人で、東京都・神奈川県に次いで人口が多い都道府県です。"},
+  {q:"人口が100万人未満の都道府県のうち、最も人口が少ないのは？", choices:["鳥取県","島根県","高知県","徳島県"], answer:0, explain:"鳥取県は54万人で、都道府県の中で最も人口が少なくなっています。"},
+  {q:"人口が100万人未満の都道府県のうち、人口80万人未満の県は鳥取県・島根県・高知県・徳島県ともう1つは？", choices:["福井県","佐賀県","山梨県","和歌山県"], answer:0, explain:"福井県は74万人で、人口80万人未満の都道府県の1つです。"},
+  {q:"京浜工業地帯と阪神工業地帯のうち、生産額の合計が多いのは？", choices:["阪神工業地帯","京浜工業地帯","どちらも同じ","比較できない"], answer:0, explain:"工業別生産額の合計は、京浜工業地帯が25兆円、阪神工業地帯が35兆円です。"},
+  {q:"京浜工業地帯・阪神工業地帯のうち、機械工業の生産額が多いのは？", choices:["阪神工業地帯","京浜工業地帯","どちらも同じ","比較できない"], answer:0, explain:"機械工業の生産額は、京浜工業地帯が11兆円、阪神工業地帯が14兆円です。"},
+  {q:"京浜工業地帯・阪神工業地帯で共通して最も生産額が大きい工業は？", choices:["機械","金属","化学","食料品"], answer:0, explain:"どちらの工業地帯も、機械工業の生産額が最も大きくなっています。"},
+  {q:"阪神工業地帯の生産額合計は約何兆円？", choices:["35兆円","25兆円","45兆円","15兆円"], answer:0, explain:"阪神工業地帯の工業別生産額の合計は35兆円です。"}
+]},
+{ pillar:3, sub:"2-3｜③統計資料の入試問題を解いてみよう！の黒太字", items:[
+  {q:"大阪港の貨物輸入量が最も多かった年は？", choices:["2011年","2015年","2018年","2022年"], answer:0, explain:"大阪港の貨物輸入量が最も多かった年は2011年です。"},
+  {q:"大阪港の貨物輸入量のグラフで、2015年の輸入量はおよそ何万トン？", choices:["2500万トン","1000万トン","3000万トン","500万トン"], answer:0, explain:"2015年の輸入量（X）は、ほぼ2500万トンであることがわかります。"},
+  {q:"沖縄県で第三次産業人口割合が高い理由は？", choices:["ホテルやバスなど観光客に関連する仕事に就いている人の割合が高いため","農業がさかんなため","工業が発達しているため","漁業がさかんなため"], answer:0, explain:"沖縄県ではホテルやバスなど、観光客に関連する仕事に就いている人の割合が高くなっています。"},
+  {q:"小売業の販売額が多くなる一般的な傾向は？", choices:["人口が多いほど多くなる","面積が広いほど多くなる","気温が高いほど多くなる","海に面しているほど多くなる"], answer:0, explain:"小売業の販売額は、人口が多いと多くなる傾向があります。"},
+  {q:"北海道と秋田県のうち、人口が多いのは？", choices:["北海道","秋田県","同じくらい","データからは不明"], answer:0, explain:"北海道と秋田県では、北海道の人口の方が多くなっています。"},
+  {q:"日本における外国人入国者の割合で、最も高い国は？", choices:["韓国","台湾","中国","アメリカ"], answer:0, explain:"日本における外国人入国者の割合は、韓国が28%で最も高くなっています。"},
+  {q:"福岡における外国人入国者の割合で、最も高い国は？", choices:["韓国","台湾","中国","アメリカ"], answer:0, explain:"福岡における外国人入国者は、韓国からの割合が62%と最も高くなっています。"},
+  {q:"福岡における外国人入国者の割合で、2番目に高い国・地域は？", choices:["台湾","香港","中国","アメリカ"], answer:0, explain:"福岡における外国人入国者は、韓国に次いで台湾（12%）の割合が高くなっています。"},
+  {q:"日本における外国人入国者のうち、アメリカからの割合と中国からの割合を比べると？", choices:["中国の方が高い","アメリカの方が高い","同じ割合である","データからは比較できない"], answer:0, explain:"アメリカからの入国者は8%で、中国からは10%をしめており、中国の方が高くなっています。"},
+  {q:"統計資料と選択肢の文を照合するとき、とくに注意すべき点は？", choices:["「その他」の内訳はグラフからはわからない","グラフの色は必ず同じ意味を持つ","割合の合計は必ず100%を超える","円グラフには表題が不要である"], answer:0, explain:"どちらのグラフにも「その他」があるので、それぞれ何か国から入国しているのかはグラフだけではわかりません。"}
+]},
+{ pillar:4, sub:"2-4｜④さまざまな統計資料を見てみよう！の黒太字", items:[
+  {q:"地域別の農業生産額で、畜産がさかんな2つの地域は北海道ともう1つは？", choices:["九州地方","東北地方","関東地方","四国地方"], answer:0, explain:"北海道と九州地方では、とくに畜産がさかんであることがわかります。"},
+  {q:"地域別の農業生産額で、近郊農業が行われ野菜の生産がさかんな地域は？", choices:["関東地方","北陸地方","九州地方","東北地方"], answer:0, explain:"野菜は、近郊農業が行われている関東地方など大消費地の近くで割合が高くなっています。"},
+  {q:"地域別の農業生産額で、促成栽培が行われ野菜の割合が高い地域は？", choices:["四国地方","北陸地方","東北地方","中国地方"], answer:0, explain:"促成栽培が行われている四国地方で野菜の割合が高くなっています。"},
+  {q:"地域別の農業生産額で、米の単作地帯となっている地域は？", choices:["北陸地方","関東地方","四国地方","九州地方"], answer:0, explain:"米は単作地帯となっている北陸地方でとくにさかんに生産されています。"},
+  {q:"地域別の農業生産額（2021年）が最も多い地域は？", choices:["九州地方","関東地方","北海道","東北地方"], answer:0, explain:"九州地方は18827億円と、地域別の農業生産額の中で最も多くなっています。"},
+  {q:"都道府県別の工業生産額で、豊田市を中心に自動車工業がとくにさかんな県は？", choices:["愛知県","静岡県","群馬県","神奈川県"], answer:0, explain:"愛知県は、豊田市を中心に自動車工業がとくにさかんです。"},
+  {q:"都道府県別の工業生産額で、市原市に石油化学コンビナートがある県は？", choices:["千葉県","神奈川県","埼玉県","東京都"], answer:0, explain:"千葉県は、市原市に石油化学コンビナートがあります。"},
+  {q:"都道府県別の工業生産額で、太田市を中心に自動車工業がさかんな県は？", choices:["群馬県","栃木県","埼玉県","茨城県"], answer:0, explain:"群馬県は、太田市を中心に自動車工業がさかんです。"},
+  {q:"都道府県別の工業生産額で、諏訪湖周辺などで電子工業がさかんな県は？", choices:["長野県","山梨県","岐阜県","新潟県"], answer:0, explain:"長野県は、諏訪湖周辺などで、電子工業がさかんです。"},
+  {q:"都道府県別の工業生産額で、情報が集まる首都として印刷業がさかんな都は？", choices:["東京都","大阪府","愛知県","神奈川県"], answer:0, explain:"東京都は、情報が集まる首都で印刷業がさかんです。"},
+  {q:"都道府県別の工業生産額で、地元の農水産物を使った食料品工業がさかんな道は？", choices:["北海道","岩手県","青森県","秋田県"], answer:0, explain:"北海道は、地元の農水産物を使った食料品工業がさかんです。"},
+  {q:"日本の工業生産額の割合（2021年）で最も高い工業は？", choices:["機械","金属","化学","食料品"], answer:0, explain:"日本の工業生産額の割合は機械44.5%が最も高くなっています。"}
+]}
+];
+
+/* ---------- 第3段階：ひとくちメモテスト（mame） ---------- */
+
+const mameQuizRaw = [
+  {pillar:3, q:"国勢調査は何年に一度実施される？", choices:["5年","1年","10年","3年"], answer:0, explain:"国勢調査は5年に一度実施されます。"},
+  {pillar:3, q:"国勢調査は、日本に住んでいる誰を対象に行われる？", choices:["すべての人（外国人をふくむ）","日本国籍を持つ人のみ","成人のみ","納税者のみ"], answer:0, explain:"国勢調査の対象は、日本に住んでいるすべての人です。そのため、外国人もふくまれます。"},
+  {pillar:3, q:"国勢調査を中心になって行う国の役所は？", choices:["総務省","国土交通省","経済産業省","法務省"], answer:0, explain:"この調査は、総務省という国の役所が中心になって全国一斉に行われます。"},
+  {pillar:3, q:"国勢調査が始まったのは何年？", choices:["1920年","1900年","1945年","1950年"], answer:0, explain:"1920年に始まった国勢調査は、2020年の調査で100周年をむかえました。"},
+  {pillar:4, q:"日本に住む外国人（2023年）で最も多い国籍は？", choices:["中国","ベトナム","韓国","フィリピン"], answer:0, explain:"最も多いのは中国の人で、全体のおよそ4分の1をしめています。"},
+  {pillar:4, q:"日本に住む外国人のうち、日系人が多くをしめる国籍は？", choices:["ブラジル","ベトナム","フィリピン","ネパール"], answer:0, explain:"5位のブラジル人の多くは日系人です。愛知県豊田市などの自動車の組立工場などで働いている人々とその家族が多くふくまれています。"},
+  {pillar:4, q:"2000年と比べて2023年に割合が大きく増えた国籍は？", choices:["ベトナム","韓国・朝鮮","中国","ブラジル"], answer:0, explain:"2000年にはベトナムはわずか1.0%でしたが、2023年には16.6%と大きく増えています。"}
+];
+
+/* ---------- 第4段階：気をつけたいポイント（sanko／読みもの・採点なし） ---------- */
+
+const sankoNotes = [
+  {
+    title:"国勢調査って、何を調べているの？",
+    body:`5年に一度実施される国勢調査では、どんな人を対象に、どのようなことが調べられているのでしょうか。国勢調査の対象は、日本に住んでいるすべての人です。そのため、外国人もふくまれます。調査は世帯ごとに行われ、調査票に氏名や性別・生年月、就いている仕事の内容や勤務地などを記入します。<br><br>
+この調査は、総務省という国の役所が中心になって全国一斉に行われます。一部の人のみに行う方式ではない全数調査です。調査の目的は人口の構成や産業のようすなどをはっきりさせることで、調査の結果は国が政策を決定していくときの基本的な資料となります。1920年に始まった国勢調査は、2020年の調査で100周年をむかえました。`,
+    src:"予習シリーズ5年上 第19回 Q&A"
+  },
+  {
+    title:"日本に住む外国人",
+    body:`日本には340万人ほどの外国人が暮らしています。最も多いのは中国の人で、全体のおよそ4分の1をしめています。2位のベトナムと4位のフィリピンは、日本でさまざまな仕事を学ぶ技能実習生として暮らしている人が多くをしめています。<br><br>
+3位の韓国は、戦前から日本で暮らしている人やその子孫の人たちで、大阪府や東京都でとくに多くなっています。5位のブラジル人の多くは日系人です。愛知県豊田市・群馬県太田市・静岡県浜松市などの自動車の組立工場などで働いている人々とその家族が多くふくまれています。日系人とは外国に移住した日本人とその子孫で、日本で働くことが認められています。`,
+    src:"予習シリーズ5年上 第19回 コラム"
+  },
+  {
+    title:"「大きな数字、小さな数字」の見抜き方",
+    body:`統計資料の表で、北海道・栃木県・東京都・愛知県・沖縄県のいずれかを示すA〜Eの数値を見比べると、東京都は人口（1409万人）が飛びぬけて大きく、愛知県はキャベツの生産量と工業生産額が大きく、北海道は米の生産量と海面漁獲量が大きく、沖縄県と栃木県は海面漁獲量が少ない（栃木県はまったくない＝内陸県）という特徴が見えてきます。<br><br>
+このように、大きな数字・小さな数字に着目することで、それぞれの数値が何を表しているかが見抜けるようになります。`,
+    src:"予習シリーズ5年上 第19回 実践（大きな数字、小さな数字）"
+  },
+  {
+    title:"割合と実際の数値のちがい",
+    body:`瀬戸内工業地域と京葉工業地域の工業ごとの生産額の割合（％）を比べると、化学工業の割合は京葉工業地域の方が大きく見えます（39.9%対24.6%）。しかし、実際の化学工業の生産額（円）で比べると、瀬戸内工業地域の方が多いのです（約8兆円対約5兆円）。<br><br>
+これは、瀬戸内工業地域の生産額の合計（約33兆円）が、京葉工業地域の合計（約13兆円）よりずっと大きいためです。割合だけでなく、実際の数値も確認することの大切さがわかる例です。`,
+    src:"予習シリーズ5年上 第19回 実践（数字の意味を確認しよう）"
+  },
+  {
+    title:"割合が高い＝実数が多いとは限らない",
+    body:`化学工業の割合は京葉工業地域の方が高いのに、実際の生産額では瀬戸内工業地域の方が多いという例のように、「割合（％）が高い＝実際の数値（量・金額）も多い」とは限りません。統計資料を読むときは、割合と実数の両方を確認するくせをつけましょう。`,
+    src:"入試でまちがえやすいポイント（一般知識）"
+  },
+  {
+    title:"「その他」を含むグラフ同士は単純比較できない",
+    body:`円グラフに「その他」の項目がある場合、その内訳（どの国・どの品目が含まれているか）はグラフだけではわかりません。「Aのグラフの方が多くの項目から成り立っている」といった判断は、「その他」の中身が不明である以上、慎重に行う必要があります。`,
+    src:"入試でまちがえやすいポイント（一般知識）"
+  },
+  {
+    title:"統計資料は「いつのものか」を必ず確認する",
+    body:`日本の輸出品目の割合は、せんい工業中心の時代→鉄鋼などの金属工業中心の時代→自動車や電子部品などの機械工業中心の時代、というように大きく変化してきました。同じような円グラフでも、年代が異なれば意味も大きく変わるため、必ず「いつの資料か」を確認する習慣をつけましょう。`,
+    src:"入試でまちがえやすいポイント（一般知識）"
+  },
+  {
+    title:"内陸の県の海面漁獲量はゼロ",
+    body:`海に面していない内陸の県（栃木県など）は、海面漁獲量が「まったくない（0）」という特殊な数値になります。統計表に「―」や「0」がある場合、それが何を意味するかを考えることで、その項目がどの都道府県を示しているかを推理する手がかりになります。`,
+    src:"入試でまちがえやすいポイント（一般知識）"
+  }
+];
+
+/* ===================== 共通ビルド関数 ===================== */
+
+function shuffleArr(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+function finalize(q){
+  const correctText = q.choices[q.answer];
+  const order = shuffleArr(q.choices.map((c,i)=>i));
+  const newChoices = order.map(i=>q.choices[i]);
+  const newAnswer = newChoices.indexOf(correctText);
+  const out = Object.assign({}, q, {choices:newChoices, answer:newAnswer});
+  return out;
+}
+
+function normalizeAnswer(str){
+  if(str===undefined || str===null) return "";
+  let s = String(str).trim();
+  s = s.replace(/[０-９]/g, ch => String.fromCharCode(ch.charCodeAt(0)-0xFEE0));
+  s = s.replace(/\s+/g,"");
+  return s;
+}
+
+function checkFillAnswer(item, userInput){
+  const norm = normalizeAnswer(userInput);
+  if(norm==="") return false;
+  const candidates = [item.answer].concat(item.accept||[]);
+  return candidates.some(c => normalizeAnswer(c)===norm);
+}
+
+/* kihon の穴埋め item 生成 */
+function buildKihonFillItems(){
+  return kihonFillRaw.map((r,idx)=>({
+    type:"fill",
+    id:"kihonFill_"+idx,
+    q:r.q,
+    answer:r.answer,
+    accept:r.accept,
+    explain:r.explain,
+    lead:PILLARS[r.pillar].label,
+    sub:PILLARS[r.pillar].full,
+    pillar:r.pillar
+  }));
+}
+
+function buildKihonFinalItems(){
+  return kihonFinalRaw.map((r,idx)=>{
+    const fq = finalize({q:r.q, choices:r.choices, answer:r.answer, explain:r.explain});
+    return Object.assign({type:"choice", id:"kihonFinal_"+idx, pillar:r.pillar}, fq);
+  });
+}
+
+function buildKihonItems(){
+  const overview = kihonOverviewScreens.map((s,idx)=>Object.assign({id:"kihonOv_"+idx}, s));
+  const fills = shuffleArrKeepBlocks();
+  const finals = shuffleArr(buildKihonFinalItems());
+  return overview.concat(fills, finals);
+}
+// 穴埋めはブロック（pillar）順は固定、ブロック内はシャッフル
+function shuffleArrKeepBlocks(){
+  const byPillar = {};
+  kihonFillRaw.forEach((r,idx)=>{
+    if(!byPillar[r.pillar]) byPillar[r.pillar]=[];
+    byPillar[r.pillar].push(idx);
+  });
+  let out = [];
+  [1,2,3,4].forEach(p=>{
+    const idxs = shuffleArr(byPillar[p]||[]);
+    idxs.forEach(idx=>{
+      const r = kihonFillRaw[idx];
+      out.push({
+        type:"fill", id:"kihonFill_"+idx, q:r.q, answer:r.answer, accept:r.accept,
+        explain:r.explain, lead:PILLARS[r.pillar].label, sub:PILLARS[r.pillar].full, pillar:r.pillar
+      });
+    });
+  });
+  return out;
+}
+
+/* kuroji item 生成：ブロック順固定、ブロック内シャッフル */
+function buildKurojiItems(){
+  let out = [];
+  kurojiBlocks.forEach((block,bi)=>{
+    const shuffledItems = shuffleArr(block.items);
+    shuffledItems.forEach((it,ii)=>{
+      const fq = finalize(it);
+      out.push(Object.assign({
+        type:"choice",
+        id:"kuroji_"+bi+"_"+ii,
+        pillar:block.pillar,
+        sub:block.sub
+      }, fq));
+    });
+  });
+  return out;
+}
+
+/* mame item 生成 */
+function buildMameItems(){
+  const shuffled = shuffleArr(mameQuizRaw);
+  return shuffled.map((r,idx)=>{
+    const fq = finalize(r);
+    return Object.assign({type:"choice", id:"mame_"+idx, pillar:r.pillar}, fq);
+  });
+}
+
+/* sanko item 生成（採点なし） */
+function buildSankoItems(){
+  return sankoNotes.map((n,idx)=>({
+    type:"info", id:"sanko_"+idx, title:n.title, body:n.body, src:n.src, wide:true
+  }));
+}
+
+const STAGES = [
+  {id:"kihon", name:"① 構造テスト", desc:"4本柱（読み方の基本・資料を使った作業・入試問題の考え方・さまざまな統計資料）の骨組みを確認。概要2画面＋穴埋め16問＋まとめ選択4問。", scored:true, ref:false, build:buildKihonItems},
+  {id:"kuroji", name:"② 黒太字テスト", desc:"統計資料の読み方のポイントと具体例を4択で確認します。", scored:true, ref:false, build:buildKurojiItems},
+  {id:"mame", name:"③ ひとくちメモテスト", desc:"国勢調査・日本に住む外国人など、教科書のコラムから出題します。", scored:true, ref:false, build:buildMameItems},
+  {id:"sanko", name:"④ 気をつけたいポイント", desc:"教科書コラム＋入試でまちがえやすい注意点の読みもの。採点はありません。", scored:false, ref:true, build:buildSankoItems}
+];
+
+/* ===================== 状態管理／localStorage ===================== */
+
+const STORAGE_KEY = "toukeishiryou_missed_v1";
+
+function loadMissedStore(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : {};
+  }catch(e){ return {}; }
+}
+function saveMissedStore(store){
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(store)); }catch(e){ /* 保存できない環境は無視 */ }
+}
+
+const state = {
+  screen:"home",
+  stageId:null,
+  isRetry:false,
+  items:[],
+  currentIndex:0,
+  scoreTotal:0,
+  scoreCorrect:0,
+  answerLog:[],
+  results:{},
+  missedStore: loadMissedStore(),
+  answered:false,
+  userInput:""
+};
+
+function startStage(stageId){
+  const stage = STAGES.find(s=>s.id===stageId);
+  state.stageId = stageId;
+  state.isRetry = false;
+  state.items = stage.build();
+  state.currentIndex = 0;
+  state.scoreTotal = state.items.filter(i=>i.type!=="info").length;
+  state.scoreCorrect = 0;
+  state.answerLog = [];
+  state.answered = false;
+  state.userInput = "";
+  state.screen = "play";
+  render();
+}
+
+function startRetry(stageId){
+  const missed = state.missedStore[stageId] || {};
+  const items = Object.values(missed);
+  if(items.length===0) return;
+  state.stageId = stageId;
+  state.isRetry = true;
+  state.items = shuffleArr(items);
+  state.currentIndex = 0;
+  state.scoreTotal = state.items.length;
+  state.scoreCorrect = 0;
+  state.answerLog = [];
+  state.answered = false;
+  state.userInput = "";
+  state.screen = "play";
+  render();
+}
+
+function currentItem(){ return state.items[state.currentIndex]; }
+
+function submitChoice(idx){
+  if(state.answered) return;
+  const item = currentItem();
+  const correct = idx === item.answer;
+  state.answered = true;
+  state.userChoiceIdx = idx;
+  if(correct) state.scoreCorrect++;
+  state.answerLog.push({item, wasCorrect:correct});
+}
+
+function submitFill(){
+  if(state.answered) return;
+  const item = currentItem();
+  const correct = checkFillAnswer(item, state.userInput);
+  state.answered = true;
+  if(correct) state.scoreCorrect++;
+  state.answerLog.push({item, wasCorrect:correct});
+}
+
+function nextItem(){
+  state.answered = false;
+  state.userInput = "";
+  state.userChoiceIdx = null;
+  state.hintShown = false;
+  if(state.currentIndex < state.items.length-1){
+    state.currentIndex++;
+    render();
+  }else{
+    finishStage();
+  }
+}
+
+function finishStage(){
+  const stage = STAGES.find(s=>s.id===state.stageId);
+  state.results[state.stageId] = {
+    correct: state.scoreCorrect,
+    total: state.scoreTotal,
+    at: Date.now()
+  };
+  if(stage.scored){
+    const missed = state.missedStore[state.stageId] || {};
+    state.answerLog.forEach(log=>{
+      const key = log.item.q;
+      if(!log.wasCorrect){
+        missed[key] = log.item;
+      }else{
+        if(missed[key]) delete missed[key];
+      }
+    });
+    state.missedStore[state.stageId] = missed;
+    saveMissedStore(state.missedStore);
+  }
+  state.screen = "result";
+  render();
+}
+
+function backHome(){
+  state.screen = "home";
+  render();
+}
+
+/* ===================== レンダリング ===================== */
+
+const app = document.getElementById("app");
+
+function render(){
+  if(state.screen==="home") renderHome();
+  else if(state.screen==="play") renderPlay();
+  else if(state.screen==="result") renderResult();
+}
+
+function esc(s){
+  return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+
+function renderHome(){
+  let html = `
+    <div class="header">
+      <h1>統計資料の読み方テスト</h1>
+      <div class="sub">予習シリーズ5年上　第19回　統計資料の読み方</div>
+    </div>
+    <div class="content">
+  `;
+  const scoredStages = STAGES.filter(s=>s.scored);
+  const refStages = STAGES.filter(s=>!s.scored);
+
+  html += `<div class="home-title">確認テスト</div>`;
+  scoredStages.forEach(stage=>{
+    const res = state.results[stage.id];
+    const missedCount = Object.keys(state.missedStore[stage.id]||{}).length;
+    html += `<div class="stage-card" onclick="startStage('${stage.id}')">
+      <div class="stage-top">
+        <div class="stage-name">${esc(stage.name)}</div>
+        <div class="stage-badge">${res ? res.correct+"/"+res.total : "未挑戦"}</div>
+      </div>
+      <div class="stage-desc">${esc(stage.desc)}</div>
+      ${res ? `<div class="progress-bar"><div class="progress-fill" style="width:${Math.round(res.correct/res.total*100)}%"></div></div>` : ""}
+      ${missedCount>0 ? `<div class="retry-btn" onclick="event.stopPropagation(); startRetry('${stage.id}')">🔁 苦手${missedCount}問を復習</div>` : ""}
+    </div>`;
+  });
+
+  html += `<div class="home-title">参考情報（読みもの）</div>`;
+  refStages.forEach(stage=>{
+    html += `<div class="stage-card ref" onclick="startStage('${stage.id}')">
+      <div class="stage-top">
+        <div class="stage-name">${esc(stage.name)}</div>
+        <div class="stage-badge">読みもの</div>
+      </div>
+      <div class="stage-desc">${esc(stage.desc)}</div>
+    </div>`;
+  });
+
+  html += `<div class="footer-note">単一HTMLファイル・localStorageに端末内で保存されます</div>`;
+  html += `</div>`;
+  app.innerHTML = html;
+}
+
+function renderPlay(){
+  const item = currentItem();
+  const stage = STAGES.find(s=>s.id===state.stageId);
+  const isInfo = item.type==="info";
+
+  let html = `
+    <div class="header">
+      <h1>${esc(stage.name)}${state.isRetry?"（復習）":""}</h1>
+      <div class="sub">${item.sub ? esc(item.sub) : esc(stage.desc)}</div>
+    </div>
+    <div class="content">
+      <div class="play-topbar">
+        <span>問題 ${state.currentIndex+1} / ${state.items.length}</span>
+        <span onclick="backHome()" style="text-decoration:underline; cursor:pointer;">中断してホームへ</span>
+      </div>
+  `;
+
+  if(isInfo){
+    html += `<div class="qcard info">
+      <div class="qtitle">${esc(item.title)}</div>
+      <div class="info-body ${item.wide?'wide':''}">${item.body}</div>
+      ${item.src ? `<div class="src-tag">出典：${esc(item.src)}</div>` : ""}
+      <button class="btn btn-ref" onclick="nextItem()">${state.currentIndex < state.items.length-1 ? "次へ" : "結果を見る"}</button>
+    </div>`;
+  } else if(item.type==="fill"){
+    html += `<div class="qcard">`;
+    if(item.lead) html += `<div class="lead-badge">${esc(item.lead)}</div>`;
+    html += `<div class="qtext">${esc(item.q)}</div>`;
+    const inputClass = state.answered ? (checkFillAnswer(item, state.userInput) ? "correct":"wrong") : "";
+    html += `<input type="text" id="fillInput" class="fill-input ${inputClass}" placeholder="答えを入力" value="${esc(state.userInput)}" ${state.answered?"disabled":""} onkeydown="if(event.key==='Enter'){document.getElementById('fillInput').value=this.value; state.userInput=this.value; submitFillUI();}">`;
+    if(!state.answered){
+      html += `<button class="btn btn-primary" onclick="submitFillUI()">こたえる</button>`;
+    }else{
+      const correct = checkFillAnswer(item, state.userInput);
+      html += `<div class="explain-box ${correct?'good':'bad'}">
+        <span class="mark-icon">${correct?"⭕":"❌"}</span><b>正解：${esc(item.answer)}</b><br>${item.explain||""}
+      </div>`;
+      html += `<button class="btn btn-primary" onclick="nextItem()">${state.currentIndex < state.items.length-1 ? "次の問題へ" : "結果を見る"}</button>`;
+    }
+    html += `</div>`;
+  } else if(item.type==="choice"){
+    html += `<div class="qcard">`;
+    if(item.pillar!==undefined && item.pillar!==null) html += `<div class="lead-badge">${esc(pillarBadge(item.pillar))}</div>`;
+    html += `<div class="qtext">${esc(item.q)}</div>`;
+    html += `<div class="choice-list">`;
+    item.choices.forEach((c,idx)=>{
+      let cls = "choice-btn";
+      if(state.answered){
+        if(idx===item.answer) cls += " correct";
+        else if(idx===state.userChoiceIdx) cls += " wrong";
+        else cls += " dim";
+      }
+      html += `<button class="${cls}" ${state.answered?"disabled":""} onclick="submitChoiceUI(${idx})">${esc(c)}</button>`;
+    });
+    html += `</div>`;
+    if(state.answered){
+      const correct = state.userChoiceIdx===item.answer;
+      html += `<div class="explain-box ${correct?'good':'bad'}">
+        <span class="mark-icon">${correct?"⭕":"❌"}</span>${item.explain||""}
+      </div>`;
+      html += `<button class="btn btn-primary" onclick="nextItem()">${state.currentIndex < state.items.length-1 ? "次の問題へ" : "結果を見る"}</button>`;
+    }
+    html += `</div>`;
+  }
+
+  html += `</div>`;
+  app.innerHTML = html;
+  if(item.type==="fill" && !state.answered){
+    const el = document.getElementById("fillInput");
+    if(el) el.focus();
+  }
+}
+
+function submitChoiceUI(idx){
+  submitChoice(idx);
+  renderPlay();
+}
+function submitFillUI(){
+  const el = document.getElementById("fillInput");
+  if(el) state.userInput = el.value;
+  submitFill();
+  renderPlay();
+}
+function toggleHint(){
+  state.hintShown = !state.hintShown;
+  renderPlay();
+}
+
+function renderResult(){
+  const stage = STAGES.find(s=>s.id===state.stageId);
+  const wrongItems = state.answerLog.filter(l=>!l.wasCorrect).map(l=>l.item);
+  const missedCount = Object.keys(state.missedStore[state.stageId]||{}).length;
+
+  let html = `
+    <div class="header">
+      <h1>結果</h1>
+      <div class="sub">${esc(stage.name)}${state.isRetry?"（復習）":""}</div>
+    </div>
+    <div class="content">
+      <div class="qcard result-box">
+        <div>できた問題</div>
+        <div class="result-score">${state.scoreCorrect} / ${state.scoreTotal}</div>
+        ${wrongItems.length>0 ? `<div class="missed-list">${wrongItems.map(it=>`<div class="missed-item">${esc(it.q)}</div>`).join("")}</div>` : `<div style="color:var(--good); font-weight:700;">全問正解です！</div>`}
+      </div>
+  `;
+  if(wrongItems.length>0){
+    html += `<button class="btn btn-primary" onclick="startRetry('${state.stageId}')">🔁 まちがえた問題だけ復習する（${wrongItems.length}問）</button>`;
+  } else if(missedCount>0){
+    html += `<button class="btn btn-primary" onclick="startRetry('${state.stageId}')">🔁 残っている苦手${missedCount}問を復習する</button>`;
+  }
+  html += `<button class="btn btn-outline" onclick="backHome()">ホームにもどる</button>`;
+  html += `</div>`;
+  app.innerHTML = html;
+}
+
+render();
+</script>
+</body>
+</html>
