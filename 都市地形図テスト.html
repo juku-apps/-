@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>日本のおもな都市・地形図テスト</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --accent:#3468a6;
+  --accent-light:#e8f0fa;
+  --ref:#7a5ea8;
+  --ref-light:#f1ecf8;
+  --good:#2f9e5b;
+  --good-light:#e6f6ec;
+  --bad:#d1453b;
+  --bad-light:#fbe9e8;
+  --ink:#22303f;
+  --sub:#5c6b7a;
+  --line:#dbe3ec;
+  --bg:#f5f7fa;
+  --card:#ffffff;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  font-family:"Zen Kaku Gothic New",sans-serif;
+  background:var(--bg);
+  color:var(--ink);
+  display:flex;
+  justify-content:center;
+}
+#app{
+  width:100%;
+  max-width:480px;
+  min-height:100vh;
+  background:var(--bg);
+  display:flex;
+  flex-direction:column;
+  position:relative;
+}
+.header{
+  padding:16px 18px 12px;
+  background:linear-gradient(135deg,var(--accent),#4d7dbf);
+  color:#fff;
+  position:sticky;
+  top:0;
+  z-index:5;
+}
+.header h1{
+  margin:0;
+  font-size:18px;
+  font-weight:900;
+  letter-spacing:.02em;
+}
+.header .sub{
+  margin-top:2px;
+  font-size:12px;
+  opacity:.9;
+}
+.content{
+  flex:1;
+  padding:14px 16px 90px;
+}
+.stage-card{
+  background:var(--card);
+  border-radius:14px;
+  box-shadow:0 2px 8px rgba(30,50,80,.08);
+  padding:16px;
+  margin-bottom:14px;
+  border:1px solid var(--line);
+  cursor:pointer;
+  transition:transform .1s;
+}
+.stage-card:active{transform:scale(.98);}
+.stage-card.ref{
+  border-color:var(--ref);
+  background:linear-gradient(180deg,#fff,var(--ref-light));
+}
+.stage-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+.stage-name{
+  font-size:16px;
+  font-weight:700;
+}
+.stage-badge{
+  font-size:11px;
+  background:var(--accent);
+  color:#fff;
+  padding:3px 8px;
+  border-radius:999px;
+  font-weight:700;
+}
+.stage-card.ref .stage-badge{background:var(--ref);}
+.stage-desc{
+  font-size:12.5px;
+  color:var(--sub);
+  margin-top:6px;
+  line-height:1.5;
+}
+.stage-meta{
+  display:flex;
+  gap:10px;
+  margin-top:10px;
+  font-size:12px;
+  color:var(--sub);
+}
+.retry-btn{
+  margin-top:10px;
+  display:inline-block;
+  background:var(--bad-light);
+  color:var(--bad);
+  border:1px solid var(--bad);
+  border-radius:8px;
+  padding:6px 10px;
+  font-size:12.5px;
+  font-weight:700;
+  cursor:pointer;
+}
+.progress-bar{
+  height:6px;
+  background:var(--line);
+  border-radius:99px;
+  overflow:hidden;
+  margin-top:8px;
+}
+.progress-fill{
+  height:100%;
+  background:var(--accent);
+  border-radius:99px;
+}
+.lead-badge{
+  display:inline-block;
+  background:var(--accent);
+  color:#fff;
+  font-size:12px;
+  font-weight:700;
+  padding:4px 10px;
+  border-radius:999px;
+  margin-bottom:10px;
+}
+.sub-badge{
+  display:inline-block;
+  background:#fff;
+  color:var(--accent);
+  border:1px solid var(--accent);
+  font-size:11px;
+  font-weight:700;
+  padding:2px 8px;
+  border-radius:999px;
+  margin-left:6px;
+}
+.play-topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-size:12.5px;
+  color:var(--sub);
+  margin-bottom:10px;
+}
+.qcard{
+  background:var(--card);
+  border-radius:14px;
+  padding:18px 16px;
+  box-shadow:0 2px 8px rgba(30,50,80,.08);
+  border:1px solid var(--line);
+}
+.qcard.info{
+  border-color:var(--ref);
+  background:linear-gradient(180deg,#fff,var(--ref-light));
+}
+.qtitle{
+  font-weight:900;
+  font-size:16px;
+  margin-bottom:8px;
+}
+.qtext{
+  font-size:15.5px;
+  line-height:1.7;
+  margin-bottom:14px;
+  white-space:pre-wrap;
+}
+.qtext.wide{font-size:14.5px;}
+.info-body{
+  font-size:14.5px;
+  line-height:1.85;
+}
+.info-body b{color:var(--accent);}
+.src-tag{
+  margin-top:14px;
+  font-size:11.5px;
+  color:var(--ref);
+  border-top:1px dashed var(--line);
+  padding-top:8px;
+}
+.choice-list{display:flex;flex-direction:column;gap:9px;}
+.choice-btn{
+  text-align:left;
+  padding:12px 14px;
+  border-radius:10px;
+  border:1.5px solid var(--line);
+  background:#fff;
+  font-size:14.5px;
+  font-family:inherit;
+  cursor:pointer;
+  line-height:1.5;
+}
+.choice-btn:active{background:var(--accent-light);}
+.choice-btn.correct{
+  border-color:var(--good);
+  background:var(--good-light);
+  font-weight:700;
+}
+.choice-btn.wrong{
+  border-color:var(--bad);
+  background:var(--bad-light);
+  font-weight:700;
+}
+.choice-btn.dim{opacity:.55;}
+.fill-input{
+  width:100%;
+  padding:12px 14px;
+  font-size:16px;
+  border-radius:10px;
+  border:1.5px solid var(--line);
+  font-family:inherit;
+  margin-bottom:10px;
+}
+.fill-input.correct{border-color:var(--good);background:var(--good-light);}
+.fill-input.wrong{border-color:var(--bad);background:var(--bad-light);}
+.btn{
+  width:100%;
+  padding:13px;
+  border-radius:10px;
+  border:none;
+  font-size:15px;
+  font-weight:700;
+  font-family:inherit;
+  cursor:pointer;
+  margin-top:6px;
+}
+.btn-primary{background:var(--accent);color:#fff;}
+.btn-ref{background:var(--ref);color:#fff;}
+.btn-outline{background:#fff;color:var(--accent);border:1.5px solid var(--accent);}
+.btn-outline.ref{color:var(--ref);border-color:var(--ref);}
+.result-box{
+  text-align:center;
+  padding:6px 0 18px;
+}
+.result-score{
+  font-size:40px;
+  font-weight:900;
+  color:var(--accent);
+  margin:6px 0;
+}
+.explain-box{
+  margin-top:14px;
+  background:var(--accent-light);
+  border-radius:10px;
+  padding:12px 14px;
+  font-size:13.5px;
+  line-height:1.7;
+}
+.explain-box.bad{background:var(--bad-light);}
+.explain-box.good{background:var(--good-light);}
+.hint-box{
+  margin-top:10px;
+  background:#fff8e6;
+  border:1px solid #e8cf8a;
+  border-radius:10px;
+  padding:10px 12px;
+  font-size:13px;
+  line-height:1.6;
+}
+.mark-icon{font-size:18px;margin-right:4px;vertical-align:-2px;}
+.missed-list{
+  text-align:left;
+  margin-top:16px;
+  font-size:13px;
+}
+.missed-item{
+  padding:8px 10px;
+  background:var(--bad-light);
+  border-radius:8px;
+  margin-bottom:6px;
+  color:#8a2f28;
+}
+.home-title{
+  font-size:13px;
+  font-weight:700;
+  color:var(--sub);
+  margin:18px 0 8px 2px;
+}
+.footer-note{
+  text-align:center;
+  font-size:11px;
+  color:var(--sub);
+  padding:10px 0 26px;
+}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+/* ===================== データ（予習シリーズ5年上 第18回 日本のおもな都市・地形図の読み方 より転記） ===================== */
+
+const PILLARS = {
+  0:{label:"都市データ確認", full:"都市データ確認（ひとくちメモ・コラムより）"},
+  1:{label:"①百万都市", full:"日本のおもな都市（1）……百万都市"},
+  2:{label:"②政令指定都市", full:"日本のおもな都市（2）……政令指定都市"},
+  3:{label:"③地形図の読み方", full:"地形図の読み方（方位・等高線・縮尺）"},
+  4:{label:"④地形図からわかること", full:"地形図からわかること（地図記号・道路の色など）"}
+};
+function pillarBadge(p){ return PILLARS[p] ? PILLARS[p].label : ""; }
+
+/* ---------- 第1段階：構造テスト（kihon） ---------- */
+
+const kihonOverviewScreens = [
+  {
+    type:"info",
+    title:"はじめに",
+    body:`第18回のテーマは「日本のおもな都市・地形図の読み方」です。<br>
+今回のポイントは大きく分けて<b>4つ</b>あります。<br><br>
+①日本の百万都市<br>
+②日本の政令指定都市<br>
+③地形図の読み方（方位・等高線・縮尺）<br>
+④地形図からわかること（地図記号・道路の色など）<br><br>
+今回は地域学習ではなく、都市についてのデータと、地図を読み解く技能がテーマです。まずは4本柱の全体像をつかんでから、それぞれの中身を確認していきましょう。`
+  },
+  {
+    type:"info",
+    title:"全体像：4本柱",
+    wide:true,
+    body:`<b>①百万都市</b>：人口100万人以上の12都市。東京・横浜・大阪・名古屋・札幌・福岡・神戸・川崎・京都・さいたま・広島・仙台。東京(23区)は政令指定都市ではない点に注意。<br><br>
+<b>②政令指定都市</b>：人口が百万人に満たない政令指定都市9市（千葉・北九州・堺・浜松・新潟・熊本・相模原・岡山・静岡）＋百万都市に含まれる政令指定都市。<br><br>
+<b>③地形図の読み方</b>：方位（ふつう上が北）、等高線（間隔がせまいほど急、広いほどゆるやか。尾根と谷）、縮尺（25000分の1では1kmが4cm、50000分の1では2cm）。<br><br>
+<b>④地形図からわかること</b>：地図記号（建物・土地利用）、道路の色（高速道路＝緑、国道＝赤、都道府県道＝黄）、まっすぐな海岸線、都府県の境の表し方。`
+  }
+];
+
+const kihonFillRaw = [
+  // pillar 1
+  {pillar:1, q:"都市としての東京は、千代田区・港区などの（　）区全体をさす。", answer:"23", accept:["23","二十三"], explain:"都市としての東京は、千代田区・港区などの23区全体をさします。"},
+  {pillar:1, q:"1859年に貿易を始めた港を中心に発展した、神奈川県の都市は（　）である。", answer:"横浜市", accept:["横浜市","横浜"], explain:"横浜市は、1859年に貿易を始めた横浜港を中心に発展しました。"},
+  {pillar:1, q:"昔は全国の産物が集まる商業のまちで「天下の台所」とよばれた都市は（　）である。", answer:"大阪市", accept:["大阪市","大阪"], explain:"大阪市は、昔は全国の産物が集まる商業のまちで、天下の台所とよばれました。"},
+  {pillar:1, q:"東京と京都の中間に位置し、「中京」ともよばれる愛知県の城下町は（　）である。", answer:"名古屋市", accept:["名古屋市","名古屋"], explain:"名古屋市は、東京と京都の中間に位置しているため、中京ともよばれる城下町です。"},
+  {pillar:1, q:"1869年に開拓使が置かれてから発展した、道路が碁盤の目のように整った北海道の都市は（　）である。", answer:"札幌市", accept:["札幌市","札幌"], explain:"札幌市は、1869年に開拓使が置かれてから発展した計画都市です。"},
+  // pillar 2
+  {pillar:2, q:"神奈川県で最も人口が多く、京浜工業地帯の工業都市である政令指定都市は（　）である。", answer:"川崎市", accept:["川崎市","川崎"], explain:"川崎市は、京浜工業地帯の工業都市で、海沿いの埋め立て地に石油化学コンビナートがあります。"},
+  {pillar:2, q:"信濃川の河口に位置する、本州の日本海側でただ1つの政令指定都市は（　）である。", answer:"新潟市", accept:["新潟市","新潟"], explain:"新潟市は、信濃川の河口に位置する、本州の日本海側でただ1つの政令指定都市です。"},
+  {pillar:2, q:"2012年に最も新しい政令指定都市となった、熊本城を中心に発達した都市は（　）である。", answer:"熊本市", accept:["熊本市","熊本"], explain:"熊本市は、2012年、最も新しい政令指定都市となりました。"},
+  {pillar:2, q:"大阪湾の埋め立て地に石油化学コンビナートがあり、世界遺産の大仙古墳がある都市は（　）である。", answer:"堺市", accept:["堺市","堺"], explain:"堺市は、大阪湾の埋め立て地に石油化学コンビナートがあり、世界遺産に登録された大仙古墳があります。"},
+  {pillar:2, q:"浜名湖に面し、楽器やオートバイの製造で知られる静岡県の都市は（　）である。", answer:"浜松市", accept:["浜松市","浜松"], explain:"浜松市は、静岡県で最も人口の多い都市で、浜名湖に面しています。"},
+  // pillar 3
+  {pillar:3, q:"地形図は、ふつう上が（　）を示す。", answer:"北", accept:["北"], explain:"地形図は、ふつう上が北を示します。"},
+  {pillar:3, q:"海面からの高さが等しい地点を結んだ線を（　）という。", answer:"等高線", accept:["等高線"], explain:"等高線は、海面からの高さが等しい地点を結んだ線です。"},
+  {pillar:3, q:"周囲よりも高くはり出したところを（　）という。", answer:"尾根", accept:["尾根"], explain:"周囲よりも高くはり出したところを尾根といいます。"},
+  {pillar:3, q:"周囲よりも低いところを（　）という。", answer:"谷", accept:["谷"], explain:"周囲よりも低いところを谷といいます。"},
+  {pillar:3, q:"実際の距離を縮めた割合を（　）という。", answer:"縮尺", accept:["縮尺"], explain:"縮尺は、実際の距離を縮めた割合のことです。"},
+  // pillar 4
+  {pillar:4, q:"高速道路を表す地形図の道路の色は（　）色である。", answer:"緑", accept:["緑","緑色"], explain:"緑色が高速道路を表します。"},
+  {pillar:4, q:"国道を表す地形図の道路の色は（　）色である。", answer:"赤", accept:["赤","赤色"], explain:"赤色が国道を表します。"},
+  {pillar:4, q:"都道府県道を表す地形図の道路の色は（　）色である。", answer:"黄", accept:["黄","黄色"], explain:"黄色が都道府県道を表します。"},
+  {pillar:4, q:"港の埠頭や防波堤の海岸線がまっすぐになっている理由は、船が（　）しやすいようにするためである。", answer:"接岸", accept:["接岸"], explain:"港の埠頭は船が接岸しやすいようにするために、直線になっています。"},
+  {pillar:4, q:"国土を測量して地図をつくり、災害を防ぐための情報を集める国の機関を（　）という。", answer:"国土地理院", accept:["国土地理院"], explain:"国土地理院は、国土を測量して地図をつくり、災害を防ぐために国土の情報を集める機関です。"}
+];
+
+const kihonFinalRaw = [
+  {pillar:1, q:"日本の百万都市について、正しいものはどれですか。",
+    choices:["大阪市は淀川の河口にあり、天下の台所とよばれた","札幌市は貿易港を中心に発展した都市である","名古屋市は九州地方最大の都市である","福岡市は開拓使が置かれてから発展した計画都市である"],
+    answer:0, explain:"大阪市は、西日本の中心都市で、淀川の河口にあります。昔は天下の台所とよばれました。"},
+  {pillar:2, q:"政令指定都市について、正しいものはどれですか。",
+    choices:["東京（23区）は政令指定都市ではない","すべての政令指定都市の人口は百万人をこえている","新潟市は本州の太平洋側にある政令指定都市である","堺市は神奈川県にある"],
+    answer:0, explain:"東京（東京23区）は政令指定都市ではありません。そのほかの百万都市はすべて政令指定都市になっています。"},
+  {pillar:3, q:"地形図の読み方について、正しいものはどれですか。",
+    choices:["等高線の間隔がせまいほど土地のかたむきが急である","等高線の間隔が広いほど土地のかたむきが急である","尾根は周囲よりも低いところである","縮尺25000分の1の地形図では1kmが2cmで表される"],
+    answer:0, explain:"土地のかたむきは、等高線と等高線の間がせまいほど急で、広いほどゆるやかです。"},
+  {pillar:4, q:"地形図からわかることについて、正しいものはどれですか。",
+    choices:["港の埠頭や防波堤の海岸線はまっすぐになっていることが多い","高速道路は地形図で赤色に示される","都道府県道は地形図で緑色に示される","地形図はふつう下が北を示す"],
+    answer:0, explain:"港の埠頭は船が接岸しやすいようにするために、直線になっています。また、埋め立て地や防波堤も直線になっています。"}
+];
+
+/* ---------- 第2段階：黒太字テスト（kuroji） ---------- */
+
+const kurojiBlocks = [
+{ pillar:1, sub:"2-1｜①日本の百万都市の黒太字", items:[
+  {q:"都市としての東京がさす範囲は？", choices:["23区全体","都心3区のみ","東京都全域","山手線内側のみ"], answer:0, explain:"都市としての東京は、千代田区・港区などの23区全体をさします。"},
+  {q:"1859年に貿易を始めた港を中心に発展した、神奈川県の都市は？", choices:["横浜市","川崎市","相模原市","鎌倉市"], answer:0, explain:"横浜市は、1859年に貿易を始めた横浜港を中心に発展しました。"},
+  {q:"昔は「天下の台所」とよばれた、淀川の河口にある都市は？", choices:["大阪市","堺市","神戸市","京都市"], answer:0, explain:"大阪市は、昔は全国の産物が集まる商業のまちで、天下の台所とよばれました。"},
+  {q:"「中京」ともよばれる、愛知県の城下町は？", choices:["名古屋市","豊田市","岡崎市","一宮市"], answer:0, explain:"名古屋市は、東京と京都の中間に位置しているため、中京ともよばれる城下町です。"},
+  {q:"開拓使が置かれてから発展した、道路が碁盤の目のように整っている都市は？", choices:["札幌市","函館市","旭川市","釧路市"], answer:0, explain:"札幌市は、1869年に開拓使が置かれてから発展した計画都市で、道路が碁盤の目のように整っています。"},
+  {q:"九州地方最大の都市で、博多織や博多人形で知られるのは？", choices:["福岡市","北九州市","熊本市","長崎市"], answer:0, explain:"福岡市は、九州地方最大の都市で、伝統的工芸品の博多織や博多人形がつくられています。"},
+  {q:"ポートアイランドなどの人工島があり、神戸ビーフでも有名な都市は？", choices:["神戸市","大阪市","堺市","姫路市"], answer:0, explain:"神戸市は、神戸港を中心に発展し、ポートアイランドなどの人工島があります。"},
+  {q:"東京湾アクアラインで千葉県木更津市と結ばれている、神奈川県の都市は？", choices:["川崎市","横浜市","相模原市","横須賀市"], answer:0, explain:"川崎市は、千葉県の木更津市と東京湾アクアラインで結ばれています。"},
+  {q:"794年から約1100年の間、日本の都だった都市は？", choices:["京都市","奈良市","大津市","大阪市"], answer:0, explain:"京都市は、794年から約1100年の間、日本の都でした。"},
+  {q:"2001年に3つの都市が合併し、県庁所在地としては初めてひらがなで示す都市となったのは？", choices:["さいたま市","千葉市","相模原市","川口市"], answer:0, explain:"さいたま市は、2001年に3つの都市が合併し、県庁所在地としては初めてひらがなで示す都市となりました。"},
+  {q:"太田川の河口の三角州に発達し、原爆ドームがある都市は？", choices:["広島市","岡山市","福山市","呉市"], answer:0, explain:"広島市は、太田川の河口の三角州に発達し、平和記念公園にある原爆ドームなどがあります。"},
+  {q:"「杜の都」とよばれ、東北三大祭りの1つである七夕が行われる都市は？", choices:["仙台市","盛岡市","秋田市","山形市"], answer:0, explain:"仙台市は、杜の都とよばれ、8月上旬には東北三大祭りの1つである七夕が行われます。"}
+]},
+{ pillar:2, sub:"2-2｜②日本の政令指定都市の黒太字", items:[
+  {q:"京葉工業地域の工業都市の1つで、幕張新都心がある千葉県の都市は？", choices:["千葉市","船橋市","柏市","市原市"], answer:0, explain:"千葉市は、京葉工業地域の工業都市の1つで、東京湾岸には幕張新都心がつくられています。"},
+  {q:"北九州工業地域の中心都市で、以前は百万都市だったが人口が減少している都市は？", choices:["北九州市","福岡市","熊本市","長崎市"], answer:0, explain:"北九州市は、北九州工業地域の中心都市で、以前は百万都市でしたが、人口が減少しています。"},
+  {q:"大阪湾の埋め立て地に石油化学コンビナートがあり、大仙古墳がある大阪府の都市は？", choices:["堺市","大阪市","豊中市","岸和田市"], answer:0, explain:"堺市は、大阪湾の埋め立て地に石油化学コンビナートがあり、大仙古墳があります。"},
+  {q:"浜名湖に面し、楽器やオートバイの製造で知られる静岡県の都市は？", choices:["浜松市","静岡市","富士市","沼津市"], answer:0, explain:"浜松市は、静岡県で最も人口の多い都市で、浜名湖に面しています。"},
+  {q:"信濃川の河口に位置する、本州の日本海側でただ1つの政令指定都市は？", choices:["新潟市","富山市","金沢市","福井市"], answer:0, explain:"新潟市は、信濃川の河口に位置する、本州の日本海側でただ1つの政令指定都市です。"},
+  {q:"2012年に最も新しい政令指定都市となった、熊本城の城下町は？", choices:["熊本市","鹿児島市","大分市","長崎市"], answer:0, explain:"熊本市は、2012年、最も新しい政令指定都市となりました。"},
+  {q:"神奈川県で3つ目の政令指定都市で、東京や横浜市のベッドタウンにもなっているのは？", choices:["相模原市","川崎市","横須賀市","藤沢市"], answer:0, explain:"相模原市は、神奈川県で3つ目の政令指定都市です。"},
+  {q:"広島市に次ぐ中国地方第二の都市で、備前焼の産地は？", choices:["岡山市","倉敷市","福山市","広島市"], answer:0, explain:"岡山市は、広島市に次ぐ中国地方第二の都市で、備前市とともに備前焼の産地です。"},
+  {q:"駿河湾から赤石山脈まで南北に広がる、政令指定都市の中で人口最少の静岡県の都市は？", choices:["静岡市","浜松市","富士市","沼津市"], answer:0, explain:"静岡市は、駿河湾から赤石山脈まで、南北に広がる都市で、政令指定都市の中では人口は最少です。"}
+]},
+{ pillar:3, sub:"2-3｜③地形図の読み方の黒太字", items:[
+  {q:"地形図は、ふつう上が何を示す？", choices:["北","南","東","西"], answer:0, explain:"地形図は、ふつう上が北を示します。"},
+  {q:"北が上になっていない地形図で方位を示すために使うものは？", choices:["方位記号","縮尺記号","等高線","方位磁針"], answer:0, explain:"北が上になっていない地形図では、方位記号を使って方位を示します。"},
+  {q:"海面からの高さが等しい地点を結んだ線は？", choices:["等高線","等圧線","国境線","縮尺線"], answer:0, explain:"等高線は、海面からの高さが等しい地点を結んだ線です。"},
+  {q:"等高線の間隔がせまいほど、土地のかたむきはどうなる？", choices:["急になる","ゆるやかになる","平らになる","変化しない"], answer:0, explain:"土地のかたむきは、等高線と等高線の間がせまいほど急です。"},
+  {q:"等高線の間隔が広いほど、土地のかたむきはどうなる？", choices:["ゆるやかになる","急になる","平らになる","変化しない"], answer:0, explain:"等高線と等高線の間が広いほどゆるやかです。"},
+  {q:"周囲よりも高くはり出したところを何という？", choices:["尾根","谷","盆地","台地"], answer:0, explain:"周囲よりも高くはり出したところを尾根といいます。"},
+  {q:"周囲よりも低いところを何という？", choices:["谷","尾根","高地","丘陵"], answer:0, explain:"周囲よりも低いところを谷といいます。"},
+  {q:"実際の距離を縮めた割合を何という？", choices:["縮尺","等高線","方位","面積比"], answer:0, explain:"縮尺は、実際の距離を縮めた割合のことです。"},
+  {q:"縮尺25000分の1の地形図で、1kmの距離は何cmで表される？", choices:["4cm","2cm","1cm","8cm"], answer:0, explain:"1kmの距離は、縮尺25000分の1の地形図では4cmで表されます。"},
+  {q:"縮尺50000分の1の地形図で、1kmの距離は何cmで表される？", choices:["2cm","4cm","1cm","8cm"], answer:0, explain:"1kmの距離は、縮尺50000分の1の地形図では2cmで表されます。"}
+]},
+{ pillar:4, sub:"2-4｜④地形図からわかることの黒太字", items:[
+  {q:"高速道路を表す地形図の道路の色は？", choices:["緑色","赤色","黄色","青色"], answer:0, explain:"緑色が高速道路を表します。"},
+  {q:"国道を表す地形図の道路の色は？", choices:["赤色","緑色","黄色","青色"], answer:0, explain:"赤色が国道を表します。"},
+  {q:"都道府県道を表す地形図の道路の色は？", choices:["黄色","緑色","赤色","青色"], answer:0, explain:"黄色が都道府県道を表します。"},
+  {q:"港の埠頭や防波堤の海岸線がまっすぐになっている理由は？", choices:["船が接岸しやすいようにするため","景観を美しくするため","波の力を弱めるため","建設費用を安くするため"], answer:0, explain:"港の埠頭は船が接岸しやすいようにするために、直線になっています。"},
+  {q:"尾根や川が都府県の境界になっている場合、地形図ではどのように示される？", choices:["点線で示される","二重線で示される","色分けで示される","記号なしで示される"], answer:0, explain:"尾根や川が都府県の境界になっているところが多く見られ、地形図では点線で示されています。"},
+  {q:"国土を測量して地図をつくり、災害を防ぐための情報を集める国の機関は？", choices:["国土地理院","気象庁","国土交通省","総務省"], answer:0, explain:"国土地理院は、国土を測量して地図をつくり、災害を防ぐために国土の情報を集める機関です。"},
+  {q:"国土地理院は何という国の役所のもとにおかれている？", choices:["国土交通省","総務省","経済産業省","気象庁"], answer:0, explain:"国土地理院は、国土交通省という国の役所のもとにおかれています。"},
+  {q:"電子版の地形図で、標高を数値で確認できる場所を示す記号は？", choices:["電子基準点","方位記号","等高線記号","縮尺記号"], answer:0, explain:"電子基準点は、＋のマークで示された場所の標高が数値で示される新しい地図記号です。"},
+  {q:"自然災害の記録を伝えるためにつくられた、比較的新しい地図記号は？", choices:["自然災害伝承碑","記念碑","史跡","天然記念物"], answer:0, explain:"自然災害伝承碑は、過去に起きた自然災害を伝える、新しくつくられた地図記号です。"},
+  {q:"活断層が動くことで、かつて低湿地だった場所に発生する可能性がある現象は？", choices:["液状化現象","地盤沈下","土砂崩れ","高潮"], answer:0, explain:"かつて低湿地だったところは、地震によるゆれで液状化現象が発生する可能性があります。"}
+]},
+{ pillar:0, sub:"2-5｜都市データ確認（ひとくちメモ・コラムより）", items:[
+  {q:"東京都にある23の区のことを何という？", choices:["特別区","政令指定都市の区","行政区","独立市"], answer:0, explain:"特別区は、東京都にある23の区のことです。政令指定都市の区とはちがい、市町村とほぼ同じ役割をもっています。"},
+  {q:"都道府県庁所在地ではない百万都市は、神奈川県のどの都市？", choices:["川崎市","横須賀市","藤沢市","相模原市"], answer:0, explain:"都道府県庁所在地ではない百万都市は、神奈川県の川崎市だけです。"},
+  {q:"日本一広い面積を持つ市は？", choices:["高山市（岐阜県）","浜松市（静岡県）","日光市（栃木県）","札幌市（北海道）"], answer:0, explain:"日本一広い都市は岐阜県高山市で、東京都とほぼ同じ2178km²です。"},
+  {q:"市の面積で全国2位の都市は？", choices:["浜松市（静岡県）","高山市（岐阜県）","日光市（栃木県）","北見市（北海道）"], answer:0, explain:"面積の第2位は静岡県浜松市、第3位は栃木県日光市です。"},
+  {q:"多摩川の下流で、右岸（上流から下流を見て右側）にある工場群がある都市は？", choices:["川崎市","横浜市","東京都","町田市"], answer:0, explain:"多摩川下流の右岸には川崎市の工場群が、左岸には羽田空港があります。"},
+  {q:"多摩川の下流で、左岸にある空港は？", choices:["羽田空港","成田空港","調布飛行場","茨城空港"], answer:0, explain:"多摩川下流の左岸には羽田空港があります。"},
+  {q:"福岡市の経済圏には、九州とどの県をふくむ約1500万人が生活している？", choices:["山口県","広島県","佐賀県","大分県"], answer:0, explain:"福岡市は、九州と山口県をふくむ約1500万人が生活する経済圏の中心都市となっています。"},
+  {q:"政令指定都市の中で唯一、本州の日本海側にある都市は？", choices:["新潟市","富山市","金沢市","福井市"], answer:0, explain:"新潟市は、本州の日本海側でただ1つの政令指定都市です。"}
+]}
+];
+
+/* ---------- 第3段階：ひとくちメモテスト（mame） ---------- */
+
+const mameQuizRaw = [
+  {pillar:1, q:"東京都にある23の区のことを何という？", choices:["特別区","政令指定都市の区","行政区","独立市"], answer:0, explain:"特別区は、東京都にある23の区のことです。政令指定都市の区とはちがい、市町村とほぼ同じ役割をもっていて、区立の小学校や中学校もあります。"},
+  {pillar:1, q:"福岡市が中心都市となっている経済圏には、九州と山口県をふくめておよそ何人が生活している？", choices:["約1500万人","約500万人","約3000万人","約800万人"], answer:0, explain:"福岡市は、九州と山口県をふくむ約1500万人が生活する経済圏の中心都市となっています。"},
+  {pillar:1, q:"多摩川下流の右岸にある川崎市の工場群と対になる、左岸にある施設は？", choices:["羽田空港","成田空港","横浜港","東京港"], answer:0, explain:"多摩川の下流は東京都と神奈川県の境です。河口付近の右岸には川崎市の工場群が、左岸には羽田空港があります。"},
+  {pillar:2, q:"日本一広い面積を持つ市（岐阜県）は？", choices:["高山市","浜松市","日光市","札幌市"], answer:0, explain:"日本一広い都市は岐阜県高山市で、東京都とほぼ同じ2178km²です。"},
+  {pillar:3, q:"国土を測量して地図をつくり、災害を防ぐための情報を集める機関は？", choices:["国土地理院","気象庁","国土交通省","総務省"], answer:0, explain:"国土地理院は、国土を測量して地図をつくり、災害を防ぐために国土の情報を集める機関です。国土交通省という国の役所のもとにおかれています。"},
+  {pillar:4, q:"地形図で高速道路を示す色は？", choices:["緑色","赤色","黄色","青色"], answer:0, explain:"緑色が高速道路、赤色が国道、黄色が都道府県道です。"},
+  {pillar:4, q:"尾根や川が都府県の境界になっている場合、地形図ではどのように示される？", choices:["点線で示される","二重線で示される","色分けで示される","記号なしで示される"], answer:0, explain:"尾根や川が、都府県の境界になっているところが多く見られます。地形図では点線で示されています。"}
+];
+
+/* ---------- 第4段階：気をつけたいポイント（sanko／読みもの・採点なし） ---------- */
+
+const sankoNotes = [
+  {
+    title:"紙ではない地形図もあるの？",
+    body:`地形図は昔から紙のものが使われてきましたが、現在は電子版もあります。タブレットなどの電子機器を使って、国土地理院のWebページで、電子版の地形図を見ることができます。電子版では、拡大したり縮小したりできるので、拡大すれば細かい部分まで読みとることができます。<br><br>
+また、新しい道路などが完成するとすぐに地形図に反映されるので、最新の情報を知ることができます。＋のマークで示された場所の標高が左下に数値で示され、等高線が読みづらい市街地の標高もわかります。電子版の地形図を紙に印刷すれば、紙の地形図として利用することもできます。<br><br>
+十日町市の地形図には、自然災害伝承碑が示されています。電子版の地形図で、自然災害伝承碑を目立たせる設定にすると、地図記号が緑色で示されます。これをクリックすると、災害名と伝承碑の写真や、説明を見ることができます。`,
+    src:"予習シリーズ5年上 第18回 Q&A"
+  },
+  {
+    title:"電子版の地形図はこんなに便利！",
+    body:`①距離と面積を測ってみよう！：画面の右上にあるツールから「計測」を選択すると、距離や面積を表示することができます。開始地点でクリックし、目的地まで動かすと、距離が表示されます。<br><br>
+②断面図をつくってみよう！：土地のかたむきは、等高線を見ればある程度わかりますが、断面図にすることで、よりわかりやすくなります。ツールから「断面図」を選択し、調べたい地点を2か所クリックすると、断面図が自動的に作製されます。<br><br>
+③災害に備える情報を引き出せる！：地図の種類から「土地の成り立ち」を選択すると、活断層の場所を示すことや、明治時代に低湿地だった場所を知ることもできます。活断層が動くと、地面がずれます。かつて低湿地だったところは、地震によるゆれで液状化現象が発生する可能性があります。`,
+    src:"予習シリーズ5年上 第18回 ちょっとくわしく"
+  },
+  {
+    title:"増える福岡市の人口",
+    body:`福岡市は、九州と山口県をふくむ約1500万人が生活する経済圏の中心都市となっています。大学や企業が集まっているため、進学や就職の機会にもめぐまれ、若者が集まりやすい都市といえます。`,
+    src:"予習シリーズ5年上 第18回 コラム"
+  },
+  {
+    title:"百万都市と政令指定都市",
+    body:`東京（東京23区）は政令指定都市ではありません。そのほかの百万都市は、すべて政令指定都市になっています。また、都道府県庁所在地ではない百万都市は、神奈川県の川崎市だけです。`,
+    src:"予習シリーズ5年上 第18回 関連することがら"
+  },
+  {
+    title:"東京(23区)は百万都市だが政令指定都市ではない",
+    body:`東京は人口957万人の百万都市ですが、政令指定都市ではありません。これは意外と見落としやすいポイントです。「百万都市＝政令指定都市」と思い込まず、東京が例外であることを覚えておきましょう。`,
+    src:"入試でまちがえやすいポイント（一般知識）"
+  },
+  {
+    title:"等高線の間隔と傾斜の関係",
+    body:`「等高線の間隔がせまい＝傾斜が急」「間隔が広い＝傾斜がゆるやか」という関係は、逆に覚えてしまいやすいポイントです。等高線がぎゅっと詰まっている場所ほど、短い水平距離で高さが大きく変わる、つまり急な斜面だとイメージすると覚えやすくなります。`,
+    src:"入試でまちがえやすいポイント（一般知識）"
+  },
+  {
+    title:"尾根と谷の区別",
+    body:`「尾根」は周囲よりも高くはり出したところ、「谷」は周囲よりも低いところです。等高線の地形図では、尾根は等高線が山頂側に向かって出っぱる形、谷は逆に山頂側にへこむ形で表れます。図で確認しながらセットで覚えましょう。`,
+    src:"入試でまちがえやすいポイント（一般知識）"
+  },
+  {
+    title:"縮尺の計算に注意",
+    body:`縮尺25000分の1の地形図では1kmが4cm、縮尺50000分の1の地形図では1kmが2cmで表されます。縮尺の分母が大きくなるほど、同じ実際の距離が地図上では小さく表される点に注意しましょう。面積を求めるときは、地図上の長さを実際の長さに直してから面積を計算する必要があります。`,
+    src:"入試でまちがえやすいポイント（一般知識）"
+  },
+  {
+    title:"新潟市は本州日本海側で唯一の政令指定都市",
+    body:`政令指定都市20市のうち、本州の日本海側に位置するのは新潟市だけです。日本海側の県庁所在地の中でも新潟市は特別な立地であることを覚えておきましょう。`,
+    src:"入試でまちがえやすいポイント（一般知識）"
+  }
+];
+
+/* ===================== 共通ビルド関数 ===================== */
+
+function shuffleArr(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+function finalize(q){
+  const correctText = q.choices[q.answer];
+  const order = shuffleArr(q.choices.map((c,i)=>i));
+  const newChoices = order.map(i=>q.choices[i]);
+  const newAnswer = newChoices.indexOf(correctText);
+  const out = Object.assign({}, q, {choices:newChoices, answer:newAnswer});
+  return out;
+}
+
+function normalizeAnswer(str){
+  if(str===undefined || str===null) return "";
+  let s = String(str).trim();
+  s = s.replace(/[０-９]/g, ch => String.fromCharCode(ch.charCodeAt(0)-0xFEE0));
+  s = s.replace(/\s+/g,"");
+  return s;
+}
+
+function checkFillAnswer(item, userInput){
+  const norm = normalizeAnswer(userInput);
+  if(norm==="") return false;
+  const candidates = [item.answer].concat(item.accept||[]);
+  return candidates.some(c => normalizeAnswer(c)===norm);
+}
+
+/* kihon の穴埋め item 生成 */
+function buildKihonFillItems(){
+  return kihonFillRaw.map((r,idx)=>({
+    type:"fill",
+    id:"kihonFill_"+idx,
+    q:r.q,
+    answer:r.answer,
+    accept:r.accept,
+    explain:r.explain,
+    lead:PILLARS[r.pillar].label,
+    sub:PILLARS[r.pillar].full,
+    pillar:r.pillar
+  }));
+}
+
+function buildKihonFinalItems(){
+  return kihonFinalRaw.map((r,idx)=>{
+    const fq = finalize({q:r.q, choices:r.choices, answer:r.answer, explain:r.explain});
+    return Object.assign({type:"choice", id:"kihonFinal_"+idx, pillar:r.pillar}, fq);
+  });
+}
+
+function buildKihonItems(){
+  const overview = kihonOverviewScreens.map((s,idx)=>Object.assign({id:"kihonOv_"+idx}, s));
+  const fills = shuffleArrKeepBlocks();
+  const finals = shuffleArr(buildKihonFinalItems());
+  return overview.concat(fills, finals);
+}
+// 穴埋めはブロック（pillar）順は固定、ブロック内はシャッフル
+function shuffleArrKeepBlocks(){
+  const byPillar = {};
+  kihonFillRaw.forEach((r,idx)=>{
+    if(!byPillar[r.pillar]) byPillar[r.pillar]=[];
+    byPillar[r.pillar].push(idx);
+  });
+  let out = [];
+  [1,2,3,4].forEach(p=>{
+    const idxs = shuffleArr(byPillar[p]||[]);
+    idxs.forEach(idx=>{
+      const r = kihonFillRaw[idx];
+      out.push({
+        type:"fill", id:"kihonFill_"+idx, q:r.q, answer:r.answer, accept:r.accept,
+        explain:r.explain, lead:PILLARS[r.pillar].label, sub:PILLARS[r.pillar].full, pillar:r.pillar
+      });
+    });
+  });
+  return out;
+}
+
+/* kuroji item 生成：ブロック順固定、ブロック内シャッフル */
+function buildKurojiItems(){
+  let out = [];
+  kurojiBlocks.forEach((block,bi)=>{
+    const shuffledItems = shuffleArr(block.items);
+    shuffledItems.forEach((it,ii)=>{
+      const fq = finalize(it);
+      out.push(Object.assign({
+        type:"choice",
+        id:"kuroji_"+bi+"_"+ii,
+        pillar:block.pillar,
+        sub:block.sub
+      }, fq));
+    });
+  });
+  return out;
+}
+
+/* mame item 生成 */
+function buildMameItems(){
+  const shuffled = shuffleArr(mameQuizRaw);
+  return shuffled.map((r,idx)=>{
+    const fq = finalize(r);
+    return Object.assign({type:"choice", id:"mame_"+idx, pillar:r.pillar}, fq);
+  });
+}
+
+/* sanko item 生成（採点なし） */
+function buildSankoItems(){
+  return sankoNotes.map((n,idx)=>({
+    type:"info", id:"sanko_"+idx, title:n.title, body:n.body, src:n.src, wide:true
+  }));
+}
+
+const STAGES = [
+  {id:"kihon", name:"① 構造テスト", desc:"4本柱（百万都市・政令指定都市・地形図の読み方・地形図からわかること）の骨組みを確認。概要2画面＋穴埋め20問＋まとめ選択4問。", scored:true, ref:false, build:buildKihonItems},
+  {id:"kuroji", name:"② 黒太字テスト", desc:"各都市の重要語句・地形図の読み方の用語を4択で確認します。", scored:true, ref:false, build:buildKurojiItems},
+  {id:"mame", name:"③ ひとくちメモテスト", desc:"教科書のひとくちメモから出題します。", scored:true, ref:false, build:buildMameItems},
+  {id:"sanko", name:"④ 気をつけたいポイント", desc:"教科書コラム＋入試でまちがえやすい注意点の読みもの。採点はありません。", scored:false, ref:true, build:buildSankoItems}
+];
+
+/* ===================== 状態管理／localStorage ===================== */
+
+const STORAGE_KEY = "toshichikeizu_missed_v1";
+
+function loadMissedStore(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : {};
+  }catch(e){ return {}; }
+}
+function saveMissedStore(store){
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(store)); }catch(e){ /* 保存できない環境は無視 */ }
+}
+
+const state = {
+  screen:"home",
+  stageId:null,
+  isRetry:false,
+  items:[],
+  currentIndex:0,
+  scoreTotal:0,
+  scoreCorrect:0,
+  answerLog:[],
+  results:{},
+  missedStore: loadMissedStore(),
+  answered:false,
+  userInput:""
+};
+
+function startStage(stageId){
+  const stage = STAGES.find(s=>s.id===stageId);
+  state.stageId = stageId;
+  state.isRetry = false;
+  state.items = stage.build();
+  state.currentIndex = 0;
+  state.scoreTotal = state.items.filter(i=>i.type!=="info").length;
+  state.scoreCorrect = 0;
+  state.answerLog = [];
+  state.answered = false;
+  state.userInput = "";
+  state.screen = "play";
+  render();
+}
+
+function startRetry(stageId){
+  const missed = state.missedStore[stageId] || {};
+  const items = Object.values(missed);
+  if(items.length===0) return;
+  state.stageId = stageId;
+  state.isRetry = true;
+  state.items = shuffleArr(items);
+  state.currentIndex = 0;
+  state.scoreTotal = state.items.length;
+  state.scoreCorrect = 0;
+  state.answerLog = [];
+  state.answered = false;
+  state.userInput = "";
+  state.screen = "play";
+  render();
+}
+
+function currentItem(){ return state.items[state.currentIndex]; }
+
+function submitChoice(idx){
+  if(state.answered) return;
+  const item = currentItem();
+  const correct = idx === item.answer;
+  state.answered = true;
+  state.userChoiceIdx = idx;
+  if(correct) state.scoreCorrect++;
+  state.answerLog.push({item, wasCorrect:correct});
+}
+
+function submitFill(){
+  if(state.answered) return;
+  const item = currentItem();
+  const correct = checkFillAnswer(item, state.userInput);
+  state.answered = true;
+  if(correct) state.scoreCorrect++;
+  state.answerLog.push({item, wasCorrect:correct});
+}
+
+function nextItem(){
+  state.answered = false;
+  state.userInput = "";
+  state.userChoiceIdx = null;
+  state.hintShown = false;
+  if(state.currentIndex < state.items.length-1){
+    state.currentIndex++;
+    render();
+  }else{
+    finishStage();
+  }
+}
+
+function finishStage(){
+  const stage = STAGES.find(s=>s.id===state.stageId);
+  state.results[state.stageId] = {
+    correct: state.scoreCorrect,
+    total: state.scoreTotal,
+    at: Date.now()
+  };
+  if(stage.scored){
+    const missed = state.missedStore[state.stageId] || {};
+    state.answerLog.forEach(log=>{
+      const key = log.item.q;
+      if(!log.wasCorrect){
+        missed[key] = log.item;
+      }else{
+        if(missed[key]) delete missed[key];
+      }
+    });
+    state.missedStore[state.stageId] = missed;
+    saveMissedStore(state.missedStore);
+  }
+  state.screen = "result";
+  render();
+}
+
+function backHome(){
+  state.screen = "home";
+  render();
+}
+
+/* ===================== レンダリング ===================== */
+
+const app = document.getElementById("app");
+
+function render(){
+  if(state.screen==="home") renderHome();
+  else if(state.screen==="play") renderPlay();
+  else if(state.screen==="result") renderResult();
+}
+
+function esc(s){
+  return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+
+function renderHome(){
+  let html = `
+    <div class="header">
+      <h1>日本のおもな都市・地形図テスト</h1>
+      <div class="sub">予習シリーズ5年上　第18回　日本のおもな都市・地形図の読み方</div>
+    </div>
+    <div class="content">
+  `;
+  const scoredStages = STAGES.filter(s=>s.scored);
+  const refStages = STAGES.filter(s=>!s.scored);
+
+  html += `<div class="home-title">確認テスト</div>`;
+  scoredStages.forEach(stage=>{
+    const res = state.results[stage.id];
+    const missedCount = Object.keys(state.missedStore[stage.id]||{}).length;
+    html += `<div class="stage-card" onclick="startStage('${stage.id}')">
+      <div class="stage-top">
+        <div class="stage-name">${esc(stage.name)}</div>
+        <div class="stage-badge">${res ? res.correct+"/"+res.total : "未挑戦"}</div>
+      </div>
+      <div class="stage-desc">${esc(stage.desc)}</div>
+      ${res ? `<div class="progress-bar"><div class="progress-fill" style="width:${Math.round(res.correct/res.total*100)}%"></div></div>` : ""}
+      ${missedCount>0 ? `<div class="retry-btn" onclick="event.stopPropagation(); startRetry('${stage.id}')">🔁 苦手${missedCount}問を復習</div>` : ""}
+    </div>`;
+  });
+
+  html += `<div class="home-title">参考情報（読みもの）</div>`;
+  refStages.forEach(stage=>{
+    html += `<div class="stage-card ref" onclick="startStage('${stage.id}')">
+      <div class="stage-top">
+        <div class="stage-name">${esc(stage.name)}</div>
+        <div class="stage-badge">読みもの</div>
+      </div>
+      <div class="stage-desc">${esc(stage.desc)}</div>
+    </div>`;
+  });
+
+  html += `<div class="footer-note">単一HTMLファイル・localStorageに端末内で保存されます</div>`;
+  html += `</div>`;
+  app.innerHTML = html;
+}
+
+function renderPlay(){
+  const item = currentItem();
+  const stage = STAGES.find(s=>s.id===state.stageId);
+  const isInfo = item.type==="info";
+
+  let html = `
+    <div class="header">
+      <h1>${esc(stage.name)}${state.isRetry?"（復習）":""}</h1>
+      <div class="sub">${item.sub ? esc(item.sub) : esc(stage.desc)}</div>
+    </div>
+    <div class="content">
+      <div class="play-topbar">
+        <span>問題 ${state.currentIndex+1} / ${state.items.length}</span>
+        <span onclick="backHome()" style="text-decoration:underline; cursor:pointer;">中断してホームへ</span>
+      </div>
+  `;
+
+  if(isInfo){
+    html += `<div class="qcard info">
+      <div class="qtitle">${esc(item.title)}</div>
+      <div class="info-body ${item.wide?'wide':''}">${item.body}</div>
+      ${item.src ? `<div class="src-tag">出典：${esc(item.src)}</div>` : ""}
+      <button class="btn btn-ref" onclick="nextItem()">${state.currentIndex < state.items.length-1 ? "次へ" : "結果を見る"}</button>
+    </div>`;
+  } else if(item.type==="fill"){
+    html += `<div class="qcard">`;
+    if(item.lead) html += `<div class="lead-badge">${esc(item.lead)}</div>`;
+    html += `<div class="qtext">${esc(item.q)}</div>`;
+    const inputClass = state.answered ? (checkFillAnswer(item, state.userInput) ? "correct":"wrong") : "";
+    html += `<input type="text" id="fillInput" class="fill-input ${inputClass}" placeholder="答えを入力" value="${esc(state.userInput)}" ${state.answered?"disabled":""} onkeydown="if(event.key==='Enter'){document.getElementById('fillInput').value=this.value; state.userInput=this.value; submitFillUI();}">`;
+    if(!state.answered){
+      html += `<button class="btn btn-primary" onclick="submitFillUI()">こたえる</button>`;
+    }else{
+      const correct = checkFillAnswer(item, state.userInput);
+      html += `<div class="explain-box ${correct?'good':'bad'}">
+        <span class="mark-icon">${correct?"⭕":"❌"}</span><b>正解：${esc(item.answer)}</b><br>${item.explain||""}
+      </div>`;
+      html += `<button class="btn btn-primary" onclick="nextItem()">${state.currentIndex < state.items.length-1 ? "次の問題へ" : "結果を見る"}</button>`;
+    }
+    html += `</div>`;
+  } else if(item.type==="choice"){
+    html += `<div class="qcard">`;
+    if(item.pillar!==undefined && item.pillar!==null) html += `<div class="lead-badge">${esc(pillarBadge(item.pillar))}</div>`;
+    html += `<div class="qtext">${esc(item.q)}</div>`;
+    html += `<div class="choice-list">`;
+    item.choices.forEach((c,idx)=>{
+      let cls = "choice-btn";
+      if(state.answered){
+        if(idx===item.answer) cls += " correct";
+        else if(idx===state.userChoiceIdx) cls += " wrong";
+        else cls += " dim";
+      }
+      html += `<button class="${cls}" ${state.answered?"disabled":""} onclick="submitChoiceUI(${idx})">${esc(c)}</button>`;
+    });
+    html += `</div>`;
+    if(state.answered){
+      const correct = state.userChoiceIdx===item.answer;
+      html += `<div class="explain-box ${correct?'good':'bad'}">
+        <span class="mark-icon">${correct?"⭕":"❌"}</span>${item.explain||""}
+      </div>`;
+      html += `<button class="btn btn-primary" onclick="nextItem()">${state.currentIndex < state.items.length-1 ? "次の問題へ" : "結果を見る"}</button>`;
+    }
+    html += `</div>`;
+  }
+
+  html += `</div>`;
+  app.innerHTML = html;
+  if(item.type==="fill" && !state.answered){
+    const el = document.getElementById("fillInput");
+    if(el) el.focus();
+  }
+}
+
+function submitChoiceUI(idx){
+  submitChoice(idx);
+  renderPlay();
+}
+function submitFillUI(){
+  const el = document.getElementById("fillInput");
+  if(el) state.userInput = el.value;
+  submitFill();
+  renderPlay();
+}
+function toggleHint(){
+  state.hintShown = !state.hintShown;
+  renderPlay();
+}
+
+function renderResult(){
+  const stage = STAGES.find(s=>s.id===state.stageId);
+  const wrongItems = state.answerLog.filter(l=>!l.wasCorrect).map(l=>l.item);
+  const missedCount = Object.keys(state.missedStore[state.stageId]||{}).length;
+
+  let html = `
+    <div class="header">
+      <h1>結果</h1>
+      <div class="sub">${esc(stage.name)}${state.isRetry?"（復習）":""}</div>
+    </div>
+    <div class="content">
+      <div class="qcard result-box">
+        <div>できた問題</div>
+        <div class="result-score">${state.scoreCorrect} / ${state.scoreTotal}</div>
+        ${wrongItems.length>0 ? `<div class="missed-list">${wrongItems.map(it=>`<div class="missed-item">${esc(it.q)}</div>`).join("")}</div>` : `<div style="color:var(--good); font-weight:700;">全問正解です！</div>`}
+      </div>
+  `;
+  if(wrongItems.length>0){
+    html += `<button class="btn btn-primary" onclick="startRetry('${state.stageId}')">🔁 まちがえた問題だけ復習する（${wrongItems.length}問）</button>`;
+  } else if(missedCount>0){
+    html += `<button class="btn btn-primary" onclick="startRetry('${state.stageId}')">🔁 残っている苦手${missedCount}問を復習する</button>`;
+  }
+  html += `<button class="btn btn-outline" onclick="backHome()">ホームにもどる</button>`;
+  html += `</div>`;
+  app.innerHTML = html;
+}
+
+render();
+</script>
+</body>
+</html>

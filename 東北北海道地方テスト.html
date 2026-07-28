@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>東北・北海道地方テスト</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --accent:#3468a6;
+  --accent-light:#e8f0fa;
+  --ref:#7a5ea8;
+  --ref-light:#f1ecf8;
+  --good:#2f9e5b;
+  --good-light:#e6f6ec;
+  --bad:#d1453b;
+  --bad-light:#fbe9e8;
+  --ink:#22303f;
+  --sub:#5c6b7a;
+  --line:#dbe3ec;
+  --bg:#f5f7fa;
+  --card:#ffffff;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  font-family:"Zen Kaku Gothic New",sans-serif;
+  background:var(--bg);
+  color:var(--ink);
+  display:flex;
+  justify-content:center;
+}
+#app{
+  width:100%;
+  max-width:480px;
+  min-height:100vh;
+  background:var(--bg);
+  display:flex;
+  flex-direction:column;
+  position:relative;
+}
+.header{
+  padding:16px 18px 12px;
+  background:linear-gradient(135deg,var(--accent),#4d7dbf);
+  color:#fff;
+  position:sticky;
+  top:0;
+  z-index:5;
+}
+.header h1{
+  margin:0;
+  font-size:18px;
+  font-weight:900;
+  letter-spacing:.02em;
+}
+.header .sub{
+  margin-top:2px;
+  font-size:12px;
+  opacity:.9;
+}
+.content{
+  flex:1;
+  padding:14px 16px 90px;
+}
+.stage-card{
+  background:var(--card);
+  border-radius:14px;
+  box-shadow:0 2px 8px rgba(30,50,80,.08);
+  padding:16px;
+  margin-bottom:14px;
+  border:1px solid var(--line);
+  cursor:pointer;
+  transition:transform .1s;
+}
+.stage-card:active{transform:scale(.98);}
+.stage-card.ref{
+  border-color:var(--ref);
+  background:linear-gradient(180deg,#fff,var(--ref-light));
+}
+.stage-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+.stage-name{
+  font-size:16px;
+  font-weight:700;
+}
+.stage-badge{
+  font-size:11px;
+  background:var(--accent);
+  color:#fff;
+  padding:3px 8px;
+  border-radius:999px;
+  font-weight:700;
+}
+.stage-card.ref .stage-badge{background:var(--ref);}
+.stage-desc{
+  font-size:12.5px;
+  color:var(--sub);
+  margin-top:6px;
+  line-height:1.5;
+}
+.stage-meta{
+  display:flex;
+  gap:10px;
+  margin-top:10px;
+  font-size:12px;
+  color:var(--sub);
+}
+.retry-btn{
+  margin-top:10px;
+  display:inline-block;
+  background:var(--bad-light);
+  color:var(--bad);
+  border:1px solid var(--bad);
+  border-radius:8px;
+  padding:6px 10px;
+  font-size:12.5px;
+  font-weight:700;
+  cursor:pointer;
+}
+.progress-bar{
+  height:6px;
+  background:var(--line);
+  border-radius:99px;
+  overflow:hidden;
+  margin-top:8px;
+}
+.progress-fill{
+  height:100%;
+  background:var(--accent);
+  border-radius:99px;
+}
+.lead-badge{
+  display:inline-block;
+  background:var(--accent);
+  color:#fff;
+  font-size:12px;
+  font-weight:700;
+  padding:4px 10px;
+  border-radius:999px;
+  margin-bottom:10px;
+}
+.sub-badge{
+  display:inline-block;
+  background:#fff;
+  color:var(--accent);
+  border:1px solid var(--accent);
+  font-size:11px;
+  font-weight:700;
+  padding:2px 8px;
+  border-radius:999px;
+  margin-left:6px;
+}
+.play-topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-size:12.5px;
+  color:var(--sub);
+  margin-bottom:10px;
+}
+.qcard{
+  background:var(--card);
+  border-radius:14px;
+  padding:18px 16px;
+  box-shadow:0 2px 8px rgba(30,50,80,.08);
+  border:1px solid var(--line);
+}
+.qcard.info{
+  border-color:var(--ref);
+  background:linear-gradient(180deg,#fff,var(--ref-light));
+}
+.qtitle{
+  font-weight:900;
+  font-size:16px;
+  margin-bottom:8px;
+}
+.qtext{
+  font-size:15.5px;
+  line-height:1.7;
+  margin-bottom:14px;
+  white-space:pre-wrap;
+}
+.qtext.wide{font-size:14.5px;}
+.info-body{
+  font-size:14.5px;
+  line-height:1.85;
+}
+.info-body b{color:var(--accent);}
+.src-tag{
+  margin-top:14px;
+  font-size:11.5px;
+  color:var(--ref);
+  border-top:1px dashed var(--line);
+  padding-top:8px;
+}
+.choice-list{display:flex;flex-direction:column;gap:9px;}
+.choice-btn{
+  text-align:left;
+  padding:12px 14px;
+  border-radius:10px;
+  border:1.5px solid var(--line);
+  background:#fff;
+  font-size:14.5px;
+  font-family:inherit;
+  cursor:pointer;
+  line-height:1.5;
+}
+.choice-btn:active{background:var(--accent-light);}
+.choice-btn.correct{
+  border-color:var(--good);
+  background:var(--good-light);
+  font-weight:700;
+}
+.choice-btn.wrong{
+  border-color:var(--bad);
+  background:var(--bad-light);
+  font-weight:700;
+}
+.choice-btn.dim{opacity:.55;}
+.fill-input{
+  width:100%;
+  padding:12px 14px;
+  font-size:16px;
+  border-radius:10px;
+  border:1.5px solid var(--line);
+  font-family:inherit;
+  margin-bottom:10px;
+}
+.fill-input.correct{border-color:var(--good);background:var(--good-light);}
+.fill-input.wrong{border-color:var(--bad);background:var(--bad-light);}
+.btn{
+  width:100%;
+  padding:13px;
+  border-radius:10px;
+  border:none;
+  font-size:15px;
+  font-weight:700;
+  font-family:inherit;
+  cursor:pointer;
+  margin-top:6px;
+}
+.btn-primary{background:var(--accent);color:#fff;}
+.btn-ref{background:var(--ref);color:#fff;}
+.btn-outline{background:#fff;color:var(--accent);border:1.5px solid var(--accent);}
+.btn-outline.ref{color:var(--ref);border-color:var(--ref);}
+.result-box{
+  text-align:center;
+  padding:6px 0 18px;
+}
+.result-score{
+  font-size:40px;
+  font-weight:900;
+  color:var(--accent);
+  margin:6px 0;
+}
+.explain-box{
+  margin-top:14px;
+  background:var(--accent-light);
+  border-radius:10px;
+  padding:12px 14px;
+  font-size:13.5px;
+  line-height:1.7;
+}
+.explain-box.bad{background:var(--bad-light);}
+.explain-box.good{background:var(--good-light);}
+.hint-box{
+  margin-top:10px;
+  background:#fff8e6;
+  border:1px solid #e8cf8a;
+  border-radius:10px;
+  padding:10px 12px;
+  font-size:13px;
+  line-height:1.6;
+}
+.mark-icon{font-size:18px;margin-right:4px;vertical-align:-2px;}
+.missed-list{
+  text-align:left;
+  margin-top:16px;
+  font-size:13px;
+}
+.missed-item{
+  padding:8px 10px;
+  background:var(--bad-light);
+  border-radius:8px;
+  margin-bottom:6px;
+  color:#8a2f28;
+}
+.home-title{
+  font-size:13px;
+  font-weight:700;
+  color:var(--sub);
+  margin:18px 0 8px 2px;
+}
+.footer-note{
+  text-align:center;
+  font-size:11px;
+  color:var(--sub);
+  padding:10px 0 26px;
+}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+/* ===================== データ（予習シリーズ5年上 第17回 東北地方／北海道地方 より転記） ===================== */
+
+const PILLARS = {
+  0:{label:"道県別まとめ", full:"今回のポイント（7道県別まとめ）"},
+  1:{label:"①東北の自然", full:"東北地方の自然（地形・気候）"},
+  2:{label:"②北海道の自然", full:"北海道地方の自然（地形・気候）"},
+  3:{label:"③農業", full:"東北地方と北海道地方の農業"},
+  4:{label:"④林業・水産業", full:"東北地方と北海道地方の林業・水産業"},
+  5:{label:"⑤工業", full:"東北地方と北海道地方の工業"},
+  6:{label:"⑥電力", full:"東北地方と北海道地方の電力"},
+  7:{label:"⑦交通・観光", full:"東北地方と北海道地方の交通・観光"}
+};
+function pillarBadge(p){ return PILLARS[p] ? PILLARS[p].label : ""; }
+
+/* ---------- 第1段階：構造テスト（kihon） ---------- */
+
+const kihonOverviewScreens = [
+  {
+    type:"info",
+    title:"はじめに",
+    body:`第17回のテーマは「東北地方／北海道地方」です。<br>
+今回のポイントは大きく分けて<b>7つ</b>あります。<br><br>
+①東北地方の自然<br>
+②北海道地方の自然<br>
+③農業<br>
+④林業・水産業<br>
+⑤工業<br>
+⑥電力<br>
+⑦交通・観光<br><br>
+2つの地方を一緒に学ぶ回なので、「東北地方だけの話」か「北海道地方だけの話」か「両方に共通する話」かを意識しながら進めましょう。`
+  },
+  {
+    type:"info",
+    title:"全体像：東北・北海道地方の7本柱",
+    wide:true,
+    body:`<b>①東北の自然</b>：日本一長い奥羽山脈、北上高地・阿武隈高地・出羽山地、十和田湖・田沢湖・猪苗代湖。太平洋側（宮古）・内陸部（山形）・日本海側（秋田）の気候。<br><br>
+<b>②北海道の自然</b>：石狩山地・日高山脈、石狩川と石狩平野、摩周湖・阿寒湖・支笏湖・洞爺湖などのカルデラ湖、流氷。<br><br>
+<b>③農業</b>：東北の稲作（大潟村・庄内平野・仙台平野）、津軽平野のりんご・山形盆地のおうとう・福島盆地のもも、北海道の稲作（上川盆地・石狩平野）・畑作（十勝平野の輪作）・酪農（根釧台地）。<br><br>
+<b>④林業・水産業</b>：津軽ひば・秋田すぎ、三陸沖の潮目、宮古・石巻の漁港、北海道のほたて貝・こんぶの養殖。<br><br>
+<b>⑤工業</b>：東北の電子工業・自動車組立工場、北海道の食料品工業（軽工業中心）、南部鉄器などの伝統的工芸品。<br><br>
+<b>⑥電力</b>：東日本大震災と原子力発電所の廃炉、地熱発電（岩手県松川）、風力発電（東北・北海道の海沿い）。<br><br>
+<b>⑦交通・観光</b>：青函トンネル、東北新幹線・山形新幹線・秋田新幹線・北海道新幹線、白神山地・知床（世界自然遺産）、平泉・北海道北東北の縄文遺跡群（世界文化遺産）。`
+  }
+];
+
+const kihonFillRaw = [
+  // pillar 1
+  {pillar:1, q:"日本一長く、東北地方の太平洋側と日本海側を分ける山脈を（　）という。", answer:"奥羽山脈", accept:["奥羽山脈"], explain:"日本一長い奥羽山脈が南北に連なり、太平洋側と日本海側とを分けています。"},
+  {pillar:1, q:"火山の火口がおちこんだくぼみに水がたまってできたカルデラ湖で、日本で最も深い湖は（　）である。", answer:"田沢湖", accept:["田沢湖"], explain:"日本で最も深い田沢湖があります。"},
+  {pillar:1, q:"東北地方で最も面積が大きい湖は（　）である。", answer:"猪苗代湖", accept:["猪苗代湖"], explain:"東北地方で最も面積が大きい猪苗代湖もあります。"},
+  // pillar 2
+  {pillar:2, q:"北海道中央にある山地で、その南に日高山脈がある山地を（　）という。", answer:"石狩山地", accept:["石狩山地"], explain:"中央に石狩山地が、その南に日高山脈があります。"},
+  {pillar:2, q:"石狩川が山々から集めた水を注ぐ、北海道の平野を（　）という。", answer:"石狩平野", accept:["石狩平野"], explain:"石狩川は、石狩平野から海に注ぎます。"},
+  {pillar:2, q:"オホーツク海の北部でできた氷が、海流や風で北海道沿岸に流れ着く現象を（　）という。", answer:"流氷", accept:["流氷"], explain:"流氷は、オホーツク海の北部でできた氷が、1月ごろ北海道のオホーツク海沿岸に流れ着くものです。"},
+  // pillar 3
+  {pillar:3, q:"秋田県にあり、稲作がさかんな干拓地を（　）という。", answer:"大潟村", accept:["大潟村"], explain:"秋田県の大潟村で稲作がさかんです。"},
+  {pillar:3, q:"すずしくて雨が少ない青森県の平野で、りんごが栽培されているのは（　）である。", answer:"津軽平野", accept:["津軽平野"], explain:"すずしくて雨が少ない津軽平野では、りんごが栽培されています。"},
+  {pillar:3, q:"おうとう（さくらんぼ）の生産量が日本一の県は（　）である。", answer:"山形県", accept:["山形県"], explain:"山形県は、おうとう（さくらんぼ）の生産量が日本一です。"},
+  {pillar:3, q:"濃霧の影響で夏でも低温な北海道の台地で、大規模な酪農が行われているのは（　）である。", answer:"根釧台地", accept:["根釧台地"], explain:"濃霧の影響により夏でも低温で、稲作や畑作に向いていない根釧台地では、大規模な酪農が行われています。"},
+  // pillar 4
+  {pillar:4, q:"三陸沖で暖流の黒潮と寒流の親潮が出合ってできる、魚の種類が豊富になる場所を（　）という。", answer:"潮目", accept:["潮目"], explain:"三陸沖には暖流の黒潮と寒流の親潮が出合う潮目ができるため、魚の種類も豊富です。"},
+  {pillar:4, q:"北海道でさかんな、貝の養殖は（　）である。", answer:"ほたて貝", accept:["ほたて貝"], explain:"北海道では、ほたて貝やこんぶの養殖がさかんです。"},
+  {pillar:4, q:"青森県の津軽ひばとともに、日本三大美林に数えられる秋田県の木は（　）である。", answer:"秋田すぎ", accept:["秋田すぎ"], explain:"米代川流域の秋田すぎは三大美林に数えられます。"},
+  // pillar 5
+  {pillar:5, q:"岩手県と宮城県にある、自動車の組立工場を中心とした工業を（　）という。", answer:"自動車工業", accept:["自動車工業","自動車の組立工場"], explain:"岩手県と宮城県には自動車の組立工場があります。"},
+  {pillar:5, q:"北海道でさかんな、地元の農林水産物をいかした工業は（　）である。", answer:"食料品工業", accept:["食料品工業"], explain:"食料品工業など、地元でとれる農林水産物などをいかした工業がさかんです。"},
+  // pillar 6
+  {pillar:6, q:"岩手県松川に1966年につくられた、日本初の発電所の種類は（　）である。", answer:"地熱発電", accept:["地熱発電"], explain:"岩手県の松川には、1966年に日本初の地熱発電所がつくられました。"},
+  {pillar:6, q:"北海道や東北地方の海沿いでさかんな、強い風を利用した発電は（　）である。", answer:"風力発電", accept:["風力発電"], explain:"北海道や青森県の日本海側、秋田県・山形県の海沿いなどには、大規模な風力発電の施設がつくられています。"},
+  // pillar 7
+  {pillar:7, q:"北海道と本州を鉄道でつなぐ、1988年に開通したトンネルを（　）という。", answer:"青函トンネル", accept:["青函トンネル"], explain:"北海道と本州を鉄道でつなぐ青函トンネルは、1988年に開通しました。"},
+  {pillar:7, q:"東京と新青森を結ぶ新幹線を（　）という。", answer:"東北新幹線", accept:["東北新幹線"], explain:"東北新幹線は東京－新青森を結びます。"},
+  {pillar:7, q:"青森県と秋田県の境にある、ぶなの原生林で知られる世界自然遺産を（　）という。", answer:"白神山地", accept:["白神山地"], explain:"青森県と秋田県の境には、ぶなの原生林で知られる白神山地があります。"},
+  {pillar:7, q:"今から900～800年ほど前に栄えた都市で、中尊寺金色堂がある岩手県の世界文化遺産を（　）という。", answer:"平泉", accept:["平泉"], explain:"平泉（岩手県）は、今から900～800年ほど前に栄えた都市の1つです。"}
+];
+
+const kihonFinalRaw = [
+  {pillar:1, q:"東北地方の自然について、正しいものはどれですか。",
+    choices:["奥羽山脈は日本一長い山脈である","田沢湖は東北地方で最も面積が大きい湖である","北上高地は日本海側にある","十和田湖は氷河がつくった湖である"],
+    answer:0, explain:"日本一長い奥羽山脈が南北に連なり、太平洋側と日本海側とを分けています。"},
+  {pillar:2, q:"北海道地方の自然について、正しいものはどれですか。",
+    choices:["摩周湖や阿寒湖はカルデラ湖である","北海道は梅雨や台風の影響を強く受ける","石狩山地は北海道の南部にある","流氷は太平洋側の沿岸に流れ着く"],
+    answer:0, explain:"東部の摩周湖・阿寒湖、南西部の支笏湖・洞爺湖などは、カルデラ湖です。"},
+  {pillar:3, q:"東北地方と北海道地方の農業について、正しいものはどれですか。",
+    choices:["山形県はおうとう（さくらんぼ）の生産量が日本一である","北海道の乳牛の飼育数は全国で下位である","津軽平野ではみかんの栽培がさかんである","根釧台地は稲作の中心地である"],
+    answer:0, explain:"山形県は、おうとう（さくらんぼ）の生産量が日本一です。"},
+  {pillar:4, q:"東北地方と北海道地方の林業・水産業について、正しいものはどれですか。",
+    choices:["三陸沖には潮目ができ、豊かな漁場となっている","北海道の森林面積は全体の10%程度である","ほたて貝の養殖は東北地方だけで行われている","三陸海岸は砂浜海岸が中心である"],
+    answer:0, explain:"三陸沖には暖流の黒潮と寒流の親潮が出合う潮目ができるため、魚の種類も豊富です。"},
+  {pillar:5, q:"東北地方と北海道地方の工業について、正しいものはどれですか。",
+    choices:["北海道地方の工業は食料品工業など軽工業の割合が多い","東北地方には自動車の組立工場は1つもない","北海道は重化学工業が工業の中心である","福島県では農業以外の産業は発達していない"],
+    answer:0, explain:"北海道地方は、食料品工業など軽工業の割合が多くなっています。"},
+  {pillar:6, q:"東北地方と北海道地方の電力について、正しいものはどれですか。",
+    choices:["東日本大震災をきっかけに東北地方では風力や太陽光発電の動きが活発になった","日本初の地熱発電所は北海道につくられた","東北地方や北海道では風力発電はほとんど行われていない","福島県の原子力発電所は現在も稼働を続けている"],
+    answer:0, explain:"東日本大震災のときに発生した原子力発電所の事故をきっかけに、東北地方では風力や太陽光などから電力を得る動きが活発になりました。"},
+  {pillar:7, q:"東北地方と北海道地方の交通・観光について、正しいものはどれですか。",
+    choices:["青函トンネルは1988年に開通し、北海道新幹線も利用している","東北新幹線は東京と札幌を直接結んでいる","白神山地は北海道にある世界自然遺産である","平泉は450年以上前から銀を産出してきた遺跡である"],
+    answer:0, explain:"北海道と本州を鉄道でつなぐ青函トンネルは、1988年に開通し、北海道新幹線もこのトンネルを利用しています。"}
+];
+
+/* ---------- 第2段階：黒太字テスト（kuroji） ---------- */
+
+const kurojiBlocks = [
+{ pillar:1, sub:"2-1｜①東北地方の自然の黒太字", items:[
+  {q:"日本一長く、東北地方の太平洋側と日本海側を分ける山脈は？", choices:["奥羽山脈","越後山脈","日高山脈","出羽山地"], answer:0, explain:"日本一長い奥羽山脈が南北に連なり、太平洋側と日本海側とを分けています。"},
+  {q:"太平洋側にある、北上川流域の高地は？", choices:["北上高地","阿武隈高地","出羽山地","石狩山地"], answer:0, explain:"太平洋側には北上高地と阿武隈高地があります。"},
+  {q:"太平洋側にある、阿武隈川流域の高地は？", choices:["阿武隈高地","北上高地","出羽山地","日高山脈"], answer:0, explain:"太平洋側には北上高地と阿武隈高地があります。"},
+  {q:"日本海側にある山地は？", choices:["出羽山地","北上高地","阿武隈高地","石狩山地"], answer:0, explain:"日本海側には出羽山地があります。"},
+  {q:"太平洋側を流れる、東北地方を代表する川は？（阿武隈川とあと1つ）", choices:["北上川","最上川","雄物川","米代川"], answer:0, explain:"太平洋側には北上川や阿武隈川などが流れています。"},
+  {q:"日本海側を流れる川で、三大急流の1つは？", choices:["最上川","北上川","阿武隈川","石狩川"], answer:0, explain:"日本海側には米代川・雄物川・最上川などが流れています。最上川は三大急流の1つです。"},
+  {q:"火山の火口がおちこんだくぼみに水がたまってできたカルデラ湖は？", choices:["十和田湖","田沢湖","猪苗代湖","中禅寺湖"], answer:0, explain:"十和田湖は、火山の火口がおちこんだくぼみに水がたまってできたカルデラ湖です。"},
+  {q:"日本で最も深い湖は？", choices:["田沢湖","十和田湖","猪苗代湖","琵琶湖"], answer:0, explain:"日本で最も深い田沢湖があります。"},
+  {q:"東北地方で最も面積が大きい湖は？", choices:["猪苗代湖","田沢湖","十和田湖","中禅寺湖"], answer:0, explain:"東北地方で最も面積が大きい猪苗代湖もあります。"},
+  {q:"太平洋側（宮古）の気候で、夏に気温を低くすることがある風は？", choices:["太平洋から吹く冷たい風","からっ風","フェーン","季節風全般"], answer:0, explain:"夏に、太平洋から冷たい風がふきこみ、気温が低くなることがあります。"},
+  {q:"日本海側（秋田）で冬に降水量が多くなる理由は？", choices:["北西のしめった季節風が奥羽山脈にぶつかるため","黒潮の影響を受けるため","台風の通り道になるため","内陸性の気候のため"], answer:0, explain:"冬は、北西のしめった季節風が奥羽山脈などにぶつかるため、降水量が多くなります。"},
+  {q:"海底地震の発生などによって高い波が急に海岸におしよせる現象は？", choices:["津波","高潮","フェーン現象","エルニーニョ現象"], answer:0, explain:"津波は海底地震の発生などによって、高い波が急に海岸におしよせる現象です。三陸海岸は津波によって何度も大きな被害を受けてきました。"}
+]},
+{ pillar:2, sub:"2-2｜②北海道地方の自然の黒太字", items:[
+  {q:"北海道中央にある山地は？", choices:["石狩山地","出羽山地","北上高地","日高山脈"], answer:0, explain:"中央に石狩山地があります。"},
+  {q:"石狩山地の南にある山脈は？", choices:["日高山脈","奥羽山脈","越後山脈","北上高地"], answer:0, explain:"その南に日高山脈があります。"},
+  {q:"大雪山とともに知られる、蝦夷富士ともよばれる火山は？", choices:["羊蹄山","有珠山","樽前山","恵庭岳"], answer:0, explain:"大雪山や羊蹄山（蝦夷富士）など、多くの火山があります。"},
+  {q:"上川盆地などで水を集め、石狩平野から海に注ぐ川は？", choices:["石狩川","十勝川","天塩川","釧路川"], answer:0, explain:"石狩川は、山々から流れ出る水を上川盆地などで集め、石狩平野から海に注ぎます。"},
+  {q:"東部にある、摩周湖とともに知られるカルデラ湖は？", choices:["阿寒湖","支笏湖","洞爺湖","サロマ湖"], answer:0, explain:"東部の摩周湖・阿寒湖はカルデラ湖です。"},
+  {q:"南西部にある、洞爺湖とともに知られるカルデラ湖は？", choices:["支笏湖","阿寒湖","摩周湖","サロマ湖"], answer:0, explain:"南西部の支笏湖・洞爺湖などは、カルデラ湖です。"},
+  {q:"オホーツク海沿岸にある湖は？", choices:["サロマ湖","支笏湖","洞爺湖","摩周湖"], answer:0, explain:"オホーツク海沿岸のサロマ湖など、多くの湖があります。"},
+  {q:"日本海側（札幌）で太平洋側より気温が高くなる理由となる暖流は？", choices:["対馬海流","黒潮","親潮","リマン海流"], answer:0, explain:"沖合いを流れる対馬海流の影響で、太平洋側より気温が高くなります。"},
+  {q:"東部（根室）で春から夏にかけて発生する、太平洋側の気象現象は？", choices:["濃霧（海霧）","からっ風","フェーン現象","季節風"], answer:0, explain:"太平洋側では、春から夏にかけて濃霧（海霧）が発生します。"},
+  {q:"オホーツク海の北部でできた氷が北海道沿岸に流れ着く現象は？", choices:["流氷","高潮","津波","季節風"], answer:0, explain:"オホーツク海の北部でできた氷が、海流や風によって流され、北海道のオホーツク海沿岸に流れ着きます。"}
+]},
+{ pillar:3, sub:"2-3｜③農業の黒太字", items:[
+  {q:"東北地方で全国の米の生産量に占める割合は、およそどれくらい？", choices:["4分の1以上","2分の1以上","10分の1程度","3分の2以上"], answer:0, explain:"東北地方では、全国の米の4分の1以上が生産されています。"},
+  {q:"秋田県にあり、稲作がさかんな干拓地は？", choices:["大潟村","上川盆地","石狩平野","仙台平野"], answer:0, explain:"秋田県の大潟村で稲作がさかんです。"},
+  {q:"稲作がさかんな、山形県の平野は？", choices:["庄内平野","仙台平野","石狩平野","津軽平野"], answer:0, explain:"山形県の庄内平野で稲作がさかんです。"},
+  {q:"稲作がさかんな、宮城県の平野は？", choices:["仙台平野","庄内平野","石狩平野","津軽平野"], answer:0, explain:"宮城県の仙台平野で稲作がさかんです。"},
+  {q:"北海道で稲作がさかんな盆地は？（石狩平野とあと1つ）", choices:["上川盆地","十勝平野","根釧台地","山形盆地"], answer:0, explain:"北海道のおもな産地は、上川盆地や石狩平野などです。"},
+  {q:"すずしくて雨が少ない青森県の平野で、りんごが栽培されているのは？", choices:["津軽平野","仙台平野","庄内平野","石狩平野"], answer:0, explain:"すずしくて雨が少ない津軽平野では、りんごが栽培されています。"},
+  {q:"おうとう（さくらんぼ）の生産量が日本一の県は？", choices:["山形県","青森県","福島県","岩手県"], answer:0, explain:"山形県は、おうとう（さくらんぼ）の生産量が日本一です。"},
+  {q:"おうとうの栽培の中心となっている、山形県の盆地は？", choices:["山形盆地","米沢盆地","新庄盆地","横手盆地"], answer:0, explain:"栽培の中心は、山形盆地です。"},
+  {q:"ももなどが栽培されている、福島県の盆地は？", choices:["福島盆地","会津盆地","郡山盆地","米沢盆地"], answer:0, explain:"福島盆地では、ももなどが栽培されています。"},
+  {q:"北海道十勝平野などで行われている、てんさい・じゃがいも・豆類などを順番に栽培する農法は？", choices:["輪作","二毛作","促成栽培","高冷地農業"], answer:0, explain:"十勝平野などで、てんさい・じゃがいも・豆類などの輪作が行われています。"},
+  {q:"岩手県で多く飼育されている家畜は？（乳牛・肉牛のほか）", choices:["肉用若鶏","めん羊","やぎ","うずら"], answer:0, explain:"岩手県では、多くの乳牛・肉用若鶏・肉牛などが飼育されています。"},
+  {q:"乳牛・肉牛の飼育数が日本一の都道府県は？", choices:["北海道","岩手県","栃木県","鹿児島県"], answer:0, explain:"北海道の乳牛・肉牛の飼育数は日本一です。"},
+  {q:"濃霧の影響で夏でも低温な北海道の台地で、大規模な酪農が行われているのは？", choices:["根釧台地","十勝平野","上川盆地","石狩平野"], answer:0, explain:"根釧台地では、大規模な酪農が行われています。"},
+  {q:"藍とならんで染め物に使われ、最上川流域で栽培がさかんだった植物は？", choices:["紅花","茶","わた","あい"], answer:0, explain:"紅花は藍とならんで、染め物に使われる代表的な植物です。最上川流域でつくられるものは品質が高いことで知られます。"}
+]},
+{ pillar:4, sub:"2-4｜④林業・水産業の黒太字", items:[
+  {q:"青森県の代表的な美林で、三大美林の1つは？", choices:["津軽ひば","秋田すぎ","木曽ひのき","吉野すぎ"], answer:0, explain:"青森県の津軽ひばは三大美林に数えられます。"},
+  {q:"米代川流域で育てられ、三大美林の1つとされる秋田県の木は？", choices:["秋田すぎ","津軽ひば","木曽ひのき","吉野すぎ"], answer:0, explain:"米代川流域の秋田すぎは三大美林に数えられます。"},
+  {q:"北海道の森林で多い、製紙・パルプ用として伐採される針葉樹は？（えぞまつとあと1つ）", choices:["とどまつ","からまつ","ぶな","秋田すぎ"], answer:0, explain:"針葉樹のえぞまつ・とどまつなどが多く、製紙・パルプ用として伐採されています。"},
+  {q:"三陸沖で暖流の黒潮と寒流の親潮が出合ってできる場所は？", choices:["潮目","干潟","三角州","リアス海岸"], answer:0, explain:"三陸沖には暖流の黒潮と寒流の親潮が出合う潮目ができます。"},
+  {q:"リアス海岸をいかした漁港がある、岩手県の港町は？", choices:["宮古","石巻","八戸","釧路"], answer:0, explain:"リアス海岸をいかした岩手県の宮古の漁港があります。"},
+  {q:"リアス海岸をいかした漁港がある、宮城県の港町は？", choices:["石巻","宮古","八戸","根室"], answer:0, explain:"宮城県の石巻などの漁港があります。"},
+  {q:"北海道でさかんな、貝の養殖は？", choices:["ほたて貝","かき","真珠","あさり"], answer:0, explain:"北海道では、ほたて貝やこんぶの養殖がさかんです。"},
+  {q:"北海道でさかんな、海藻の養殖は？", choices:["こんぶ","のり","わかめ","ひじき"], answer:0, explain:"北海道では、ほたて貝やこんぶの養殖がさかんです。"},
+  {q:"2011年3月11日に発生した、東北地方太平洋沖地震による災害は？", choices:["東日本大震災","阪神・淡路大震災","関東大震災","能登半島地震"], answer:0, explain:"東日本大震災は、2011年3月11日に発生した東北地方太平洋沖地震による災害です。"},
+  {q:"北海道で力が入れられている、稚魚を放流して育てる漁業は？", choices:["さけの栽培漁業","まぐろの養殖","うなぎの養殖","かきの養殖"], answer:0, explain:"北海道では、さけの栽培漁業にも力が入れられています。"}
+]},
+{ pillar:5, sub:"2-5｜⑤工業の黒太字", items:[
+  {q:"東北地方で空港や高速道路の周辺に進出した、集積回路などをつくる工業は？", choices:["電子工業","製紙業","陶磁器業","繊維工業"], answer:0, explain:"空港や高速道路の周辺に、集積回路などをつくる電子工業が進出しました。"},
+  {q:"岩手県と宮城県にある、自動車関連の工場は？", choices:["自動車の組立工場","製鉄所","造船所","石油化学コンビナート"], answer:0, explain:"岩手県と宮城県には自動車の組立工場があります。"},
+  {q:"電子部品のほか情報通信機器の生産もさかんな東北地方の県は？", choices:["福島県","秋田県","山形県","青森県"], answer:0, explain:"福島県などでは電子部品のほか、情報通信機器の生産もさかんです。"},
+  {q:"北海道地方の工業で割合が多いのは？", choices:["軽工業","重化学工業","石油化学工業","鉄鋼業"], answer:0, explain:"食料品工業など、軽工業の割合が多くなっています。"},
+  {q:"岩手県でつくられる伝統的工芸品で、周辺で取れた砂鉄をもとにつくられてきたものは？", choices:["南部鉄器","天童将棋駒","大館曲げわっぱ","会津塗"], answer:0, explain:"南部鉄器（岩手県）は、周辺で取れた砂鉄をもとにつくられてきました。"},
+  {q:"日本で生産される将棋駒のほとんどをしめる、山形県の伝統的工芸品は？", choices:["天童将棋駒","南部鉄器","大館曲げわっぱ","置賜紬"], answer:0, explain:"天童将棋駒（山形県）は、日本で生産される将棋駒のほとんどをしめています。"},
+  {q:"秋田すぎが用いられている、秋田県の伝統的工芸品は？", choices:["大館曲げわっぱ","南部鉄器","天童将棋駒","会津塗"], answer:0, explain:"大館曲げわっぱ（秋田県）は、秋田すぎが用いられています。"},
+  {q:"アイヌの伝統的な織物で、北海道の伝統的工芸品は？", choices:["二風谷アットゥシ","津軽塗","会津塗","宮城伝統こけし"], answer:0, explain:"二風谷アットゥシ（北海道）は、アイヌの伝統的な織物です。"}
+]},
+{ pillar:6, sub:"2-6｜⑥電力の黒太字", items:[
+  {q:"東日本大震災のときに事故が発生し、福島県にある発電所を廃炉にすることが決まったのは？", choices:["原子力発電所","火力発電所","水力発電所","地熱発電所"], answer:0, explain:"東日本大震災のときに発生した原子力発電所の事故の結果、福島県にある原子力発電所を廃炉にすることが決まりました。"},
+  {q:"岩手県松川に1966年につくられた、日本初の発電所の種類は？", choices:["地熱発電","風力発電","太陽光発電","水力発電"], answer:0, explain:"岩手県の松川には、1966年に日本初の地熱発電所がつくられました。"},
+  {q:"北海道や青森県の日本海側、秋田県・山形県の海沿いなどでさかんな発電は？", choices:["風力発電","地熱発電","太陽光発電","火力発電"], answer:0, explain:"これらの地域には、大規模な風力発電の施設がつくられています。"},
+  {q:"風力発電がほかの地方に比べて東北・北海道でさかんな理由は？", choices:["安定して強い風がふき、広い土地があるため","地価が安いため","人口が少ないため","法律で義務づけられているため"], answer:0, explain:"安定して強い風がふき、沿岸には発電所をつくることのできる広い土地があるため、風力発電がさかんに行われています。"},
+  {q:"風力発電の問題点として挙げられる、風車の建設による影響は？", choices:["景観の悪化","地盤沈下","水質汚染","土壌流出"], answer:0, explain:"風車の建設によって景観が悪化することを心配する声があります。"},
+  {q:"風車が回転するときに問題になることがあるものは？", choices:["騒音","振動による地割れ","異臭","電波障害"], answer:0, explain:"風車が回転するときの騒音が問題になることもあります。"}
+]},
+{ pillar:7, sub:"2-7｜⑦交通・観光の黒太字", items:[
+  {q:"北海道と本州を鉄道でつなぐ、1988年に開通したトンネルは？", choices:["青函トンネル","関越トンネル","山手トンネル","丹那トンネル"], answer:0, explain:"北海道と本州を鉄道でつなぐ青函トンネルは、1988年に開通しました。"},
+  {q:"東京と新青森を結ぶ新幹線は？", choices:["東北新幹線","山形新幹線","秋田新幹線","北海道新幹線"], answer:0, explain:"東北新幹線は東京－新青森を結びます。"},
+  {q:"東京・山形・新庄を結ぶ新幹線は？", choices:["山形新幹線","東北新幹線","秋田新幹線","北陸新幹線"], answer:0, explain:"山形新幹線は東京－山形－新庄を結びます。"},
+  {q:"東京と秋田を結ぶ新幹線は？", choices:["秋田新幹線","山形新幹線","東北新幹線","北海道新幹線"], answer:0, explain:"秋田新幹線は東京－秋田を結びます。"},
+  {q:"新青森と新函館北斗を結ぶ新幹線は？", choices:["北海道新幹線","東北新幹線","山形新幹線","秋田新幹線"], answer:0, explain:"北海道新幹線は新青森－新函館北斗を結びます。"},
+  {q:"北海道の空の玄関とよばれる空港は？", choices:["新千歳空港","函館空港","丘珠空港","釧路空港"], answer:0, explain:"新千歳空港は、北海道の空の玄関です。"},
+  {q:"東京と青森を結ぶ、日本で最も長い高速道路は？", choices:["東北自動車道","北海道縦貫自動車道","常磐自動車道","関越自動車道"], answer:0, explain:"東北自動車道は東京－青森を結びます。日本で最も長い高速道路です。"},
+  {q:"青森県と秋田県の境にある、ぶなの原生林で知られる世界自然遺産は？", choices:["白神山地","知床","平泉","縄文遺跡群"], answer:0, explain:"青森県と秋田県の境には、ぶなの原生林で知られる白神山地があります。"},
+  {q:"海と陸の多様な生物が一体となった環境が残されている、北海道の世界自然遺産は？", choices:["知床","白神山地","釧路湿原","支笏洞爺国立公園"], answer:0, explain:"北海道の知床には、海と陸の多様な生物が一体となった環境が残されています。"},
+  {q:"今から900～800年ほど前に栄えた都市で、中尊寺金色堂がある岩手県の世界文化遺産は？", choices:["平泉","白神山地","知床","縄文遺跡群"], answer:0, explain:"平泉（岩手県）は、今から900～800年ほど前に栄えた都市の1つで、中尊寺金色堂などがあります。"},
+  {q:"青森県・北海道などにある、大昔の人々の暮らしのようすがわかる世界文化遺産は？", choices:["北海道・北東北の縄文遺跡群","平泉","白神山地","知床"], answer:0, explain:"北海道・北東北の縄文遺跡群（青森県・北海道など）は、大昔の人々の暮らしのようすがわかる遺跡です。"},
+  {q:"水鳥の生息地として重要な湿地を保護するための国どうしの取り決めは？", choices:["ラムサール条約","世界遺産条約","京都議定書","パリ協定"], answer:0, explain:"ラムサール条約は、水鳥の生息地として重要な湿地と、そこにすむ生物を保護するための国どうしの取り決めです。"}
+]},
+{ pillar:3, sub:"2-8｜統計ランキング（農業・水産業）", items:[
+  {q:"米の生産量割合（2023年）で、全国1位の県は？", choices:["新潟県","北海道","秋田県","山形県"], answer:0, explain:"米は新潟8.3%、北海道7.5%、秋田6.4%の順で、新潟県が1位です。"},
+  {q:"小麦の生産量割合（2023年）で、全国1位の都道府県は？", choices:["北海道","福岡県","佐賀県","愛知県"], answer:0, explain:"小麦は北海道が65.5%と圧倒的な割合を占めています。"},
+  {q:"たまねぎの生産量割合（2022年）で、全国1位の都道府県は？", choices:["北海道","兵庫県","佐賀県","愛知県"], answer:0, explain:"たまねぎは北海道が67.7%と圧倒的な割合を占めています。"},
+  {q:"りんごの生産量割合（2022年）で、全国1位の県は？", choices:["青森県","長野県","岩手県","山形県"], answer:0, explain:"りんごは青森59.6%、長野18.0%の順で、青森県が1位です。"},
+  {q:"ももの生産量割合（2022年）で、全国1位の県は？", choices:["山梨県","福島県","長野県","山形県"], answer:0, explain:"ももは山梨30.5%、福島23.7%の順で、山梨県が1位です。"},
+  {q:"ほたて貝の収獲量割合（2022年）で、全国1位の都道府県は？", choices:["北海道","青森県","宮城県","岩手県"], answer:0, explain:"ほたて貝は北海道49.7%、青森45.3%の順で、北海道が1位です。"},
+  {q:"こんぶの収獲量割合（2022年）で、全国1位の都道府県は？", choices:["北海道","岩手県","宮城県","青森県"], answer:0, explain:"こんぶは北海道が71.4%と圧倒的な割合を占めています。"},
+  {q:"わかめの収獲量割合（2022年）で、全国1位の県は？", choices:["宮城県","岩手県","徳島県","北海道"], answer:0, explain:"わかめは宮城47.0%、岩手30.4%の順で、宮城県が1位です。"}
+]},
+{ pillar:0, sub:"2-9｜道県当てクイズ（今回のポイント）", items:[
+  {q:"「りんごの生産量が日本一」「陸奥湾のほたて貝」「東北三大祭りのねぶた」が特色の県は？", choices:["青森県","秋田県","山形県","岩手県"], answer:0, explain:"青森県はりんごの生産量日本一、陸奥湾のほたて貝、ねぶた、東北新幹線の終着駅・新青森が特色です。"},
+  {q:"「稲作、あきたこまち、八郎潟の干拓」「東北三大祭りの竿燈」「白神山地、十和田湖」が特色の県は？", choices:["秋田県","青森県","山形県","岩手県"], answer:0, explain:"秋田県は稲作・あきたこまち・八郎潟の干拓、竿燈、白神山地・十和田湖が特色です。"},
+  {q:"「三大急流の最上川」「庄内平野の稲作、おうとうの生産量が日本一」「山形新幹線」が特色の県は？", choices:["山形県","秋田県","岩手県","宮城県"], answer:0, explain:"山形県は最上川、庄内平野の稲作・おうとう、山形新幹線が特色です。"},
+  {q:"「畜産、酪農」「伝統的工芸品の南部鉄器」「世界文化遺産の平泉」が特色の県は？", choices:["岩手県","宮城県","福島県","秋田県"], answer:0, explain:"岩手県は畜産・酪農、南部鉄器、日本初の地熱発電、平泉が特色です。"},
+  {q:"「仙台平野の稲作」「かきの養殖」「仙台は杜の都、東北三大祭りの七夕」が特色の県は？", choices:["宮城県","岩手県","福島県","山形県"], answer:0, explain:"宮城県は仙台平野の稲作、かきの養殖、宮城伝統こけし、仙台七夕が特色です。"},
+  {q:"「東北最大の湖・猪苗代湖」「ももなどの栽培」「再生可能エネルギーを利用した発電」が特色の県は？", choices:["福島県","宮城県","山形県","岩手県"], answer:0, explain:"福島県は猪苗代湖、ももの栽培、再生可能エネルギーが特色です。"},
+  {q:"「洞爺湖などのカルデラ湖」「石狩平野・上川盆地の稲作、十勝平野の畑作、根釧台地の酪農」「世界自然遺産の知床」が特色の道は？", choices:["北海道","青森県","岩手県","秋田県"], answer:0, explain:"北海道は洞爺湖などのカルデラ湖、稲作・畑作・酪農、食料品工業、知床・アイヌが特色です。"},
+  {q:"面積が最も大きい道県は？（2023年、78418km²）", choices:["北海道","岩手県","福島県","秋田県"], answer:0, explain:"面積は北海道78418km²が圧倒的に大きく、次いで岩手県15275km²の順です。"},
+  {q:"人口が最も多い道県は？（2023年、約509万人）", choices:["北海道","宮城県","福島県","青森県"], answer:0, explain:"人口は北海道が約509万人と最も多くなっています。"},
+  {q:"東北地方で人口が最も少ない県は？（2023年、約91万人）", choices:["秋田県","山形県","岩手県","福島県"], answer:0, explain:"人口は秋田県が約91万人と、東北地方の中で最も少なくなっています。"},
+  {q:"岩手県の県庁所在地は？", choices:["盛岡市","一関市","花巻市","北上市"], answer:0, explain:"岩手県の県庁所在地は盛岡市です。"},
+  {q:"宮城県の県庁所在地は？", choices:["仙台市","石巻市","大崎市","気仙沼市"], answer:0, explain:"宮城県の県庁所在地は仙台市です。"}
+]}
+];
+
+/* ---------- 第3段階：ひとくちメモテスト（mame） ---------- */
+
+const mameQuizRaw = [
+  {pillar:1, q:"海底地震の発生などによって、高い波が急に海岸におしよせる現象は？", choices:["津波","高潮","フェーン現象","エルニーニョ現象"], answer:0, explain:"津波は海底地震の発生などによって、高い波が急に海岸におしよせる現象です。三陸海岸は、津波によって何度も大きな被害を受けてきました。"},
+  {pillar:2, q:"オホーツク海の北部でできた氷が北海道沿岸に流れ着く現象は？", choices:["流氷","高潮","津波","季節風"], answer:0, explain:"流氷は、オホーツク海の北部でできた氷が、海流や風によって流され、1月ごろ北海道のオホーツク海沿岸に流れ着くものです。港は3月ごろまでとざされます。"},
+  {pillar:3, q:"最上川流域で栽培がさかんだった、口紅の原料にもなる植物は？", choices:["紅花","茶","わた","あい"], answer:0, explain:"紅花は藍とならんで、染め物に使われる代表的な植物で、口紅の原料にもなりました。最上川流域でつくられるものは品質が高く、昔から栽培がさかんでした。"},
+  {pillar:4, q:"2011年3月11日に発生した東北地方太平洋沖地震による災害は？", choices:["東日本大震災","阪神・淡路大震災","関東大震災","能登半島地震"], answer:0, explain:"東日本大震災は、2011年3月11日に発生した東北地方太平洋沖地震による災害です。とくに海沿いの地域では、津波により大きな被害を受けました。"},
+  {pillar:6, q:"風車の建設によって心配される、景観への影響は？", choices:["景観の悪化","地盤沈下","水質汚染","土壌流出"], answer:0, explain:"風車の建設によって景観が悪化することを心配する声があります。また、風車が回転するときの騒音が問題になることもあります。"},
+  {pillar:7, q:"水鳥の生息地として重要な湿地を保護するための国どうしの取り決めは？", choices:["ラムサール条約","世界遺産条約","京都議定書","パリ協定"], answer:0, explain:"ラムサール条約は、水鳥の生息地として重要な湿地と、そこにすむ生物を保護するための国どうしの取り決めです。千葉県の谷津干潟などが登録されています。"},
+  {pillar:5, q:"アイヌの伝統的な織物で、北海道の伝統的工芸品は？", choices:["二風谷アットゥシ","津軽塗","会津塗","宮城伝統こけし"], answer:0, explain:"二風谷アットゥシ（北海道）は、アイヌの伝統的な織物です。"}
+];
+
+/* ---------- 第4段階：気をつけたいポイント（sanko／読みもの・採点なし） ---------- */
+
+const sankoNotes = [
+  {
+    title:"北海道なのに「広島」が？",
+    body:`北海道庁がある札幌市と、北海道の空の玄関である新千歳空港の間には、北広島市があります。北広島市は、140年ほど前、広島県から開拓のために人々が移り住んできたことをきっかけに始まった町です。北海道には、札幌市に「福井」、釧路市に「鳥取」などのように移住してきた人々の出身地に由来する地名が各地にあります。<br><br>
+1869年に開拓使という役所がおかれて本格的に開拓が始められ、日本の各地から集められた人々が屯田兵として、開拓と北の防備にあたりました。その一方で、昔は蝦夷地とよばれた北海道に古くから住んでいたアイヌの人々の生活や文化がおびやかされるようになりました。現在ある「ウポポイ」とよばれる施設は、日本の先住民族であるアイヌの文化を守り発展させていくためにつくられたものです。<br><br>
+北海道や東北地方の北部には、アイヌ語に由来する地名が多くあります。これまでの看板では漢字で書かれた地名が大きく表示されていましたが、現在ではアイヌ語が同じ大きさで表示されている看板も見られるようになっています。`,
+    src:"予習シリーズ5年上 第17回 Q&A"
+  },
+  {
+    title:"やませと東北地方",
+    body:`①やませと冷害：東北地方のおもに太平洋側では、初夏にやませがふくことがあります。やませがふき続けると夏でも気温が上がらず、冷害になり、米は不作になってしまいます。やませによる冷害は、日本海側よりも太平洋側で被害が大きくなります。日本海側では、南北に走っている奥羽山脈によって、やませがさえぎられるからです。<br><br>
+②冷害を防ぐ工夫：（1）水の管理：気温が上がらないときには、田の水位を上げて、稲を冷たい風から守ります。水には、空気にくらべて、あたたまりにくくさめにくい性質があります。大規模な水田地帯では、2週間先の気温の予測情報などを活用している地域もあります。（2）品種改良：宮城県では、かつてササニシキという品種の稲の生産がさかんでしたが、寒さに弱い品種でもあったため、深刻な冷害が発生した1993年以降、ほとんど生産されなくなりました。しかし、味のよいササニシキを求める声もあり、ササニシキと寒さに強い品種を組み合わせる品種改良によって、新しいブランド米がつくられています。`,
+    src:"予習シリーズ5年上 第17回 ちょっとくわしく"
+  },
+  {
+    title:"サムサノナツハオロオロアルキ",
+    body:`岩手県生まれの詩人である宮沢賢治の詩「雨ニモマケズ」の中に、「サムサノナツハオロオロアルキ」という一節があります。この「寒さの夏」とは、冷害を示しています。<br><br>
+宮沢賢治は、学校で農業を教えたこともあり、後には自ら畑を耕しながら、農民の指導などにあたりました。このため、農家、とくに稲作農家の苦労を肌で感じていました。稲作農家にとって、暑いはずの夏に気温が上がらないことは、大きな心配の種だったのです。`,
+    src:"予習シリーズ5年上 第17回 コラム"
+  },
+  {
+    title:"やませは太平洋側で被害が大きい",
+    body:`やませは太平洋側の東北地方でおもに被害をもたらす初夏の冷たい風です。日本海側では、南北に走る奥羽山脈がやませをさえぎるため、被害は小さくなります。「やませ＝東北地方全体の問題」ではなく「太平洋側でとくに深刻」という点を正確に覚えておきましょう。`,
+    src:"入試でまちがえやすいポイント（一般知識）"
+  },
+  {
+    title:"新潟県は東北地方ではない",
+    body:`米の生産量ランキングで新潟県が1位になることがよくありますが、新潟県は中部地方（北陸）に属し、東北地方の県ではありません。東北地方は青森・岩手・宮城・秋田・山形・福島の6県です。統計の1位県が必ずしも「その地方の県」とは限らない点に注意しましょう。`,
+    src:"入試でまちがえやすいポイント（一般知識）"
+  },
+  {
+    title:"白神山地と知床の違い",
+    body:`白神山地（青森県・秋田県の境、ぶなの原生林）と知床（北海道、海と陸の生態系）は、どちらも世界自然遺産ですが、所在地も特徴も異なります。「白神＝東北」「知床＝北海道」とセットで覚えましょう。`,
+    src:"入試でまちがえやすいポイント（一般知識）"
+  },
+  {
+    title:"北海道は梅雨や台風の影響をほとんど受けない",
+    body:`北海道は、梅雨や台風の影響をあまり受けないという、日本の他地域とは異なる気候の特徴があります。この点は北海道特有のポイントとしてよく問われるので、覚えておきましょう。`,
+    src:"入試でまちがえやすいポイント（一般知識）"
+  },
+  {
+    title:"東北三大祭りをセットで覚える",
+    body:`東北三大祭りは、青森ねぶた（青森県）・秋田竿燈（秋田県）・仙台七夕（宮城県）の3つです。県名と祭りの組み合わせをまとめて覚えておくと、県当てクイズにも対応しやすくなります。`,
+    src:"入試でまちがえやすいポイント（一般知識）"
+  }
+];
+
+/* ===================== 共通ビルド関数 ===================== */
+
+function shuffleArr(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+function finalize(q){
+  const correctText = q.choices[q.answer];
+  const order = shuffleArr(q.choices.map((c,i)=>i));
+  const newChoices = order.map(i=>q.choices[i]);
+  const newAnswer = newChoices.indexOf(correctText);
+  const out = Object.assign({}, q, {choices:newChoices, answer:newAnswer});
+  return out;
+}
+
+function normalizeAnswer(str){
+  if(str===undefined || str===null) return "";
+  let s = String(str).trim();
+  s = s.replace(/[０-９]/g, ch => String.fromCharCode(ch.charCodeAt(0)-0xFEE0));
+  s = s.replace(/\s+/g,"");
+  return s;
+}
+
+function checkFillAnswer(item, userInput){
+  const norm = normalizeAnswer(userInput);
+  if(norm==="") return false;
+  const candidates = [item.answer].concat(item.accept||[]);
+  return candidates.some(c => normalizeAnswer(c)===norm);
+}
+
+/* kihon の穴埋め item 生成 */
+function buildKihonFillItems(){
+  return kihonFillRaw.map((r,idx)=>({
+    type:"fill",
+    id:"kihonFill_"+idx,
+    q:r.q,
+    answer:r.answer,
+    accept:r.accept,
+    explain:r.explain,
+    lead:PILLARS[r.pillar].label,
+    sub:PILLARS[r.pillar].full,
+    pillar:r.pillar
+  }));
+}
+
+function buildKihonFinalItems(){
+  return kihonFinalRaw.map((r,idx)=>{
+    const fq = finalize({q:r.q, choices:r.choices, answer:r.answer, explain:r.explain});
+    return Object.assign({type:"choice", id:"kihonFinal_"+idx, pillar:r.pillar}, fq);
+  });
+}
+
+function buildKihonItems(){
+  const overview = kihonOverviewScreens.map((s,idx)=>Object.assign({id:"kihonOv_"+idx}, s));
+  const fills = shuffleArrKeepBlocks();
+  const finals = shuffleArr(buildKihonFinalItems());
+  return overview.concat(fills, finals);
+}
+// 穴埋めはブロック（pillar）順は固定、ブロック内はシャッフル
+function shuffleArrKeepBlocks(){
+  const byPillar = {};
+  kihonFillRaw.forEach((r,idx)=>{
+    if(!byPillar[r.pillar]) byPillar[r.pillar]=[];
+    byPillar[r.pillar].push(idx);
+  });
+  let out = [];
+  [1,2,3,4,5,6,7].forEach(p=>{
+    const idxs = shuffleArr(byPillar[p]||[]);
+    idxs.forEach(idx=>{
+      const r = kihonFillRaw[idx];
+      out.push({
+        type:"fill", id:"kihonFill_"+idx, q:r.q, answer:r.answer, accept:r.accept,
+        explain:r.explain, lead:PILLARS[r.pillar].label, sub:PILLARS[r.pillar].full, pillar:r.pillar
+      });
+    });
+  });
+  return out;
+}
+
+/* kuroji item 生成：ブロック順固定、ブロック内シャッフル */
+function buildKurojiItems(){
+  let out = [];
+  kurojiBlocks.forEach((block,bi)=>{
+    const shuffledItems = shuffleArr(block.items);
+    shuffledItems.forEach((it,ii)=>{
+      const fq = finalize(it);
+      out.push(Object.assign({
+        type:"choice",
+        id:"kuroji_"+bi+"_"+ii,
+        pillar:block.pillar,
+        sub:block.sub
+      }, fq));
+    });
+  });
+  return out;
+}
+
+/* mame item 生成 */
+function buildMameItems(){
+  const shuffled = shuffleArr(mameQuizRaw);
+  return shuffled.map((r,idx)=>{
+    const fq = finalize(r);
+    return Object.assign({type:"choice", id:"mame_"+idx, pillar:r.pillar}, fq);
+  });
+}
+
+/* sanko item 生成（採点なし） */
+function buildSankoItems(){
+  return sankoNotes.map((n,idx)=>({
+    type:"info", id:"sanko_"+idx, title:n.title, body:n.body, src:n.src, wide:true
+  }));
+}
+
+const STAGES = [
+  {id:"kihon", name:"① 構造テスト", desc:"7本柱（東北の自然・北海道の自然・農業・林業水産業・工業・電力・交通観光）の骨組みを確認。概要2画面＋穴埋め21問＋まとめ選択7問。", scored:true, ref:false, build:buildKihonItems},
+  {id:"kuroji", name:"② 黒太字テスト", desc:"各分野の重要語句・統計ランキング・7道県別まとめを4択で確認します。", scored:true, ref:false, build:buildKurojiItems},
+  {id:"mame", name:"③ ひとくちメモテスト", desc:"教科書のひとくちメモから出題します。", scored:true, ref:false, build:buildMameItems},
+  {id:"sanko", name:"④ 気をつけたいポイント", desc:"教科書コラム＋入試でまちがえやすい注意点の読みもの。採点はありません。", scored:false, ref:true, build:buildSankoItems}
+];
+
+/* ===================== 状態管理／localStorage ===================== */
+
+const STORAGE_KEY = "tohokuhokkaido_missed_v1";
+
+function loadMissedStore(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : {};
+  }catch(e){ return {}; }
+}
+function saveMissedStore(store){
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(store)); }catch(e){ /* 保存できない環境は無視 */ }
+}
+
+const state = {
+  screen:"home",
+  stageId:null,
+  isRetry:false,
+  items:[],
+  currentIndex:0,
+  scoreTotal:0,
+  scoreCorrect:0,
+  answerLog:[],
+  results:{},
+  missedStore: loadMissedStore(),
+  answered:false,
+  userInput:""
+};
+
+function startStage(stageId){
+  const stage = STAGES.find(s=>s.id===stageId);
+  state.stageId = stageId;
+  state.isRetry = false;
+  state.items = stage.build();
+  state.currentIndex = 0;
+  state.scoreTotal = state.items.filter(i=>i.type!=="info").length;
+  state.scoreCorrect = 0;
+  state.answerLog = [];
+  state.answered = false;
+  state.userInput = "";
+  state.screen = "play";
+  render();
+}
+
+function startRetry(stageId){
+  const missed = state.missedStore[stageId] || {};
+  const items = Object.values(missed);
+  if(items.length===0) return;
+  state.stageId = stageId;
+  state.isRetry = true;
+  state.items = shuffleArr(items);
+  state.currentIndex = 0;
+  state.scoreTotal = state.items.length;
+  state.scoreCorrect = 0;
+  state.answerLog = [];
+  state.answered = false;
+  state.userInput = "";
+  state.screen = "play";
+  render();
+}
+
+function currentItem(){ return state.items[state.currentIndex]; }
+
+function submitChoice(idx){
+  if(state.answered) return;
+  const item = currentItem();
+  const correct = idx === item.answer;
+  state.answered = true;
+  state.userChoiceIdx = idx;
+  if(correct) state.scoreCorrect++;
+  state.answerLog.push({item, wasCorrect:correct});
+}
+
+function submitFill(){
+  if(state.answered) return;
+  const item = currentItem();
+  const correct = checkFillAnswer(item, state.userInput);
+  state.answered = true;
+  if(correct) state.scoreCorrect++;
+  state.answerLog.push({item, wasCorrect:correct});
+}
+
+function nextItem(){
+  state.answered = false;
+  state.userInput = "";
+  state.userChoiceIdx = null;
+  state.hintShown = false;
+  if(state.currentIndex < state.items.length-1){
+    state.currentIndex++;
+    render();
+  }else{
+    finishStage();
+  }
+}
+
+function finishStage(){
+  const stage = STAGES.find(s=>s.id===state.stageId);
+  state.results[state.stageId] = {
+    correct: state.scoreCorrect,
+    total: state.scoreTotal,
+    at: Date.now()
+  };
+  if(stage.scored){
+    const missed = state.missedStore[state.stageId] || {};
+    state.answerLog.forEach(log=>{
+      const key = log.item.q;
+      if(!log.wasCorrect){
+        missed[key] = log.item;
+      }else{
+        if(missed[key]) delete missed[key];
+      }
+    });
+    state.missedStore[state.stageId] = missed;
+    saveMissedStore(state.missedStore);
+  }
+  state.screen = "result";
+  render();
+}
+
+function backHome(){
+  state.screen = "home";
+  render();
+}
+
+/* ===================== レンダリング ===================== */
+
+const app = document.getElementById("app");
+
+function render(){
+  if(state.screen==="home") renderHome();
+  else if(state.screen==="play") renderPlay();
+  else if(state.screen==="result") renderResult();
+}
+
+function esc(s){
+  return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+
+function renderHome(){
+  let html = `
+    <div class="header">
+      <h1>東北・北海道地方テスト</h1>
+      <div class="sub">予習シリーズ5年上　第17回　東北地方／北海道地方</div>
+    </div>
+    <div class="content">
+  `;
+  const scoredStages = STAGES.filter(s=>s.scored);
+  const refStages = STAGES.filter(s=>!s.scored);
+
+  html += `<div class="home-title">確認テスト</div>`;
+  scoredStages.forEach(stage=>{
+    const res = state.results[stage.id];
+    const missedCount = Object.keys(state.missedStore[stage.id]||{}).length;
+    html += `<div class="stage-card" onclick="startStage('${stage.id}')">
+      <div class="stage-top">
+        <div class="stage-name">${esc(stage.name)}</div>
+        <div class="stage-badge">${res ? res.correct+"/"+res.total : "未挑戦"}</div>
+      </div>
+      <div class="stage-desc">${esc(stage.desc)}</div>
+      ${res ? `<div class="progress-bar"><div class="progress-fill" style="width:${Math.round(res.correct/res.total*100)}%"></div></div>` : ""}
+      ${missedCount>0 ? `<div class="retry-btn" onclick="event.stopPropagation(); startRetry('${stage.id}')">🔁 苦手${missedCount}問を復習</div>` : ""}
+    </div>`;
+  });
+
+  html += `<div class="home-title">参考情報（読みもの）</div>`;
+  refStages.forEach(stage=>{
+    html += `<div class="stage-card ref" onclick="startStage('${stage.id}')">
+      <div class="stage-top">
+        <div class="stage-name">${esc(stage.name)}</div>
+        <div class="stage-badge">読みもの</div>
+      </div>
+      <div class="stage-desc">${esc(stage.desc)}</div>
+    </div>`;
+  });
+
+  html += `<div class="footer-note">単一HTMLファイル・localStorageに端末内で保存されます</div>`;
+  html += `</div>`;
+  app.innerHTML = html;
+}
+
+function renderPlay(){
+  const item = currentItem();
+  const stage = STAGES.find(s=>s.id===state.stageId);
+  const isInfo = item.type==="info";
+
+  let html = `
+    <div class="header">
+      <h1>${esc(stage.name)}${state.isRetry?"（復習）":""}</h1>
+      <div class="sub">${item.sub ? esc(item.sub) : esc(stage.desc)}</div>
+    </div>
+    <div class="content">
+      <div class="play-topbar">
+        <span>問題 ${state.currentIndex+1} / ${state.items.length}</span>
+        <span onclick="backHome()" style="text-decoration:underline; cursor:pointer;">中断してホームへ</span>
+      </div>
+  `;
+
+  if(isInfo){
+    html += `<div class="qcard info">
+      <div class="qtitle">${esc(item.title)}</div>
+      <div class="info-body ${item.wide?'wide':''}">${item.body}</div>
+      ${item.src ? `<div class="src-tag">出典：${esc(item.src)}</div>` : ""}
+      <button class="btn btn-ref" onclick="nextItem()">${state.currentIndex < state.items.length-1 ? "次へ" : "結果を見る"}</button>
+    </div>`;
+  } else if(item.type==="fill"){
+    html += `<div class="qcard">`;
+    if(item.lead) html += `<div class="lead-badge">${esc(item.lead)}</div>`;
+    html += `<div class="qtext">${esc(item.q)}</div>`;
+    const inputClass = state.answered ? (checkFillAnswer(item, state.userInput) ? "correct":"wrong") : "";
+    html += `<input type="text" id="fillInput" class="fill-input ${inputClass}" placeholder="答えを入力" value="${esc(state.userInput)}" ${state.answered?"disabled":""} onkeydown="if(event.key==='Enter'){document.getElementById('fillInput').value=this.value; state.userInput=this.value; submitFillUI();}">`;
+    if(!state.answered){
+      html += `<button class="btn btn-primary" onclick="submitFillUI()">こたえる</button>`;
+    }else{
+      const correct = checkFillAnswer(item, state.userInput);
+      html += `<div class="explain-box ${correct?'good':'bad'}">
+        <span class="mark-icon">${correct?"⭕":"❌"}</span><b>正解：${esc(item.answer)}</b><br>${item.explain||""}
+      </div>`;
+      html += `<button class="btn btn-primary" onclick="nextItem()">${state.currentIndex < state.items.length-1 ? "次の問題へ" : "結果を見る"}</button>`;
+    }
+    html += `</div>`;
+  } else if(item.type==="choice"){
+    html += `<div class="qcard">`;
+    if(item.pillar!==undefined && item.pillar!==null) html += `<div class="lead-badge">${esc(pillarBadge(item.pillar))}</div>`;
+    html += `<div class="qtext">${esc(item.q)}</div>`;
+    html += `<div class="choice-list">`;
+    item.choices.forEach((c,idx)=>{
+      let cls = "choice-btn";
+      if(state.answered){
+        if(idx===item.answer) cls += " correct";
+        else if(idx===state.userChoiceIdx) cls += " wrong";
+        else cls += " dim";
+      }
+      html += `<button class="${cls}" ${state.answered?"disabled":""} onclick="submitChoiceUI(${idx})">${esc(c)}</button>`;
+    });
+    html += `</div>`;
+    if(state.answered){
+      const correct = state.userChoiceIdx===item.answer;
+      html += `<div class="explain-box ${correct?'good':'bad'}">
+        <span class="mark-icon">${correct?"⭕":"❌"}</span>${item.explain||""}
+      </div>`;
+      html += `<button class="btn btn-primary" onclick="nextItem()">${state.currentIndex < state.items.length-1 ? "次の問題へ" : "結果を見る"}</button>`;
+    }
+    html += `</div>`;
+  }
+
+  html += `</div>`;
+  app.innerHTML = html;
+  if(item.type==="fill" && !state.answered){
+    const el = document.getElementById("fillInput");
+    if(el) el.focus();
+  }
+}
+
+function submitChoiceUI(idx){
+  submitChoice(idx);
+  renderPlay();
+}
+function submitFillUI(){
+  const el = document.getElementById("fillInput");
+  if(el) state.userInput = el.value;
+  submitFill();
+  renderPlay();
+}
+function toggleHint(){
+  state.hintShown = !state.hintShown;
+  renderPlay();
+}
+
+function renderResult(){
+  const stage = STAGES.find(s=>s.id===state.stageId);
+  const wrongItems = state.answerLog.filter(l=>!l.wasCorrect).map(l=>l.item);
+  const missedCount = Object.keys(state.missedStore[state.stageId]||{}).length;
+
+  let html = `
+    <div class="header">
+      <h1>結果</h1>
+      <div class="sub">${esc(stage.name)}${state.isRetry?"（復習）":""}</div>
+    </div>
+    <div class="content">
+      <div class="qcard result-box">
+        <div>できた問題</div>
+        <div class="result-score">${state.scoreCorrect} / ${state.scoreTotal}</div>
+        ${wrongItems.length>0 ? `<div class="missed-list">${wrongItems.map(it=>`<div class="missed-item">${esc(it.q)}</div>`).join("")}</div>` : `<div style="color:var(--good); font-weight:700;">全問正解です！</div>`}
+      </div>
+  `;
+  if(wrongItems.length>0){
+    html += `<button class="btn btn-primary" onclick="startRetry('${state.stageId}')">🔁 まちがえた問題だけ復習する（${wrongItems.length}問）</button>`;
+  } else if(missedCount>0){
+    html += `<button class="btn btn-primary" onclick="startRetry('${state.stageId}')">🔁 残っている苦手${missedCount}問を復習する</button>`;
+  }
+  html += `<button class="btn btn-outline" onclick="backHome()">ホームにもどる</button>`;
+  html += `</div>`;
+  app.innerHTML = html;
+}
+
+render();
+</script>
+</body>
+</html>
