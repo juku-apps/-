@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>生物のつながりテスト</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --accent:#3468a6;
+  --accent-light:#e8f0fa;
+  --ref:#7a5ea8;
+  --ref-light:#f1ecf8;
+  --good:#2f9e5b;
+  --good-light:#e6f6ec;
+  --bad:#d1453b;
+  --bad-light:#fbe9e8;
+  --ink:#22303f;
+  --sub:#5c6b7a;
+  --line:#dbe3ec;
+  --bg:#f5f7fa;
+  --card:#ffffff;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  font-family:"Zen Kaku Gothic New",sans-serif;
+  background:var(--bg);
+  color:var(--ink);
+  display:flex;
+  justify-content:center;
+}
+#app{
+  width:100%;
+  max-width:480px;
+  min-height:100vh;
+  background:var(--bg);
+  display:flex;
+  flex-direction:column;
+  position:relative;
+}
+.header{
+  padding:16px 18px 12px;
+  background:linear-gradient(135deg,var(--accent),#4d7dbf);
+  color:#fff;
+  position:sticky;
+  top:0;
+  z-index:5;
+}
+.header h1{
+  margin:0;
+  font-size:18px;
+  font-weight:900;
+  letter-spacing:.02em;
+}
+.header .sub{
+  margin-top:2px;
+  font-size:12px;
+  opacity:.9;
+}
+.content{
+  flex:1;
+  padding:14px 16px 90px;
+}
+.home-title{
+  font-size:14px;
+  font-weight:800;
+  color:var(--sub);
+  margin:18px 2px 10px;
+}
+.home-title:first-child{margin-top:2px;}
+.stage-card{
+  background:var(--card);
+  border-radius:14px;
+  box-shadow:0 2px 8px rgba(30,50,80,.08);
+  padding:16px;
+  margin-bottom:14px;
+  border:1px solid var(--line);
+  cursor:pointer;
+  transition:transform .1s;
+}
+.stage-card:active{transform:scale(.98);}
+.stage-card.ref{
+  border-color:var(--ref);
+  background:linear-gradient(180deg,#fff,var(--ref-light));
+}
+.stage-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+.stage-name{
+  font-size:16px;
+  font-weight:700;
+}
+.stage-badge{
+  font-size:11px;
+  background:var(--accent);
+  color:#fff;
+  padding:3px 8px;
+  border-radius:999px;
+  font-weight:700;
+  white-space:nowrap;
+  margin-left:8px;
+}
+.stage-card.ref .stage-badge{background:var(--ref);}
+.stage-desc{
+  font-size:12.5px;
+  color:var(--sub);
+  margin-top:6px;
+  line-height:1.5;
+}
+.progress-bar{
+  height:6px;
+  background:var(--line);
+  border-radius:99px;
+  margin-top:10px;
+  overflow:hidden;
+}
+.progress-fill{
+  height:100%;
+  background:linear-gradient(90deg,var(--accent),#4d7dbf);
+  border-radius:99px;
+  transition:width .3s;
+}
+.retry-btn{
+  margin-top:10px;
+  display:inline-block;
+  background:var(--bad-light);
+  color:var(--bad);
+  border:1px solid var(--bad);
+  border-radius:8px;
+  padding:6px 10px;
+  font-size:12.5px;
+  font-weight:700;
+  cursor:pointer;
+}
+.footer-note{
+  text-align:center;
+  font-size:11px;
+  color:var(--sub);
+  margin-top:22px;
+}
+.reset-all-btn{
+  width:100%;
+  margin-top:18px;
+  padding:11px;
+  border-radius:10px;
+  background:none;
+  border:1px solid var(--bad);
+  color:var(--bad);
+  font-size:12.5px;
+  font-weight:700;
+  cursor:pointer;
+  font-family:inherit;
+}
+.play-topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-size:12px;
+  color:var(--sub);
+  margin-bottom:12px;
+}
+.qcard{
+  background:var(--card);
+  border-radius:14px;
+  padding:18px;
+  box-shadow:0 2px 8px rgba(30,50,80,.08);
+  border:1px solid var(--line);
+  margin-bottom:16px;
+}
+.qcard.info{
+  background:linear-gradient(180deg,#fff,var(--ref-light));
+  border-color:var(--ref);
+}
+.qtitle{
+  font-size:16px;
+  font-weight:800;
+  margin-bottom:10px;
+  color:var(--ref);
+}
+.info-body{
+  font-size:14px;
+  line-height:1.9;
+  color:var(--ink);
+}
+.info-body p{margin:0 0 12px;}
+.info-body p:last-child{margin-bottom:0;}
+.src-tag{
+  margin-top:12px;
+  font-size:11.5px;
+  color:var(--sub);
+}
+.lead-badge{
+  display:inline-block;
+  font-size:11px;
+  font-weight:700;
+  color:var(--accent);
+  background:var(--accent-light);
+  padding:3px 10px;
+  border-radius:999px;
+  margin-bottom:10px;
+}
+.qtext{
+  font-size:15px;
+  font-weight:700;
+  line-height:1.7;
+  margin-bottom:16px;
+}
+.choice-list{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.choice-btn{
+  width:100%;
+  text-align:left;
+  padding:13px 14px;
+  border-radius:12px;
+  border:1.5px solid var(--line);
+  background:#fff;
+  color:var(--ink);
+  font-size:14px;
+  font-family:inherit;
+  font-weight:600;
+  cursor:pointer;
+}
+.choice-btn:disabled{cursor:default;}
+.choice-btn.correct{border-color:var(--good);background:var(--good-light);color:#1c6b3f;}
+.choice-btn.wrong{border-color:var(--bad);background:var(--bad-light);color:#9c3128;}
+.choice-btn.dim{opacity:.4;}
+.fill-input{
+  width:100%;
+  padding:13px 14px;
+  border-radius:12px;
+  border:1.5px solid var(--line);
+  font-size:15px;
+  font-family:inherit;
+  margin-bottom:14px;
+}
+.fill-input.correct{border-color:var(--good);background:var(--good-light);}
+.fill-input.wrong{border-color:var(--bad);background:var(--bad-light);}
+.explain-box{
+  border-radius:12px;
+  padding:14px;
+  font-size:13px;
+  line-height:1.8;
+  margin-bottom:14px;
+}
+.explain-box.good{background:var(--good-light);color:#1c6b3f;}
+.explain-box.bad{background:var(--bad-light);color:#9c3128;}
+.mark-icon{font-size:15px;margin-right:6px;}
+.btn{
+  width:100%;
+  padding:14px;
+  border-radius:12px;
+  border:none;
+  font-size:15px;
+  font-weight:800;
+  font-family:inherit;
+  cursor:pointer;
+}
+.btn-primary{background:linear-gradient(135deg,var(--accent),#4d7dbf);color:#fff;}
+.btn-ref{background:linear-gradient(135deg,var(--ref),#9678c2);color:#fff;}
+.btn-outline{background:#fff;border:1.5px solid var(--line);color:var(--ink);}
+.btn-danger-outline{background:var(--bad-light);border:1.5px solid var(--bad);color:var(--bad);}
+.result-actions{display:flex;gap:10px;margin-top:4px;}
+.result-actions .btn{flex:1;}
+.result-box{text-align:center;}
+.result-score{
+  font-size:44px;
+  font-weight:900;
+  color:var(--accent);
+  margin:8px 0;
+}
+.wrong-list{margin-top:14px;text-align:left;}
+.wrong-list-label{font-size:12px;color:var(--sub);margin-bottom:6px;}
+.wrong-item{
+  padding:10px 12px;
+  border-radius:10px;
+  background:var(--bad-light);
+  color:#9c3128;
+  margin-bottom:8px;
+  font-size:13px;
+  line-height:1.6;
+}
+.perfect-msg{color:var(--good);font-weight:800;margin-top:10px;font-size:14px;}
+.speak-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-bottom:14px;
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:10px 12px;
+}
+.speak-btn{
+  border:1.5px solid var(--ref);
+  background:#fff;
+  color:var(--ref);
+  border-radius:999px;
+  padding:8px 16px;
+  font-size:13px;
+  font-weight:700;
+  font-family:inherit;
+  cursor:pointer;
+  white-space:nowrap;
+}
+.speak-btn.playing{background:var(--ref);color:#fff;}
+.speed-control{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  font-size:12px;
+  color:var(--sub);
+}
+.speed-control input[type=range]{
+  width:92px;
+  accent-color:var(--ref);
+}
+.hidden{display:none!important;}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+/* ===================== 単元データ：柱の定義 ===================== */
+const PILLARS = {
+  1: {label:"① 環境と植物", full:"環境と植物"},
+  2: {label:"② 自然界のつり合い", full:"自然界のつり合い"},
+  3: {label:"③ 地球温暖化", full:"地球温暖化"}
+};
+
+/* ===================== ①構造テスト：概要画面 ===================== */
+const kihonOverviewScreens = [
+  {
+    title:"はじめに",
+    body:`<p>今回のテーマは「生物のつながり」です。植物は日光を使って自分で養分をつくり、それをもとにほかの生き物たちが生きています。</p><p>この回では、①植物と光の関わり方、②生き物どうしの食べる・食べられるという関係、③地球規模での温暖化の問題、という3つの視点から「生物のつながり」を学びます。</p>`,
+    speak:"今回のテーマは、生物のつながりです。植物は日光を使って自分で養分をつくり、それをもとにほかの生き物たちが生きています。この回では、植物と光の関わり方、生き物どうしの食べる食べられるという関係、そして地球規模での温暖化の問題という、3つの視点から生物のつながりを学んでいきます。"
+  },
+  {
+    title:"3つの柱",
+    body:`<p><b>① 環境と植物</b><br>日光の強さと植物の育ち方の関係、陽生植物・陰生植物のちがい、森林をつくる植物のすみ分けについて学びます。</p><p><b>② 自然界のつり合い</b><br>食物連鎖、生産者・消費者・分解者の役割、炭素やちっ素の循環、生物どうしの共生・寄生について学びます。</p><p><b>③ 地球温暖化</b><br>温室効果ガスと気温上昇のしくみ、二酸化炭素濃度の変化、地球温暖化の影響について学びます。</p>`,
+    speak:"この回は、大きく3つの柱に分かれています。1つ目は、環境と植物です。日光の強さと植物の育ち方の関係や、陽生植物と陰生植物のちがい、森林をつくる植物のすみ分けについて学びます。2つ目は、自然界のつり合いです。食物連鎖や、生産者・消費者・分解者の役割、炭素やちっ素の循環、生物どうしの共生や寄生について学びます。3つ目は、地球温暖化です。温室効果ガスと気温上昇のしくみや、二酸化炭素濃度の変化、地球温暖化の影響について学びます。それでは、順番に見ていきましょう。"
+  }
+];
+
+/* ===================== ①構造テスト：穴埋め ===================== */
+const kihonFillRaw = [
+  {pillar:1, q:"光合成によってつくられる養分の量と、呼吸によって消費される養分の量が同じになるときの光の強さを何といいますか。", answer:"補償点", explain:"補償点より強い光のもとで、植物は成長しながら生活を続けることができる。"},
+  {pillar:1, q:"ケヤキのように、育つために強い光を必要とする植物を何といいますか。", answer:"陽生植物", explain:"陽生植物の樹木を陽樹という。"},
+  {pillar:1, q:"シイのように、弱い光の下でも育つことができる植物を何といいますか。", answer:"陰生植物", explain:"陰生植物の樹木を陰樹という。"},
+  {pillar:1, q:"陽生の樹木のことを何といいますか。", answer:"陽樹", explain:"陽樹の例：マツ・サクラ・クヌギ・コナラ・シラカバ・ケヤキなど。"},
+  {pillar:1, q:"陰生の樹木のことを何といいますか。", answer:"陰樹", explain:"陰樹の例：カシ・シイ・ブナなど。"},
+  {pillar:1, q:"おもにつる性の植物で、高木の上の方までつるをのばし、森林のへりを包みこむようにしげっている群落を何といいますか。", answer:"マント群落", explain:"クズ・ヤブガラシ・フジ・ヤマブドウ・ツタなどからなる。"},
+  {pillar:1, q:"森林のまわりに生える草の群落を何といいますか。", answer:"そで群落", explain:"ススキ・ヨモギ・イノコズチなどからなる。"},
+  {pillar:1, q:"シイやカシだけの森のように、陰樹の森で安定した状態を何といいますか。", answer:"極相", accept:["極相林"], explain:"この状態を極相（極相林）という。"},
+  {pillar:2, q:"光合成によって養分をつくることができる、食物連鎖の始まりとなる生物を何といいますか。", answer:"生産者", explain:"植物のように光合成で養分をつくる生物。"},
+  {pillar:2, q:"植物をえさにする草食動物や、ほかの動物をえさにする肉食動物、両方をえさにする雑食動物をまとめて何といいますか。", answer:"消費者", explain:"草食動物・肉食動物・雑食動物をまとめてこう呼ぶ。"},
+  {pillar:2, q:"生物の死がいやふんなどを養分としてとり入れ、分解してエネルギーを得ている生物を何といいますか。", answer:"分解者", explain:"代表的な分解者は細菌類や菌類（カビ・キノコ）。ミミズやダンゴムシもふくまれる。"},
+  {pillar:2, q:"生物の間の食べる・食べられるというつながりを何といいますか。", answer:"食物連鎖", explain:"生産者を出発点とする、食べる・食べられるの関係。"},
+  {pillar:2, q:"水中をただよいながら生活する生物をまとめて何といいますか。", answer:"プランクトン", explain:"植物プランクトンと動物プランクトンに分けられる。"},
+  {pillar:2, q:"食物連鎖で食べられるものほど個体数が多くなっている、ある形の関係を何といいますか。", answer:"生物ピラミッド", accept:["ピラミッド"], explain:"食べられるものほど個体数が多く、ピラミッド型になる。"},
+  {pillar:2, q:"異なる種類の生物が密接なつながりをもって生活することを何といいますか。", answer:"共生", explain:"おたがいが利益を受ける場合と、一方だけが利益を受ける場合がある。"},
+  {pillar:2, q:"一方が利益を得て、もう一方が不利益を受ける関係を何といいますか。", answer:"寄生", explain:"ヒトに寄生するシラミなどがその例。"},
+  {pillar:3, q:"近年、地球の平均気温が上昇し続けていることを何といいますか。", answer:"地球温暖化", explain:"大気中の温室効果ガスの増加が主な原因とされる。"},
+  {pillar:3, q:"二酸化炭素やメタンなど、熱を吸収して再度放出する性質をもつ気体をまとめて何といいますか。", answer:"温室効果ガス", explain:"熱を吸収して再度放出する性質があり、地球を保温している。"},
+  {pillar:3, q:"日本では、過去100年で平均気温は何℃上昇しましたか。", answer:"1.2℃", accept:["1.2","1.2度"], explain:"日本では過去100年で平均気温が1.2℃上昇した。"},
+  {pillar:3, q:"二酸化炭素濃度は、月ごとに見ると夏と冬のどちらに減少しますか。", answer:"夏", explain:"植物の光合成活動が活発になるため、二酸化炭素濃度は夏に減少する。"},
+  {pillar:3, q:"サンゴの白化は、サンゴと共生している何がにげてしまうことで起こりますか。", answer:"褐虫藻", explain:"褐虫藻がにげるとサンゴの骨格が透けて白く見える。"},
+  {pillar:3, q:"地球温暖化を防ぐために使用の割合を高めることが求められている、太陽光や風力などのエネルギーを何といいますか。", answer:"再生可能エネルギー", explain:"化石燃料の使用を減らし、再生可能エネルギーの割合を高めることが求められている。"}
+];
+
+/* ===================== ①構造テスト：まとめ選択 ===================== */
+const kihonFinalRaw = [
+  {pillar:1, q:"陽生植物と陰生植物の説明として正しいものはどれですか。", choices:["陽生植物は強い光を必要とし、陰生植物は弱い光でも育つことができる","陽生植物は弱い光でも育ち、陰生植物は強い光を必要とする","陽生植物も陰生植物も光の強さに関係なく同じように育つ","陽生植物は森の下草、陰生植物は野原の草である"], answer:0, explain:"ケヤキのように育つために強い光を必要とする植物を陽生植物、シイのように弱い光の下でも育つことができる植物を陰生植物という。"},
+  {pillar:2, q:"生産者・消費者・分解者の関係として正しいものはどれですか。", choices:["生産者は光合成で養分をつくり、消費者はそれを食べ、分解者は死がいやふんを養分として利用する","分解者は光合成をして養分をつくる生物である","消費者は光合成によって自分で養分をつくることができる","生産者・消費者・分解者はすべて同じ働きをする生物である"], answer:0, explain:"生産者（植物）は光合成で養分をつくり、消費者（動物）はそれを食べて生きる。分解者は生物の死がいやふんを養分として取り入れ分解する。"},
+  {pillar:3, q:"地球温暖化のしくみとして正しいものはどれですか。", choices:["温室効果ガスが増えると、熱を吸収して再び地球にもどす量が増え、気温が上がっていく","温室効果ガスが増えると、地球の熱がすべて宇宙へにげていくため気温が下がる","二酸化炭素濃度は夏に増加し、冬に減少する","地球温暖化は海面を下げる原因になる"], answer:0, explain:"温室効果ガスには熱を吸収して再度放出する性質があるため、増えると地球を保温するはたらきが強まり、気温が上がっていく。なお、二酸化炭素濃度は夏に減少し冬に増加する。"}
+];
+
+/* ===================== ②黒太字テスト ===================== */
+const kurojiBlocks = [
+  {pillar:1, sub:"環境と植物", items:[
+    {q:"植物が光を使って養分（デンプン）をつくるはたらきを何といいますか。", choices:["光合成","呼吸","蒸散","分解"], answer:0, explain:"植物は光合成によって養分をつくり、成長・生活している。"},
+    {q:"光合成によってつくられる養分の量と、呼吸によって消費される養分の量が同じになるときの光の強さを何といいますか。", choices:["補償点","極相","生産点","平衡点"], answer:0, explain:"補償点より強い光のもとで、植物は成長しながら生活を続けることができる。"},
+    {q:"陽生の樹木のことを何といいますか。", choices:["陽樹","陰樹","高木","低木"], answer:0},
+    {q:"陰生の樹木のことを何といいますか。", choices:["陰樹","陽樹","低木","下草"], answer:0},
+    {q:"次のうち、陽生植物（陽樹）の例として正しいものはどれですか。", choices:["マツ","カシ","シイ","ブナ"], answer:0, explain:"陽樹はマツ・サクラ・クヌギ・コナラ・シラカバ・ケヤキなど。カシ・シイ・ブナは陰樹。"},
+    {q:"次のうち、陰生植物（陰樹）の例として正しいものはどれですか。", choices:["カシ","マツ","サクラ","ケヤキ"], answer:0},
+    {q:"成長して8m以上になる木のことを何といいますか。", choices:["高木","低木","下草","幼木"], answer:0},
+    {q:"成長しても高さが3mくらいにしかならず、幹がなく根もとから枝分かれする木を何といいますか。", choices:["低木","高木","下草","つる植物"], answer:0},
+    {q:"陰生植物で、森林内の水分を保つはたらきをする植物をまとめて何といいますか。", choices:["下草","低木","マント群落","そで群落"], answer:0},
+    {q:"おもにつる性の植物で、森林のへりを包みこむようにしげっている群落を何といいますか。", choices:["マント群落","そで群落","下草","高木"], answer:0},
+    {q:"森林のまわりに生える草の群落を何といいますか。", choices:["そで群落","マント群落","下草","低木"], answer:0},
+    {q:"ある場所で1つのまとまりをもって生活している何種類かの植物の集まりを何といいますか。", choices:["植物群落","生態系","食物連鎖","個体群"], answer:0},
+    {q:"発芽成長から開花結実して1年以内に一生を終える植物を何といいますか。", choices:["一年草","二年草","多年草","高木"], answer:0},
+    {q:"冬に地上部がかれても、地下の根やくきが生きていて、開花結実を何年もくり返す植物を何といいますか。", choices:["多年草","一年草","二年草","陰樹"], answer:0},
+    {q:"アカマツやコナラなどの陽樹と、シイやカシなどの陰樹が入りまじった森林を何といいますか。", choices:["混交林","極相林","陽樹の森","陰樹の森"], answer:0},
+    {q:"陰樹の森のように、長い年月をへて安定した状態になった植物群落を何といいますか。", choices:["極相","混交林","植物群落","陽樹の森"], answer:0},
+    {q:"シイ・カシなどの常緑広葉樹が多くをしめている森林を何といいますか。", choices:["照葉樹林","夏緑樹林","針葉樹林","亜熱帯多雨林"], answer:0},
+    {q:"ブナ・ミズナラなどの落葉広葉樹が多くをしめている森林を何といいますか。", choices:["夏緑樹林","照葉樹林","針葉樹林","硬葉樹林"], answer:0}
+  ]},
+  {pillar:2, sub:"自然界のつり合い", items:[
+    {q:"光合成によって養分をつくることができる、食物連鎖の始まりとなる生物を何といいますか。", choices:["生産者","消費者","分解者","天敵"], answer:0},
+    {q:"植物をえさにする草食動物や、ほかの動物をえさにする肉食動物などをまとめて何といいますか。", choices:["消費者","生産者","分解者","生物ピラミッド"], answer:0},
+    {q:"生物の間の食べる・食べられるというつながりを何といいますか。", choices:["食物連鎖","生物ピラミッド","物質の循環","共生"], answer:0},
+    {q:"食物連鎖の中で、ある生物を食べる生物のことを何といいますか。", choices:["天敵","生産者","分解者","寄生"], answer:0, explain:"クモはチョウの天敵であるという。"},
+    {q:"水中をただよいながら生活する生物をまとめて何といいますか。", choices:["プランクトン","消費者","分解者","植物群落"], answer:0},
+    {q:"光合成をして養分をつくり出す、水中の生産者にあたる生物を何といいますか。", choices:["植物プランクトン","動物プランクトン","分解者","消費者"], answer:0},
+    {q:"べん毛やせん毛などの運動器官をもち、動き回ることができるプランクトンを何といいますか。", choices:["動物プランクトン","植物プランクトン","生産者","分解者"], answer:0},
+    {q:"ミジンコは、エビやカニと同じ何のなかまですか。", choices:["節足動物","軟体動物","は虫類","両生類"], answer:0},
+    {q:"食物連鎖では、食べられるものほど個体数が多くなっていて、ある形の関係になります。この形を何といいますか。", choices:["ピラミッド型","円型","直線型","樹形"], answer:0},
+    {q:"生物の死がいやふんなどを養分としてとり入れ、分解してエネルギーを得ている生物を何といいますか。", choices:["分解者","生産者","消費者","天敵"], answer:0},
+    {q:"代表的な分解者としてあげられる、カビやキノコなどのなかまを何といいますか。", choices:["菌類","節足動物","プランクトン","生産者"], answer:0, explain:"代表的な分解者は細菌類や菌類（カビ・キノコ）で、ミミズやダンゴムシもふくまれる。"},
+    {q:"炭素をふくむ養分（デンプンや糖）は、何によって生物の間を移動しますか。", choices:["食物連鎖","呼吸","光合成","分解"], answer:0},
+    {q:"植物が二酸化炭素をとり入れて、炭素をふくむ養分をつくるはたらきを何といいますか。", choices:["光合成","呼吸","分解","蒸散"], answer:0},
+    {q:"ほとんどの生物が空気中から直接とりこむことができない、生物のからだをつくるのに欠かせない成分は何ですか。", choices:["ちっ素","炭素","酸素","水素"], answer:0},
+    {q:"異なる種類の生物が密接なつながりをもって生活することを何といいますか。", choices:["共生","寄生","食物連鎖","分解"], answer:0},
+    {q:"アブラムシがアリにあまい汁をあたえる代わりに天敵から守ってもらうような、おたがいが利益を受ける関係の例は何ですか。", choices:["共生","寄生","天敵","分解"], answer:0},
+    {q:"一方が利益を得て、もう一方が不利益を受ける関係を何といいますか。", choices:["寄生","共生","食物連鎖","天敵"], answer:0, explain:"ヒトに寄生するシラミなどがその例。"},
+    {q:"モンシロチョウの幼虫に寄生し、相手を殺してしまう例としてあげられている生物は何ですか。", choices:["アオムシコマユバチ","アブラムシ","コバンザメ","シラミ"], answer:0}
+  ]},
+  {pillar:3, sub:"地球温暖化", items:[
+    {q:"地球の平均気温が上昇を続けている現象を何といいますか。", choices:["地球温暖化","温室効果","白化","光合成"], answer:0},
+    {q:"二酸化炭素やメタンなど、熱を吸収して再度放出する性質をもつ気体をまとめて何といいますか。", choices:["温室効果ガス","酸性雨","フロンガス","排気ガス"], answer:0},
+    {q:"日本では、過去100年で平均気温は何℃上昇しましたか。", choices:["1.2℃","0.5℃","2.5℃","5.0℃"], answer:0},
+    {q:"二酸化炭素濃度は、月ごとに見ると夏と冬のどちらに増加しますか。", choices:["冬","夏","春","秋"], answer:0, explain:"夏は植物の活動が活発になるため二酸化炭素濃度は減少し、冬は活動がおとろえるため増加する。"},
+    {q:"人間が大気中に放出した二酸化炭素のうち、一部を吸収するのは海と何ですか。", choices:["植物","動物","岩石","土"], answer:0},
+    {q:"サンゴと共生していて、サンゴの白化の原因となる、にげてしまう生物は何ですか。", choices:["褐虫藻","植物プランクトン","動物プランクトン","ミドリムシ"], answer:0},
+    {q:"地球温暖化の影響として本文にあげられていないものはどれですか。", choices:["火山の噴火の増加","海面上昇","異常気象の増加","自然の生態系が乱れること"], answer:0, explain:"地球温暖化の影響としては海面上昇・異常気象の増加・生態系の乱れが挙げられている。火山の噴火は地球温暖化の影響ではない。"},
+    {q:"地球温暖化への対策としてあげられている、太陽光や風力などのエネルギーを何といいますか。", choices:["再生可能エネルギー","化石燃料","温室効果ガス","原子力エネルギー"], answer:0},
+    {q:"温室効果ガスによって地球が保温されるしくみとして正しいものはどれですか。", choices:["地球から宇宙へにげようとする熱が再び地球にもどされる","太陽の光をすべて反射する","二酸化炭素が酸素に変わる","気温が下がる"], answer:0},
+    {q:"化石燃料を使用することで大気中に放出される気体は主に何ですか。", choices:["二酸化炭素","酸素","ちっ素","水素"], answer:0}
+  ]}
+];
+
+/* ===================== ③ひとくちメモテスト ===================== */
+const mameQuizRaw = [
+  {q:"落ち葉が最後には細菌類やカビなどのはたらきで何に分解されますか。", choices:["二酸化炭素や水","酸素とちっ素","デンプンとブドウ糖","石油"], answer:0, explain:"落ち葉はダンゴムシやワラジムシのえさになったり、細菌類などにくさったりして細かくなり、最後は二酸化炭素や水に分解され、残りは土や肥料になる。"},
+  {q:"落ち葉を食べたり分解したりする小さな生き物として、本文にあげられていないものはどれですか。", choices:["ミジンコ","ダンゴムシ","ミミズ","トビムシ"], answer:0, explain:"落ち葉はダンゴムシやワラジムシのえさになったり、ミミズやトビムシに食べられたりする。ミジンコは池の中の動物プランクトンで、落ち葉を食べる生き物としては登場しない。"},
+  {q:"湖や沼の底に土砂や水草などの遺がいが積もって水深が浅くなった状態を何といいますか。", choices:["湿地","草原","裸地","極相"], answer:0, explain:"湖や沼も長い年月をかけて森林へと変わる。土砂や水草の遺がいが積もり、水深が浅くなると湿地となる。"},
+  {q:"湿地がさらに土砂が積もって乾燥すると、何になりますか。", choices:["草原","湖","沼","極相林"], answer:0, explain:"このあとは陸地と同じようにして森林へと変わっていく。"},
+  {q:"サンゴの白化で、サンゴと共生していてにげてしまう生物は何ですか。", choices:["褐虫藻","プランクトン","アオムシコマユバチ","コバンザメ"], answer:0},
+  {q:"サンゴが白く見えるのは、褐虫藻がにげてしまい、サンゴの何が透けて見えるためですか。", choices:["骨格","内臓","触手","卵"], answer:0},
+  {q:"褐虫藻がにげてしまう原因の1つとしてあげられているのは何ですか。", choices:["地球温暖化にともなう海水温の上昇","台風の増加","森林の減少","酸性雨"], answer:0}
+];
+
+/* ===================== ④気をつけたいポイント（読みもの） ===================== */
+const sankoNotes = [
+  {
+    title:"落ち葉はどこへ消えたの？",
+    body:`雑木林には毎年たくさんの落ち葉が積もりますが、林が落ち葉にうもれてしまうことはありません。落ち葉はダンゴムシやワラジムシなどのえさになったり、細菌類などの微生物によってくさったりして、しだいに細かくなります。細かくなったものは、さらにミミズやトビムシなどに食べられます。最後には細菌類やカビなどのはたらきで、二酸化炭素や水に分解され、残りは土や肥料になります。`,
+    src:"教科書 導入Q&A（p7）"
+  },
+  {
+    title:"湖や沼が森林になるまで",
+    body:`湖や沼も、長い年月をかけて森林へと変わります。湖や沼の底には土砂や水草などの遺がいがどんどん積もっていき、しだいに水深が浅くなって湿地となります。さらに土砂が積もって乾燥すると草原になります。このあとは陸地と同じようにして森林へと変わっていきます。`,
+    src:"教科書コラム（p11）"
+  },
+  {
+    title:"サンゴの白化",
+    body:`サンゴの白化とは、サンゴと共生している褐虫藻がにげてしまい、サンゴの骨格が透けて見えるために、全体として白く見えることです。褐虫藻がにげてしまう原因のひとつは、地球温暖化にともなって海水温が上昇したことです。`,
+    src:"教科書コラム（p14）"
+  },
+  {
+    title:"陽生植物と陰生植物の混同に注意",
+    body:`「陽生植物＝日なたが好き・強い光が必要」「陰生植物＝日かげでも育つ・弱い光でも育つ」という対応を、逆に覚えてしまう受験生が多いので注意しましょう。陽樹の代表はマツ・サクラ・コナラ・ケヤキなど、陰樹の代表はカシ・シイ・ブナなどです。`,
+    src:"入試でまちがえやすいポイント（一般知識）"
+  },
+  {
+    title:"生産者・消費者・分解者の役割の違い",
+    body:`「生産者＝植物（光合成で養分をつくる）」「消費者＝動物（植物や他の動物を食べる）」「分解者＝細菌類・菌類など（死がいやふんを分解する）」という3つの役割を混同しないようにしましょう。ミミズやダンゴムシは消費者ではなく分解者にふくまれる点にも注意が必要です。`,
+    src:"入試でまちがえやすいポイント（一般知識）"
+  },
+  {
+    title:"炭素の循環とちっ素の循環の違い",
+    body:`炭素は二酸化炭素として空気中にあり、植物の光合成によって養分に変わり、食物連鎖を通じて生物の間を移動し、呼吸によって再び空気中にもどります。一方、ちっ素はほとんどの生物が空気中から直接とりこむことができず、分解者がつくった肥料を植物が根から吸収するという形で循環します。「炭素は呼吸で空気中にもどる」「ちっ素は肥料として根から吸収される」というちがいを整理しておきましょう。`,
+    src:"入試でまちがえやすいポイント（一般知識）"
+  },
+  {
+    title:"二酸化炭素濃度の季節変化の向き",
+    body:`二酸化炭素濃度のグラフは、植物の光合成が活発になる夏に「減少」し、活動がおとろえる冬に「増加」します。「夏は緑が増えるから二酸化炭素が減る」というイメージと結びつけて、逆に覚えないようにしましょう。`,
+    src:"入試でまちがえやすいポイント（一般知識）"
+  },
+  {
+    title:"共生と寄生の違い",
+    body:`「共生」は異なる種類の生物が密接なつながりをもって生活することで、おたがいに利益を受ける場合（アブラムシとアリ）や、一方だけが利益を受け、もう一方には利益も不利益もない場合（コバンザメとサメ）もふくまれます。「寄生」は一方が利益を得て、もう一方が害（不利益）を受ける関係です。「共生＝害がない」「寄生＝害がある」という点で区別しましょう。`,
+    src:"入試でまちがえやすいポイント（一般知識）"
+  }
+];
+
+/* ===================== 共通ビルド関数 ===================== */
+function shuffleArr(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+function finalize(q){
+  const correctText = q.choices[q.answer];
+  const order = shuffleArr(q.choices.map((c,i)=>i));
+  const newChoices = order.map(i=>q.choices[i]);
+  const newAnswer = newChoices.indexOf(correctText);
+  const out = Object.assign({}, q, {choices:newChoices, answer:newAnswer});
+  return out;
+}
+
+function normalizeAnswer(str){
+  if(str===undefined || str===null) return "";
+  let s = String(str).trim();
+  s = s.replace(/[０-９]/g, ch => String.fromCharCode(ch.charCodeAt(0)-0xFEE0));
+  s = s.replace(/\s+/g,"");
+  s = s.replace(/[『』「」]/g,"");
+  return s;
+}
+
+function checkFillAnswer(item, userInput){
+  const norm = normalizeAnswer(userInput);
+  if(norm==="") return false;
+  const candidates = [item.answer].concat(item.accept||[]);
+  return candidates.some(c => normalizeAnswer(c)===norm);
+}
+
+function shuffleArrKeepBlocks(){
+  const byPillar = {};
+  kihonFillRaw.forEach((r,idx)=>{
+    if(!byPillar[r.pillar]) byPillar[r.pillar]=[];
+    byPillar[r.pillar].push(idx);
+  });
+  let out = [];
+  [1,2,3].forEach(p=>{
+    const idxs = shuffleArr(byPillar[p]||[]);
+    idxs.forEach(idx=>{
+      const r = kihonFillRaw[idx];
+      out.push({
+        type:"fill", id:"kihonFill_"+idx, q:r.q, answer:r.answer, accept:r.accept,
+        explain:r.explain, lead:PILLARS[r.pillar].label, sub:PILLARS[r.pillar].full, pillar:r.pillar
+      });
+    });
+  });
+  return out;
+}
+
+function buildKihonFinalItems(){
+  return kihonFinalRaw.map((r,idx)=>{
+    const fq = finalize({q:r.q, choices:r.choices, answer:r.answer, explain:r.explain});
+    return Object.assign({type:"choice", id:"kihonFinal_"+idx, pillar:r.pillar, sub:PILLARS[r.pillar].full}, fq);
+  });
+}
+
+function buildKihonItems(){
+  const overview = kihonOverviewScreens.map((s,idx)=>Object.assign({id:"kihonOv_"+idx, type:"info", wide:true}, s));
+  const fills = shuffleArrKeepBlocks();
+  const finals = shuffleArr(buildKihonFinalItems());
+  return overview.concat(fills, finals);
+}
+
+function buildKurojiItems(){
+  let out = [];
+  kurojiBlocks.forEach((block,bi)=>{
+    const shuffledItems = shuffleArr(block.items);
+    shuffledItems.forEach((it,ii)=>{
+      const fq = finalize(it);
+      out.push(Object.assign({
+        type:"choice",
+        id:"kuroji_"+bi+"_"+ii,
+        pillar:block.pillar,
+        sub:block.sub
+      }, fq));
+    });
+  });
+  return out;
+}
+
+function buildMameItems(){
+  const shuffled = shuffleArr(mameQuizRaw);
+  return shuffled.map((r,idx)=>{
+    const fq = finalize(r);
+    return Object.assign({type:"choice", id:"mame_"+idx}, fq);
+  });
+}
+
+function buildSankoItems(){
+  return sankoNotes.map((n,idx)=>({
+    type:"info", id:"sanko_"+idx, title:n.title, body:n.body, src:n.src, wide:true
+  }));
+}
+
+const STAGES = [
+  {id:"kihon", name:"① 構造テスト", desc:"3本柱（環境と植物・自然界のつり合い・地球温暖化）の骨組みを確認。概要2画面＋穴埋め22問＋まとめ選択3問。", scored:true, ref:false, build:buildKihonItems},
+  {id:"kuroji", name:"② 黒太字テスト", desc:"各分野の重要語句を4択で確認します。計46問。", scored:true, ref:false, build:buildKurojiItems},
+  {id:"mame", name:"③ ひとくちメモテスト", desc:"教科書の導入Q&Aとコラムから出題します。計7問。", scored:true, ref:false, build:buildMameItems},
+  {id:"sanko", name:"④ 気をつけたいポイント", desc:"教科書コラム＋入試でまちがえやすい注意点の読みもの。採点はありません。", scored:false, ref:true, build:buildSankoItems}
+];
+
+/* ===================== 状態管理／localStorage ===================== */
+const STORAGE_KEY = "seibutsu1_missed_v1";
+
+function loadMissedStore(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : {};
+  }catch(e){ return {}; }
+}
+function saveMissedStore(store){
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(store)); }catch(e){ /* 保存できない環境は無視 */ }
+}
+
+const SPEAK_RATE_KEY = "quizapp_speak_rate_v1";
+function loadSpeakRate(){
+  try{
+    const v = parseFloat(localStorage.getItem(SPEAK_RATE_KEY));
+    if(!isNaN(v) && v>=0.7 && v<=1.8) return v;
+  }catch(e){}
+  return 1.1;
+}
+function saveSpeakRate(v){
+  try{ localStorage.setItem(SPEAK_RATE_KEY, String(v)); }catch(e){}
+}
+
+const state = {
+  screen:"home",
+  stageId:null,
+  isRetry:false,
+  items:[],
+  currentIndex:0,
+  scoreTotal:0,
+  scoreCorrect:0,
+  answerLog:[],
+  results:{},
+  missedStore: loadMissedStore(),
+  answered:false,
+  userInput:"",
+  userChoiceIdx:null,
+  speakRate: loadSpeakRate()
+};
+
+function startStage(stageId){
+  const stage = STAGES.find(s=>s.id===stageId);
+  state.stageId = stageId;
+  state.isRetry = false;
+  state.items = stage.build();
+  state.currentIndex = 0;
+  state.scoreTotal = state.items.filter(i=>i.type!=="info").length;
+  state.scoreCorrect = 0;
+  state.answerLog = [];
+  state.answered = false;
+  state.userInput = "";
+  state.userChoiceIdx = null;
+  state.screen = "play";
+  render();
+}
+
+function startRetry(stageId){
+  const missed = state.missedStore[stageId] || {};
+  const items = Object.values(missed);
+  if(items.length===0) return;
+  state.stageId = stageId;
+  state.isRetry = true;
+  state.items = shuffleArr(items);
+  state.currentIndex = 0;
+  state.scoreTotal = state.items.length;
+  state.scoreCorrect = 0;
+  state.answerLog = [];
+  state.answered = false;
+  state.userInput = "";
+  state.userChoiceIdx = null;
+  state.screen = "play";
+  render();
+}
+
+function currentItem(){ return state.items[state.currentIndex]; }
+
+function submitChoice(idx){
+  if(state.answered) return;
+  const item = currentItem();
+  const correct = idx === item.answer;
+  state.answered = true;
+  state.userChoiceIdx = idx;
+  if(correct) state.scoreCorrect++;
+  state.answerLog.push({item, wasCorrect:correct});
+}
+
+function submitFill(){
+  if(state.answered) return;
+  const item = currentItem();
+  const correct = checkFillAnswer(item, state.userInput);
+  state.answered = true;
+  if(correct) state.scoreCorrect++;
+  state.answerLog.push({item, wasCorrect:correct});
+}
+
+function nextItem(){
+  stopSpeak();
+  state.answered = false;
+  state.userInput = "";
+  state.userChoiceIdx = null;
+  if(state.currentIndex < state.items.length-1){
+    state.currentIndex++;
+    render();
+  }else{
+    finishStage();
+  }
+}
+
+function finishStage(){
+  const stage = STAGES.find(s=>s.id===state.stageId);
+  state.results[state.stageId] = {
+    correct: state.scoreCorrect,
+    total: state.scoreTotal,
+    at: Date.now()
+  };
+  if(stage.scored){
+    const missed = state.missedStore[state.stageId] || {};
+    state.answerLog.forEach(log=>{
+      const key = log.item.q;
+      if(!log.wasCorrect){
+        missed[key] = log.item;
+      }else{
+        if(missed[key]) delete missed[key];
+      }
+    });
+    state.missedStore[state.stageId] = missed;
+    saveMissedStore(state.missedStore);
+  }
+  state.screen = "result";
+  render();
+}
+
+function backHome(){
+  stopSpeak();
+  stopMic();
+  state.screen = "home";
+  render();
+}
+
+/* ===================== 音声読み上げ（Web Speech API：読み上げ） ===================== */
+let cachedVoices = [];
+
+function speakSupported(){
+  return typeof window!=="undefined" && "speechSynthesis" in window;
+}
+
+function refreshVoices(){
+  if(speakSupported()) cachedVoices = window.speechSynthesis.getVoices() || [];
+}
+if(speakSupported()){
+  refreshVoices();
+  window.speechSynthesis.onvoiceschanged = refreshVoices;
+}
+
+function getBestJaVoice(){
+  const jaVoices = cachedVoices.filter(v => v.lang && v.lang.toLowerCase().startsWith("ja"));
+  if(jaVoices.length===0) return null;
+  const preferred = jaVoices.find(v => /google/i.test(v.name))
+    || jaVoices.find(v => v.localService===false)
+    || jaVoices[0];
+  return preferred;
+}
+
+function speakText(text, btnId){
+  if(!speakSupported()) return;
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = "ja-JP";
+  u.rate = state.speakRate;
+  const voice = getBestJaVoice();
+  if(voice) u.voice = voice;
+  u.onend = ()=>{ setSpeakBtnState(btnId, false); };
+  u.onerror = ()=>{ setSpeakBtnState(btnId, false); };
+  window.speechSynthesis.speak(u);
+  setSpeakBtnState(btnId, true);
+}
+
+function stopSpeak(){
+  if(speakSupported()) window.speechSynthesis.cancel();
+}
+
+function toggleSpeak(text){
+  if(!speakSupported()) return;
+  if(window.speechSynthesis.speaking){
+    stopSpeak();
+    setSpeakBtnState("speakBtn", false);
+  }else{
+    speakText(text, "speakBtn");
+  }
+}
+
+function updateSpeakRate(v){
+  state.speakRate = parseFloat(v);
+  saveSpeakRate(state.speakRate);
+  const label = document.getElementById("speakRateLabel");
+  if(label) label.textContent = state.speakRate.toFixed(1)+"倍";
+}
+
+function setSpeakBtnState(btnId, playing){
+  const btn = document.getElementById(btnId);
+  if(!btn) return;
+  btn.classList.toggle("playing", playing);
+  btn.innerHTML = playing ? "⏸ 読み上げを止める" : "🔊 音声で聞く";
+}
+
+/* マイク機能は精度の問題により削除済み。他の関数からの呼び出しに備えて no-op で残す */
+function stopMic(){}
+
+/* ===================== レンダリング ===================== */
+const app = document.getElementById("app");
+
+function render(){
+  if(state.screen==="home") renderHome();
+  else if(state.screen==="play") renderPlay();
+  else if(state.screen==="result") renderResult();
+}
+
+function esc(s){
+  return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+
+function pillarBadge(p){
+  return (PILLARS[p] && PILLARS[p].label) || "";
+}
+
+function renderHome(){
+  let html = `
+    <div class="header">
+      <h1>生物のつながりテスト</h1>
+      <div class="sub">予習シリーズ5年下　理科　第1回　生物のつながり</div>
+    </div>
+    <div class="content">
+  `;
+  const scoredStages = STAGES.filter(s=>s.scored);
+  const refStages = STAGES.filter(s=>!s.scored);
+
+  html += `<div class="home-title">確認テスト</div>`;
+  scoredStages.forEach(stage=>{
+    const res = state.results[stage.id];
+    const missedCount = Object.keys(state.missedStore[stage.id]||{}).length;
+    html += `<div class="stage-card" onclick="startStage('${stage.id}')">
+      <div class="stage-top">
+        <div class="stage-name">${esc(stage.name)}</div>
+        <div class="stage-badge">${res ? res.correct+"/"+res.total : "未挑戦"}</div>
+      </div>
+      <div class="stage-desc">${esc(stage.desc)}</div>
+      ${res ? `<div class="progress-bar"><div class="progress-fill" style="width:${Math.round(res.correct/res.total*100)}%"></div></div>` : ""}
+      ${missedCount>0 ? `<div class="retry-btn" onclick="event.stopPropagation(); startRetry('${stage.id}')">🔁 苦手${missedCount}問を復習</div>` : ""}
+    </div>`;
+  });
+
+  html += `<div class="home-title">参考情報（読みもの）</div>`;
+  refStages.forEach(stage=>{
+    html += `<div class="stage-card ref" onclick="startStage('${stage.id}')">
+      <div class="stage-top">
+        <div class="stage-name">${esc(stage.name)}</div>
+        <div class="stage-badge">読みもの</div>
+      </div>
+      <div class="stage-desc">${esc(stage.desc)}</div>
+    </div>`;
+  });
+
+  const totalMissed = STAGES.filter(s=>s.scored).reduce((sum,s)=>sum+Object.keys(state.missedStore[s.id]||{}).length,0);
+  html += `<div class="footer-note">単一HTMLファイル・localStorageに端末内で保存されます</div>`;
+  if(totalMissed>0){
+    html += `<button class="reset-all-btn" id="resetAllBtn" onclick="doResetAll()">🗑️ 苦手リストをすべてリセット</button>`;
+  }
+  html += `</div>`;
+  app.innerHTML = html;
+}
+
+function renderPlay(){
+  const item = currentItem();
+  const stage = STAGES.find(s=>s.id===state.stageId);
+  const isInfo = item.type==="info";
+
+  let html = `
+    <div class="header">
+      <h1>${esc(stage.name)}${state.isRetry?"（復習）":""}</h1>
+      <div class="sub">${item.sub ? esc(item.sub) : esc(stage.desc)}</div>
+    </div>
+    <div class="content">
+      <div class="play-topbar">
+        <span>問題 ${state.currentIndex+1} / ${state.items.length}</span>
+        <span onclick="backHome()" style="text-decoration:underline; cursor:pointer;">中断してホームへ</span>
+      </div>
+  `;
+
+  if(isInfo){
+    html += `<div class="qcard info">
+      <div class="qtitle">${esc(item.title)}</div>
+      ${item.speak ? `
+      <div class="speak-row">
+        <button id="speakBtn" class="speak-btn" onclick='toggleSpeak(${JSON.stringify(item.speak)})'>🔊 音声で聞く</button>
+        <div class="speed-control">
+          <span>速さ</span>
+          <input type="range" min="0.7" max="1.8" step="0.1" value="${state.speakRate}" oninput="updateSpeakRate(this.value)">
+          <span id="speakRateLabel">${state.speakRate.toFixed(1)}倍</span>
+        </div>
+      </div>` : ""}
+      <div class="info-body ${item.wide?'wide':''}">${item.body}</div>
+      ${item.src ? `<div class="src-tag">出典：${esc(item.src)}</div>` : ""}
+      <button class="btn btn-ref" onclick="nextItem()">${state.currentIndex < state.items.length-1 ? "次へ" : "結果を見る"}</button>
+    </div>`;
+  } else if(item.type==="fill"){
+    html += `<div class="qcard">`;
+    if(item.lead) html += `<div class="lead-badge">${esc(item.lead)}</div>`;
+    html += `<div class="qtext">${esc(item.q)}</div>`;
+    const inputClass = state.answered ? (checkFillAnswer(item, state.userInput) ? "correct":"wrong") : "";
+    html += `<input type="text" id="fillInput" class="fill-input ${inputClass}" placeholder="答えを入力" value="${esc(state.userInput)}" ${state.answered?"disabled":""} onkeydown="if(event.key==='Enter'){state.userInput=this.value; submitFillUI();}">`;
+    if(!state.answered){
+      html += `<button class="btn btn-primary" onclick="submitFillUI()">こたえる</button>`;
+    }else{
+      const correct = checkFillAnswer(item, state.userInput);
+      html += `<div class="explain-box ${correct?'good':'bad'}">
+        <span class="mark-icon">${correct?"⭕":"❌"}</span><b>正解：${esc(item.answer)}</b><br>${esc(item.explain||"")}
+      </div>`;
+      html += `<button class="btn btn-primary" onclick="nextItem()">${state.currentIndex < state.items.length-1 ? "次の問題へ" : "結果を見る"}</button>`;
+    }
+    html += `</div>`;
+  } else if(item.type==="choice"){
+    html += `<div class="qcard">`;
+    if(item.pillar!==undefined && item.pillar!==null) html += `<div class="lead-badge">${esc(pillarBadge(item.pillar))}</div>`;
+    html += `<div class="qtext">${esc(item.q)}</div>`;
+    html += `<div class="choice-list">`;
+    item.choices.forEach((c,idx)=>{
+      let cls = "choice-btn";
+      if(state.answered){
+        if(idx===item.answer) cls += " correct";
+        else if(idx===state.userChoiceIdx) cls += " wrong";
+        else cls += " dim";
+      }
+      html += `<button class="${cls}" ${state.answered?"disabled":""} onclick="submitChoiceUI(${idx})">${esc(c)}</button>`;
+    });
+    html += `</div>`;
+    if(state.answered){
+      const correct = state.userChoiceIdx===item.answer;
+      html += `<div class="explain-box ${correct?'good':'bad'}">
+        <span class="mark-icon">${correct?"⭕":"❌"}</span>${esc(item.explain||"")}
+      </div>`;
+      html += `<button class="btn btn-primary" onclick="nextItem()">${state.currentIndex < state.items.length-1 ? "次の問題へ" : "結果を見る"}</button>`;
+    }
+    html += `</div>`;
+  }
+
+  html += `</div>`;
+  app.innerHTML = html;
+  if(item.type==="fill" && !state.answered){
+    const el = document.getElementById("fillInput");
+    if(el) el.focus();
+  }
+}
+
+function submitChoiceUI(idx){
+  submitChoice(idx);
+  renderPlay();
+}
+function submitFillUI(){
+  const el = document.getElementById("fillInput");
+  if(el) state.userInput = el.value;
+  submitFill();
+  renderPlay();
+}
+
+function renderResult(){
+  const stage = STAGES.find(s=>s.id===state.stageId);
+  const wrongItems = state.answerLog.filter(l=>!l.wasCorrect).map(l=>l.item);
+  const missedCount = Object.keys(state.missedStore[state.stageId]||{}).length;
+
+  let html = `
+    <div class="header">
+      <h1>結果</h1>
+      <div class="sub">${esc(stage.name)}${state.isRetry?"（復習）":""}</div>
+    </div>
+    <div class="content">
+      <div class="qcard result-box">
+        <div>できた問題</div>
+        <div class="result-score">${state.scoreCorrect} / ${state.scoreTotal}</div>
+        ${wrongItems.length>0 ? `
+        <div class="wrong-list">
+          <div class="wrong-list-label">まちがえた問題</div>
+          ${wrongItems.map(it=>`<div class="wrong-item">${esc(it.q)}</div>`).join("")}
+        </div>` : `<div class="perfect-msg">🎉 全問正解！</div>`}
+      </div>
+      <div class="result-actions">
+        <button class="btn btn-primary" onclick="${state.isRetry ? `startRetry('${state.stageId}')` : `startStage('${state.stageId}')`}">もう一度</button>
+        <button class="btn btn-outline" onclick="backHome()">ホームへ</button>
+      </div>
+      ${(!state.isRetry && missedCount>0) ? `<button class="btn btn-danger-outline" style="margin-top:10px;" onclick="startRetry('${state.stageId}')">🔁 苦手${missedCount}問を復習する</button>` : ""}
+    </div>
+  `;
+  app.innerHTML = html;
+}
+
+function doResetAll(){
+  state.missedStore = {};
+  saveMissedStore(state.missedStore);
+  const btn = document.getElementById("resetAllBtn");
+  if(btn){
+    btn.textContent = "✅ リセットしました";
+    setTimeout(()=>{ renderHome(); }, 1200);
+  }
+}
+
+render();
+</script>
+</body>
+</html>

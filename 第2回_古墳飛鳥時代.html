@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>古墳・飛鳥時代テスト</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --accent:#3468a6;
+  --accent-light:#e8f0fa;
+  --ref:#7a5ea8;
+  --ref-light:#f1ecf8;
+  --good:#2f9e5b;
+  --good-light:#e6f6ec;
+  --bad:#d1453b;
+  --bad-light:#fbe9e8;
+  --ink:#22303f;
+  --sub:#5c6b7a;
+  --line:#dbe3ec;
+  --bg:#f5f7fa;
+  --card:#ffffff;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  font-family:"Zen Kaku Gothic New",sans-serif;
+  background:var(--bg);
+  color:var(--ink);
+  display:flex;
+  justify-content:center;
+}
+#app{
+  width:100%;
+  max-width:480px;
+  min-height:100vh;
+  background:var(--bg);
+  display:flex;
+  flex-direction:column;
+  position:relative;
+}
+.header{
+  padding:16px 18px 12px;
+  background:linear-gradient(135deg,var(--accent),#4d7dbf);
+  color:#fff;
+  position:sticky;
+  top:0;
+  z-index:5;
+}
+.header h1{
+  margin:0;
+  font-size:18px;
+  font-weight:900;
+  letter-spacing:.02em;
+}
+.header .sub{
+  margin-top:2px;
+  font-size:12px;
+  opacity:.9;
+}
+.content{
+  flex:1;
+  padding:14px 16px 90px;
+}
+.stage-card{
+  background:var(--card);
+  border-radius:14px;
+  box-shadow:0 2px 8px rgba(30,50,80,.08);
+  padding:16px;
+  margin-bottom:14px;
+  border:1px solid var(--line);
+  cursor:pointer;
+  transition:transform .1s;
+}
+.stage-card:active{transform:scale(.98);}
+.stage-card.ref{
+  border-color:var(--ref);
+  background:linear-gradient(180deg,#fff,var(--ref-light));
+}
+.stage-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+.stage-name{
+  font-size:16px;
+  font-weight:700;
+}
+.stage-badge{
+  font-size:11px;
+  background:var(--accent);
+  color:#fff;
+  padding:3px 8px;
+  border-radius:999px;
+  font-weight:700;
+}
+.stage-card.ref .stage-badge{background:var(--ref);}
+.stage-desc{
+  font-size:12.5px;
+  color:var(--sub);
+  margin-top:6px;
+  line-height:1.5;
+}
+.stage-meta{
+  display:flex;
+  gap:10px;
+  margin-top:10px;
+  font-size:12px;
+  color:var(--sub);
+}
+.retry-btn{
+  margin-top:10px;
+  display:inline-block;
+  background:var(--bad-light);
+  color:var(--bad);
+  border:1px solid var(--bad);
+  border-radius:8px;
+  padding:6px 10px;
+  font-size:12.5px;
+  font-weight:700;
+  cursor:pointer;
+}
+.progress-bar{
+  height:6px;
+  background:var(--line);
+  border-radius:99px;
+  overflow:hidden;
+  margin-top:8px;
+}
+.progress-fill{
+  height:100%;
+  background:var(--accent);
+  border-radius:99px;
+}
+.lead-badge{
+  display:inline-block;
+  background:var(--accent);
+  color:#fff;
+  font-size:12px;
+  font-weight:700;
+  padding:4px 10px;
+  border-radius:999px;
+  margin-bottom:10px;
+}
+.sub-badge{
+  display:inline-block;
+  background:#fff;
+  color:var(--accent);
+  border:1px solid var(--accent);
+  font-size:11px;
+  font-weight:700;
+  padding:2px 8px;
+  border-radius:999px;
+  margin-left:6px;
+}
+.play-topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-size:12.5px;
+  color:var(--sub);
+  margin-bottom:10px;
+}
+.qcard{
+  background:var(--card);
+  border-radius:14px;
+  padding:18px 16px;
+  box-shadow:0 2px 8px rgba(30,50,80,.08);
+  border:1px solid var(--line);
+}
+.qcard.info{
+  border-color:var(--ref);
+  background:linear-gradient(180deg,#fff,var(--ref-light));
+}
+.qtitle{
+  font-weight:900;
+  font-size:16px;
+  margin-bottom:8px;
+}
+.qtext{
+  font-size:15.5px;
+  line-height:1.7;
+  margin-bottom:14px;
+  white-space:pre-wrap;
+}
+.qtext.wide{font-size:14.5px;}
+.info-body{
+  font-size:14.5px;
+  line-height:1.85;
+}
+.info-body b{color:var(--accent);}
+.src-tag{
+  margin-top:14px;
+  font-size:11.5px;
+  color:var(--ref);
+  border-top:1px dashed var(--line);
+  padding-top:8px;
+}
+.speak-btn{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  background:#fff;
+  color:var(--ref);
+  border:1.5px solid var(--ref);
+  border-radius:999px;
+  padding:7px 14px;
+  font-size:13px;
+  font-weight:700;
+  font-family:inherit;
+  cursor:pointer;
+  margin-bottom:12px;
+}
+.speak-btn.playing{
+  background:var(--ref);
+  color:#fff;
+}
+.speak-row{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-bottom:12px;
+  flex-wrap:wrap;
+}
+.speed-control{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  font-size:12px;
+  color:var(--sub);
+}
+.speed-control input[type=range]{
+  width:92px;
+  accent-color:var(--ref);
+}
+.choice-list{display:flex;flex-direction:column;gap:9px;}
+.choice-btn{
+  text-align:left;
+  padding:12px 14px;
+  border-radius:10px;
+  border:1.5px solid var(--line);
+  background:#fff;
+  font-size:14.5px;
+  font-family:inherit;
+  cursor:pointer;
+  line-height:1.5;
+}
+.choice-btn:active{background:var(--accent-light);}
+.choice-btn.correct{
+  border-color:var(--good);
+  background:var(--good-light);
+  font-weight:700;
+}
+.choice-btn.wrong{
+  border-color:var(--bad);
+  background:var(--bad-light);
+  font-weight:700;
+}
+.choice-btn.dim{opacity:.55;}
+.fill-input{
+  width:100%;
+  padding:12px 14px;
+  font-size:16px;
+  border-radius:10px;
+  border:1.5px solid var(--line);
+  font-family:inherit;
+  margin-bottom:10px;
+}
+.fill-input.correct{border-color:var(--good);background:var(--good-light);}
+.fill-input.wrong{border-color:var(--bad);background:var(--bad-light);}
+.btn{
+  width:100%;
+  padding:13px;
+  border-radius:10px;
+  border:none;
+  font-size:15px;
+  font-weight:700;
+  font-family:inherit;
+  cursor:pointer;
+  margin-top:6px;
+}
+.btn-primary{background:var(--accent);color:#fff;}
+.btn-ref{background:var(--ref);color:#fff;}
+.btn-outline{background:#fff;color:var(--accent);border:1.5px solid var(--accent);}
+.btn-outline.ref{color:var(--ref);border-color:var(--ref);}
+.result-box{
+  text-align:center;
+  padding:6px 0 18px;
+}
+.result-score{
+  font-size:40px;
+  font-weight:900;
+  color:var(--accent);
+  margin:6px 0;
+}
+.explain-box{
+  margin-top:14px;
+  background:var(--accent-light);
+  border-radius:10px;
+  padding:12px 14px;
+  font-size:13.5px;
+  line-height:1.7;
+}
+.explain-box.bad{background:var(--bad-light);}
+.explain-box.good{background:var(--good-light);}
+.hint-box{
+  margin-top:10px;
+  background:#fff8e6;
+  border:1px solid #e8cf8a;
+  border-radius:10px;
+  padding:10px 12px;
+  font-size:13px;
+  line-height:1.6;
+}
+.mark-icon{font-size:18px;margin-right:4px;vertical-align:-2px;}
+.missed-list{
+  text-align:left;
+  margin-top:16px;
+  font-size:13px;
+}
+.missed-item{
+  padding:8px 10px;
+  background:var(--bad-light);
+  border-radius:8px;
+  margin-bottom:6px;
+  color:#8a2f28;
+}
+.home-title{
+  font-size:13px;
+  font-weight:700;
+  color:var(--sub);
+  margin:18px 0 8px 2px;
+}
+.footer-note{
+  text-align:center;
+  font-size:11px;
+  color:var(--sub);
+  padding:10px 0 26px;
+}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+/* ===================== データ（予習シリーズ5年下 第2回 古墳時代・飛鳥時代 より転記） ===================== */
+
+const PILLARS = {
+  1:{label:"①古墳文化", full:"古墳文化"},
+  2:{label:"②ヤマト政権", full:"ヤマト政権"},
+  3:{label:"③渡来人と大陸文化", full:"渡来人と大陸文化"},
+  4:{label:"④推古天皇の政治", full:"推古天皇のころの政治"},
+  5:{label:"⑤飛鳥文化", full:"飛鳥文化"},
+  6:{label:"⑥大化の改新", full:"大化の改新"}
+};
+function pillarBadge(p){ return PILLARS[p] ? PILLARS[p].label : ""; }
+
+/* ---------- 第1段階：構造テスト（kihon） ---------- */
+
+const kihonOverviewScreens = [
+  {
+    type:"info",
+    title:"はじめに",
+    speak:"今回のテーマは、古墳時代と飛鳥時代、大陸から学んだ国づくりです。今回のポイントは、大きく分けて6つあります。1つ目は古墳文化、2つ目はヤマト政権、3つ目は渡来人と大陸文化、4つ目は推古天皇のころの政治、5つ目は飛鳥文化、6つ目は大化の改新です。まずはこの6つの柱の全体像をつかんでから、それぞれの中身を確認していきましょう。",
+    body:`第2回のテーマは「古墳時代・飛鳥時代〜大陸から学んだ国づくり〜」です。<br>
+今回のポイントは大きく分けて<b>6つ</b>あります。<br><br>
+①古墳文化<br>
+②ヤマト政権<br>
+③渡来人と大陸文化<br>
+④推古天皇のころの政治<br>
+⑤飛鳥文化<br>
+⑥大化の改新<br><br>
+まずはこの6本柱の全体像をつかんでから、それぞれの中身（黒太字・ひとくちメモ）を確認していきましょう。`
+  },
+  {
+    type:"info",
+    title:"全体像：古墳・飛鳥時代の6本柱",
+    wide:true,
+    speak:"それでは、6つの柱を順番に見ていきましょう。1つ目、古墳文化です。3世紀半ばから、前方後円墳などの古墳がつくられ始めました。埴輪や副葬品からも、当時の社会のようすがわかります。大仙古墳は、日本最大の古墳です。2つ目、ヤマト政権です。大和地方の豪族たちが中心となってつくった政権で、氏姓制度によって、大王を中心に豪族たちが政治に参加しました。3つ目、渡来人と大陸文化です。中国や朝鮮半島から渡ってきた渡来人によって、儒教や仏教、それに土木、鉄製農具、すえ器、機織りなどの技術が伝えられました。4つ目、推古天皇のころの政治です。推古天皇と聖徳太子らが、冠位十二階や憲法十七条を定め、遣隋使を送るなど、天皇を中心とした政治のしくみを整えようとしました。5つ目、飛鳥文化です。日本で最初の仏教文化で、法隆寺などがつくられ、豪族は古墳に代わって寺院をつくるようになりました。6つ目、大化の改新です。中大兄皇子と中臣鎌足が蘇我氏を滅ぼし、公地公民などの改革を進めました。白村江の戦いや壬申の乱を経て、藤原京という本格的な都がつくられました。",
+    body:`<b>①古墳文化</b>：3世紀半ばから前方後円墳などの古墳がつくられ始め、埴輪や副葬品からも当時の社会がわかります。大仙古墳は日本最大の古墳です。<br><br>
+<b>②ヤマト政権</b>：大和地方の豪族たちが中心となってつくった政権。氏姓制度により、大王を中心に豪族が政治に参加しました。<br><br>
+<b>③渡来人と大陸文化</b>：中国・朝鮮半島から渡ってきた渡来人によって、儒教・仏教や、土木・鉄製農具・すえ器・機織りなどの技術が伝えられました。<br><br>
+<b>④推古天皇のころの政治</b>：推古天皇と聖徳太子らが、冠位十二階・憲法十七条を定め、遣隋使を送るなど、天皇中心の政治のしくみを整えようとしました。<br><br>
+<b>⑤飛鳥文化</b>：日本で最初の仏教文化。法隆寺など、豪族は古墳に代わって寺院をつくるようになりました。<br><br>
+<b>⑥大化の改新</b>：中大兄皇子と中臣鎌足が蘇我氏を滅ぼし、公地公民などの改革を進めました。白村江の戦い、壬申の乱を経て、藤原京という本格的な都がつくられました。`
+  }
+];
+
+const kihonFillRaw = [
+  // pillar 1
+  {pillar:1, q:"3世紀半ばから4世紀にかけて近畿地方を中心につくられ始めた、大きな古墳を（　）という。", answer:"前方後円墳", accept:["前方後円墳"], explain:"近畿地方を中心に、前方後円墳とよばれる大きな古墳がつくられ始めました。"},
+  {pillar:1, q:"古墳のまわりや上に置かれた、素焼きの土製品を（　）という。", answer:"埴輪", accept:["埴輪"], explain:"古墳のまわりや上には、埴輪とよばれる素焼きの土製品が置かれました。"},
+  {pillar:1, q:"古墳がつくられた3世紀後半から7世紀ごろまでを（　）時代という。", answer:"古墳", accept:["古墳"], explain:"古墳がつくられた3世紀後半から7世紀ごろまでを、古墳時代といいます。"},
+  {pillar:1, q:"日本最大の古墳で、大阪府堺市にあるのは（　）である。", answer:"大仙古墳", accept:["大仙古墳"], explain:"長さが486mもある日本最大の古墳、大仙古墳（仁徳陵古墳）です。"},
+  // pillar 2
+  {pillar:2, q:"3世紀中ごろから4世紀にかけて、大和地方の豪族たちが中心となってつくった政権を（　）という。", answer:"ヤマト政権", accept:["ヤマト政権","大和政権"], explain:"大和地方（奈良県北部）の豪族たちが中心となって、ヤマト政権（大和政権）をつくりました。"},
+  {pillar:2, q:"ヤマト政権の支配者は、大王（後には　　）とよばれた。", answer:"天皇", accept:["天皇"], explain:"この政権の支配者は、大王（後には天皇）とよばれました。"},
+  {pillar:2, q:"大王が氏の家柄に応じて臣・連などの姓をあたえ、政治に参加させたしくみを（　）という。", answer:"氏姓制度", accept:["氏姓制度"], explain:"大王は、氏の家柄に応じて、臣・連などの姓をあたえました。このしくみを氏姓制度といいます。"},
+  // pillar 3
+  {pillar:3, q:"中国・朝鮮半島から日本に渡ってきた人々を（　）という。", answer:"渡来人", accept:["渡来人"], explain:"中国・朝鮮半島から日本に渡ってきた人々を渡来人といいます。"},
+  {pillar:3, q:"儒教は5世紀に、仏教は6世紀に、それぞれ朝鮮半島の（　）から伝えられた。", answer:"百済", accept:["百済"], explain:"儒教は5世紀に、仏教は6世紀に、それぞれ朝鮮半島の百済から公に伝えられました。"},
+  {pillar:3, q:"のぼりがまで高温で焼かれ、かたくてこわれにくい土器を（　）という。", answer:"すえ器", accept:["すえ器"], explain:"のぼりがまで高温で焼かれるため、すえ器には、かたくてこわれにくいという特色があります。"},
+  {pillar:3, q:"生糸を原料に、機という機械を使ってつくる織物を（　）という。", answer:"絹織物", accept:["絹織物"], explain:"生糸を原料に、機という機械を使って絹織物をつくる技術が伝えられました。"},
+  // pillar 4
+  {pillar:4, q:"593年、推古天皇がおいの聖徳太子を任命した、天皇を助ける役職を（　）という。", answer:"摂政", accept:["摂政"], explain:"推古天皇は、おいの聖徳太子（厩戸皇子）を摂政としました。"},
+  {pillar:4, q:"603年に定められた、役人の地位をあらわす制度を（　）という。", answer:"冠位十二階", accept:["冠位十二階"], explain:"冠位十二階（603年）は、役人の地位をあらわす制度です。"},
+  {pillar:4, q:"604年に定められた、豪族に役人としての心がまえを示した法を（　）という。", answer:"憲法十七条", accept:["憲法十七条"], explain:"憲法十七条（604年）は、豪族たちに対して、役人としての心がまえを示しました。"},
+  {pillar:4, q:"隋にならって政治のしくみを整えるために送られた使いを（　）という。", answer:"遣隋使", accept:["遣隋使"], explain:"朝廷は、隋と国交を開き、すすんだ制度や文化を取り入れようと、遣隋使をつかわしました。"},
+  {pillar:4, q:"607年に遣隋使として隋に渡った人物は（　）である。", answer:"小野妹子", accept:["小野妹子"], explain:"小野妹子らの遣隋使とともに隋に渡った留学生や僧は、中国の政治や文化を学んで帰国しました。"},
+  // pillar 5
+  {pillar:5, q:"飛鳥地方を中心におこった、日本で最初の仏教文化を（　）という。", answer:"飛鳥文化", accept:["飛鳥文化"], explain:"飛鳥地方を中心に、日本で最初の仏教文化がおこりました。これを飛鳥文化とよびます。"},
+  {pillar:5, q:"聖徳太子が建てたとされる、世界最古の木造建築である奈良県の寺は（　）である。", answer:"法隆寺", accept:["法隆寺"], explain:"法隆寺（奈良県）は、現存する木造建築としては世界で最も古く、世界文化遺産に登録されています。"},
+  {pillar:5, q:"京都府にあり、弥勒菩薩半跏思惟像で知られる寺は（　）である。", answer:"広隆寺", accept:["広隆寺"], explain:"広隆寺（京都府）の弥勒菩薩半跏思惟像は、飛鳥文化を代表する仏像です。"},
+  // pillar 6
+  {pillar:6, q:"645年、中大兄皇子と中臣鎌足が蘇我蝦夷・入鹿父子を滅ぼした政治改革を（　）という。", answer:"大化の改新", accept:["大化の改新"], explain:"645年の政治改革を大化の改新といいます。"},
+  {pillar:6, q:"663年、唐と新羅の連合軍に敗れた戦いを（　）という。", answer:"白村江の戦い", accept:["白村江の戦い"], explain:"663年、唐と新羅の連合軍に敗れました（白村江の戦い）。"},
+  {pillar:6, q:"672年、天智天皇の後つぎをめぐって起こった争いを（　）という。", answer:"壬申の乱", accept:["壬申の乱"], explain:"672年、天智天皇の後つぎをめぐって、その弟と息子の間で争い（壬申の乱）が起こりました。"},
+  {pillar:6, q:"694年に持統天皇が奈良盆地南部に築いた、日本最初の本格的な都を（　）という。", answer:"藤原京", accept:["藤原京"], explain:"持統天皇は、694年、大規模な都（藤原京）を築きました。"},
+  {pillar:6, q:"大化の改新で示された、これまで天皇や豪族がもっていた土地や人民を国家のものとする原則を（　）という。", answer:"公地公民", accept:["公地公民"], explain:"これまで天皇や豪族がもっていた土地や人民を、国家のものとする（公地公民）ことが示されました。"}
+];
+
+const kihonFinalRaw = [
+  {pillar:1, q:"古墳文化について、正しいものはどれですか。",
+    choices:["前方後円墳はヤマト政権の力が広まるとともに各地でつくられた","古墳は奈良時代につくられ始めた","埴輪は主に鉄でつくられた","大仙古墳は日本で2番目に大きい古墳である"],
+    answer:0, explain:"古墳は、近畿地方を治めていたヤマト政権の力が広まるのにともなって、各地でつくられるようになりました。"},
+  {pillar:2, q:"ヤマト政権について、正しいものはどれですか。",
+    choices:["ヤマト政権は大和地方の豪族たちが中心となってつくった政権である","ヤマト政権の支配者は最初から天皇とよばれていた","氏姓制度は豪族の力をおさえるためのものだった","ヤマト政権は近畿地方以外ではまったく力を持たなかった"],
+    answer:0, explain:"大和地方（奈良県北部）の豪族たちが中心となって、ヤマト政権（大和政権）をつくりました。"},
+  {pillar:3, q:"渡来人と大陸文化について、正しいものはどれですか。",
+    choices:["渡来人によって多くの文化や技術がもたらされた","仏教は最初から国全体に信仰されていた","儒教は仏教より後に伝えられた","渡来人は主にヨーロッパから来た人々である"],
+    answer:0, explain:"渡来人によって多くの文化や技術がもたらされました。"},
+  {pillar:4, q:"推古天皇のころの政治について、正しいものはどれですか。",
+    choices:["聖徳太子は摂政として蘇我馬子とともに政治にあたった","憲法十七条は現在の憲法と同じ意味を持っていた","冠位十二階は家柄だけで役人を選ぶ制度だった","遣隋使は一度も派遣されなかった"],
+    answer:0, explain:"推古天皇は、聖徳太子を摂政として、蘇我馬子とともに政治にあたらせました。"},
+  {pillar:5, q:"飛鳥文化について、正しいものはどれですか。",
+    choices:["飛鳥文化にはインドや西アジアなどの文化の影響が見られる","飛鳥文化は奈良時代に栄えた文化である","法隆寺は大阪府にある","飛鳥文化は仏教とは関係がない"],
+    answer:0, explain:"飛鳥文化とよばれるこの文化には、インド・西アジア・ギリシャなどの文化の影響が見られます。"},
+  {pillar:6, q:"大化の改新について、正しいものはどれですか。",
+    choices:["大化の改新では公地公民の原則が示された","大化の改新は聖徳太子が中心となって行った","白村江の戦いで日本は勝利した","藤原京は平安時代につくられた"],
+    answer:0, explain:"改新の詔では、これまで天皇や豪族がもっていた土地や人民を、国家のものとする（公地公民）ことが示されました。"}
+];
+
+/* ---------- 第2段階：黒太字テスト（kuroji） ---------- */
+
+const kurojiBlocks = [
+{ pillar:1, sub:"2-1｜①古墳文化の黒太字", items:[
+  {q:"3世紀半ばから4世紀にかけて近畿地方を中心につくられ始めた、大きな古墳は？", choices:["前方後円墳","円墳","方墳","竪穴住居"], answer:0, explain:"近畿地方を中心に、前方後円墳とよばれる大きな古墳がつくられ始めました。"},
+  {q:"古墳のまわりや上に置かれた、素焼きの土製品は？", choices:["埴輪","土偶","須恵器","銅鐸"], answer:0, explain:"古墳のまわりや上には、埴輪とよばれる素焼きの土製品が置かれました。"},
+  {q:"古墳がつくられた3世紀後半から7世紀ごろまでを何という？", choices:["古墳時代","弥生時代","飛鳥時代","縄文時代"], answer:0, explain:"古墳がつくられた3世紀後半から7世紀ごろまでを、古墳時代といいます。"},
+  {q:"日本最大の古墳で、大阪府堺市にあるのは？", choices:["大仙古墳","稲荷山古墳","江田船山古墳","高松塚古墳"], answer:0, explain:"長さが486mもある日本最大の古墳、大仙古墳（仁徳陵古墳）です。"},
+  {q:"大仙古墳は誰の墓とされている？", choices:["仁徳天皇","雄略天皇","推古天皇","天武天皇"], answer:0, explain:"大仙古墳は、仁徳天皇の墓とされています。"},
+  {q:"埴輪から知ることができるのは、当時の何のようす？", choices:["生活のようす","気候のようす","貿易のようす","戦争のようす"], answer:0, explain:"埴輪には、円筒形や人物・動物・家などをかたどったものがあり、当時の生活のようすを知ることができます。"},
+  {q:"古墳の内部に、死者とともに納められた鏡・玉・剣などを何という？", choices:["副葬品","祭器","埴輪","土偶"], answer:0, explain:"古墳の内部には、死者とともに、鏡・玉・剣などの副葬品が納められました。"},
+  {q:"円形の古墳を何という？", choices:["円墳","方墳","前方後円墳","八角墳"], answer:0, explain:"古墳の形には、前方後円墳・円墳・方墳などがあります。"},
+  {q:"方形の古墳を何という？", choices:["方墳","円墳","前方後円墳","八角墳"], answer:0, explain:"古墳の形には、前方後円墳・円墳・方墳などがあります。"},
+  {q:"埼玉県にある、ワカタケル大王があたえたと考えられる鉄剣が出土した古墳は？", choices:["稲荷山古墳","江田船山古墳","大仙古墳","高松塚古墳"], answer:0, explain:"ワカタケル大王があたえたと考えられる鉄剣が稲荷山古墳（埼玉県）から出土しています。"}
+]},
+{ pillar:2, sub:"2-2｜②ヤマト政権の黒太字", items:[
+  {q:"3世紀中ごろから4世紀にかけて、大和地方の豪族たちが中心となってつくった政権は？", choices:["ヤマト政権","飛鳥政権","大宰府","朝廷"], answer:0, explain:"大和地方の豪族たちが中心となって、ヤマト政権（大和政権）をつくりました。"},
+  {q:"ヤマト政権の支配者は、大王のほかに後には何とよばれた？", choices:["天皇","将軍","太政大臣","関白"], answer:0, explain:"この政権の支配者は、大王（後には天皇）とよばれました。"},
+  {q:"ヤマト政権が各地の豪族にあたえた代わりに求めたものは、貢ぎ物ともう1つは？", choices:["兵士","米","布","馬"], answer:0, explain:"ヤマト政権は、朝鮮半島からの鉄や技術などをあたえる代わりに、貢ぎ物や兵士を出すことを求めました。"},
+  {q:"ワカタケル大王があたえたと考えられる鉄刀が出土した、熊本県の古墳は？", choices:["江田船山古墳","稲荷山古墳","大仙古墳","高松塚古墳"], answer:0, explain:"ワカタケル大王があたえたと考えられる鉄刀が江田船山古墳（熊本県）から出土しています。"},
+  {q:"豪族たちがつくっていた、それぞれの集団を何という？", choices:["氏","姓","族","家"], answer:0, explain:"このころの豪族たちは、それぞれ氏とよばれる集団をつくっていました。"},
+  {q:"大王が氏の家柄に応じてあたえた、臣・連などの呼び名を何という？", choices:["姓","氏","位","冠位"], answer:0, explain:"大王は、氏の家柄に応じて、臣・連などの姓をあたえました。"},
+  {q:"大王が氏に姓をあたえ政治に参加させたしくみを何という？", choices:["氏姓制度","律令制度","冠位十二階","公地公民"], answer:0, explain:"このしくみを氏姓制度といいます。"},
+  {q:"日本で乗馬の風習が始まったのはおよそ何世紀ごろ？", choices:["4〜5世紀","1〜2世紀","7〜8世紀","9〜10世紀"], answer:0, explain:"日本で乗馬の風習が始まったのは、4〜5世紀のことです。"}
+]},
+{ pillar:3, sub:"2-3｜③渡来人と大陸文化の黒太字", items:[
+  {q:"中国・朝鮮半島から日本に渡ってきた人々は？", choices:["渡来人","豪族","大王","武人"], answer:0, explain:"中国・朝鮮半島から日本に渡ってきた人々を渡来人といいます。"},
+  {q:"紀元前6世紀ごろに中国の孔子が説いた教えは？", choices:["儒教","仏教","道教","神道"], answer:0, explain:"儒教は、紀元前6世紀ごろに中国の孔子が説いた教えで、儒学ともいいます。"},
+  {q:"紀元前5世紀ごろ、インドのシャカ（釈迦）によって始められた宗教は？", choices:["仏教","儒教","道教","ヒンドゥー教"], answer:0, explain:"仏教は、紀元前5世紀ごろ、インドのシャカ（釈迦）によって始められた宗教です。"},
+  {q:"儒教が朝鮮半島の百済から伝えられたのは何世紀？", choices:["5世紀","4世紀","6世紀","7世紀"], answer:0, explain:"儒教は5世紀に、朝鮮半島の百済から公に伝えられました。"},
+  {q:"仏教が朝鮮半島の百済から伝えられたのは何世紀？", choices:["6世紀","5世紀","7世紀","4世紀"], answer:0, explain:"仏教は6世紀に、朝鮮半島の百済から公に伝えられました。"},
+  {q:"古墳やため池、用水路などをつくる技術は何工事とよばれる？", choices:["土木工事","建築工事","治水工事","開墾工事"], answer:0, explain:"古墳やため池、用水路などをつくる技術によって、水田などの耕地が増えました。"},
+  {q:"のぼりがまで高温で焼かれ、かたくてこわれにくい土器は？", choices:["すえ器","弥生土器","縄文土器","埴輪"], answer:0, explain:"すえ器には、かたくてこわれにくく、水もれが少ないという特色があります。"},
+  {q:"生糸を原料に、機という機械を使ってつくる織物は？", choices:["絹織物","麻織物","綿織物","毛織物"], answer:0, explain:"生糸を原料に、機という機械を使って絹織物をつくる技術が伝えられました。"},
+  {q:"ワカタケル大王と同じ人物とされる天皇は？", choices:["雄略天皇","推古天皇","天智天皇","天武天皇"], answer:0, explain:"ワカタケル大王とは雄略天皇と同じ人物と考えられています。"},
+  {q:"中国の歴史書にある「倭王の武」にあたると考えられる大王は？", choices:["ワカタケル大王","景行天皇","仁徳天皇","応神天皇"], answer:0, explain:"ワカタケル大王は、中国の歴史書にある倭王の武にあたると考えられています。"}
+]},
+{ pillar:4, sub:"2-4｜④推古天皇のころの政治の黒太字", items:[
+  {q:"593年、推古天皇がおいの聖徳太子を任命した役職は？", choices:["摂政","関白","太政大臣","征夷大将軍"], answer:0, explain:"推古天皇は、おいの聖徳太子（厩戸皇子）を摂政としました。"},
+  {q:"天皇と親戚の関係にあり、聖徳太子とともに政治にあたった人物は？", choices:["蘇我馬子","中臣鎌足","小野妹子","蘇我入鹿"], answer:0, explain:"天皇と親戚の関係にあった蘇我馬子とともに政治にあたらせました。"},
+  {q:"603年に定められた、役人の地位をあらわす制度は？", choices:["冠位十二階","憲法十七条","大化の改新","氏姓制度"], answer:0, explain:"冠位十二階（603年）は、役人の地位をあらわす制度です。"},
+  {q:"604年に定められた、役人としての心がまえを示した法は？", choices:["憲法十七条","冠位十二階","改新の詔","大宝律令"], answer:0, explain:"憲法十七条（604年）は、豪族たちに対して、役人としての心がまえを示しました。"},
+  {q:"「和をとうとび、争うことのないようにしなさい」で始まる法は？", choices:["憲法十七条","冠位十二階","改新の詔","公地公民"], answer:0, explain:"憲法十七条の第一条は「和をとうとび、争うことのないようにしなさい」です。"},
+  {q:"推古天皇のころからの約100年間を何時代とよぶことがある？", choices:["飛鳥時代","古墳時代","奈良時代","平安時代"], answer:0, explain:"推古天皇のころからの約100年間を、飛鳥地方に朝廷が置かれたことから、飛鳥時代とよぶことがあります。"},
+  {q:"大王（天皇）が政治を行う場を何という？", choices:["朝廷","幕府","国府","太政官"], answer:0, explain:"朝廷とは、大王（天皇）が政治を行う場のことです。"},
+  {q:"隋にならって政治のしくみを整えるために送られた使いは？", choices:["遣隋使","遣唐使","遣新羅使","渡来人"], answer:0, explain:"朝廷は、隋と国交を開くために、遣隋使をつかわしました。"},
+  {q:"607年に遣隋使として隋に渡った人物は？", choices:["小野妹子","中臣鎌足","蘇我馬子","中大兄皇子"], answer:0, explain:"小野妹子らの遣隋使とともに隋に渡った留学生や僧は、中国の政治や文化を学んで帰国しました。"},
+  {q:"聖徳太子の別名は？", choices:["厩戸皇子","中大兄皇子","大海人皇子","舎人親王"], answer:0, explain:"聖徳太子は厩戸皇子ともよばれます。"},
+  {q:"6世紀末に中国国内をまとめた王朝は？", choices:["隋","唐","漢","魏"], answer:0, explain:"中国では6世紀末に隋が国内をまとめました。"},
+  {q:"聖徳太子のおばにあたり、日本で最初の女性の天皇は？", choices:["推古天皇","持統天皇","孝謙天皇","元明天皇"], answer:0, explain:"聖徳太子のおばにあたる推古天皇は、日本で最初の女性の天皇です。"}
+]},
+{ pillar:5, sub:"2-5｜⑤飛鳥文化の黒太字", items:[
+  {q:"飛鳥地方を中心におこった、日本で最初の仏教文化は？", choices:["飛鳥文化","白鳳文化","天平文化","国風文化"], answer:0, explain:"飛鳥地方を中心に、日本で最初の仏教文化がおこりました。これを飛鳥文化とよびます。"},
+  {q:"飛鳥文化に影響を与えた文化は、インド・西アジアともう1つは？", choices:["ギリシャ","エジプト","ローマ","ペルシャ"], answer:0, explain:"飛鳥文化には、インド・西アジア・ギリシャなどの文化の影響が見られます。"},
+  {q:"聖徳太子が建てたとされる、世界最古の木造建築である奈良県の寺は？", choices:["法隆寺","広隆寺","四天王寺","東大寺"], answer:0, explain:"法隆寺は、現存する木造建築としては世界で最も古く、世界文化遺産に登録されています。"},
+  {q:"京都府にあり、弥勒菩薩半跏思惟像で知られる寺は？", choices:["広隆寺","法隆寺","四天王寺","延暦寺"], answer:0, explain:"広隆寺（京都府）の弥勒菩薩半跏思惟像は、飛鳥文化を代表する仏像です。"},
+  {q:"大阪府にある、飛鳥時代の代表的な寺院は？", choices:["四天王寺","法隆寺","広隆寺","東大寺"], answer:0, explain:"このころの代表的な寺院には、法隆寺（奈良県）や四天王寺（大阪府）などがあります。"},
+  {q:"豪族が自分の力を示すため、古墳に代わってつくるようになったものは？", choices:["寺院","宮殿","城","神社"], answer:0, explain:"仏教が豪族の間にも広まると、豪族は自分の力を示すため、古墳に代わって、寺院をつくるようになっていきました。"},
+  {q:"法隆寺は何県にある？", choices:["奈良県","京都県","大阪府","滋賀県"], answer:0, explain:"法隆寺は奈良県にあります。"},
+  {q:"仏教が最初に信仰されていたのは、渡来人ともう1つは？", choices:["蘇我氏","物部氏","中臣氏","大伴氏"], answer:0, explain:"仏教は、はじめ、渡来人や蘇我氏など、一部の人々に信仰されていました。"}
+]},
+{ pillar:6, sub:"2-6｜⑥大化の改新の黒太字", items:[
+  {q:"645年、中大兄皇子と中臣鎌足が蘇我蝦夷・入鹿父子を滅ぼした政治改革は？", choices:["大化の改新","壬申の乱","白村江の戦い","乙巳の変のみ"], answer:0, explain:"645年の政治改革を大化の改新といいます。"},
+  {q:"中大兄皇子は後に何天皇となった？", choices:["天智天皇","天武天皇","持統天皇","推古天皇"], answer:0, explain:"中大兄皇子は都を大津（滋賀県）に移し、天智天皇となりました。"},
+  {q:"中臣鎌足は後に何とよばれた？", choices:["藤原鎌足","蘇我鎌足","物部鎌足","大伴鎌足"], answer:0, explain:"中臣鎌足は後の藤原鎌足です。"},
+  {q:"大化の改新で初めて定められた元号は？", choices:["大化","白鳳","天平","養老"], answer:0, explain:"このとき、初めて大化という元号が定められました。"},
+  {q:"改新の詔で示された、天皇や豪族の土地や人民を国家のものとする原則は？", choices:["公地公民","荘園制","律令制","氏姓制度"], answer:0, explain:"これまで天皇や豪族がもっていた土地や人民を、国家のものとする（公地公民）ことが示されました。"},
+  {q:"663年、唐と新羅の連合軍に敗れた戦いは？", choices:["白村江の戦い","壬申の乱","刀伊の入寇","文永の役"], answer:0, explain:"663年、唐と新羅の連合軍に敗れました（白村江の戦い）。"},
+  {q:"白村江の戦いの後、九州北部に配置された兵士は？", choices:["防人","武士","衛士","国司"], answer:0, explain:"防人とよばれる兵士を、九州北部に配置しました。"},
+  {q:"白村江の戦いに備えて博多湾近くに築かれた、堀を用いた施設は？", choices:["水城","山城","土塁","柵"], answer:0, explain:"堀を用いた水城を築きました。"},
+  {q:"672年、天智天皇の後つぎをめぐって起こった争いは？", choices:["壬申の乱","大化の改新","白村江の戦い","乙巳の変"], answer:0, explain:"672年、天智天皇の後つぎをめぐって、その弟と息子の間で争い（壬申の乱）が起こりました。"},
+  {q:"壬申の乱に勝利し天皇となった人物は？", choices:["天武天皇","天智天皇","持統天皇","文武天皇"], answer:0, explain:"弟が勝利して天武天皇となりました。"},
+  {q:"天武天皇の皇后で、後に天皇になった人物は？", choices:["持統天皇","推古天皇","元明天皇","孝謙天皇"], answer:0, explain:"天武天皇の皇后で、後に天皇になった持統天皇です。"},
+  {q:"694年に持統天皇が築いた、日本最初の本格的な都は？", choices:["藤原京","平城京","平安京","難波京"], answer:0, explain:"持統天皇は、694年、大規模な都（藤原京）を築きました。"},
+  {q:"1998年に奈良県で出土した、日本最初の銅でつくられたお金は？", choices:["富本銭","和同開珎","寛永通宝","開元通宝"], answer:0, explain:"富本銭は、日本で最初の、銅でつくられたお金（銅銭）です。"},
+  {q:"7世紀後半から8世紀初めに栄えた、唐の初期の文化の影響を受けた文化は？", choices:["白鳳文化","飛鳥文化","天平文化","国風文化"], answer:0, explain:"7世紀後半から8世紀初め、唐の初期の文化の影響を受けた、活気に満ちた白鳳文化が栄えました。"}
+]}
+];
+
+/* ---------- 第3段階：ひとくちメモテスト（mame） ---------- */
+
+const mameQuizRaw = [
+  {pillar:2, q:"日本で乗馬の風習が始まったのはおよそ何世紀ごろ？", choices:["4〜5世紀","1〜2世紀","7〜8世紀","9〜10世紀"], answer:0, explain:"日本で乗馬の風習が始まったのは、4〜5世紀のことです。朝鮮半島出身の渡来人によって、馬の飼育のしかたや乗馬の技術などが伝えられたと考えられています。"},
+  {pillar:3, q:"紀元前5世紀ごろインドのシャカによって始められた宗教は？", choices:["仏教","儒教","道教","神道"], answer:0, explain:"仏教は、紀元前5世紀ごろ、インドのシャカ（釈迦）によって始められた宗教です。アジアを中心に、世界で数億人の信者がいます。"},
+  {pillar:4, q:"朝廷の記録や外国への手紙に使われた文字は？", choices:["漢字","かな文字","甲骨文字","梵字"], answer:0, explain:"朝廷の記録や外国への手紙は、漢字を使って書かれました。漢字は、日本の文化の水準を高めるのに役立ちました。"},
+  {pillar:4, q:"天皇が幼いときや女性のときに天皇を助けて政治を行う役職は？", choices:["摂政","関白","太政大臣","征夷大将軍"], answer:0, explain:"摂政は、天皇が幼いときや女性のときなどに、天皇をたすけて政治を行う役職です。聖徳太子のおばにあたる推古天皇は、日本で最初の女性の天皇です。"},
+  {pillar:5, q:"7世紀初めに聖徳太子が建てたとされる、世界最古の木造建築は？", choices:["法隆寺","広隆寺","四天王寺","東大寺"], answer:0, explain:"法隆寺は7世紀初めに聖徳太子が建てたとされます。一度焼けて再建されましたが、現存する木造建築としては世界で最も古く、世界文化遺産に登録されています。"},
+  {pillar:6, q:"1998年に奈良県で出土した日本最初の銅銭は？", choices:["富本銭","和同開珎","寛永通宝","永楽通宝"], answer:0, explain:"富本銭は、日本で最初の、銅でつくられたお金（銅銭）です。しかし、このお金が実際にどの程度使われたのかは、よくわかっていません。"},
+  {pillar:6, q:"7世紀後半から8世紀初めに栄えた、高松塚古墳の壁画で知られる文化は？", choices:["白鳳文化","飛鳥文化","天平文化","国風文化"], answer:0, explain:"白鳳文化は、7世紀後半から8世紀初め、唐の初期の文化の影響を受けた、活気に満ちた文化です。当時のようすが、高松塚古墳の壁画などからわかります。"}
+];
+
+/* ---------- 第4段階：気をつけたいポイント（sanko／読みもの・採点なし） ---------- */
+
+const sankoNotes = [
+  {
+    title:"この緑の山は何？",
+    body:`上の写真の、山のように見えるものは、大阪府堺市にあります。この緑の山は、いったい何なのでしょうか。<br><br>
+これは、濠に囲まれた巨大なお墓です。大王や豪族（小国の王）は、自分たちの力の大きさを示すために、自然の地形を利用したり土を高くもり上げたりして、古墳とよばれる大きな墓をつくりました。長さが486mもある日本最大の古墳、大仙古墳（仁徳陵古墳）です。<br><br>
+もり土がくずれないように古墳の斜面にはふき石がしきつめられたため、つくった当時の古墳は、石が光を反射して白っぽく見えました。長い年月を経て草や木が生いしげり、小さな山のようなすがたになったのです。大きな古墳を築くには、すぐれた技術をもった人や、多くの働き手が必要でした。このため、近くの村だけでなく、各地から多くの人々が集められました。`,
+    src:"予習シリーズ5年下 第2回 Q&A"
+  },
+  {
+    title:"倭と朝鮮半島・中国とのつながり",
+    body:`①朝鮮半島と倭：4世紀の中ごろ、ヤマト政権は、朝鮮半島のすぐれた技術や鉄を求めて、半島南部の伽耶諸国（加羅）との結びつきを強めていました。4世紀の終わりごろには、百済と手を結び、高句麗や新羅と戦ったといわれています。高句麗の好太王（広開土王）の碑には、倭の軍と戦ったことが記されています。<br><br>
+②貴重な朝鮮半島の鉄：日本では弥生時代の終わりごろから、農具に鉄が使われるようになりました。また、武具にも鉄が使われるようになり、ヤマト政権は朝鮮半島から鉄を手に入れて地方の豪族にあたえ、関係を深めていきました。<br><br>
+③中国への手紙：5世紀になって、高句麗の勢いが強くなると、ヤマト政権と結びつきの強かった伽耶諸国がおびやかされるようになりました。ヤマト政権の5代にわたる大王（倭の五王）は、中国にたびたび使いを送って、倭の王としての地位と、朝鮮半島南部の支配権を認めてもらおうとしました。手紙の武はワカタケル大王といわれています。<br><br>
+④神宿る沖ノ島：九州から朝鮮半島に向かう途中にある福岡県の沖ノ島では、航海の安全と交流の成功を願って、神に祈りをささげる儀式が行われていました。神にささげられた宝物は、後の時代の物もふくめ8万点にもなります。沖ノ島は、世界文化遺産「神宿る島宗像・沖ノ島と関連遺産群」の1つとなっています。`,
+    src:"予習シリーズ5年下 第2回 ちょっとくわしく"
+  },
+  {
+    title:"大王と天皇の呼び名の変化",
+    body:`ヤマト政権の支配者は、はじめ「大王」とよばれ、後に「天皇」とよばれるようになりました。「ワカタケル大王」（雄略天皇）のように、古墳時代にはまだ「大王」という呼び名が使われていた点に注意しましょう。天皇という呼び名がいつから使われ始めたかは、飛鳥時代あたりが目安になります。`,
+    src:"入試でまちがえやすいポイント（一般知識）"
+  },
+  {
+    title:"儒教と仏教、伝来の順序",
+    body:`儒教は5世紀、仏教は6世紀に、それぞれ朝鮮半島の百済から日本に公に伝えられました。「儒教が先、仏教が後」という順序を正確に覚えておきましょう。仏教はそれ以前から渡来人の間で信仰されていましたが、「公に伝えられた」時期としては6世紀とされています。`,
+    src:"入試でまちがえやすいポイント（一般知識）"
+  },
+  {
+    title:"冠位十二階と氏姓制度の違い",
+    body:`氏姓制度は、豪族の「家柄」に応じて姓（臣・連など）をあたえるしくみでした。これに対して冠位十二階は、家柄にとらわれず、「能力」のある人を役人にとりたてようとした制度です。「氏姓制度＝家柄重視」「冠位十二階＝能力重視」という対比で覚えておくと、入試で問われたときに混同しにくくなります。`,
+    src:"入試でまちがえやすいポイント（一般知識）"
+  },
+  {
+    title:"白村江の戦いと壬申の乱の違い",
+    body:`白村江の戦い（663年）は、朝鮮半島をめぐる日本と唐・新羅連合軍との対外戦争です。一方、壬申の乱（672年）は、天智天皇の後つぎをめぐる国内の争いです。年代が近く名前も似ているため混同しやすいので、「白村江＝対外戦争」「壬申の乱＝国内の後継者争い」と整理して覚えましょう。`,
+    src:"入試でまちがえやすいポイント（一般知識）"
+  }
+];
+
+/* ===================== 共通ビルド関数 ===================== */
+
+function shuffleArr(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+function finalize(q){
+  const correctText = q.choices[q.answer];
+  const order = shuffleArr(q.choices.map((c,i)=>i));
+  const newChoices = order.map(i=>q.choices[i]);
+  const newAnswer = newChoices.indexOf(correctText);
+  const out = Object.assign({}, q, {choices:newChoices, answer:newAnswer});
+  return out;
+}
+
+function normalizeAnswer(str){
+  if(str===undefined || str===null) return "";
+  let s = String(str).trim();
+  s = s.replace(/[０-９]/g, ch => String.fromCharCode(ch.charCodeAt(0)-0xFEE0));
+  s = s.replace(/\s+/g,"");
+  s = s.replace(/[『』「」]/g,"");
+  return s;
+}
+
+function checkFillAnswer(item, userInput){
+  const norm = normalizeAnswer(userInput);
+  if(norm==="") return false;
+  const candidates = [item.answer].concat(item.accept||[]);
+  return candidates.some(c => normalizeAnswer(c)===norm);
+}
+
+/* kihon の穴埋め item 生成 */
+function buildKihonFillItems(){
+  return kihonFillRaw.map((r,idx)=>({
+    type:"fill",
+    id:"kihonFill_"+idx,
+    q:r.q,
+    answer:r.answer,
+    accept:r.accept,
+    explain:r.explain,
+    lead:PILLARS[r.pillar].label,
+    sub:PILLARS[r.pillar].full,
+    pillar:r.pillar
+  }));
+}
+
+function buildKihonFinalItems(){
+  return kihonFinalRaw.map((r,idx)=>{
+    const fq = finalize({q:r.q, choices:r.choices, answer:r.answer, explain:r.explain});
+    return Object.assign({type:"choice", id:"kihonFinal_"+idx, pillar:r.pillar}, fq);
+  });
+}
+
+function buildKihonItems(){
+  const overview = kihonOverviewScreens.map((s,idx)=>Object.assign({id:"kihonOv_"+idx}, s));
+  const fills = shuffleArrKeepBlocks();
+  const finals = shuffleArr(buildKihonFinalItems());
+  return overview.concat(fills, finals);
+}
+// 穴埋めはブロック（pillar）順は固定、ブロック内はシャッフル
+function shuffleArrKeepBlocks(){
+  const byPillar = {};
+  kihonFillRaw.forEach((r,idx)=>{
+    if(!byPillar[r.pillar]) byPillar[r.pillar]=[];
+    byPillar[r.pillar].push(idx);
+  });
+  let out = [];
+  [1,2,3,4,5,6].forEach(p=>{
+    const idxs = shuffleArr(byPillar[p]||[]);
+    idxs.forEach(idx=>{
+      const r = kihonFillRaw[idx];
+      out.push({
+        type:"fill", id:"kihonFill_"+idx, q:r.q, answer:r.answer, accept:r.accept,
+        explain:r.explain, lead:PILLARS[r.pillar].label, sub:PILLARS[r.pillar].full, pillar:r.pillar
+      });
+    });
+  });
+  return out;
+}
+
+/* kuroji item 生成：ブロック順固定、ブロック内シャッフル */
+function buildKurojiItems(){
+  let out = [];
+  kurojiBlocks.forEach((block,bi)=>{
+    const shuffledItems = shuffleArr(block.items);
+    shuffledItems.forEach((it,ii)=>{
+      const fq = finalize(it);
+      out.push(Object.assign({
+        type:"choice",
+        id:"kuroji_"+bi+"_"+ii,
+        pillar:block.pillar,
+        sub:block.sub
+      }, fq));
+    });
+  });
+  return out;
+}
+
+/* mame item 生成 */
+function buildMameItems(){
+  const shuffled = shuffleArr(mameQuizRaw);
+  return shuffled.map((r,idx)=>{
+    const fq = finalize(r);
+    return Object.assign({type:"choice", id:"mame_"+idx, pillar:r.pillar}, fq);
+  });
+}
+
+/* sanko item 生成（採点なし） */
+function buildSankoItems(){
+  return sankoNotes.map((n,idx)=>({
+    type:"info", id:"sanko_"+idx, title:n.title, body:n.body, src:n.src, wide:true
+  }));
+}
+
+const STAGES = [
+  {id:"kihon", name:"① 構造テスト", desc:"6本柱（古墳文化・ヤマト政権・渡来人と大陸文化・推古天皇の政治・飛鳥文化・大化の改新）の骨組みを確認。概要2画面＋穴埋め24問＋まとめ選択6問。", scored:true, ref:false, build:buildKihonItems},
+  {id:"kuroji", name:"② 黒太字テスト", desc:"各分野の重要語句を4択で確認します。", scored:true, ref:false, build:buildKurojiItems},
+  {id:"mame", name:"③ ひとくちメモテスト", desc:"教科書のひとくちメモから出題します。", scored:true, ref:false, build:buildMameItems},
+  {id:"sanko", name:"④ 気をつけたいポイント", desc:"教科書コラム＋入試でまちがえやすい注意点の読みもの。採点はありません。", scored:false, ref:true, build:buildSankoItems}
+];
+
+/* ===================== 状態管理／localStorage ===================== */
+
+const STORAGE_KEY = "kofunasuka_missed_v1";
+
+function loadMissedStore(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : {};
+  }catch(e){ return {}; }
+}
+function saveMissedStore(store){
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(store)); }catch(e){ /* 保存できない環境は無視 */ }
+}
+
+const state = {
+  screen:"home",
+  stageId:null,
+  isRetry:false,
+  items:[],
+  currentIndex:0,
+  scoreTotal:0,
+  scoreCorrect:0,
+  answerLog:[],
+  results:{},
+  missedStore: loadMissedStore(),
+  answered:false,
+  userInput:"",
+  speakRate: loadSpeakRate(),
+  currentSpeakText: ""
+};
+
+function startStage(stageId){
+  stopSpeak();
+  stopMic();
+  const stage = STAGES.find(s=>s.id===stageId);
+  state.stageId = stageId;
+  state.isRetry = false;
+  state.items = stage.build();
+  state.currentIndex = 0;
+  state.scoreTotal = state.items.filter(i=>i.type!=="info").length;
+  state.scoreCorrect = 0;
+  state.answerLog = [];
+  state.answered = false;
+  state.userInput = "";
+  state.screen = "play";
+  render();
+}
+
+function startRetry(stageId){
+  const missed = state.missedStore[stageId] || {};
+  const items = Object.values(missed);
+  if(items.length===0) return;
+  state.stageId = stageId;
+  state.isRetry = true;
+  state.items = shuffleArr(items);
+  state.currentIndex = 0;
+  state.scoreTotal = state.items.length;
+  state.scoreCorrect = 0;
+  state.answerLog = [];
+  state.answered = false;
+  state.userInput = "";
+  state.screen = "play";
+  render();
+}
+
+function currentItem(){ return state.items[state.currentIndex]; }
+
+function submitChoice(idx){
+  if(state.answered) return;
+  const item = currentItem();
+  const correct = idx === item.answer;
+  state.answered = true;
+  state.userChoiceIdx = idx;
+  if(correct) state.scoreCorrect++;
+  state.answerLog.push({item, wasCorrect:correct});
+}
+
+function submitFill(){
+  if(state.answered) return;
+  const item = currentItem();
+  const correct = checkFillAnswer(item, state.userInput);
+  state.answered = true;
+  if(correct) state.scoreCorrect++;
+  state.answerLog.push({item, wasCorrect:correct});
+}
+
+function nextItem(){
+  stopSpeak();
+  stopMic();
+  state.answered = false;
+  state.userInput = "";
+  state.userChoiceIdx = null;
+  state.hintShown = false;
+  if(state.currentIndex < state.items.length-1){
+    state.currentIndex++;
+    render();
+  }else{
+    finishStage();
+  }
+}
+
+function finishStage(){
+  const stage = STAGES.find(s=>s.id===state.stageId);
+  state.results[state.stageId] = {
+    correct: state.scoreCorrect,
+    total: state.scoreTotal,
+    at: Date.now()
+  };
+  if(stage.scored){
+    const missed = state.missedStore[state.stageId] || {};
+    state.answerLog.forEach(log=>{
+      const key = log.item.q;
+      if(!log.wasCorrect){
+        missed[key] = log.item;
+      }else{
+        if(missed[key]) delete missed[key];
+      }
+    });
+    state.missedStore[state.stageId] = missed;
+    saveMissedStore(state.missedStore);
+  }
+  state.screen = "result";
+  render();
+}
+
+function backHome(){
+  stopSpeak();
+  stopMic();
+  state.screen = "home";
+  render();
+}
+
+/* ===================== 音声読み上げ（Web Speech API：読み上げ） ===================== */
+
+const SPEAK_RATE_KEY = "quizapp_speak_rate_v1";
+function loadSpeakRate(){
+  try{
+    const v = parseFloat(localStorage.getItem(SPEAK_RATE_KEY));
+    if(!isNaN(v) && v>=0.7 && v<=1.8) return v;
+  }catch(e){}
+  return 1.1;
+}
+function saveSpeakRate(v){
+  try{ localStorage.setItem(SPEAK_RATE_KEY, String(v)); }catch(e){}
+}
+
+let speakUtterance = null;
+let cachedVoices = [];
+
+function speakSupported(){
+  return typeof window!=="undefined" && "speechSynthesis" in window;
+}
+
+function refreshVoices(){
+  if(speakSupported()) cachedVoices = window.speechSynthesis.getVoices() || [];
+}
+if(speakSupported()){
+  refreshVoices();
+  window.speechSynthesis.onvoiceschanged = refreshVoices;
+}
+
+function getBestJaVoice(){
+  const jaVoices = cachedVoices.filter(v => v.lang && v.lang.toLowerCase().startsWith("ja"));
+  if(jaVoices.length===0) return null;
+  // クラウド系（localServiceでない）や「Google」を含む音声は自然な傾向があるため優先
+  const preferred = jaVoices.find(v => /google/i.test(v.name)) 
+    || jaVoices.find(v => v.localService===false)
+    || jaVoices[0];
+  return preferred;
+}
+
+function speakText(text, btnId){
+  if(!speakSupported()) return;
+  window.speechSynthesis.cancel();
+  state.currentSpeakText = text;
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = "ja-JP";
+  u.rate = state.speakRate;
+  const voice = getBestJaVoice();
+  if(voice) u.voice = voice;
+  u.onend = ()=>{ setSpeakBtnState(btnId, false); };
+  u.onerror = ()=>{ setSpeakBtnState(btnId, false); };
+  speakUtterance = u;
+  window.speechSynthesis.speak(u);
+  setSpeakBtnState(btnId, true);
+}
+
+function stopSpeak(){
+  if(speakSupported()) window.speechSynthesis.cancel();
+}
+
+function setSpeakBtnState(btnId, playing){
+  const btn = document.getElementById(btnId);
+  if(!btn) return;
+  btn.classList.toggle("playing", playing);
+  btn.innerHTML = playing ? "⏸ 読み上げを止める" : "🔊 音声で聞く";
+}
+
+function toggleSpeak(text, btnId){
+  btnId = btnId || "speakBtn";
+  if(!speakSupported()) return;
+  if(window.speechSynthesis.speaking){
+    stopSpeak();
+    setSpeakBtnState(btnId, false);
+  }else{
+    speakText(text, btnId);
+  }
+}
+
+function updateSpeakRate(val){
+  state.speakRate = parseFloat(val);
+  saveSpeakRate(state.speakRate);
+  const label = document.getElementById("speakRateLabel");
+  if(label) label.textContent = state.speakRate.toFixed(1)+"倍";
+  if(speakSupported() && window.speechSynthesis.speaking && state.currentSpeakText){
+    speakText(state.currentSpeakText, "speakBtn");
+  }
+}
+
+/* stopMic は他の関数から呼ばれているため、no-opとして残す（音声入力機能は削除済み） */
+function stopMic(){}
+
+/* ===================== レンダリング ===================== */
+
+const app = document.getElementById("app");
+
+function render(){
+  if(state.screen==="home") renderHome();
+  else if(state.screen==="play") renderPlay();
+  else if(state.screen==="result") renderResult();
+}
+
+function esc(s){
+  return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+
+function renderHome(){
+  let html = `
+    <div class="header">
+      <h1>古墳・飛鳥時代テスト</h1>
+      <div class="sub">予習シリーズ5年下　第2回　古墳時代・飛鳥時代</div>
+    </div>
+    <div class="content">
+  `;
+  const scoredStages = STAGES.filter(s=>s.scored);
+  const refStages = STAGES.filter(s=>!s.scored);
+
+  html += `<div class="home-title">確認テスト</div>`;
+  scoredStages.forEach(stage=>{
+    const res = state.results[stage.id];
+    const missedCount = Object.keys(state.missedStore[stage.id]||{}).length;
+    html += `<div class="stage-card" onclick="startStage('${stage.id}')">
+      <div class="stage-top">
+        <div class="stage-name">${esc(stage.name)}</div>
+        <div class="stage-badge">${res ? res.correct+"/"+res.total : "未挑戦"}</div>
+      </div>
+      <div class="stage-desc">${esc(stage.desc)}</div>
+      ${res ? `<div class="progress-bar"><div class="progress-fill" style="width:${Math.round(res.correct/res.total*100)}%"></div></div>` : ""}
+      ${missedCount>0 ? `<div class="retry-btn" onclick="event.stopPropagation(); startRetry('${stage.id}')">🔁 苦手${missedCount}問を復習</div>` : ""}
+    </div>`;
+  });
+
+  html += `<div class="home-title">参考情報（読みもの）</div>`;
+  refStages.forEach(stage=>{
+    html += `<div class="stage-card ref" onclick="startStage('${stage.id}')">
+      <div class="stage-top">
+        <div class="stage-name">${esc(stage.name)}</div>
+        <div class="stage-badge">読みもの</div>
+      </div>
+      <div class="stage-desc">${esc(stage.desc)}</div>
+    </div>`;
+  });
+
+  html += `<div class="footer-note">単一HTMLファイル・localStorageに端末内で保存されます</div>`;
+  html += `</div>`;
+  app.innerHTML = html;
+}
+
+function renderPlay(){
+  const item = currentItem();
+  const stage = STAGES.find(s=>s.id===state.stageId);
+  const isInfo = item.type==="info";
+
+  let html = `
+    <div class="header">
+      <h1>${esc(stage.name)}${state.isRetry?"（復習）":""}</h1>
+      <div class="sub">${item.sub ? esc(item.sub) : esc(stage.desc)}</div>
+    </div>
+    <div class="content">
+      <div class="play-topbar">
+        <span>問題 ${state.currentIndex+1} / ${state.items.length}</span>
+        <span onclick="backHome()" style="text-decoration:underline; cursor:pointer;">中断してホームへ</span>
+      </div>
+  `;
+
+  if(isInfo){
+    html += `<div class="qcard info">
+      <div class="qtitle">${esc(item.title)}</div>
+      ${item.speak ? `
+      <div class="speak-row">
+        <button id="speakBtn" class="speak-btn" onclick='toggleSpeak(${JSON.stringify(item.speak)})'>🔊 音声で聞く</button>
+        <div class="speed-control">
+          <span>速さ</span>
+          <input type="range" min="0.7" max="1.8" step="0.1" value="${state.speakRate}" oninput="updateSpeakRate(this.value)">
+          <span id="speakRateLabel">${state.speakRate.toFixed(1)}倍</span>
+        </div>
+      </div>` : ""}
+      <div class="info-body ${item.wide?'wide':''}">${item.body}</div>
+      ${item.src ? `<div class="src-tag">出典：${esc(item.src)}</div>` : ""}
+      <button class="btn btn-ref" onclick="nextItem()">${state.currentIndex < state.items.length-1 ? "次へ" : "結果を見る"}</button>
+    </div>`;
+  } else if(item.type==="fill"){
+    html += `<div class="qcard">`;
+    if(item.lead) html += `<div class="lead-badge">${esc(item.lead)}</div>`;
+    html += `<div class="qtext">${esc(item.q)}</div>`;
+    const inputClass = state.answered ? (checkFillAnswer(item, state.userInput) ? "correct":"wrong") : "";
+    html += `<input type="text" id="fillInput" class="fill-input ${inputClass}" placeholder="答えを入力" value="${esc(state.userInput)}" ${state.answered?"disabled":""} onkeydown="if(event.key==='Enter'){document.getElementById('fillInput').value=this.value; state.userInput=this.value; submitFillUI();}">`;
+    if(!state.answered){
+      html += `<button class="btn btn-primary" onclick="submitFillUI()">こたえる</button>`;
+    }else{
+      const correct = checkFillAnswer(item, state.userInput);
+      html += `<div class="explain-box ${correct?'good':'bad'}">
+        <span class="mark-icon">${correct?"⭕":"❌"}</span><b>正解：${esc(item.answer)}</b><br>${item.explain||""}
+      </div>`;
+      html += `<button class="btn btn-primary" onclick="nextItem()">${state.currentIndex < state.items.length-1 ? "次の問題へ" : "結果を見る"}</button>`;
+    }
+    html += `</div>`;
+  } else if(item.type==="choice"){
+    html += `<div class="qcard">`;
+    if(item.pillar!==undefined && item.pillar!==null) html += `<div class="lead-badge">${esc(pillarBadge(item.pillar))}</div>`;
+    html += `<div class="qtext">${esc(item.q)}</div>`;
+    html += `<div class="choice-list">`;
+    item.choices.forEach((c,idx)=>{
+      let cls = "choice-btn";
+      if(state.answered){
+        if(idx===item.answer) cls += " correct";
+        else if(idx===state.userChoiceIdx) cls += " wrong";
+        else cls += " dim";
+      }
+      html += `<button class="${cls}" ${state.answered?"disabled":""} onclick="submitChoiceUI(${idx})">${esc(c)}</button>`;
+    });
+    html += `</div>`;
+    if(state.answered){
+      const correct = state.userChoiceIdx===item.answer;
+      html += `<div class="explain-box ${correct?'good':'bad'}">
+        <span class="mark-icon">${correct?"⭕":"❌"}</span>${item.explain||""}
+      </div>`;
+      html += `<button class="btn btn-primary" onclick="nextItem()">${state.currentIndex < state.items.length-1 ? "次の問題へ" : "結果を見る"}</button>`;
+    }
+    html += `</div>`;
+  }
+
+  html += `</div>`;
+  app.innerHTML = html;
+  if(item.type==="fill" && !state.answered){
+    const el = document.getElementById("fillInput");
+    if(el) el.focus();
+  }
+}
+
+function submitChoiceUI(idx){
+  submitChoice(idx);
+  renderPlay();
+}
+function submitFillUI(){
+  const el = document.getElementById("fillInput");
+  if(el) state.userInput = el.value;
+  submitFill();
+  renderPlay();
+}
+function toggleHint(){
+  state.hintShown = !state.hintShown;
+  renderPlay();
+}
+
+function renderResult(){
+  const stage = STAGES.find(s=>s.id===state.stageId);
+  const wrongItems = state.answerLog.filter(l=>!l.wasCorrect).map(l=>l.item);
+  const missedCount = Object.keys(state.missedStore[state.stageId]||{}).length;
+
+  let html = `
+    <div class="header">
+      <h1>結果</h1>
+      <div class="sub">${esc(stage.name)}${state.isRetry?"（復習）":""}</div>
+    </div>
+    <div class="content">
+      <div class="qcard result-box">
+        <div>できた問題</div>
+        <div class="result-score">${state.scoreCorrect} / ${state.scoreTotal}</div>
+        ${wrongItems.length>0 ? `<div class="missed-list">${wrongItems.map(it=>`<div class="missed-item">${esc(it.q)}</div>`).join("")}</div>` : `<div style="color:var(--good); font-weight:700;">全問正解です！</div>`}
+      </div>
+  `;
+  if(wrongItems.length>0){
+    html += `<button class="btn btn-primary" onclick="startRetry('${state.stageId}')">🔁 まちがえた問題だけ復習する（${wrongItems.length}問）</button>`;
+  } else if(missedCount>0){
+    html += `<button class="btn btn-primary" onclick="startRetry('${state.stageId}')">🔁 残っている苦手${missedCount}問を復習する</button>`;
+  }
+  html += `<button class="btn btn-outline" onclick="backHome()">ホームにもどる</button>`;
+  html += `</div>`;
+  app.innerHTML = html;
+}
+
+render();
+</script>
+</body>
+</html>

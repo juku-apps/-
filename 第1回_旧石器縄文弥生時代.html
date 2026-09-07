@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>旧石器・縄文・弥生時代テスト</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --accent:#3468a6;
+  --accent-light:#e8f0fa;
+  --ref:#7a5ea8;
+  --ref-light:#f1ecf8;
+  --good:#2f9e5b;
+  --good-light:#e6f6ec;
+  --bad:#d1453b;
+  --bad-light:#fbe9e8;
+  --ink:#22303f;
+  --sub:#5c6b7a;
+  --line:#dbe3ec;
+  --bg:#f5f7fa;
+  --card:#ffffff;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  font-family:"Zen Kaku Gothic New",sans-serif;
+  background:var(--bg);
+  color:var(--ink);
+  display:flex;
+  justify-content:center;
+}
+#app{
+  width:100%;
+  max-width:480px;
+  min-height:100vh;
+  background:var(--bg);
+  display:flex;
+  flex-direction:column;
+  position:relative;
+}
+.header{
+  padding:16px 18px 12px;
+  background:linear-gradient(135deg,var(--accent),#4d7dbf);
+  color:#fff;
+  position:sticky;
+  top:0;
+  z-index:5;
+}
+.header h1{
+  margin:0;
+  font-size:18px;
+  font-weight:900;
+  letter-spacing:.02em;
+}
+.header .sub{
+  margin-top:2px;
+  font-size:12px;
+  opacity:.9;
+}
+.content{
+  flex:1;
+  padding:14px 16px 90px;
+}
+.stage-card{
+  background:var(--card);
+  border-radius:14px;
+  box-shadow:0 2px 8px rgba(30,50,80,.08);
+  padding:16px;
+  margin-bottom:14px;
+  border:1px solid var(--line);
+  cursor:pointer;
+  transition:transform .1s;
+}
+.stage-card:active{transform:scale(.98);}
+.stage-card.ref{
+  border-color:var(--ref);
+  background:linear-gradient(180deg,#fff,var(--ref-light));
+}
+.stage-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+.stage-name{
+  font-size:16px;
+  font-weight:700;
+}
+.stage-badge{
+  font-size:11px;
+  background:var(--accent);
+  color:#fff;
+  padding:3px 8px;
+  border-radius:999px;
+  font-weight:700;
+}
+.stage-card.ref .stage-badge{background:var(--ref);}
+.stage-desc{
+  font-size:12.5px;
+  color:var(--sub);
+  margin-top:6px;
+  line-height:1.5;
+}
+.stage-meta{
+  display:flex;
+  gap:10px;
+  margin-top:10px;
+  font-size:12px;
+  color:var(--sub);
+}
+.retry-btn{
+  margin-top:10px;
+  display:inline-block;
+  background:var(--bad-light);
+  color:var(--bad);
+  border:1px solid var(--bad);
+  border-radius:8px;
+  padding:6px 10px;
+  font-size:12.5px;
+  font-weight:700;
+  cursor:pointer;
+}
+.progress-bar{
+  height:6px;
+  background:var(--line);
+  border-radius:99px;
+  overflow:hidden;
+  margin-top:8px;
+}
+.progress-fill{
+  height:100%;
+  background:var(--accent);
+  border-radius:99px;
+}
+.lead-badge{
+  display:inline-block;
+  background:var(--accent);
+  color:#fff;
+  font-size:12px;
+  font-weight:700;
+  padding:4px 10px;
+  border-radius:999px;
+  margin-bottom:10px;
+}
+.sub-badge{
+  display:inline-block;
+  background:#fff;
+  color:var(--accent);
+  border:1px solid var(--accent);
+  font-size:11px;
+  font-weight:700;
+  padding:2px 8px;
+  border-radius:999px;
+  margin-left:6px;
+}
+.play-topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-size:12.5px;
+  color:var(--sub);
+  margin-bottom:10px;
+}
+.qcard{
+  background:var(--card);
+  border-radius:14px;
+  padding:18px 16px;
+  box-shadow:0 2px 8px rgba(30,50,80,.08);
+  border:1px solid var(--line);
+}
+.qcard.info{
+  border-color:var(--ref);
+  background:linear-gradient(180deg,#fff,var(--ref-light));
+}
+.qtitle{
+  font-weight:900;
+  font-size:16px;
+  margin-bottom:8px;
+}
+.qtext{
+  font-size:15.5px;
+  line-height:1.7;
+  margin-bottom:14px;
+  white-space:pre-wrap;
+}
+.qtext.wide{font-size:14.5px;}
+.info-body{
+  font-size:14.5px;
+  line-height:1.85;
+}
+.info-body b{color:var(--accent);}
+.src-tag{
+  margin-top:14px;
+  font-size:11.5px;
+  color:var(--ref);
+  border-top:1px dashed var(--line);
+  padding-top:8px;
+}
+.speak-btn{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  background:#fff;
+  color:var(--ref);
+  border:1.5px solid var(--ref);
+  border-radius:999px;
+  padding:7px 14px;
+  font-size:13px;
+  font-weight:700;
+  font-family:inherit;
+  cursor:pointer;
+  margin-bottom:12px;
+}
+.speak-btn.playing{
+  background:var(--ref);
+  color:#fff;
+}
+.speak-row{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-bottom:12px;
+  flex-wrap:wrap;
+}
+.speed-control{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  font-size:12px;
+  color:var(--sub);
+}
+.speed-control input[type=range]{
+  width:92px;
+  accent-color:var(--ref);
+}
+.choice-list{display:flex;flex-direction:column;gap:9px;}
+.choice-btn{
+  text-align:left;
+  padding:12px 14px;
+  border-radius:10px;
+  border:1.5px solid var(--line);
+  background:#fff;
+  font-size:14.5px;
+  font-family:inherit;
+  cursor:pointer;
+  line-height:1.5;
+}
+.choice-btn:active{background:var(--accent-light);}
+.choice-btn.correct{
+  border-color:var(--good);
+  background:var(--good-light);
+  font-weight:700;
+}
+.choice-btn.wrong{
+  border-color:var(--bad);
+  background:var(--bad-light);
+  font-weight:700;
+}
+.choice-btn.dim{opacity:.55;}
+.fill-input{
+  width:100%;
+  padding:12px 14px;
+  font-size:16px;
+  border-radius:10px;
+  border:1.5px solid var(--line);
+  font-family:inherit;
+  margin-bottom:10px;
+}
+.fill-input.correct{border-color:var(--good);background:var(--good-light);}
+.fill-input.wrong{border-color:var(--bad);background:var(--bad-light);}
+.btn{
+  width:100%;
+  padding:13px;
+  border-radius:10px;
+  border:none;
+  font-size:15px;
+  font-weight:700;
+  font-family:inherit;
+  cursor:pointer;
+  margin-top:6px;
+}
+.btn-primary{background:var(--accent);color:#fff;}
+.btn-ref{background:var(--ref);color:#fff;}
+.btn-outline{background:#fff;color:var(--accent);border:1.5px solid var(--accent);}
+.btn-outline.ref{color:var(--ref);border-color:var(--ref);}
+.result-box{
+  text-align:center;
+  padding:6px 0 18px;
+}
+.result-score{
+  font-size:40px;
+  font-weight:900;
+  color:var(--accent);
+  margin:6px 0;
+}
+.explain-box{
+  margin-top:14px;
+  background:var(--accent-light);
+  border-radius:10px;
+  padding:12px 14px;
+  font-size:13.5px;
+  line-height:1.7;
+}
+.explain-box.bad{background:var(--bad-light);}
+.explain-box.good{background:var(--good-light);}
+.hint-box{
+  margin-top:10px;
+  background:#fff8e6;
+  border:1px solid #e8cf8a;
+  border-radius:10px;
+  padding:10px 12px;
+  font-size:13px;
+  line-height:1.6;
+}
+.mark-icon{font-size:18px;margin-right:4px;vertical-align:-2px;}
+.missed-list{
+  text-align:left;
+  margin-top:16px;
+  font-size:13px;
+}
+.missed-item{
+  padding:8px 10px;
+  background:var(--bad-light);
+  border-radius:8px;
+  margin-bottom:6px;
+  color:#8a2f28;
+}
+.home-title{
+  font-size:13px;
+  font-weight:700;
+  color:var(--sub);
+  margin:18px 0 8px 2px;
+}
+.footer-note{
+  text-align:center;
+  font-size:11px;
+  color:var(--sub);
+  padding:10px 0 26px;
+}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+/* ===================== データ（予習シリーズ5年下 第1回 旧石器時代・縄文時代・弥生時代 より転記） ===================== */
+
+const PILLARS = {
+  1:{label:"①旧石器時代", full:"旧石器時代の日本列島"},
+  2:{label:"②縄文時代", full:"縄文時代の人々のくらし"},
+  3:{label:"③弥生時代", full:"弥生時代の人々のくらし"},
+  4:{label:"④中国の歴史書", full:"中国の歴史書から見た弥生時代の日本"}
+};
+function pillarBadge(p){ return PILLARS[p] ? PILLARS[p].label : ""; }
+
+/* ---------- 第1段階：構造テスト（kihon） ---------- */
+
+const kihonOverviewScreens = [
+  {
+    type:"info",
+    title:"はじめに",
+    speak:"今回のテーマは、旧石器時代、縄文時代、弥生時代、原始時代のくらしです。今回のポイントは、大きく分けて4つあります。1つ目は旧石器時代の日本列島、2つ目は縄文時代の人々のくらし、3つ目は弥生時代の人々のくらし、4つ目は中国の歴史書から見た弥生時代の日本です。まずはこの4つの柱の全体像をつかんでから、それぞれの中身を確認していきましょう。",
+    body:`第1回のテーマは「旧石器時代・縄文時代・弥生時代〜原始時代のくらし〜」です。<br>
+今回のポイントは大きく分けて<b>4つ</b>あります。<br><br>
+①旧石器時代の日本列島<br>
+②縄文時代の人々のくらし<br>
+③弥生時代の人々のくらし<br>
+④中国の歴史書から見た弥生時代の日本<br><br>
+まずはこの4本柱の全体像をつかんでから、それぞれの中身（黒太字・ひとくちメモ）を確認していきましょう。`
+  },
+  {
+    type:"info",
+    title:"全体像：原始時代の4本柱",
+    wide:true,
+    speak:"それでは、4つの柱を順番に見ていきましょう。1つ目、旧石器時代です。数万年前は、大陸と陸続きだった日本列島です。人々は洞くつに住み、打製石器を使って狩りをしながら移住していました。群馬県の岩宿遺跡の発掘で、日本にも旧石器時代があったことが明らかになりました。2つ目、縄文時代です。約1万年前に日本列島が形づくられ、縄文土器を使って食べ物を煮たきするようになりました。竪穴住居に定住してむらをつくりましたが、貧富の差はほとんどありませんでした。土偶や貝塚も、この時代の特色です。3つ目、弥生時代です。大陸から稲作と金属器が伝わり、弥生土器がつくられました。石包丁で稲を収穫し、高床倉庫にたくわえました。稲作が広まるとともに貧富や身分の差が生まれ、争いや環濠集落、そして王が現れました。4つ目、中国の歴史書です。漢書地理志、後漢書東夷伝、魏志倭人伝という3つの中国の歴史書から、当時の倭、つまり日本のようすがわかります。",
+    body:`<b>①旧石器時代</b>：数万年前は大陸と陸続きだった日本列島。人々は洞くつに住み、打製石器を使って狩りをしながら移住していました。岩宿遺跡（群馬県）の発掘で、日本にも旧石器時代があったことが明らかになりました。<br><br>
+<b>②縄文時代</b>：約1万年前に日本列島が形づくられ、縄文土器を使って食べ物を煮たきするようになりました。竪穴住居に定住し、むらをつくりましたが、貧富の差はほとんどありませんでした。土偶や貝塚もこの時代の特色です。<br><br>
+<b>③弥生時代</b>：大陸から稲作と金属器が伝わり、弥生土器がつくられました。石包丁で稲を収穫し、高床倉庫にたくわえました。稲作の広まりとともに貧富や身分の差が生まれ、争いや環濠集落、そして王が現れました。<br><br>
+<b>④中国の歴史書</b>：『漢書』地理志・『後漢書』東夷伝・『魏志』倭人伝という3つの中国の歴史書から、当時の倭（日本）のようすがわかります。`
+  }
+];
+
+const kihonFillRaw = [
+  // pillar 1
+  {pillar:1, q:"日本列島で発見された、大陸にいたことを示す動物の化石は、マンモスと（　）である。", answer:"ナウマン象", accept:["ナウマン象"], explain:"大陸にいたマンモスやナウマン象などの化石が発見されたことでも、日本列島が大陸の一部だったことがわかります。"},
+  {pillar:1, q:"旧石器時代の人々が狩りに使った、石を打ち欠いてつくられた道具を（　）という。", answer:"打製石器", accept:["打製石器","旧石器"], explain:"狩りには、旧石器（打製石器）が使われました。"},
+  {pillar:1, q:"日本にも旧石器時代に人のいとなみがあったことを明らかにした、群馬県の遺跡は（　）である。", answer:"岩宿遺跡", accept:["岩宿遺跡"], explain:"日本にも旧石器時代に人のいとなみがあったことが、岩宿遺跡（群馬県）の発掘で明らかになりました。"},
+  {pillar:1, q:"大型動物の化石が発見されている、長野県の湖は（　）である。", answer:"野尻湖", accept:["野尻湖"], explain:"野尻湖では、大型動物の化石が発見されています。"},
+  // pillar 2
+  {pillar:2, q:"縄文土器が使われていた時代を（　）時代という。", answer:"縄文", accept:["縄文"], explain:"縄文土器が使われていた時代を縄文時代といいます。"},
+  {pillar:2, q:"石をみがいてつくられた石器を（　）という。", answer:"磨製石器", accept:["磨製石器"], explain:"磨製石器は、石をみがいてつくられました。"},
+  {pillar:2, q:"縄文時代の人々が定住のためにつくった、地面を掘り下げてつくった住居を（　）という。", answer:"竪穴住居", accept:["竪穴住居"], explain:"人々は、水辺に近く日当たりのよい台地に竪穴住居をつくって定住しました。"},
+  {pillar:2, q:"たくさんの貝がらが積み上げられた遺跡を（　）という。", answer:"貝塚", accept:["貝塚"], explain:"たくさんの貝がらが積み上げられた遺跡を貝塚とよびます。"},
+  {pillar:2, q:"縄文時代につくられた、おもに女性をかたどった土の人形を（　）という。", answer:"土偶", accept:["土偶"], explain:"土偶は、おもに女性をかたどった土の人形で、魔よけや安産、豊かな収穫を祈るためのものと考えられています。"},
+  {pillar:2, q:"明治時代にアメリカ人のモースによって発掘された、東京都の貝塚を（　）という。", answer:"大森貝塚", accept:["大森貝塚"], explain:"大森貝塚は、明治時代にアメリカ人のモースによって発掘された東京都の貝塚です。"},
+  // pillar 3
+  {pillar:3, q:"縄文時代の終わりごろ、中国や朝鮮半島から伝えられた、米づくりを（　）という。", answer:"稲作", accept:["稲作"], explain:"縄文時代の終わりごろ、中国や朝鮮半島から、稲作（米づくり）と金属器が伝えられました。"},
+  {pillar:3, q:"弥生時代につくられた、薄くてかたく文様の少ない土器を（　）という。", answer:"弥生土器", accept:["弥生土器"], explain:"薄くてかたく、文様の少ない弥生土器がつくられ始めました。"},
+  {pillar:3, q:"稲の収穫に使われた、多くは磨製石器でつくられた道具を（　）という。", answer:"石包丁", accept:["石包丁"], explain:"石包丁で収穫した稲は、高床倉庫にたくわえられました。"},
+  {pillar:3, q:"収穫した稲をたくわえるためにつくられた、ねずみ返しのある倉庫を（　）という。", answer:"高床倉庫", accept:["高床倉庫"], explain:"石包丁で収穫した稲は、高床倉庫にたくわえられました。"},
+  {pillar:3, q:"敵の侵入に備えて濠をめぐらせた集落を（　）という。", answer:"環濠集落", accept:["環濠集落"], explain:"むらのまわりに濠がめぐらされた、このような集落を環濠集落といいます。"},
+  {pillar:3, q:"弥生時代、いくつかのむらをまとめた指導者は（　）とよばれるようになった。", answer:"王", accept:["王"], explain:"有力なむらがいくつかのむらをまとめ、小さなくに（国）をつくるようになると、その指導者は王とよばれるようになりました。"},
+  // pillar 4
+  {pillar:4, q:"倭（日本）が100あまりの小国に分かれていたと記されている中国の歴史書は（　）である。", answer:"『漢書』地理志", accept:["漢書地理志","『漢書』地理志","漢書 地理志"], explain:"『漢書』地理志には、倭（日本）は100あまりの小国に分かれていたと記されています。"},
+  {pillar:4, q:"倭の奴国の使いに中国の漢の皇帝が金印を授けたと記されている中国の歴史書は（　）である。", answer:"『後漢書』東夷伝", accept:["後漢書東夷伝","『後漢書』東夷伝","後漢書 東夷伝"], explain:"『後漢書』東夷伝には、倭の奴国の使いに中国の漢の皇帝が金印を授けたことが記されています。"},
+  {pillar:4, q:"邪馬台国の女王である卑弥呼のことが記されている中国の歴史書は（　）である。", answer:"『魏志』倭人伝", accept:["魏志倭人伝","『魏志』倭人伝","魏志 倭人伝"], explain:"『魏志』倭人伝には、邪馬台国の女王である卑弥呼がまじないによって人々を治めていたことが記されています。"},
+  {pillar:4, q:"志賀島（福岡県）で発見された、「漢委奴国王」ときざまれた印を（　）という。", answer:"金印", accept:["金印"], explain:"この金印と考えられるものが、江戸時代の半ばに、博多湾に面した志賀島（福岡県）で発見されました。"}
+];
+
+const kihonFinalRaw = [
+  {pillar:1, q:"旧石器時代について、正しいものはどれですか。",
+    choices:["旧石器時代の狩りには打製石器が使われていた","旧石器時代の人々はすでに稲作を行っていた","岩宿遺跡は佐賀県にある","旧石器時代の人々は竪穴住居に定住していた"],
+    answer:0, explain:"狩りには、旧石器（打製石器）が使われました。"},
+  {pillar:2, q:"縄文時代について、正しいものはどれですか。",
+    choices:["縄文時代の人々は貧富の差がほとんどない社会でくらしていた","縄文時代にはすでに稲作が全国に広まっていた","土偶はおもに男性をかたどってつくられた","縄文時代の人々の生活は自給自足のみで交易は行われなかった"],
+    answer:0, explain:"住居のつくりや大きさ、死者の葬り方にあまり差がないため、貧富の差や身分のちがいがほとんどない社会であったと考えられています。"},
+  {pillar:3, q:"弥生時代について、正しいものはどれですか。",
+    choices:["稲作の広まりとともに貧富や身分の差が広がった","弥生時代には金属器はまったく使われなかった","高床倉庫はねずみが入りやすいようにつくられた","弥生時代には争いはまったく起こらなかった"],
+    answer:0, explain:"稲作が広まると、たくわえが多いか少ないかによって、人々の間に貧富や身分の差が広がっていきました。"},
+  {pillar:4, q:"中国の歴史書から見た弥生時代の日本について、正しいものはどれですか。",
+    choices:["邪馬台国の女王卑弥呼はまじないによって人々を治めていた","金印は江戸時代に博多湾で発見された銅鏡である","『漢書』地理志には邪馬台国の卑弥呼のことが記されている","倭の奴国の使いに授けられたのは銅鏡である"],
+    answer:0, explain:"『魏志』倭人伝には、卑弥呼はまじないによって、人々を治めたと記されています。"}
+];
+
+/* ---------- 第2段階：黒太字テスト（kuroji） ---------- */
+
+const kurojiBlocks = [
+{ pillar:1, sub:"2-1｜①旧石器時代の日本列島の黒太字", items:[
+  {q:"数万年前の日本列島は何の一部だった？", choices:["大陸","孤立した島","現在と同じ形の島国","海底火山"], answer:0, explain:"数万年前の日本列島は大陸の一部で、日本海は大きな湖でした。"},
+  {q:"大陸にいたことを示す、日本で化石が発見された象は、ナウマン象ともう1つは？", choices:["マンモス","アフリカゾウ","インドゾウ","恐竜"], answer:0, explain:"大陸にいたマンモスやナウマン象などの化石が発見されたことでもわかります。"},
+  {q:"旧石器時代の人々が住んでいた場所は？", choices:["洞くつ","竪穴住居","高床倉庫","岩の上"], answer:0, explain:"人々は、洞くつなどに住み、狩りや木の実の採集などをしながら移住していました。"},
+  {q:"旧石器時代の狩りに使われた、石を打ち欠いてつくられた道具は？", choices:["打製石器","磨製石器","青銅器","鉄器"], answer:0, explain:"狩りには、旧石器（打製石器）が使われました。"},
+  {q:"日本にも旧石器時代に人のいとなみがあったことを明らかにした遺跡は？", choices:["岩宿遺跡","三内丸山遺跡","吉野ヶ里遺跡","登呂遺跡"], answer:0, explain:"日本にも旧石器時代に人のいとなみがあったことが、岩宿遺跡の発掘で明らかになりました。"},
+  {q:"岩宿遺跡がある都道府県は？", choices:["群馬県","青森県","佐賀県","静岡県"], answer:0, explain:"岩宿遺跡は群馬県にあります。"},
+  {q:"大型動物の化石が発見されている、長野県の湖は？", choices:["野尻湖","諏訪湖","琵琶湖","浜名湖"], answer:0, explain:"野尻湖では、大型動物の化石が発見されています。"},
+  {q:"1946年に岩宿遺跡で打製石器を発見した人物は？", choices:["相沢忠洋","モース","卑弥呼","伊能忠敬"], answer:0, explain:"1946年、相沢忠洋が、この地層から打製石器を発見しました。"},
+  {q:"岩宿遺跡で発見された、ガラス状で産地が限られる石は？", choices:["黒曜石","ひすい","水晶","石灰岩"], answer:0, explain:"黒曜石はガラス状の石で、産地が限られます。"},
+  {q:"旧石器時代の人々が体を温め、獲物を焼くために使ったものは？", choices:["火","土器","石包丁","青銅器"], answer:0, explain:"火を使って体を温め、獲物を焼いて食べました。"}
+]},
+{ pillar:2, sub:"2-2｜②縄文時代の人々のくらしの黒太字", items:[
+  {q:"今から約1万年前、氷河がとけて起こった変化は？", choices:["海面が上昇した","海面が低下した","気温が下がった","大陸と陸続きになった"], answer:0, explain:"今から約1万年前、地球の気候があたたかくなると、氷河がとけて海面が上昇しました。"},
+  {q:"石をみがいてつくられた石器は？", choices:["磨製石器","打製石器","青銅器","鉄器"], answer:0, explain:"磨製石器は、石をみがいてつくられました。"},
+  {q:"動物の骨や角でつくられた、つりばりなどの道具は？", choices:["骨角器","石包丁","土偶","銅鐸"], answer:0, explain:"動物の骨や角でつくられた骨角器のつりばりなどが使われるようになりました。"},
+  {q:"縄目の文様がつけられたことからその名がついた土器は？", choices:["縄文土器","弥生土器","須恵器","土師器"], answer:0, explain:"縄自の文様がつけられたことから縄文土器とよばれます。"},
+  {q:"縄文土器が使われていた時代を何という？", choices:["縄文時代","弥生時代","旧石器時代","古墳時代"], answer:0, explain:"縄文土器が使われていた時代を縄文時代といいます。"},
+  {q:"縄文時代の人々が定住のためにつくった住居は？", choices:["竪穴住居","高床倉庫","洞くつ","環濠集落"], answer:0, explain:"人々は、竪穴住居をつくって定住し、むら（集落）をいとなんでいました。"},
+  {q:"竪穴住居のあとから最大500人をこえる人口があったことがわかる、青森県の遺跡は？", choices:["三内丸山遺跡","岩宿遺跡","吉野ヶ里遺跡","登呂遺跡"], answer:0, explain:"三内丸山遺跡では、最大で500人をこえる人口があったことが、竪穴住居のあとからわかっています。"},
+  {q:"たくさんの貝がらが積み上げられた遺跡は？", choices:["貝塚","環濠集落","竪穴住居","古墳"], answer:0, explain:"たくさんの貝がらが積み上げられた遺跡を貝塚とよびます。"},
+  {q:"明治時代にモースによって発掘された、東京都の貝塚は？", choices:["大森貝塚","加曽利貝塚","板付遺跡","登呂遺跡"], answer:0, explain:"大森貝塚は、明治時代に、アメリカ人のモースによって発掘された東京都の貝塚です。"},
+  {q:"縄文時代、足りないものをおぎなった物々交換のことを何という？", choices:["交易","貿易","租税","貢ぎ物"], answer:0, explain:"足りないものは物々交換（交易）によっておぎなわれました。"},
+  {q:"縄文時代につくられた、木をくりぬいた舟は？", choices:["丸木舟","高床倉庫","竪穴住居","土偶"], answer:0, explain:"火で焦がしながら石器でくりぬいてつくった丸木舟が、全国で150艘以上も発見されています。"},
+  {q:"おもに女性をかたどった、まじないに使われた土の人形は？", choices:["土偶","埴輪","銅鐸","石包丁"], answer:0, explain:"土偶は、おもに女性をかたどった土の人形です。"},
+  {q:"小型ですばやい動きをする動物の狩りに使われた道具は？", choices:["弓矢","石包丁","銅剣","土偶"], answer:0, explain:"弓矢は、小型ですばやい動きをする動物の狩りに用いられました。"},
+  {q:"縄文時代の人々が獲物を捕まえるために弓矢のほかに利用したものは？", choices:["落とし穴","わな","高床倉庫","環濠"], answer:0, explain:"獲物を捕まえるためには、弓矢のほかに、落とし穴なども利用されていました。"}
+]},
+{ pillar:3, sub:"2-3｜③弥生時代の人々のくらしの黒太字", items:[
+  {q:"縄文時代の終わりごろ中国や朝鮮半島から伝えられた、米づくりは？", choices:["稲作","畑作","漁業","狩猟"], answer:0, explain:"縄文時代の終わりごろ、中国や朝鮮半島から、稲作（米づくり）が伝えられました。"},
+  {q:"稲作とともに大陸から伝えられた、鉄器・青銅器などをまとめて何という？", choices:["金属器","石器","土器","漆器"], answer:0, explain:"稲作とともに、金属器（鉄器・青銅器）が伝えられました。"},
+  {q:"薄くてかたく文様の少ない、このころつくられ始めた土器は？", choices:["弥生土器","縄文土器","須恵器","埴輪"], answer:0, explain:"薄くてかたく、文様の少ない弥生土器がつくられ始めました。"},
+  {q:"弥生土器が使われていた時代を何という？", choices:["弥生時代","縄文時代","旧石器時代","古墳時代"], answer:0, explain:"弥生土器が使われていた時代を弥生時代といいます。"},
+  {q:"稲作が紀元前2世紀ごろに達した、東北地方の県は？", choices:["青森県","秋田県","岩手県","宮城県"], answer:0, explain:"稲作は、九州北部から日本の各地に広まり、紀元前2世紀ごろには、青森県に達しました。"},
+  {q:"稲作がまだ行われず、狩りや漁を中心とした生活が続けられていた地域は、沖縄ともう1つは？", choices:["北海道","四国","九州","近畿"], answer:0, explain:"北海道と沖縄ではまだ稲作は行われず、狩りや漁を中心とした生活が続けられていました。"},
+  {q:"弥生時代の集落や水田のあとが残る、福岡県の遺跡は？", choices:["板付遺跡","登呂遺跡","吉野ヶ里遺跡","岩宿遺跡"], answer:0, explain:"板付遺跡（福岡県）には、弥生時代の集落や水田のあとが残されています。"},
+  {q:"弥生時代の集落や水田のあとが残る、静岡県の遺跡は？", choices:["登呂遺跡","板付遺跡","吉野ヶ里遺跡","岩宿遺跡"], answer:0, explain:"登呂遺跡（静岡県）には、弥生時代の集落や水田のあとが残されています。"},
+  {q:"稲の収穫に使われた道具は？", choices:["石包丁","すき","くわ","うすときね"], answer:0, explain:"石包丁で収穫した稲は、高床倉庫にたくわえられました。"},
+  {q:"収穫した稲をたくわえた、ねずみ返しのある倉庫は？", choices:["高床倉庫","竪穴住居","環濠集落","貝塚"], answer:0, explain:"石包丁で収穫した稲は、高床倉庫にたくわえられました。"},
+  {q:"稲作とともに伝えられ、武器や工具として用いられた金属は？", choices:["鉄器","青銅器のみ","銀器","金器"], answer:0, explain:"鉄器は、武器や、木の農具をつくる工具として用いられました。"},
+  {q:"豊作などを神々に祈る祭器として用いられた、青銅でつくられた道具は、銅剣・銅鉾・銅鐸ともう1つは？", choices:["銅鏡","銅印","銅釜","銅矛先"], answer:0, explain:"青銅でつくられた銅剣・銅鉾・銅鐸・銅鏡は、豊作などを神々に祈る祭器として用いられました。"},
+  {q:"むらのまわりに濠をめぐらせた集落を何という？", choices:["環濠集落","竪穴集落","貝塚集落","高床集落"], answer:0, explain:"敵の侵入に備えて、濠がめぐらされた集落を環濠集落といいます。"},
+  {q:"環濠集落で知られる、佐賀県の弥生時代の遺跡は？", choices:["吉野ヶ里遺跡","登呂遺跡","板付遺跡","岩宿遺跡"], answer:0, explain:"吉野ヶ里遺跡は、外側が2.5kmにもおよぶ2重の濠をもつ、国内最大級の環濠集落です。"},
+  {q:"弥生時代、いくつかのむらをまとめた指導者は何とよばれるようになった？", choices:["王","豪族","将軍","天皇"], answer:0, explain:"有力なむらがいくつかのむらをまとめ、小さなくに（国）をつくるようになると、その指導者は王とよばれるようになりました。"},
+  {q:"弥生時代の王が古墳時代に成長していく先の身分は？", choices:["豪族","天皇","将軍","貴族"], answer:0, explain:"王は地域の支配者に成長すると、次の古墳時代には豪族となっていきます。"}
+]},
+{ pillar:4, sub:"2-4｜④中国の歴史書から見た弥生時代の日本の黒太字", items:[
+  {q:"倭（日本）が100あまりの小国に分かれていたと記す中国の歴史書は？", choices:["『漢書』地理志","『後漢書』東夷伝","『魏志』倭人伝","『三国志』"], answer:0, explain:"『漢書』地理志には、倭（日本）は100あまりの小国に分かれていたと記されています。"},
+  {q:"倭の奴国の使いに金印を授けたと記す中国の歴史書は？", choices:["『後漢書』東夷伝","『漢書』地理志","『魏志』倭人伝","『三国志』"], answer:0, explain:"『後漢書』東夷伝には、倭の奴国の使いに中国の漢の皇帝が金印を授けたことが記されています。"},
+  {q:"邪馬台国の女王卑弥呼について記す中国の歴史書は？", choices:["『魏志』倭人伝","『漢書』地理志","『後漢書』東夷伝","『宋書』"], answer:0, explain:"『魏志』倭人伝には、邪馬台国の女王卑弥呼のことが記されています。"},
+  {q:"志賀島（福岡県）で発見された、「漢委奴国王」ときざまれた印は？", choices:["金印","銅鏡","銅鐸","銀印"], answer:0, explain:"この金印と考えられるものが、志賀島（福岡県）で発見されました。「漢委奴国王」ときざまれています。"},
+  {q:"邪馬台国の女王は？", choices:["卑弥呼","持統天皇","推古天皇","神功皇后"], answer:0, explain:"邪馬台国の女王である卑弥呼が、30あまりの小国を従えていました。"},
+  {q:"卑弥呼が使いを送った中国の王朝は？", choices:["魏","漢","唐","隋"], answer:0, explain:"卑弥呼は、中国の魏に使いを送りました。"},
+  {q:"卑弥呼が魏の皇帝から授けられた称号は？", choices:["親魏倭王","漢委奴国王","日本国王","倭王"], answer:0, explain:"卑弥呼は、魏の皇帝から「親魏倭王」の称号と、銅鏡などを授けられたとされています。"},
+  {q:"卑弥呼が人々を治めた方法は？", choices:["まじない","武力","法律","選挙"], answer:0, explain:"卑弥呼はまじないによって、人々を治めました。"},
+  {q:"邪馬台国の位置について有力な2つの説は、九州北部説ともう1つは？", choices:["大和（奈良県）説","近江（滋賀県）説","出雲（島根県）説","筑紫（福岡県）説"], answer:0, explain:"邪馬台国の位置については、九州北部にあったとする説と、大和（奈良県）にあったとする説の2つが有力です。"},
+  {q:"金印が発見されたのは何時代の半ばごろ？", choices:["江戸時代","明治時代","室町時代","平安時代"], answer:0, explain:"この金印と考えられるものが、江戸時代の半ば（18世紀の終わりごろ）に発見されました。"}
+]}
+];
+
+/* ---------- 第3段階：ひとくちメモテスト（mame） ---------- */
+
+const mameQuizRaw = [
+  {pillar:2, q:"小型ですばやい動きをする動物の狩りに用いられた道具は？", choices:["弓矢","石包丁","銅剣","土偶"], answer:0, explain:"弓矢は、小型ですばやい動きをする動物の狩りに用いられました。獲物を捕まえるためには、弓矢のほかに、落とし穴なども利用されていました。"},
+  {pillar:2, q:"明治時代に、アメリカ人のモースによって発掘された東京都の貝塚は？", choices:["大森貝塚","加曽利貝塚","板付遺跡","三内丸山遺跡"], answer:0, explain:"大森貝塚は、明治時代に、アメリカ人のモースによって発掘された東京都の貝塚です。発掘方法や出土した物のまとめ方などが、その後の手本となりました。"},
+  {pillar:3, q:"銅は、すずという金属と混ぜて火にかけるとどうなることが知られていた？", choices:["溶けやすくなる","かたくなる","色が変わる","軽くなる"], answer:0, explain:"銅は、すずという金属と混ぜて火にかけると溶けやすくなることがすでに知られていました。溶かしたものを型に流しこんで青銅器をつくりました。"},
+  {pillar:3, q:"豊かな収穫を祈ったり、収穫に感謝したりする儀式に用いられた道具を何という？", choices:["祭器","農具","武器","楽器"], answer:0, explain:"祭器は、豊かな収穫を祈ったり、収穫に感謝したりする儀式に用いられた道具をさします。銅鐸は、はじめは鈴のように鳴らしていたと考えられています。"},
+  {pillar:3, q:"弥生時代に争いが起こるようになった理由として挙げられるのは、稲作に適した土地ともう1つ何をめぐる争い？", choices:["水","食料","家畜","布"], answer:0, explain:"長く保存できる稲を少しでもたくわえようと、稲作に適した土地や、稲作に必要な水などをめぐって、争いが起こりました。"},
+  {pillar:4, q:"邪馬台国の位置について有力な2つの説は、九州北部説と何県説？", choices:["奈良県（大和）","佐賀県","福岡県","滋賀県"], answer:0, explain:"邪馬台国の位置については、九州北部にあったとする説と、大和（奈良県）にあったとする説の2つが有力です。"}
+];
+
+/* ---------- 第4段階：気をつけたいポイント（sanko／読みもの・採点なし） ---------- */
+
+const sankoNotes = [
+  {
+    title:"土器がもたらしたものは？",
+    body:`縄文時代には、縄文土器が用いられました。縄文土器は人々の生活にどのような変化をもたらしたのでしょうか。<br><br>
+食べ物を煮たきすることによって、どんぐりや、それまで食べることのできなかった植物の葉や根・くきも食べられるようになりました。土器を利用することによって、食生活は豊かになり、1か所で長くくらす定住生活ができるようになったと考えられています。<br><br>
+肉や魚・貝なども、煮たきすることによって、栄養の吸収もよくなり、生の状態よりも長い期間食べられるようになりました。食べ物は季節によってちがっていて、どんぐりは、土器や地面に掘った穴で水にさらして、あく抜きをして食べていたと考えられています。植物だけでなく、陸上動物や魚貝類なども、季節に応じて食料としていました。`,
+    src:"予習シリーズ5年下 第1回 Q&A"
+  },
+  {
+    title:"「時代」を増やした岩宿遺跡",
+    body:`関東ロームの地層ができた時代は火山活動が活発で人は生活できないと考えられていたため、長い間、発掘の対象にはされていませんでした。1946年、相沢忠洋が、この地層から打製石器を発見しました。その後、本格的な発掘が行われ、日本でも旧石器時代に人が活動していたことが明らかにされました。<br><br>
+岩宿遺跡で発見された黒曜石の打製石器の黒曜石は、ガラス状の石で、産地が限られます。`,
+    src:"予習シリーズ5年下 第1回 ちょっとくわしく"
+  },
+  {
+    title:"常識をぬり変えた三内丸山遺跡",
+    body:`かつては、縄文時代の集落は小規模で、人々の行動範囲もせまいと考えられていました。三内丸山遺跡では、最大で500人をこえる人口があったことが、竪穴住居のあとからわかっています。<br><br>
+現在の北海道や東北地方で産出された黒曜石や、新潟県で産出されたひすいも見つかっており、遠い地域と交流していたことも明らかとなりました。三内丸山遺跡をふくむ17の遺跡は、「北海道・北東北の縄文遺跡群」として、世界文化遺産に登録されています。`,
+    src:"予習シリーズ5年下 第1回 ちょっとくわしく"
+  },
+  {
+    title:"くにの中心であった吉野ヶ里遺跡",
+    body:`外側が2.5kmにもおよぶ2重の濠をもつ、国内最大級の環濠集落です。3000をこえるかめ棺や、袖を縫い合わせた部分が残る絹織物も発掘されています。<br><br>
+近くでは小さな集落の遺跡も発見され、吉野ヶ里遺跡が地域の中心的な集落あとであることがうかがえます。竪穴住居、高床倉庫、物見やぐらなどとともに、宮殿とも祭殿とも考えられる大型建造物も見つかっています。`,
+    src:"予習シリーズ5年下 第1回 ちょっとくわしく"
+  },
+  {
+    title:"打製石器と磨製石器の違い",
+    body:`打製石器は石を打ち欠いてつくられた石器で、旧石器時代に使われました。磨製石器は石をみがいてつくられた石器で、縄文時代以降に使われるようになりました。「旧石器時代＝打製石器のみ」「縄文時代以降＝打製石器と磨製石器の両方」という関係を整理しておきましょう。`,
+    src:"入試でまちがえやすいポイント（一般知識）"
+  },
+  {
+    title:"縄文土器と弥生土器の違い",
+    body:`縄文土器は縄目の文様がつけられた、厚手でもろい土器です。弥生土器は薄くてかたく、文様の少ない土器です。「縄文＝縄目の文様・厚手」「弥生＝薄手でかたい・文様少ない」とセットで覚えておきましょう。`,
+    src:"入試でまちがえやすいポイント（一般知識）"
+  },
+  {
+    title:"3つの中国の歴史書の内容",
+    body:`『漢書』地理志（倭は100あまりの小国に分かれていた）、『後漢書』東夷伝（倭の奴国の使いに金印を授けた）、『魏志』倭人伝（邪馬台国の卑弥呼がまじないで人々を治めた）という3つの歴史書は、内容が混同しやすいので、書名とその内容をセットで正確に覚えましょう。`,
+    src:"入試でまちがえやすいポイント（一般知識）"
+  },
+  {
+    title:"やじりの変化からわかること",
+    body:`縄文時代のやじりは三角形で小さくて軽く、狩りのために使われていました。弥生時代の半ばごろの遺跡からは、木の葉形の大きくて重いやじりが発掘されており、弓矢が狩りの道具から戦いのための武器に変わったことがわかります。この変化は、稲作の広まりによって争いが起こるようになったことと関連づけて理解しておきましょう。`,
+    src:"入試でまちがえやすいポイント（一般知識）"
+  }
+];
+
+/* ===================== 共通ビルド関数 ===================== */
+
+function shuffleArr(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+function finalize(q){
+  const correctText = q.choices[q.answer];
+  const order = shuffleArr(q.choices.map((c,i)=>i));
+  const newChoices = order.map(i=>q.choices[i]);
+  const newAnswer = newChoices.indexOf(correctText);
+  const out = Object.assign({}, q, {choices:newChoices, answer:newAnswer});
+  return out;
+}
+
+function normalizeAnswer(str){
+  if(str===undefined || str===null) return "";
+  let s = String(str).trim();
+  s = s.replace(/[０-９]/g, ch => String.fromCharCode(ch.charCodeAt(0)-0xFEE0));
+  s = s.replace(/\s+/g,"");
+  s = s.replace(/[『』「」]/g,"");
+  return s;
+}
+
+function checkFillAnswer(item, userInput){
+  const norm = normalizeAnswer(userInput);
+  if(norm==="") return false;
+  const candidates = [item.answer].concat(item.accept||[]);
+  return candidates.some(c => normalizeAnswer(c)===norm);
+}
+
+/* kihon の穴埋め item 生成 */
+function buildKihonFillItems(){
+  return kihonFillRaw.map((r,idx)=>({
+    type:"fill",
+    id:"kihonFill_"+idx,
+    q:r.q,
+    answer:r.answer,
+    accept:r.accept,
+    explain:r.explain,
+    lead:PILLARS[r.pillar].label,
+    sub:PILLARS[r.pillar].full,
+    pillar:r.pillar
+  }));
+}
+
+function buildKihonFinalItems(){
+  return kihonFinalRaw.map((r,idx)=>{
+    const fq = finalize({q:r.q, choices:r.choices, answer:r.answer, explain:r.explain});
+    return Object.assign({type:"choice", id:"kihonFinal_"+idx, pillar:r.pillar}, fq);
+  });
+}
+
+function buildKihonItems(){
+  const overview = kihonOverviewScreens.map((s,idx)=>Object.assign({id:"kihonOv_"+idx}, s));
+  const fills = shuffleArrKeepBlocks();
+  const finals = shuffleArr(buildKihonFinalItems());
+  return overview.concat(fills, finals);
+}
+// 穴埋めはブロック（pillar）順は固定、ブロック内はシャッフル
+function shuffleArrKeepBlocks(){
+  const byPillar = {};
+  kihonFillRaw.forEach((r,idx)=>{
+    if(!byPillar[r.pillar]) byPillar[r.pillar]=[];
+    byPillar[r.pillar].push(idx);
+  });
+  let out = [];
+  [1,2,3,4].forEach(p=>{
+    const idxs = shuffleArr(byPillar[p]||[]);
+    idxs.forEach(idx=>{
+      const r = kihonFillRaw[idx];
+      out.push({
+        type:"fill", id:"kihonFill_"+idx, q:r.q, answer:r.answer, accept:r.accept,
+        explain:r.explain, lead:PILLARS[r.pillar].label, sub:PILLARS[r.pillar].full, pillar:r.pillar
+      });
+    });
+  });
+  return out;
+}
+
+/* kuroji item 生成：ブロック順固定、ブロック内シャッフル */
+function buildKurojiItems(){
+  let out = [];
+  kurojiBlocks.forEach((block,bi)=>{
+    const shuffledItems = shuffleArr(block.items);
+    shuffledItems.forEach((it,ii)=>{
+      const fq = finalize(it);
+      out.push(Object.assign({
+        type:"choice",
+        id:"kuroji_"+bi+"_"+ii,
+        pillar:block.pillar,
+        sub:block.sub
+      }, fq));
+    });
+  });
+  return out;
+}
+
+/* mame item 生成 */
+function buildMameItems(){
+  const shuffled = shuffleArr(mameQuizRaw);
+  return shuffled.map((r,idx)=>{
+    const fq = finalize(r);
+    return Object.assign({type:"choice", id:"mame_"+idx, pillar:r.pillar}, fq);
+  });
+}
+
+/* sanko item 生成（採点なし） */
+function buildSankoItems(){
+  return sankoNotes.map((n,idx)=>({
+    type:"info", id:"sanko_"+idx, title:n.title, body:n.body, src:n.src, wide:true
+  }));
+}
+
+const STAGES = [
+  {id:"kihon", name:"① 構造テスト", desc:"4本柱（旧石器時代・縄文時代・弥生時代・中国の歴史書）の骨組みを確認。概要2画面＋穴埋め20問＋まとめ選択4問。", scored:true, ref:false, build:buildKihonItems},
+  {id:"kuroji", name:"② 黒太字テスト", desc:"各時代の重要語句を4択で確認します。", scored:true, ref:false, build:buildKurojiItems},
+  {id:"mame", name:"③ ひとくちメモテスト", desc:"教科書のひとくちメモから出題します。", scored:true, ref:false, build:buildMameItems},
+  {id:"sanko", name:"④ 気をつけたいポイント", desc:"教科書コラム＋入試でまちがえやすい注意点の読みもの。採点はありません。", scored:false, ref:true, build:buildSankoItems}
+];
+
+/* ===================== 状態管理／localStorage ===================== */
+
+const STORAGE_KEY = "kyuusekki_missed_v1";
+
+function loadMissedStore(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : {};
+  }catch(e){ return {}; }
+}
+function saveMissedStore(store){
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(store)); }catch(e){ /* 保存できない環境は無視 */ }
+}
+
+const state = {
+  screen:"home",
+  stageId:null,
+  isRetry:false,
+  items:[],
+  currentIndex:0,
+  scoreTotal:0,
+  scoreCorrect:0,
+  answerLog:[],
+  results:{},
+  missedStore: loadMissedStore(),
+  answered:false,
+  userInput:"",
+  speakRate: loadSpeakRate(),
+  currentSpeakText: ""
+};
+
+function startStage(stageId){
+  stopSpeak();
+  stopMic();
+  const stage = STAGES.find(s=>s.id===stageId);
+  state.stageId = stageId;
+  state.isRetry = false;
+  state.items = stage.build();
+  state.currentIndex = 0;
+  state.scoreTotal = state.items.filter(i=>i.type!=="info").length;
+  state.scoreCorrect = 0;
+  state.answerLog = [];
+  state.answered = false;
+  state.userInput = "";
+  state.screen = "play";
+  render();
+}
+
+function startRetry(stageId){
+  const missed = state.missedStore[stageId] || {};
+  const items = Object.values(missed);
+  if(items.length===0) return;
+  state.stageId = stageId;
+  state.isRetry = true;
+  state.items = shuffleArr(items);
+  state.currentIndex = 0;
+  state.scoreTotal = state.items.length;
+  state.scoreCorrect = 0;
+  state.answerLog = [];
+  state.answered = false;
+  state.userInput = "";
+  state.screen = "play";
+  render();
+}
+
+function currentItem(){ return state.items[state.currentIndex]; }
+
+function submitChoice(idx){
+  if(state.answered) return;
+  const item = currentItem();
+  const correct = idx === item.answer;
+  state.answered = true;
+  state.userChoiceIdx = idx;
+  if(correct) state.scoreCorrect++;
+  state.answerLog.push({item, wasCorrect:correct});
+}
+
+function submitFill(){
+  if(state.answered) return;
+  const item = currentItem();
+  const correct = checkFillAnswer(item, state.userInput);
+  state.answered = true;
+  if(correct) state.scoreCorrect++;
+  state.answerLog.push({item, wasCorrect:correct});
+}
+
+function nextItem(){
+  stopSpeak();
+  stopMic();
+  state.answered = false;
+  state.userInput = "";
+  state.userChoiceIdx = null;
+  state.hintShown = false;
+  if(state.currentIndex < state.items.length-1){
+    state.currentIndex++;
+    render();
+  }else{
+    finishStage();
+  }
+}
+
+function finishStage(){
+  const stage = STAGES.find(s=>s.id===state.stageId);
+  state.results[state.stageId] = {
+    correct: state.scoreCorrect,
+    total: state.scoreTotal,
+    at: Date.now()
+  };
+  if(stage.scored){
+    const missed = state.missedStore[state.stageId] || {};
+    state.answerLog.forEach(log=>{
+      const key = log.item.q;
+      if(!log.wasCorrect){
+        missed[key] = log.item;
+      }else{
+        if(missed[key]) delete missed[key];
+      }
+    });
+    state.missedStore[state.stageId] = missed;
+    saveMissedStore(state.missedStore);
+  }
+  state.screen = "result";
+  render();
+}
+
+function backHome(){
+  stopSpeak();
+  stopMic();
+  state.screen = "home";
+  render();
+}
+
+/* ===================== 音声読み上げ（Web Speech API：読み上げ） ===================== */
+
+const SPEAK_RATE_KEY = "quizapp_speak_rate_v1";
+function loadSpeakRate(){
+  try{
+    const v = parseFloat(localStorage.getItem(SPEAK_RATE_KEY));
+    if(!isNaN(v) && v>=0.7 && v<=1.8) return v;
+  }catch(e){}
+  return 1.1;
+}
+function saveSpeakRate(v){
+  try{ localStorage.setItem(SPEAK_RATE_KEY, String(v)); }catch(e){}
+}
+
+let speakUtterance = null;
+let cachedVoices = [];
+
+function speakSupported(){
+  return typeof window!=="undefined" && "speechSynthesis" in window;
+}
+
+function refreshVoices(){
+  if(speakSupported()) cachedVoices = window.speechSynthesis.getVoices() || [];
+}
+if(speakSupported()){
+  refreshVoices();
+  window.speechSynthesis.onvoiceschanged = refreshVoices;
+}
+
+function getBestJaVoice(){
+  const jaVoices = cachedVoices.filter(v => v.lang && v.lang.toLowerCase().startsWith("ja"));
+  if(jaVoices.length===0) return null;
+  // クラウド系（localServiceでない）や「Google」を含む音声は自然な傾向があるため優先
+  const preferred = jaVoices.find(v => /google/i.test(v.name)) 
+    || jaVoices.find(v => v.localService===false)
+    || jaVoices[0];
+  return preferred;
+}
+
+function speakText(text, btnId){
+  if(!speakSupported()) return;
+  window.speechSynthesis.cancel();
+  state.currentSpeakText = text;
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = "ja-JP";
+  u.rate = state.speakRate;
+  const voice = getBestJaVoice();
+  if(voice) u.voice = voice;
+  u.onend = ()=>{ setSpeakBtnState(btnId, false); };
+  u.onerror = ()=>{ setSpeakBtnState(btnId, false); };
+  speakUtterance = u;
+  window.speechSynthesis.speak(u);
+  setSpeakBtnState(btnId, true);
+}
+
+function stopSpeak(){
+  if(speakSupported()) window.speechSynthesis.cancel();
+}
+
+function setSpeakBtnState(btnId, playing){
+  const btn = document.getElementById(btnId);
+  if(!btn) return;
+  btn.classList.toggle("playing", playing);
+  btn.innerHTML = playing ? "⏸ 読み上げを止める" : "🔊 音声で聞く";
+}
+
+function toggleSpeak(text, btnId){
+  btnId = btnId || "speakBtn";
+  if(!speakSupported()) return;
+  if(window.speechSynthesis.speaking){
+    stopSpeak();
+    setSpeakBtnState(btnId, false);
+  }else{
+    speakText(text, btnId);
+  }
+}
+
+function updateSpeakRate(val){
+  state.speakRate = parseFloat(val);
+  saveSpeakRate(state.speakRate);
+  const label = document.getElementById("speakRateLabel");
+  if(label) label.textContent = state.speakRate.toFixed(1)+"倍";
+  if(speakSupported() && window.speechSynthesis.speaking && state.currentSpeakText){
+    speakText(state.currentSpeakText, "speakBtn");
+  }
+}
+
+/* stopMic は他の関数から呼ばれているため、no-opとして残す（音声入力機能は削除済み） */
+function stopMic(){}
+
+/* ===================== レンダリング ===================== */
+
+const app = document.getElementById("app");
+
+function render(){
+  if(state.screen==="home") renderHome();
+  else if(state.screen==="play") renderPlay();
+  else if(state.screen==="result") renderResult();
+}
+
+function esc(s){
+  return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+
+function renderHome(){
+  let html = `
+    <div class="header">
+      <h1>旧石器・縄文・弥生時代テスト</h1>
+      <div class="sub">予習シリーズ5年下　第1回　旧石器時代・縄文時代・弥生時代</div>
+    </div>
+    <div class="content">
+  `;
+  const scoredStages = STAGES.filter(s=>s.scored);
+  const refStages = STAGES.filter(s=>!s.scored);
+
+  html += `<div class="home-title">確認テスト</div>`;
+  scoredStages.forEach(stage=>{
+    const res = state.results[stage.id];
+    const missedCount = Object.keys(state.missedStore[stage.id]||{}).length;
+    html += `<div class="stage-card" onclick="startStage('${stage.id}')">
+      <div class="stage-top">
+        <div class="stage-name">${esc(stage.name)}</div>
+        <div class="stage-badge">${res ? res.correct+"/"+res.total : "未挑戦"}</div>
+      </div>
+      <div class="stage-desc">${esc(stage.desc)}</div>
+      ${res ? `<div class="progress-bar"><div class="progress-fill" style="width:${Math.round(res.correct/res.total*100)}%"></div></div>` : ""}
+      ${missedCount>0 ? `<div class="retry-btn" onclick="event.stopPropagation(); startRetry('${stage.id}')">🔁 苦手${missedCount}問を復習</div>` : ""}
+    </div>`;
+  });
+
+  html += `<div class="home-title">参考情報（読みもの）</div>`;
+  refStages.forEach(stage=>{
+    html += `<div class="stage-card ref" onclick="startStage('${stage.id}')">
+      <div class="stage-top">
+        <div class="stage-name">${esc(stage.name)}</div>
+        <div class="stage-badge">読みもの</div>
+      </div>
+      <div class="stage-desc">${esc(stage.desc)}</div>
+    </div>`;
+  });
+
+  html += `<div class="footer-note">単一HTMLファイル・localStorageに端末内で保存されます</div>`;
+  html += `</div>`;
+  app.innerHTML = html;
+}
+
+function renderPlay(){
+  const item = currentItem();
+  const stage = STAGES.find(s=>s.id===state.stageId);
+  const isInfo = item.type==="info";
+
+  let html = `
+    <div class="header">
+      <h1>${esc(stage.name)}${state.isRetry?"（復習）":""}</h1>
+      <div class="sub">${item.sub ? esc(item.sub) : esc(stage.desc)}</div>
+    </div>
+    <div class="content">
+      <div class="play-topbar">
+        <span>問題 ${state.currentIndex+1} / ${state.items.length}</span>
+        <span onclick="backHome()" style="text-decoration:underline; cursor:pointer;">中断してホームへ</span>
+      </div>
+  `;
+
+  if(isInfo){
+    html += `<div class="qcard info">
+      <div class="qtitle">${esc(item.title)}</div>
+      ${item.speak ? `
+      <div class="speak-row">
+        <button id="speakBtn" class="speak-btn" onclick='toggleSpeak(${JSON.stringify(item.speak)})'>🔊 音声で聞く</button>
+        <div class="speed-control">
+          <span>速さ</span>
+          <input type="range" min="0.7" max="1.8" step="0.1" value="${state.speakRate}" oninput="updateSpeakRate(this.value)">
+          <span id="speakRateLabel">${state.speakRate.toFixed(1)}倍</span>
+        </div>
+      </div>` : ""}
+      <div class="info-body ${item.wide?'wide':''}">${item.body}</div>
+      ${item.src ? `<div class="src-tag">出典：${esc(item.src)}</div>` : ""}
+      <button class="btn btn-ref" onclick="nextItem()">${state.currentIndex < state.items.length-1 ? "次へ" : "結果を見る"}</button>
+    </div>`;
+  } else if(item.type==="fill"){
+    html += `<div class="qcard">`;
+    if(item.lead) html += `<div class="lead-badge">${esc(item.lead)}</div>`;
+    html += `<div class="qtext">${esc(item.q)}</div>`;
+    const inputClass = state.answered ? (checkFillAnswer(item, state.userInput) ? "correct":"wrong") : "";
+    html += `<input type="text" id="fillInput" class="fill-input ${inputClass}" placeholder="答えを入力" value="${esc(state.userInput)}" ${state.answered?"disabled":""} onkeydown="if(event.key==='Enter'){document.getElementById('fillInput').value=this.value; state.userInput=this.value; submitFillUI();}">`;
+    if(!state.answered){
+      html += `<button class="btn btn-primary" onclick="submitFillUI()">こたえる</button>`;
+    }else{
+      const correct = checkFillAnswer(item, state.userInput);
+      html += `<div class="explain-box ${correct?'good':'bad'}">
+        <span class="mark-icon">${correct?"⭕":"❌"}</span><b>正解：${esc(item.answer)}</b><br>${item.explain||""}
+      </div>`;
+      html += `<button class="btn btn-primary" onclick="nextItem()">${state.currentIndex < state.items.length-1 ? "次の問題へ" : "結果を見る"}</button>`;
+    }
+    html += `</div>`;
+  } else if(item.type==="choice"){
+    html += `<div class="qcard">`;
+    if(item.pillar!==undefined && item.pillar!==null) html += `<div class="lead-badge">${esc(pillarBadge(item.pillar))}</div>`;
+    html += `<div class="qtext">${esc(item.q)}</div>`;
+    html += `<div class="choice-list">`;
+    item.choices.forEach((c,idx)=>{
+      let cls = "choice-btn";
+      if(state.answered){
+        if(idx===item.answer) cls += " correct";
+        else if(idx===state.userChoiceIdx) cls += " wrong";
+        else cls += " dim";
+      }
+      html += `<button class="${cls}" ${state.answered?"disabled":""} onclick="submitChoiceUI(${idx})">${esc(c)}</button>`;
+    });
+    html += `</div>`;
+    if(state.answered){
+      const correct = state.userChoiceIdx===item.answer;
+      html += `<div class="explain-box ${correct?'good':'bad'}">
+        <span class="mark-icon">${correct?"⭕":"❌"}</span>${item.explain||""}
+      </div>`;
+      html += `<button class="btn btn-primary" onclick="nextItem()">${state.currentIndex < state.items.length-1 ? "次の問題へ" : "結果を見る"}</button>`;
+    }
+    html += `</div>`;
+  }
+
+  html += `</div>`;
+  app.innerHTML = html;
+  if(item.type==="fill" && !state.answered){
+    const el = document.getElementById("fillInput");
+    if(el) el.focus();
+  }
+}
+
+function submitChoiceUI(idx){
+  submitChoice(idx);
+  renderPlay();
+}
+function submitFillUI(){
+  const el = document.getElementById("fillInput");
+  if(el) state.userInput = el.value;
+  submitFill();
+  renderPlay();
+}
+function toggleHint(){
+  state.hintShown = !state.hintShown;
+  renderPlay();
+}
+
+function renderResult(){
+  const stage = STAGES.find(s=>s.id===state.stageId);
+  const wrongItems = state.answerLog.filter(l=>!l.wasCorrect).map(l=>l.item);
+  const missedCount = Object.keys(state.missedStore[state.stageId]||{}).length;
+
+  let html = `
+    <div class="header">
+      <h1>結果</h1>
+      <div class="sub">${esc(stage.name)}${state.isRetry?"（復習）":""}</div>
+    </div>
+    <div class="content">
+      <div class="qcard result-box">
+        <div>できた問題</div>
+        <div class="result-score">${state.scoreCorrect} / ${state.scoreTotal}</div>
+        ${wrongItems.length>0 ? `<div class="missed-list">${wrongItems.map(it=>`<div class="missed-item">${esc(it.q)}</div>`).join("")}</div>` : `<div style="color:var(--good); font-weight:700;">全問正解です！</div>`}
+      </div>
+  `;
+  if(wrongItems.length>0){
+    html += `<button class="btn btn-primary" onclick="startRetry('${state.stageId}')">🔁 まちがえた問題だけ復習する（${wrongItems.length}問）</button>`;
+  } else if(missedCount>0){
+    html += `<button class="btn btn-primary" onclick="startRetry('${state.stageId}')">🔁 残っている苦手${missedCount}問を復習する</button>`;
+  }
+  html += `<button class="btn btn-outline" onclick="backHome()">ホームにもどる</button>`;
+  html += `</div>`;
+  app.innerHTML = html;
+}
+
+render();
+</script>
+</body>
+</html>
