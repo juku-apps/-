@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>奈良時代テスト</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --accent:#3468a6;
+  --accent-light:#e8f0fa;
+  --ref:#7a5ea8;
+  --ref-light:#f1ecf8;
+  --good:#2f9e5b;
+  --good-light:#e6f6ec;
+  --bad:#d1453b;
+  --bad-light:#fbe9e8;
+  --ink:#22303f;
+  --sub:#5c6b7a;
+  --line:#dbe3ec;
+  --bg:#f5f7fa;
+  --card:#ffffff;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  font-family:"Zen Kaku Gothic New",sans-serif;
+  background:var(--bg);
+  color:var(--ink);
+  display:flex;
+  justify-content:center;
+}
+#app{
+  width:100%;
+  max-width:480px;
+  min-height:100vh;
+  background:var(--bg);
+  display:flex;
+  flex-direction:column;
+  position:relative;
+}
+.header{
+  padding:16px 18px 12px;
+  background:linear-gradient(135deg,var(--accent),#4d7dbf);
+  color:#fff;
+  position:sticky;
+  top:0;
+  z-index:5;
+}
+.header h1{
+  margin:0;
+  font-size:18px;
+  font-weight:900;
+  letter-spacing:.02em;
+}
+.header .sub{
+  margin-top:2px;
+  font-size:12px;
+  opacity:.9;
+}
+.content{
+  flex:1;
+  padding:14px 16px 90px;
+}
+.home-title{
+  font-size:14px;
+  font-weight:800;
+  color:var(--sub);
+  margin:18px 2px 10px;
+}
+.home-title:first-child{margin-top:2px;}
+.stage-card{
+  background:var(--card);
+  border-radius:14px;
+  box-shadow:0 2px 8px rgba(30,50,80,.08);
+  padding:16px;
+  margin-bottom:14px;
+  border:1px solid var(--line);
+  cursor:pointer;
+  transition:transform .1s;
+}
+.stage-card:active{transform:scale(.98);}
+.stage-card.ref{
+  border-color:var(--ref);
+  background:linear-gradient(180deg,#fff,var(--ref-light));
+}
+.stage-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+.stage-name{
+  font-size:16px;
+  font-weight:700;
+}
+.stage-badge{
+  font-size:11px;
+  background:var(--accent);
+  color:#fff;
+  padding:3px 8px;
+  border-radius:999px;
+  font-weight:700;
+  white-space:nowrap;
+  margin-left:8px;
+}
+.stage-card.ref .stage-badge{background:var(--ref);}
+.stage-desc{
+  font-size:12.5px;
+  color:var(--sub);
+  margin-top:6px;
+  line-height:1.5;
+}
+.progress-bar{
+  height:6px;
+  background:var(--line);
+  border-radius:99px;
+  margin-top:10px;
+  overflow:hidden;
+}
+.progress-fill{
+  height:100%;
+  background:linear-gradient(90deg,var(--accent),#4d7dbf);
+  border-radius:99px;
+  transition:width .3s;
+}
+.retry-btn{
+  margin-top:10px;
+  display:inline-block;
+  background:var(--bad-light);
+  color:var(--bad);
+  border:1px solid var(--bad);
+  border-radius:8px;
+  padding:6px 10px;
+  font-size:12.5px;
+  font-weight:700;
+  cursor:pointer;
+}
+.footer-note{
+  text-align:center;
+  font-size:11px;
+  color:var(--sub);
+  margin-top:22px;
+}
+.reset-all-btn{
+  width:100%;
+  margin-top:18px;
+  padding:11px;
+  border-radius:10px;
+  background:none;
+  border:1px solid var(--bad);
+  color:var(--bad);
+  font-size:12.5px;
+  font-weight:700;
+  cursor:pointer;
+  font-family:inherit;
+}
+.play-topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-size:12px;
+  color:var(--sub);
+  margin-bottom:12px;
+}
+.qcard{
+  background:var(--card);
+  border-radius:14px;
+  padding:18px;
+  box-shadow:0 2px 8px rgba(30,50,80,.08);
+  border:1px solid var(--line);
+  margin-bottom:16px;
+}
+.qcard.info{
+  background:linear-gradient(180deg,#fff,var(--ref-light));
+  border-color:var(--ref);
+}
+.qtitle{
+  font-size:16px;
+  font-weight:800;
+  margin-bottom:10px;
+  color:var(--ref);
+}
+.info-body{
+  font-size:14px;
+  line-height:1.9;
+  color:var(--ink);
+}
+.info-body p{margin:0 0 12px;}
+.info-body p:last-child{margin-bottom:0;}
+.src-tag{
+  margin-top:12px;
+  font-size:11.5px;
+  color:var(--sub);
+}
+.lead-badge{
+  display:inline-block;
+  font-size:11px;
+  font-weight:700;
+  color:var(--accent);
+  background:var(--accent-light);
+  padding:3px 10px;
+  border-radius:999px;
+  margin-bottom:10px;
+}
+.qtext{
+  font-size:15px;
+  font-weight:700;
+  line-height:1.7;
+  margin-bottom:16px;
+}
+.choice-list{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.choice-btn{
+  width:100%;
+  text-align:left;
+  padding:13px 14px;
+  border-radius:12px;
+  border:1.5px solid var(--line);
+  background:#fff;
+  color:var(--ink);
+  font-size:14px;
+  font-family:inherit;
+  font-weight:600;
+  cursor:pointer;
+}
+.choice-btn:disabled{cursor:default;}
+.choice-btn.correct{border-color:var(--good);background:var(--good-light);color:#1c6b3f;}
+.choice-btn.wrong{border-color:var(--bad);background:var(--bad-light);color:#9c3128;}
+.choice-btn.dim{opacity:.4;}
+.fill-input{
+  width:100%;
+  padding:13px 14px;
+  border-radius:12px;
+  border:1.5px solid var(--line);
+  font-size:15px;
+  font-family:inherit;
+  margin-bottom:14px;
+}
+.fill-input.correct{border-color:var(--good);background:var(--good-light);}
+.fill-input.wrong{border-color:var(--bad);background:var(--bad-light);}
+.explain-box{
+  border-radius:12px;
+  padding:14px;
+  font-size:13px;
+  line-height:1.8;
+  margin-bottom:14px;
+}
+.explain-box.good{background:var(--good-light);color:#1c6b3f;}
+.explain-box.bad{background:var(--bad-light);color:#9c3128;}
+.mark-icon{font-size:15px;margin-right:6px;}
+.btn{
+  width:100%;
+  padding:14px;
+  border-radius:12px;
+  border:none;
+  font-size:15px;
+  font-weight:800;
+  font-family:inherit;
+  cursor:pointer;
+}
+.btn-primary{background:linear-gradient(135deg,var(--accent),#4d7dbf);color:#fff;}
+.btn-ref{background:linear-gradient(135deg,var(--ref),#9678c2);color:#fff;}
+.btn-outline{background:#fff;border:1.5px solid var(--line);color:var(--ink);}
+.btn-danger-outline{background:var(--bad-light);border:1.5px solid var(--bad);color:var(--bad);}
+.result-actions{display:flex;gap:10px;margin-top:4px;}
+.result-actions .btn{flex:1;}
+.result-box{text-align:center;}
+.result-score{
+  font-size:44px;
+  font-weight:900;
+  color:var(--accent);
+  margin:8px 0;
+}
+.wrong-list{margin-top:14px;text-align:left;}
+.wrong-list-label{font-size:12px;color:var(--sub);margin-bottom:6px;}
+.wrong-item{
+  padding:10px 12px;
+  border-radius:10px;
+  background:var(--bad-light);
+  color:#9c3128;
+  margin-bottom:8px;
+  font-size:13px;
+  line-height:1.6;
+}
+.perfect-msg{color:var(--good);font-weight:800;margin-top:10px;font-size:14px;}
+.speak-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-bottom:14px;
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:10px 12px;
+}
+.speak-btn{
+  border:1.5px solid var(--ref);
+  background:#fff;
+  color:var(--ref);
+  border-radius:999px;
+  padding:8px 16px;
+  font-size:13px;
+  font-weight:700;
+  font-family:inherit;
+  cursor:pointer;
+  white-space:nowrap;
+}
+.speak-btn.playing{background:var(--ref);color:#fff;}
+.speed-control{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  font-size:12px;
+  color:var(--sub);
+}
+.speed-control input[type=range]{
+  width:92px;
+  accent-color:var(--ref);
+}
+.hidden{display:none!important;}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+/* ===================== 単元データ：柱の定義 ===================== */
+const PILLARS = {
+  1: {label:"① 律令政治", full:"律令政治"},
+  2: {label:"② 移された都", full:"移された都"},
+  3: {label:"③ 聖武天皇と仏教", full:"聖武天皇と仏教"},
+  4: {label:"④ 農民の生活と新しい土地政策", full:"農民の生活と新しい土地政策"},
+  5: {label:"⑤ 海をわたった人々", full:"海をわたった人々"},
+  6: {label:"⑥ 天平文化", full:"天平文化"}
+};
+
+/* ===================== ①構造テスト：概要画面 ===================== */
+const kihonOverviewScreens = [
+  {
+    title:"はじめに",
+    body:`<p>今回のテーマは「奈良時代」です。710年に奈良の平城京に都が移されてから、794年に平安京に都が移されるまでの約80年間を奈良時代といいます。</p><p>聖武天皇のころには、災害やききん、伝染病、貴族の反乱が相次ぎ、世の中に不安が広がっていました。聖武天皇は、仏教の力で国を治めようと、743年に東大寺の大仏をつくる命令を出しました。</p><p>この回では、律令政治のしくみ、都の移り変わり、聖武天皇と仏教、農民の生活と土地政策、海をわたった人々、天平文化という、6つの視点から奈良時代を学びます。</p>`,
+    speak:"今回のテーマは、奈良時代です。710年に奈良の平城京に都が移されてから、794年に平安京に都が移されるまでの約80年間を、奈良時代といいます。聖武天皇のころには、災害やききん、伝染病、貴族の反乱が相次ぎ、世の中に不安が広がっていました。聖武天皇は、仏教の力で国を治めようと、743年に東大寺の大仏をつくる命令を出しました。この回では、律令政治のしくみ、都の移り変わり、聖武天皇と仏教、農民の生活と土地政策、海をわたった人々、天平文化という、6つの視点から奈良時代を学んでいきます。"
+  },
+  {
+    title:"6つの柱",
+    body:`<p><b>① 律令政治</b><br>大宝律令の制定、二官八省のしくみ、地方の政治、租・調・庸などの税や兵役について学びます。</p><p><b>② 移された都</b><br>710年に平城京へ都が移されたことと、都と国府を結ぶ道について学びます。</p><p><b>③ 聖武天皇と仏教</b><br>国分寺・国分尼寺、東大寺の大仏、行基や道鏡など、仏教を中心とした政治について学びます。</p><p><b>④ 農民の生活と新しい土地政策</b><br>農民の苦しい生活と、三世一身の法・墾田永年私財法による土地政策の変化を学びます。</p><p><b>⑤ 海をわたった人々</b><br>遣唐使の航路や、阿倍仲麻呂・鑑真など、海をわたった人々について学びます。</p><p><b>⑥ 天平文化</b><br>『古事記』『日本書紀』『万葉集』などの書物や、正倉院の宝物など、天平文化について学びます。</p>`,
+    speak:"この回は、大きく6つの柱に分かれています。1つ目は、律令政治です。大宝律令の制定や、二官八省のしくみ、地方の政治、租・調・庸などの税や兵役について学びます。2つ目は、移された都です。710年に平城京へ都が移されたことと、都と国府を結ぶ道について学びます。3つ目は、聖武天皇と仏教です。国分寺・国分尼寺、東大寺の大仏、行基や道鏡など、仏教を中心とした政治について学びます。4つ目は、農民の生活と新しい土地政策です。農民の苦しい生活と、三世一身の法、墾田永年私財法による土地政策の変化を学びます。5つ目は、海をわたった人々です。遣唐使の航路や、阿倍仲麻呂、鑑真など、海をわたった人々について学びます。6つ目は、天平文化です。古事記、日本書紀、万葉集などの書物や、正倉院の宝物など、天平文化について学びます。それでは、順番に見ていきましょう。"
+  }
+];
+
+/* ===================== ①構造テスト：穴埋め ===================== */
+const kihonFillRaw = [
+  {pillar:1, q:"701年、唐の律令にならって定められ、天皇を中心とする政治のしくみを完成させた法律を何といいますか。", answer:"大宝律令", explain:"大宝律令によって、大化の改新がめざした天皇を中心とする政治のしくみが完成した。"},
+  {pillar:1, q:"律令にもとづいて行われる政治を何といいますか。", answer:"律令政治", explain:"大宝律令の制定後、律令政治が本格的に行われるようになった。"},
+  {pillar:1, q:"朝廷が6年ごとに戸籍をつくり、それにもとづいて口分田をあたえたきまりを何といいますか。", answer:"班田収授の法", explain:"6歳以上の男子に2段、女子にはその3分の2の口分田があたえられた。"},
+  {pillar:1, q:"収穫の約3％の稲を地方の役所に納める税を何といいますか。", answer:"租", explain:"租は口分田にかける税で、女子も負担した。"},
+  {pillar:2, q:"710年、奈良に都が移されたときの天皇は誰ですか。", answer:"元明天皇", explain:"女性の元明天皇のとき、飛鳥の藤原京から奈良の平城京に都が移された。"},
+  {pillar:2, q:"710年に奈良に置かれた都を何といいますか。", answer:"平城京", explain:"平城京は、唐の都・長安にならってつくられた都である。"},
+  {pillar:2, q:"平城京は、唐の都の何にならってつくられましたか。", answer:"長安", explain:"長安は現在の西安にあたる。"},
+  {pillar:2, q:"平城京から平安京に都が移されるまでの約80年間を何といいますか。", answer:"奈良時代", explain:"奈良時代は710年から794年までの約80年間をさす。"},
+  {pillar:3, q:"741年、国ごとに国分寺と国分尼寺を建てるよう命じた天皇は誰ですか。", answer:"聖武天皇", explain:"聖武天皇は、世の中の不安を仏教の力でしずめようとした。"},
+  {pillar:3, q:"743年、聖武天皇が大仏をつくる命令を出した、総国分寺である寺を何といいますか。", answer:"東大寺", explain:"大仏の完成式典は752年に行われた。"},
+  {pillar:3, q:"各地で池や橋・道路をつくり、人々に仏教を説いたが、朝廷から活動を禁じられた僧は誰ですか。", answer:"行基", explain:"のちに大仏づくりの事業に参加し、僧として最高の位をあたえられた。"},
+  {pillar:3, q:"寺院の勢力が強くなり、政治に口出しをするようになった僧は誰ですか。", answer:"道鏡", explain:"このため律令政治は次第に乱れていった。"},
+  {pillar:4, q:"貧しい農民の生活を「貧窮問答歌」によんだ貴族は誰ですか。", answer:"山上憶良", explain:"「貧窮問答歌」は『万葉集』に収められている。"},
+  {pillar:4, q:"「貧窮問答歌」が収められている、奈良時代の和歌集は何ですか。", answer:"万葉集", explain:"『万葉集』は現存する日本最古の和歌集である。"},
+  {pillar:4, q:"723年に定められた、新しく開墾した土地を3代まで私有できるきまりを何といいますか。", answer:"三世一身の法", explain:"開墾が期待したほどすすまなかったため、後に墾田永年私財法が出された。"},
+  {pillar:4, q:"743年に聖武天皇が定めた、開墾した田を永久に自分のものにしてよいというきまりを何といいますか。", answer:"墾田永年私財法", explain:"このきまりのあと、力のある貴族や寺社が私有地（荘園）を増やしていった。"},
+  {pillar:5, q:"630年、第1回の遣唐使として送られた人物は誰ですか。", answer:"犬上御田鍬", explain:"朝廷は唐のすすんだ制度や文化を取り入れるため遣唐使を送った。"},
+  {pillar:5, q:"留学生として唐に渡ったが、帰国できず唐の皇帝に一生仕えた人物は誰ですか。", answer:"阿倍仲麻呂", explain:"仲麻呂はふるさとをしのび、三笠の山にのぼった月をよんだ和歌を残した。"},
+  {pillar:5, q:"失敗を重ねて失明しながらも、6度目の航海で日本にたどり着いた唐の高僧は誰ですか。", answer:"鑑真", explain:"来日した鑑真は、日本の僧の制度を整えた。"},
+  {pillar:5, q:"鑑真が奈良に開いた寺を何といいますか。", answer:"唐招提寺", explain:"鑑真は日本で亡くなった。"},
+  {pillar:6, q:"奈良時代で最も文化が栄えた聖武天皇のころの元号にちなんで名づけられた文化を何といいますか。", answer:"天平文化", explain:"遣唐使によって唐の文化がもたらされ、仏教の影響を受けた貴族中心の文化である。"},
+  {pillar:6, q:"712年につくられた歴史書を何といいますか。", answer:"古事記", explain:"神話や伝承・記録などをもとにつくられた。"},
+  {pillar:6, q:"720年につくられた歴史書を何といいますか。", answer:"日本書紀", explain:"『古事記』の8年後につくられた。"},
+  {pillar:6, q:"現存する日本最古の和歌集を何といいますか。", answer:"万葉集", explain:"天皇から一般の人々まで、さまざまな身分の人がよんだ約4500首の和歌が収められている。"}
+];
+
+/* ===================== ①構造テスト：まとめ選択 ===================== */
+const kihonFinalRaw = [
+  {pillar:1, q:"律令政治のしくみとして正しいものはどれですか。", choices:["天皇のもとに二官八省が置かれ、地方は国・郡・里に分けられた","天皇のもとに三権分立のしくみが置かれた","地方には貴族が派遣され、都には豪族が置かれた","律令政治には税のきまりはなかった"], answer:0, explain:"国の政治は天皇のもとに二官八省、地方の政治は国・郡・里に分けられ、国司・郡司・里長が置かれた。"},
+  {pillar:2, q:"平城京について正しいものはどれですか。", choices:["唐の都・長安にならってつくられた、碁盤の目のような計画都市である","日本で独自に考案された、円形の都市である","唐からの影響は受けていない","平安京よりも東にある都である"], answer:0, explain:"平城京は唐の都・長安にならってつくられ、南北に走る朱雀大路を中心に道路が碁盤の目のようにつくられた。"},
+  {pillar:3, q:"聖武天皇が大仏づくりを命じた理由として正しいものはどれですか。", choices:["世の中に広がっていた不安を仏教の力でしずめ、国を治めようとしたから","外国からの侵略を防ぐため軍事力として利用しようとしたから","貴族の反乱をおさえるため武器として使おうとしたから","農民の税を減らすため"], answer:0, explain:"聖武天皇のころは災害やききん、伝染病、貴族の反乱が相次いだ。聖武天皇や光明皇后は、世の中の不安を仏教の力でしずめ、国を治めようとした。"},
+  {pillar:4, q:"三世一身の法と墾田永年私財法の関係として正しいものはどれですか。", choices:["三世一身の法では開墾がすすまなかったため、墾田永年私財法が出された","墾田永年私財法のあとに三世一身の法が出された","どちらも同じ内容のきまりである","両方とも農民の口分田を没収するきまりである"], answer:0, explain:"723年の三世一身の法では開墾が期待したほどすすまなかったため、743年に墾田永年私財法が出され、開墾した田を永久に私有できるようになった。"},
+  {pillar:5, q:"遣唐使の航路について正しいものはどれですか。", choices:["新羅との関係が悪化すると、朝鮮半島沿いの北路から東シナ海を横断する南路に変わった","はじめから東シナ海を横断する南路のみが使われた","遣唐使の航路は一度も変化しなかった","遣唐使は航路を使わず陸路のみで唐に渡った"], answer:0, explain:"遣唐使の航路は、はじめは朝鮮半島の西岸沿いに北上する北路だったが、8世紀に新羅との関係が悪くなると、東シナ海を横断する南路をとるようになった。"},
+  {pillar:6, q:"天平文化の特色として正しいものはどれですか。", choices:["遣唐使によって唐の文化がもたらされ、仏教の影響を受けた貴族中心の文化である","日本独自の文化で、唐の影響はまったく受けていない","武士を中心とした質素な文化である","庶民のあいだにのみ広まった文化である"], answer:0, explain:"天平文化は、遣唐使によって唐の文化がもたらされたため唐の影響を強く受けており、朝廷が仏教を保護したため仏教の影響を受けた貴族中心の文化である。"}
+];
+
+/* ===================== ②黒太字テスト ===================== */
+const kurojiBlocks = [
+  {pillar:1, sub:"律令政治", items:[
+    {q:"701年、唐の律令にならって定められた法律を何といいますか。", choices:["大宝律令","養老律令","御成敗式目","十七条の憲法"], answer:0},
+    {q:"律令にもとづいて行われる政治を何といいますか。", choices:["律令政治","荘園制度","摂関政治","武家政治"], answer:0},
+    {q:"国の政治のしくみで、天皇のもとに置かれた8つの省をまとめて何といいますか。", choices:["八省","二官","太政官","国司"], answer:0},
+    {q:"八省が実際に行う政治は、何が決めた政策にもとづいていましたか。", choices:["太政官","二官","神祇官","国司"], answer:0},
+    {q:"地方の政治で、都から派遣された役人を何といいますか。", choices:["国司","郡司","里長","防人"], answer:0},
+    {q:"地方の政治で、地方の豪族が任命された役職を何といいますか。", choices:["郡司","国司","里長","衛士"], answer:0},
+    {q:"里長のおもな仕事は何でしたか。", choices:["税の取り立て","戦いの指揮","寺院の管理","貨幣の発行"], answer:0},
+    {q:"九州の政治・外交・防衛を担当し、現在の福岡県太宰府市に置かれた役所を何といいますか。", choices:["大宰府","国府","二官八省","平城宮"], answer:0},
+    {q:"家族の名・年齢・性別などが記された、班田収授の法のもとになる書類を何といいますか。", choices:["戸籍","木簡","風土記","万葉集"], answer:0},
+    {q:"6歳以上の男女にあたえられた田を何といいますか。", choices:["口分田","荘園","国分寺領","私有地"], answer:0},
+    {q:"収穫の約3％の稲を地方の役所に納める税を何といいますか。", choices:["租","調","庸","雑徭"], answer:0},
+    {q:"地方の特産物を納め、中央の財源になった税を何といいますか。", choices:["調","租","庸","雑徭"], answer:0},
+    {q:"都で10日間働く代わりに布を納める税を何といいますか。", choices:["庸","租","調","雑徭"], answer:0},
+    {q:"国司のもとで、1年に60日以内の労働をする負担を何といいますか。", choices:["雑徭","租","調","庸"], answer:0},
+    {q:"兵士から選ばれ、3年間九州の守りについた兵役を何といいますか。", choices:["防人","衛士","雑徭","郡司"], answer:0},
+    {q:"兵士から選ばれ、1年間都の守りについた兵役を何といいますか。", choices:["衛士","防人","雑徭","国司"], answer:0}
+  ]},
+  {pillar:2, sub:"移された都", items:[
+    {q:"710年、奈良に都を移した天皇は誰ですか。", choices:["元明天皇","聖武天皇","元正天皇","天武天皇"], answer:0},
+    {q:"710年に奈良につくられた都を何といいますか。", choices:["平城京","藤原京","平安京","難波京"], answer:0},
+    {q:"平城京は、唐のどの都市にならってつくられましたか。", choices:["長安","洛陽","北京","南京"], answer:0},
+    {q:"平城京の中心を南北に走る、幅約70mの道路を何といいますか。", choices:["朱雀大路","東海道","シルクロード","二条大路"], answer:0},
+    {q:"平城京から平安京に都が移されるまでの約80年間を何といいますか。", choices:["奈良時代","飛鳥時代","平安時代","古墳時代"], answer:0},
+    {q:"平城京より前に置かれていた都を何といいますか。", choices:["藤原京","平安京","難波京","太宰府"], answer:0},
+    {q:"都と国府を結ぶ道路に、約16kmごとにもうけられ、馬が用意されていた施設を何といいますか。", choices:["駅（駅家）","市","荘園","正倉院"], answer:0},
+    {q:"国司の役所があるところを何といいますか。", choices:["国府","国分寺","大宰府","平城宮"], answer:0}
+  ]},
+  {pillar:3, sub:"聖武天皇と仏教", items:[
+    {q:"741年、国ごとに国分寺と国分尼寺を建てるよう命じた天皇は誰ですか。", choices:["聖武天皇","元明天皇","天武天皇","元正天皇"], answer:0},
+    {q:"743年、聖武天皇が大仏をつくる命令を出した先の、総国分寺である寺を何といいますか。", choices:["東大寺","唐招提寺","法隆寺","国分寺"], answer:0},
+    {q:"聖武天皇が大仏づくりを命じた背景として、都で多くの人が亡くなった原因は何ですか。", choices:["伝染病","戦争","飢え死に","地震"], answer:0},
+    {q:"大仏の完成式典が行われたのは何年ですか。", choices:["752年","743年","741年","710年"], answer:0},
+    {q:"聖武天皇は740年から6年の間に何回都を移しましたか。", choices:["4回","2回","6回","1回"], answer:0},
+    {q:"中臣鎌足（藤原鎌足）の孫で、聖武天皇の皇后は誰ですか。", choices:["光明皇后","持統天皇","元明天皇","推古天皇"], answer:0},
+    {q:"光明皇后が貧しい病人や孤児を救うためにつくった施設を何といいますか（2つのうち1つ）。", choices:["施薬院","国分寺","正倉院","唐招提寺"], answer:0},
+    {q:"各地で池や橋・道路をつくり、人々に仏教を説いた僧は誰ですか。", choices:["行基","鑑真","道鏡","山上憶良"], answer:0},
+    {q:"行基は当初、朝廷からどのようなあつかいを受けましたか。", choices:["活動を禁じられた","最高の位をあたえられた","処罰された","唐に追放された"], answer:0},
+    {q:"大仏づくりの事業に行基が参加したあと、行基はどうなりましたか。", choices:["僧として最高の位をあたえられた","罰を受けた","唐に渡った","平城京から追放された"], answer:0},
+    {q:"寺院の勢力が強くなり、政治に口出しをするようになった僧は誰ですか。", choices:["道鏡","行基","鑑真","阿倍仲麻呂"], answer:0},
+    {q:"国分寺の分布から、朝廷の力がおよんでいた範囲として正しいものはどれですか。", choices:["東北地方の一部から南九州まで","北海道全域から沖縄まで","近畿地方のみ","九州地方のみ"], answer:0}
+  ]},
+  {pillar:4, sub:"農民の生活と新しい土地政策", items:[
+    {q:"多くの農民が住んでいた、縄文時代とそれほど変わらない住居を何といいますか。", choices:["竪穴住居","高床倉庫","校倉造","寝殿造"], answer:0},
+    {q:"重い負担から逃れるため、口分田を捨てて貴族や寺社の土地に逃げこむ農民もいたが、その口分田はどうなりましたか。", choices:["荒れていった","国に返された","貴族が耕した","国分寺の土地になった"], answer:0},
+    {q:"貧しい農民のつらい気持ちをよんだ「貧窮問答歌」の作者は誰ですか。", choices:["山上憶良","柿本人麻呂","額田王","阿倍仲麻呂"], answer:0},
+    {q:"「貧窮問答歌」はどの歌集に収められていますか。", choices:["万葉集","古今和歌集","古事記","日本書紀"], answer:0},
+    {q:"人口が増えて口分田が不足したため、朝廷はどうしましたか。", choices:["新しい土地のきまりを定めた","口分田をすべて廃止した","農民を移住させた","税をすべて廃止した"], answer:0},
+    {q:"723年に定められた、新しく水路をつくって開墾すれば3代まで土地を私有できるきまりを何といいますか。", choices:["三世一身の法","墾田永年私財法","班田収授の法","荘園制度"], answer:0},
+    {q:"三世一身の法で私有が認められた期間は何代までですか。", choices:["3代（孫またはひ孫）まで","1代限り","永久に","10代まで"], answer:0},
+    {q:"743年に聖武天皇が定めた、開墾した田を永久に私有できるきまりを何といいますか。", choices:["墾田永年私財法","三世一身の法","班田収授の法","律令"], answer:0},
+    {q:"墾田永年私財法が出されたあと、力のある貴族や大きな寺社が増やしていった私有地を何といいますか。", choices:["荘園","口分田","国分寺領","都"], answer:0},
+    {q:"荘園は、誰を使って開かれましたか。", choices:["近くの農民や逃げてきた農民","朝廷の役人","唐からの渡来人のみ","僧のみ"], answer:0},
+    {q:"三世一身の法が出されても土地の開墾があまりすすまなかった理由は何ですか。", choices:["期限が来ると土地が取り上げられてしまうから","税が高すぎたから","天候が悪かったから","道具が不足していたから"], answer:0, explain:"三世一身の法では、期限（3代まで）が来ると土地が国に返されてしまうため、人々は開墾に積極的になれなかった。"},
+    {q:"墾田永年私財法によって、土地はどのような扱いになりましたか。", choices:["永久に私有できるようになった","国にすべて返す必要があった","3代までしか私有できなかった","毎年税を納めれば私有できた"], answer:0}
+  ]},
+  {pillar:5, sub:"海をわたった人々", items:[
+    {q:"630年、朝廷が唐に送った第1回遣唐使は誰ですか。", choices:["犬上御田鍬","阿倍仲麻呂","鑑真","小野妹子"], answer:0},
+    {q:"遣唐使の航路で、はじめにとられていた、朝鮮半島の西岸沿いを北上する航路を何といいますか。", choices:["北路","南路","シルクロード","海の道"], answer:0},
+    {q:"8世紀に新羅との関係が悪くなったあと、遣唐使がとるようになった、東シナ海を横断する航路を何といいますか。", choices:["南路","北路","陸路","海の道"], answer:0},
+    {q:"8世紀ごろ、遣唐使は何隻で船団を組んでいましたか。", choices:["4隻","1隻","10隻","2隻"], answer:0},
+    {q:"留学生として唐に渡ったが、帰国する船が難破して日本に帰れず、唐の皇帝に一生仕えた人物は誰ですか。", choices:["阿倍仲麻呂","犬上御田鍬","鑑真","行基"], answer:0},
+    {q:"阿倍仲麻呂がふるさとをしのんでよんだ和歌に出てくる山は何ですか。", choices:["三笠の山","富士山","高千穂","比叡山"], answer:0},
+    {q:"唐の高僧で、失明しながらも6度目の航海で日本にたどり着いた人物は誰ですか。", choices:["鑑真","阿倍仲麻呂","犬上御田鍬","道鏡"], answer:0},
+    {q:"鑑真が来日して整えたものは何ですか。", choices:["日本の僧の制度","律令","貨幣制度","遣唐使の航路"], answer:0},
+    {q:"鑑真が奈良に開いた寺を何といいますか。", choices:["唐招提寺","東大寺","国分寺","興福寺"], answer:0},
+    {q:"口分田を農民に支給しやすくするために、土地を四角く区画した制度を何といいますか。", choices:["条里制","荘園制度","律令制度","二官八省"], answer:0}
+  ]},
+  {pillar:6, sub:"天平文化", items:[
+    {q:"聖武天皇のころに最も栄えた、奈良時代の文化を何といいますか。", choices:["天平文化","国風文化","飛鳥文化","桃山文化"], answer:0},
+    {q:"712年につくられた歴史書を何といいますか。", choices:["古事記","日本書紀","風土記","万葉集"], answer:0},
+    {q:"720年につくられた歴史書を何といいますか。", choices:["日本書紀","古事記","風土記","万葉集"], answer:0},
+    {q:"713年、朝廷がそれぞれの国の産物や地名のおこり、伝説などをまとめるよう命じた書物を何といいますか。", choices:["風土記","古事記","日本書紀","万葉集"], answer:0},
+    {q:"現存する日本最古の和歌集を何といいますか。", choices:["万葉集","古今和歌集","古事記","日本書紀"], answer:0},
+    {q:"『万葉集』には、天皇から一般の人々まで、さまざまな身分の人がよんだ約何首の和歌が収められていますか。", choices:["4500首","450首","45000首","500首"], answer:0},
+    {q:"『万葉集』では、かな文字がなかったため、漢字の音や訓を使って日本語を書き表した方法を何といいますか。", choices:["万葉がな","漢文","古文","変体仮名"], answer:0},
+    {q:"武勇にすぐれ、各地の豪族を倒したといわれる、『古事記』『日本書紀』に登場する神話上の人物は誰ですか。", choices:["ヤマトタケル","アマテラス","スサノオ","邪馬台国の卑弥呼"], answer:0},
+    {q:"宮崎県に伝わる、太陽の女神アマテラスが天の岩戸に隠れた神話にもとづく神楽を何といいますか。", choices:["高千穂神楽","出雲神楽","石見神楽","雅楽"], answer:0},
+    {q:"東大寺にある、聖武天皇が使っていた日用品を中心に約9000点の品物が収められていた倉を何といいますか。", choices:["正倉院","唐招提寺","国分寺","大宰府"], answer:0},
+    {q:"正倉院の建築に使われている、釘を使わず三角柱の木材を組んで壁をつくる方法を何といいますか。", choices:["校倉造","寝殿造","書院造","数寄屋造"], answer:0},
+    {q:"ヨーロッパと中国を結ぶ交通路を何といいますか。", choices:["シルクロード","北路","南路","条里制"], answer:0},
+    {q:"708年、武蔵国の秩父で銅が発見されたのをきっかけに、朝廷がつくった貨幣を何といいますか。", choices:["和同開珎","大宝律令","木簡","風土記"], answer:0},
+    {q:"地方から運ばれた税に荷札としてつけられた、薄い木の札を何といいますか。", choices:["木簡","戸籍","和同開珎","風土記"], answer:0}
+  ]}
+];
+
+/* ===================== ③ひとくちメモテスト ===================== */
+const mameQuizRaw = [
+  {q:"戸籍とは何が記された書類ですか。", choices:["家族の名・年齢・性別など","土地の広さと収穫量","税の金額のみ","兵士の名簿のみ"], answer:0, explain:"戸籍は家族の名・年齢・性別などが記された書類で、役所がつくった。"},
+  {q:"重い負担から逃れるため、戸籍で男子を何といつわる例が見られましたか。", choices:["女子","貴族","僧","老人"], answer:0},
+  {q:"光明皇后は、貧しい病人や孤児を救うために何をつくりましたか（2つのうち1つ）。", choices:["施薬院","国分寺","唐招提寺","大宰府"], answer:0},
+  {q:"三世一身の法が出されても土地の開墾があまりすすまなかったのはなぜですか。", choices:["期待したほどにはすすまなかったため、墾田永年私財法が出された","法律が厳しすぎたため誰も従わなかった","朝廷がすぐに廃止したため","土地がすでに不足していなかったため"], answer:0},
+  {q:"条里制とは何のためにつくられた制度ですか。", choices:["口分田を農民に支給しやすくするため","貨幣を発行しやすくするため","税を集めやすくするため","戸籍をつくりやすくするため"], answer:0},
+  {q:"今でも条里制のなごりが見られる地域として本文にあげられているのはどこですか。", choices:["奈良盆地","関東平野","北海道","九州"], answer:0},
+  {q:"校倉造とは、どのような方法で壁をつくる建築様式ですか。", choices:["釘を使わず、三角柱の木材（校木）を組んで壁をつくる","石を積み上げて壁をつくる","土を固めて壁をつくる","レンガを積んで壁をつくる"], answer:0},
+  {q:"『万葉集』では、かな文字がなかったため、どのように日本語を書き表していましたか。", choices:["漢字の音や訓を使って","絵文字を使って","唐の文字をそのまま使って","表音記号を独自に作って"], answer:0},
+  {q:"大仏づくりで働いた人数は、のべ何人でしたか。", choices:["260万人","26万人","2600万人","2万6000人"], answer:0},
+  {q:"大仏づくりのとき、大仏の表面を金でおおうために使われた金属は何ですか。", choices:["水銀","銅","すず","鉄"], answer:0},
+  {q:"平城京にくらしていた人のうち、貴族は何人ほどでしたか。", choices:["200人ほど","2000人ほど","20人ほど","2万人ほど"], answer:0, explain:"平城京には約10万人がくらしていたと考えられているが、貴族は200人ほどにすぎなかった。"},
+  {q:"調や庸など、地方から運ばれた産物につけられた、薄い木の荷札を何といいますか。", choices:["木簡","戸籍","和同開珎","風土記"], answer:0}
+];
+
+/* ===================== ④気をつけたいポイント（読みもの） ===================== */
+const sankoNotes = [
+  {
+    title:"シルクロードと日本",
+    body:`ヨーロッパと中国を結ぶ交通路を、シルクロード（絹の道）といいます。中国の特産品であった絹が、この道を通じてヨーロッパへ運ばれました。仏教や数々の文化も、この道によって中国に伝えられ、さらに朝鮮半島や日本へと伝えられました。平城京は、ヨーロッパとアジアを結ぶ道を通して、世界の文化とつながっていたのです。`,
+    src:"教科書コラム（p33）"
+  },
+  {
+    title:"地下に埋まった内裏",
+    body:`藤原京や平城京は、別の場所に都が移ると田畑になりました。田畑として使われ続けたため、地中に埋まった都のあとは破壊されずにすみました。こうして、当時使われていた木簡や器などの品物が、後の発掘によって出土することになったのです。`,
+    src:"教科書コラム（p34）"
+  },
+  {
+    title:"現代に伝えられる神話",
+    body:`『古事記』や『日本書紀』には、神々の子孫が、各地を統一していく話が収められています。武勇にすぐれ、各地の豪族を倒したといわれるヤマトタケルの話はその1つです。登場する神々の多くは各地の神社にまつられ、豊作や豊漁への願いや感謝を、歌と舞で表現した神楽も伝えられています。神話は、事実をそのまま伝えたものではありませんが、当時の人々の信仰や考えを知る手がかりとなります。`,
+    src:"教科書コラム（p32）"
+  },
+  {
+    title:"「貧窮問答歌」に見る農民の苦しさ",
+    body:`山上憶良がよんだ「貧窮問答歌」には、地面にじかにわらをしいて寝る家族のようすや、火の気もないかまど、それでも税を取り立てにやって来る里長のようすがえがかれています。逃げることもできない農民の苦しい生活が、和歌という形で今に伝えられている点に注目しましょう。`,
+    src:"教科書 p30の引用より"
+  },
+  {
+    title:"平城京に集まる人と物",
+    body:`平城京には約10万人がくらしていたと考えられていますが、貴族は200人ほどにすぎませんでした。都には全国各地から調や庸が運ばれ、都の東と西に開かれた市で売買されました。和同開珎などの貨幣も発行されましたが、都やその周辺以外では米や布が貨幣の代わりに使われていました。`,
+    src:"教科書「ちょっとくわしく」（p34）"
+  },
+  {
+    title:"租・調・庸のちがいを整理する",
+    body:`租・調・庸は混同しやすいので、次のように整理しましょう。「租」は口分田にかかる税で稲を地方の役所に納める。「調」は地方の特産物を都に納める。「庸」は都で10日間働く代わりに布を納める。調と庸は都まで運ぶ必要があり、中央の財源になった点も覚えておきましょう。`,
+    src:"入試でまちがえやすいポイント（一般知識）"
+  },
+  {
+    title:"三世一身の法と墾田永年私財法の順序に注意",
+    body:`三世一身の法（723年）と墾田永年私財法（743年）は、出された順番と内容を混同しやすいので注意しましょう。三世一身の法は「3代まで私有できる」という期限つきのきまりで、開墾がすすまなかったため、20年後に墾田永年私財法が出され「永久に私有できる」きまりに変わりました。`,
+    src:"入試でまちがえやすいポイント（一般知識）"
+  },
+  {
+    title:"阿倍仲麻呂と鑑真の対比",
+    body:`「日本から唐へ渡ったが帰れなかった人物＝阿倍仲麻呂」「唐から日本へやって来た僧＝鑑真」という向きを逆に覚えないようにしましょう。阿倍仲麻呂は留学生として唐に渡り帰国できなかった人物、鑑真は日本への渡航を決意し、失明しながらも来日を果たした唐の高僧です。`,
+    src:"入試でまちがえやすいポイント（一般知識）"
+  },
+  {
+    title:"『古事記』と『日本書紀』の成立年に注意",
+    body:`『古事記』（712年）と『日本書紀』（720年）は、どちらが先かを混同しやすいので注意しましょう。「古事記が先（712年）、日本書紀が後（720年）」という順番と、『万葉集』は現存する日本最古の「和歌集」であるのに対し、『古事記』『日本書紀』は「歴史書」である点も区別して覚えましょう。`,
+    src:"入試でまちがえやすいポイント（一般知識）"
+  }
+];
+
+/* ===================== 共通ビルド関数 ===================== */
+function shuffleArr(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+function finalize(q){
+  const correctText = q.choices[q.answer];
+  const order = shuffleArr(q.choices.map((c,i)=>i));
+  const newChoices = order.map(i=>q.choices[i]);
+  const newAnswer = newChoices.indexOf(correctText);
+  const out = Object.assign({}, q, {choices:newChoices, answer:newAnswer});
+  return out;
+}
+
+function normalizeAnswer(str){
+  if(str===undefined || str===null) return "";
+  let s = String(str).trim();
+  s = s.replace(/[０-９]/g, ch => String.fromCharCode(ch.charCodeAt(0)-0xFEE0));
+  s = s.replace(/\s+/g,"");
+  s = s.replace(/[『』「」]/g,"");
+  return s;
+}
+
+function checkFillAnswer(item, userInput){
+  const norm = normalizeAnswer(userInput);
+  if(norm==="") return false;
+  const candidates = [item.answer].concat(item.accept||[]);
+  return candidates.some(c => normalizeAnswer(c)===norm);
+}
+
+function shuffleArrKeepBlocks(){
+  const byPillar = {};
+  kihonFillRaw.forEach((r,idx)=>{
+    if(!byPillar[r.pillar]) byPillar[r.pillar]=[];
+    byPillar[r.pillar].push(idx);
+  });
+  let out = [];
+  [1,2,3,4,5,6].forEach(p=>{
+    const idxs = shuffleArr(byPillar[p]||[]);
+    idxs.forEach(idx=>{
+      const r = kihonFillRaw[idx];
+      out.push({
+        type:"fill", id:"kihonFill_"+idx, q:r.q, answer:r.answer, accept:r.accept,
+        explain:r.explain, lead:PILLARS[r.pillar].label, sub:PILLARS[r.pillar].full, pillar:r.pillar
+      });
+    });
+  });
+  return out;
+}
+
+function buildKihonFinalItems(){
+  return kihonFinalRaw.map((r,idx)=>{
+    const fq = finalize({q:r.q, choices:r.choices, answer:r.answer, explain:r.explain});
+    return Object.assign({type:"choice", id:"kihonFinal_"+idx, pillar:r.pillar, sub:PILLARS[r.pillar].full}, fq);
+  });
+}
+
+function buildKihonItems(){
+  const overview = kihonOverviewScreens.map((s,idx)=>Object.assign({id:"kihonOv_"+idx, type:"info", wide:true}, s));
+  const fills = shuffleArrKeepBlocks();
+  const finals = shuffleArr(buildKihonFinalItems());
+  return overview.concat(fills, finals);
+}
+
+function buildKurojiItems(){
+  let out = [];
+  kurojiBlocks.forEach((block,bi)=>{
+    const shuffledItems = shuffleArr(block.items);
+    shuffledItems.forEach((it,ii)=>{
+      const fq = finalize(it);
+      out.push(Object.assign({
+        type:"choice",
+        id:"kuroji_"+bi+"_"+ii,
+        pillar:block.pillar,
+        sub:block.sub
+      }, fq));
+    });
+  });
+  return out;
+}
+
+function buildMameItems(){
+  const shuffled = shuffleArr(mameQuizRaw);
+  return shuffled.map((r,idx)=>{
+    const fq = finalize(r);
+    return Object.assign({type:"choice", id:"mame_"+idx}, fq);
+  });
+}
+
+function buildSankoItems(){
+  return sankoNotes.map((n,idx)=>({
+    type:"info", id:"sanko_"+idx, title:n.title, body:n.body, src:n.src, wide:true
+  }));
+}
+
+const STAGES = [
+  {id:"kihon", name:"① 構造テスト", desc:"6本柱（律令政治・移された都・聖武天皇と仏教・農民の生活と新しい土地政策・海をわたった人々・天平文化）の骨組みを確認。概要2画面＋穴埋め24問＋まとめ選択6問。", scored:true, ref:false, build:buildKihonItems},
+  {id:"kuroji", name:"② 黒太字テスト", desc:"各分野の重要語句を4択で確認します。計72問。", scored:true, ref:false, build:buildKurojiItems},
+  {id:"mame", name:"③ ひとくちメモテスト", desc:"教科書のひとくちメモ・Q&Aから出題します。計12問。", scored:true, ref:false, build:buildMameItems},
+  {id:"sanko", name:"④ 気をつけたいポイント", desc:"教科書コラム＋入試でまちがえやすい注意点の読みもの。採点はありません。", scored:false, ref:true, build:buildSankoItems}
+];
+
+/* ===================== 状態管理／localStorage ===================== */
+const STORAGE_KEY = "narajidai_missed_v1";
+
+function loadMissedStore(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : {};
+  }catch(e){ return {}; }
+}
+function saveMissedStore(store){
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(store)); }catch(e){ /* 保存できない環境は無視 */ }
+}
+
+const SPEAK_RATE_KEY = "quizapp_speak_rate_v1";
+function loadSpeakRate(){
+  try{
+    const v = parseFloat(localStorage.getItem(SPEAK_RATE_KEY));
+    if(!isNaN(v) && v>=0.7 && v<=1.8) return v;
+  }catch(e){}
+  return 1.1;
+}
+function saveSpeakRate(v){
+  try{ localStorage.setItem(SPEAK_RATE_KEY, String(v)); }catch(e){}
+}
+
+const state = {
+  screen:"home",
+  stageId:null,
+  isRetry:false,
+  items:[],
+  currentIndex:0,
+  scoreTotal:0,
+  scoreCorrect:0,
+  answerLog:[],
+  results:{},
+  missedStore: loadMissedStore(),
+  answered:false,
+  userInput:"",
+  userChoiceIdx:null,
+  speakRate: loadSpeakRate()
+};
+
+function startStage(stageId){
+  const stage = STAGES.find(s=>s.id===stageId);
+  state.stageId = stageId;
+  state.isRetry = false;
+  state.items = stage.build();
+  state.currentIndex = 0;
+  state.scoreTotal = state.items.filter(i=>i.type!=="info").length;
+  state.scoreCorrect = 0;
+  state.answerLog = [];
+  state.answered = false;
+  state.userInput = "";
+  state.userChoiceIdx = null;
+  state.screen = "play";
+  render();
+}
+
+function startRetry(stageId){
+  const missed = state.missedStore[stageId] || {};
+  const items = Object.values(missed);
+  if(items.length===0) return;
+  state.stageId = stageId;
+  state.isRetry = true;
+  state.items = shuffleArr(items);
+  state.currentIndex = 0;
+  state.scoreTotal = state.items.length;
+  state.scoreCorrect = 0;
+  state.answerLog = [];
+  state.answered = false;
+  state.userInput = "";
+  state.userChoiceIdx = null;
+  state.screen = "play";
+  render();
+}
+
+function currentItem(){ return state.items[state.currentIndex]; }
+
+function submitChoice(idx){
+  if(state.answered) return;
+  const item = currentItem();
+  const correct = idx === item.answer;
+  state.answered = true;
+  state.userChoiceIdx = idx;
+  if(correct) state.scoreCorrect++;
+  state.answerLog.push({item, wasCorrect:correct});
+}
+
+function submitFill(){
+  if(state.answered) return;
+  const item = currentItem();
+  const correct = checkFillAnswer(item, state.userInput);
+  state.answered = true;
+  if(correct) state.scoreCorrect++;
+  state.answerLog.push({item, wasCorrect:correct});
+}
+
+function nextItem(){
+  stopSpeak();
+  state.answered = false;
+  state.userInput = "";
+  state.userChoiceIdx = null;
+  if(state.currentIndex < state.items.length-1){
+    state.currentIndex++;
+    render();
+  }else{
+    finishStage();
+  }
+}
+
+function finishStage(){
+  const stage = STAGES.find(s=>s.id===state.stageId);
+  state.results[state.stageId] = {
+    correct: state.scoreCorrect,
+    total: state.scoreTotal,
+    at: Date.now()
+  };
+  if(stage.scored){
+    const missed = state.missedStore[state.stageId] || {};
+    state.answerLog.forEach(log=>{
+      const key = log.item.q;
+      if(!log.wasCorrect){
+        missed[key] = log.item;
+      }else{
+        if(missed[key]) delete missed[key];
+      }
+    });
+    state.missedStore[state.stageId] = missed;
+    saveMissedStore(state.missedStore);
+  }
+  state.screen = "result";
+  render();
+}
+
+function backHome(){
+  stopSpeak();
+  stopMic();
+  state.screen = "home";
+  render();
+}
+
+/* ===================== 音声読み上げ（Web Speech API：読み上げ） ===================== */
+let cachedVoices = [];
+
+function speakSupported(){
+  return typeof window!=="undefined" && "speechSynthesis" in window;
+}
+
+function refreshVoices(){
+  if(speakSupported()) cachedVoices = window.speechSynthesis.getVoices() || [];
+}
+if(speakSupported()){
+  refreshVoices();
+  window.speechSynthesis.onvoiceschanged = refreshVoices;
+}
+
+function getBestJaVoice(){
+  const jaVoices = cachedVoices.filter(v => v.lang && v.lang.toLowerCase().startsWith("ja"));
+  if(jaVoices.length===0) return null;
+  const preferred = jaVoices.find(v => /google/i.test(v.name))
+    || jaVoices.find(v => v.localService===false)
+    || jaVoices[0];
+  return preferred;
+}
+
+function speakText(text, btnId){
+  if(!speakSupported()) return;
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = "ja-JP";
+  u.rate = state.speakRate;
+  const voice = getBestJaVoice();
+  if(voice) u.voice = voice;
+  u.onend = ()=>{ setSpeakBtnState(btnId, false); };
+  u.onerror = ()=>{ setSpeakBtnState(btnId, false); };
+  window.speechSynthesis.speak(u);
+  setSpeakBtnState(btnId, true);
+}
+
+function stopSpeak(){
+  if(speakSupported()) window.speechSynthesis.cancel();
+}
+
+function toggleSpeak(text){
+  if(!speakSupported()) return;
+  if(window.speechSynthesis.speaking){
+    stopSpeak();
+    setSpeakBtnState("speakBtn", false);
+  }else{
+    speakText(text, "speakBtn");
+  }
+}
+
+function updateSpeakRate(v){
+  state.speakRate = parseFloat(v);
+  saveSpeakRate(state.speakRate);
+  const label = document.getElementById("speakRateLabel");
+  if(label) label.textContent = state.speakRate.toFixed(1)+"倍";
+}
+
+function setSpeakBtnState(btnId, playing){
+  const btn = document.getElementById(btnId);
+  if(!btn) return;
+  btn.classList.toggle("playing", playing);
+  btn.innerHTML = playing ? "⏸ 読み上げを止める" : "🔊 音声で聞く";
+}
+
+/* マイク機能は精度の問題により削除済み。他の関数からの呼び出しに備えて no-op で残す */
+function stopMic(){}
+
+/* ===================== レンダリング ===================== */
+const app = document.getElementById("app");
+
+function render(){
+  if(state.screen==="home") renderHome();
+  else if(state.screen==="play") renderPlay();
+  else if(state.screen==="result") renderResult();
+}
+
+function esc(s){
+  return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+
+function pillarBadge(p){
+  return (PILLARS[p] && PILLARS[p].label) || "";
+}
+
+function renderHome(){
+  let html = `
+    <div class="header">
+      <h1>奈良時代テスト</h1>
+      <div class="sub">予習シリーズ5年下　社会　第3回　奈良時代</div>
+    </div>
+    <div class="content">
+  `;
+  const scoredStages = STAGES.filter(s=>s.scored);
+  const refStages = STAGES.filter(s=>!s.scored);
+
+  html += `<div class="home-title">確認テスト</div>`;
+  scoredStages.forEach(stage=>{
+    const res = state.results[stage.id];
+    const missedCount = Object.keys(state.missedStore[stage.id]||{}).length;
+    html += `<div class="stage-card" onclick="startStage('${stage.id}')">
+      <div class="stage-top">
+        <div class="stage-name">${esc(stage.name)}</div>
+        <div class="stage-badge">${res ? res.correct+"/"+res.total : "未挑戦"}</div>
+      </div>
+      <div class="stage-desc">${esc(stage.desc)}</div>
+      ${res ? `<div class="progress-bar"><div class="progress-fill" style="width:${Math.round(res.correct/res.total*100)}%"></div></div>` : ""}
+      ${missedCount>0 ? `<div class="retry-btn" onclick="event.stopPropagation(); startRetry('${stage.id}')">🔁 苦手${missedCount}問を復習</div>` : ""}
+    </div>`;
+  });
+
+  html += `<div class="home-title">参考情報（読みもの）</div>`;
+  refStages.forEach(stage=>{
+    html += `<div class="stage-card ref" onclick="startStage('${stage.id}')">
+      <div class="stage-top">
+        <div class="stage-name">${esc(stage.name)}</div>
+        <div class="stage-badge">読みもの</div>
+      </div>
+      <div class="stage-desc">${esc(stage.desc)}</div>
+    </div>`;
+  });
+
+  const totalMissed = STAGES.filter(s=>s.scored).reduce((sum,s)=>sum+Object.keys(state.missedStore[s.id]||{}).length,0);
+  html += `<div class="footer-note">単一HTMLファイル・localStorageに端末内で保存されます</div>`;
+  if(totalMissed>0){
+    html += `<button class="reset-all-btn" id="resetAllBtn" onclick="doResetAll()">🗑️ 苦手リストをすべてリセット</button>`;
+  }
+  html += `</div>`;
+  app.innerHTML = html;
+}
+
+function renderPlay(){
+  const item = currentItem();
+  const stage = STAGES.find(s=>s.id===state.stageId);
+  const isInfo = item.type==="info";
+
+  let html = `
+    <div class="header">
+      <h1>${esc(stage.name)}${state.isRetry?"（復習）":""}</h1>
+      <div class="sub">${item.sub ? esc(item.sub) : esc(stage.desc)}</div>
+    </div>
+    <div class="content">
+      <div class="play-topbar">
+        <span>問題 ${state.currentIndex+1} / ${state.items.length}</span>
+        <span onclick="backHome()" style="text-decoration:underline; cursor:pointer;">中断してホームへ</span>
+      </div>
+  `;
+
+  if(isInfo){
+    html += `<div class="qcard info">
+      <div class="qtitle">${esc(item.title)}</div>
+      ${item.speak ? `
+      <div class="speak-row">
+        <button id="speakBtn" class="speak-btn" onclick='toggleSpeak(${JSON.stringify(item.speak)})'>🔊 音声で聞く</button>
+        <div class="speed-control">
+          <span>速さ</span>
+          <input type="range" min="0.7" max="1.8" step="0.1" value="${state.speakRate}" oninput="updateSpeakRate(this.value)">
+          <span id="speakRateLabel">${state.speakRate.toFixed(1)}倍</span>
+        </div>
+      </div>` : ""}
+      <div class="info-body ${item.wide?'wide':''}">${item.body}</div>
+      ${item.src ? `<div class="src-tag">出典：${esc(item.src)}</div>` : ""}
+      <button class="btn btn-ref" onclick="nextItem()">${state.currentIndex < state.items.length-1 ? "次へ" : "結果を見る"}</button>
+    </div>`;
+  } else if(item.type==="fill"){
+    html += `<div class="qcard">`;
+    if(item.lead) html += `<div class="lead-badge">${esc(item.lead)}</div>`;
+    html += `<div class="qtext">${esc(item.q)}</div>`;
+    const inputClass = state.answered ? (checkFillAnswer(item, state.userInput) ? "correct":"wrong") : "";
+    html += `<input type="text" id="fillInput" class="fill-input ${inputClass}" placeholder="答えを入力" value="${esc(state.userInput)}" ${state.answered?"disabled":""} onkeydown="if(event.key==='Enter'){state.userInput=this.value; submitFillUI();}">`;
+    if(!state.answered){
+      html += `<button class="btn btn-primary" onclick="submitFillUI()">こたえる</button>`;
+    }else{
+      const correct = checkFillAnswer(item, state.userInput);
+      html += `<div class="explain-box ${correct?'good':'bad'}">
+        <span class="mark-icon">${correct?"⭕":"❌"}</span><b>正解：${esc(item.answer)}</b><br>${esc(item.explain||"")}
+      </div>`;
+      html += `<button class="btn btn-primary" onclick="nextItem()">${state.currentIndex < state.items.length-1 ? "次の問題へ" : "結果を見る"}</button>`;
+    }
+    html += `</div>`;
+  } else if(item.type==="choice"){
+    html += `<div class="qcard">`;
+    if(item.pillar!==undefined && item.pillar!==null) html += `<div class="lead-badge">${esc(pillarBadge(item.pillar))}</div>`;
+    html += `<div class="qtext">${esc(item.q)}</div>`;
+    html += `<div class="choice-list">`;
+    item.choices.forEach((c,idx)=>{
+      let cls = "choice-btn";
+      if(state.answered){
+        if(idx===item.answer) cls += " correct";
+        else if(idx===state.userChoiceIdx) cls += " wrong";
+        else cls += " dim";
+      }
+      html += `<button class="${cls}" ${state.answered?"disabled":""} onclick="submitChoiceUI(${idx})">${esc(c)}</button>`;
+    });
+    html += `</div>`;
+    if(state.answered){
+      const correct = state.userChoiceIdx===item.answer;
+      html += `<div class="explain-box ${correct?'good':'bad'}">
+        <span class="mark-icon">${correct?"⭕":"❌"}</span>${esc(item.explain||"")}
+      </div>`;
+      html += `<button class="btn btn-primary" onclick="nextItem()">${state.currentIndex < state.items.length-1 ? "次の問題へ" : "結果を見る"}</button>`;
+    }
+    html += `</div>`;
+  }
+
+  html += `</div>`;
+  app.innerHTML = html;
+  if(item.type==="fill" && !state.answered){
+    const el = document.getElementById("fillInput");
+    if(el) el.focus();
+  }
+}
+
+function submitChoiceUI(idx){
+  submitChoice(idx);
+  renderPlay();
+}
+function submitFillUI(){
+  const el = document.getElementById("fillInput");
+  if(el) state.userInput = el.value;
+  submitFill();
+  renderPlay();
+}
+
+function renderResult(){
+  const stage = STAGES.find(s=>s.id===state.stageId);
+  const wrongItems = state.answerLog.filter(l=>!l.wasCorrect).map(l=>l.item);
+  const missedCount = Object.keys(state.missedStore[state.stageId]||{}).length;
+
+  let html = `
+    <div class="header">
+      <h1>結果</h1>
+      <div class="sub">${esc(stage.name)}${state.isRetry?"（復習）":""}</div>
+    </div>
+    <div class="content">
+      <div class="qcard result-box">
+        <div>できた問題</div>
+        <div class="result-score">${state.scoreCorrect} / ${state.scoreTotal}</div>
+        ${wrongItems.length>0 ? `
+        <div class="wrong-list">
+          <div class="wrong-list-label">まちがえた問題</div>
+          ${wrongItems.map(it=>`<div class="wrong-item">${esc(it.q)}</div>`).join("")}
+        </div>` : `<div class="perfect-msg">🎉 全問正解！</div>`}
+      </div>
+      <div class="result-actions">
+        <button class="btn btn-primary" onclick="${state.isRetry ? `startRetry('${state.stageId}')` : `startStage('${state.stageId}')`}">もう一度</button>
+        <button class="btn btn-outline" onclick="backHome()">ホームへ</button>
+      </div>
+      ${(!state.isRetry && missedCount>0) ? `<button class="btn btn-danger-outline" style="margin-top:10px;" onclick="startRetry('${state.stageId}')">🔁 苦手${missedCount}問を復習する</button>` : ""}
+    </div>
+  `;
+  app.innerHTML = html;
+}
+
+function doResetAll(){
+  state.missedStore = {};
+  saveMissedStore(state.missedStore);
+  const btn = document.getElementById("resetAllBtn");
+  if(btn){
+    btn.textContent = "✅ リセットしました";
+    setTimeout(()=>{ renderHome(); }, 1200);
+  }
+}
+
+render();
+</script>
+</body>
+</html>

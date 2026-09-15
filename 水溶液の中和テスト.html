@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>水溶液の中和テスト</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --accent:#3468a6;
+  --accent-light:#e8f0fa;
+  --ref:#7a5ea8;
+  --ref-light:#f1ecf8;
+  --good:#2f9e5b;
+  --good-light:#e6f6ec;
+  --bad:#d1453b;
+  --bad-light:#fbe9e8;
+  --ink:#22303f;
+  --sub:#5c6b7a;
+  --line:#dbe3ec;
+  --bg:#f5f7fa;
+  --card:#ffffff;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  font-family:"Zen Kaku Gothic New",sans-serif;
+  background:var(--bg);
+  color:var(--ink);
+  display:flex;
+  justify-content:center;
+}
+#app{
+  width:100%;
+  max-width:480px;
+  min-height:100vh;
+  background:var(--bg);
+  display:flex;
+  flex-direction:column;
+  position:relative;
+}
+.header{
+  padding:16px 18px 12px;
+  background:linear-gradient(135deg,var(--accent),#4d7dbf);
+  color:#fff;
+  position:sticky;
+  top:0;
+  z-index:5;
+}
+.header h1{
+  margin:0;
+  font-size:18px;
+  font-weight:900;
+  letter-spacing:.02em;
+}
+.header .sub{
+  margin-top:2px;
+  font-size:12px;
+  opacity:.9;
+}
+.content{
+  flex:1;
+  padding:14px 16px 90px;
+}
+.home-title{
+  font-size:14px;
+  font-weight:800;
+  color:var(--sub);
+  margin:18px 2px 10px;
+}
+.home-title:first-child{margin-top:2px;}
+.stage-card{
+  background:var(--card);
+  border-radius:14px;
+  box-shadow:0 2px 8px rgba(30,50,80,.08);
+  padding:16px;
+  margin-bottom:14px;
+  border:1px solid var(--line);
+  cursor:pointer;
+  transition:transform .1s;
+}
+.stage-card:active{transform:scale(.98);}
+.stage-card.ref{
+  border-color:var(--ref);
+  background:linear-gradient(180deg,#fff,var(--ref-light));
+}
+.stage-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+.stage-name{
+  font-size:16px;
+  font-weight:700;
+}
+.stage-badge{
+  font-size:11px;
+  background:var(--accent);
+  color:#fff;
+  padding:3px 8px;
+  border-radius:999px;
+  font-weight:700;
+  white-space:nowrap;
+  margin-left:8px;
+}
+.stage-card.ref .stage-badge{background:var(--ref);}
+.stage-desc{
+  font-size:12.5px;
+  color:var(--sub);
+  margin-top:6px;
+  line-height:1.5;
+}
+.progress-bar{
+  height:6px;
+  background:var(--line);
+  border-radius:99px;
+  margin-top:10px;
+  overflow:hidden;
+}
+.progress-fill{
+  height:100%;
+  background:linear-gradient(90deg,var(--accent),#4d7dbf);
+  border-radius:99px;
+  transition:width .3s;
+}
+.retry-btn{
+  margin-top:10px;
+  display:inline-block;
+  background:var(--bad-light);
+  color:var(--bad);
+  border:1px solid var(--bad);
+  border-radius:8px;
+  padding:6px 10px;
+  font-size:12.5px;
+  font-weight:700;
+  cursor:pointer;
+}
+.footer-note{
+  text-align:center;
+  font-size:11px;
+  color:var(--sub);
+  margin-top:22px;
+}
+.reset-all-btn{
+  width:100%;
+  margin-top:18px;
+  padding:11px;
+  border-radius:10px;
+  background:none;
+  border:1px solid var(--bad);
+  color:var(--bad);
+  font-size:12.5px;
+  font-weight:700;
+  cursor:pointer;
+  font-family:inherit;
+}
+.play-topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-size:12px;
+  color:var(--sub);
+  margin-bottom:12px;
+}
+.qcard{
+  background:var(--card);
+  border-radius:14px;
+  padding:18px;
+  box-shadow:0 2px 8px rgba(30,50,80,.08);
+  border:1px solid var(--line);
+  margin-bottom:16px;
+}
+.qcard.info{
+  background:linear-gradient(180deg,#fff,var(--ref-light));
+  border-color:var(--ref);
+}
+.qtitle{
+  font-size:16px;
+  font-weight:800;
+  margin-bottom:10px;
+  color:var(--ref);
+}
+.info-body{
+  font-size:14px;
+  line-height:1.9;
+  color:var(--ink);
+}
+.info-body p{margin:0 0 12px;}
+.info-body p:last-child{margin-bottom:0;}
+.src-tag{
+  margin-top:12px;
+  font-size:11.5px;
+  color:var(--sub);
+}
+.lead-badge{
+  display:inline-block;
+  font-size:11px;
+  font-weight:700;
+  color:var(--accent);
+  background:var(--accent-light);
+  padding:3px 10px;
+  border-radius:999px;
+  margin-bottom:10px;
+}
+.qtext{
+  font-size:15px;
+  font-weight:700;
+  line-height:1.7;
+  margin-bottom:16px;
+}
+.choice-list{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.choice-btn{
+  width:100%;
+  text-align:left;
+  padding:13px 14px;
+  border-radius:12px;
+  border:1.5px solid var(--line);
+  background:#fff;
+  color:var(--ink);
+  font-size:14px;
+  font-family:inherit;
+  font-weight:600;
+  cursor:pointer;
+}
+.choice-btn:disabled{cursor:default;}
+.choice-btn.correct{border-color:var(--good);background:var(--good-light);color:#1c6b3f;}
+.choice-btn.wrong{border-color:var(--bad);background:var(--bad-light);color:#9c3128;}
+.choice-btn.dim{opacity:.4;}
+.fill-input{
+  width:100%;
+  padding:13px 14px;
+  border-radius:12px;
+  border:1.5px solid var(--line);
+  font-size:15px;
+  font-family:inherit;
+  margin-bottom:14px;
+}
+.fill-input.correct{border-color:var(--good);background:var(--good-light);}
+.fill-input.wrong{border-color:var(--bad);background:var(--bad-light);}
+.explain-box{
+  border-radius:12px;
+  padding:14px;
+  font-size:13px;
+  line-height:1.8;
+  margin-bottom:14px;
+}
+.explain-box.good{background:var(--good-light);color:#1c6b3f;}
+.explain-box.bad{background:var(--bad-light);color:#9c3128;}
+.mark-icon{font-size:15px;margin-right:6px;}
+.btn{
+  width:100%;
+  padding:14px;
+  border-radius:12px;
+  border:none;
+  font-size:15px;
+  font-weight:800;
+  font-family:inherit;
+  cursor:pointer;
+}
+.btn-primary{background:linear-gradient(135deg,var(--accent),#4d7dbf);color:#fff;}
+.btn-ref{background:linear-gradient(135deg,var(--ref),#9678c2);color:#fff;}
+.btn-outline{background:#fff;border:1.5px solid var(--line);color:var(--ink);}
+.btn-danger-outline{background:var(--bad-light);border:1.5px solid var(--bad);color:var(--bad);}
+.result-actions{display:flex;gap:10px;margin-top:4px;}
+.result-actions .btn{flex:1;}
+.result-box{text-align:center;}
+.result-score{
+  font-size:44px;
+  font-weight:900;
+  color:var(--accent);
+  margin:8px 0;
+}
+.wrong-list{margin-top:14px;text-align:left;}
+.wrong-list-label{font-size:12px;color:var(--sub);margin-bottom:6px;}
+.wrong-item{
+  padding:10px 12px;
+  border-radius:10px;
+  background:var(--bad-light);
+  color:#9c3128;
+  margin-bottom:8px;
+  font-size:13px;
+  line-height:1.6;
+}
+.perfect-msg{color:var(--good);font-weight:800;margin-top:10px;font-size:14px;}
+.speak-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-bottom:14px;
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:10px 12px;
+}
+.speak-btn{
+  border:1.5px solid var(--ref);
+  background:#fff;
+  color:var(--ref);
+  border-radius:999px;
+  padding:8px 16px;
+  font-size:13px;
+  font-weight:700;
+  font-family:inherit;
+  cursor:pointer;
+  white-space:nowrap;
+}
+.speak-btn.playing{background:var(--ref);color:#fff;}
+.speed-control{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  font-size:12px;
+  color:var(--sub);
+}
+.speed-control input[type=range]{
+  width:92px;
+  accent-color:var(--ref);
+}
+.hidden{display:none!important;}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+/* ===================== 単元データ：柱の定義 ===================== */
+const PILLARS = {
+  1: {label:"① 水溶液の分類", full:"水溶液の分類"},
+  2: {label:"② 酸・アルカリ水溶液の中和", full:"酸・アルカリ水溶液の中和"},
+  3: {label:"③ 中和の計算", full:"中和の計算"}
+};
+
+/* ===================== ①構造テスト：概要画面 ===================== */
+const kihonOverviewScreens = [
+  {
+    title:"はじめに",
+    body:`<p>今回のテーマは「水溶液の中和」です。酸性の水溶液とアルカリ性の水溶液を混ぜると、たがいの性質を打ち消し合う中和反応が起こり、水と塩とよばれる物質ができます。</p><p>塩酸と水酸化ナトリウム水溶液がちょうど中性になるとき、その状態を完全中和といいます。ただし、すべての塩の水溶液が中性になるとは限らない点も、この回で学ぶ大切なポイントです。</p><p>この回では、①水溶液の分類、②酸・アルカリ水溶液の中和、③中和の計算、という3つの視点から学びます。</p>`,
+    speak:"今回のテーマは、水溶液の中和です。酸性の水溶液とアルカリ性の水溶液を混ぜると、たがいの性質を打ち消し合う中和反応が起こり、水と塩とよばれる物質ができます。塩酸と水酸化ナトリウム水溶液がちょうど中性になるとき、その状態を完全中和といいます。ただし、すべての塩の水溶液が中性になるとは限らない点も、この回で学ぶ大切なポイントです。この回では、水溶液の分類、酸・アルカリ水溶液の中和、中和の計算という、3つの視点から学んでいきます。"
+  },
+  {
+    title:"3つの柱",
+    body:`<p><b>① 水溶液の分類</b><br>色・におい・溶質・液性による水溶液の分類と、指示薬の色の変化、電解質・非電解質について学びます。</p><p><b>② 酸・アルカリ水溶液の中和</b><br>中和反応のしくみ、完全中和、中和反応と発熱、いろいろな水溶液の中和について学びます。</p><p><b>③ 中和の計算</b><br>グラフを使った中和の計算問題の解き方について学びます。</p>`,
+    speak:"この回は、大きく3つの柱に分かれています。1つ目は、水溶液の分類です。色・におい・溶質・液性による水溶液の分類と、指示薬の色の変化、電解質・非電解質について学びます。2つ目は、酸・アルカリ水溶液の中和です。中和反応のしくみ、完全中和、中和反応と発熱、いろいろな水溶液の中和について学びます。3つ目は、中和の計算です。グラフを使った中和の計算問題の解き方について学びます。それでは、順番に見ていきましょう。"
+  }
+];
+
+/* ===================== ①構造テスト：穴埋め ===================== */
+const kihonFillRaw = [
+  {pillar:1, q:"気体や液体、固体などの溶質を水に溶かしたものを何といいますか。", answer:"水溶液", explain:"水溶液は透明で、濃さはどこで調べても同じになっている。"},
+  {pillar:1, q:"水溶液に溶けているものを何といいますか。", answer:"溶質", explain:"溶質が常温で気体・液体・固体のどれかによって水溶液を分けられる。"},
+  {pillar:1, q:"水溶液が酸性・中性・アルカリ性のどれであるかを何といいますか。", answer:"液性", explain:"液性は指示薬を用いて調べることができる。"},
+  {pillar:1, q:"BTB液は、酸性のとき何色になりますか。", answer:"黄色", explain:"中性では緑色、アルカリ性では青色になる。"},
+  {pillar:1, q:"フェノールフタレイン液は、アルカリ性のとき何色になりますか。", answer:"赤色", explain:"酸性・中性のときは無色である。"},
+  {pillar:1, q:"水溶液にしたとき、電流を通す物質を何といいますか。", answer:"電解質", explain:"食塩や塩化水素などが電解質である。"},
+  {pillar:1, q:"水溶液にしたとき、電流を通さない物質を何といいますか。", answer:"非電解質", explain:"砂糖やアルコールなどが非電解質である。"},
+  {pillar:1, q:"pHが7のとき水溶液は何性ですか。", answer:"中性", explain:"pHが7より小さいと酸性、大きいとアルカリ性になる。"},
+  {pillar:2, q:"酸とアルカリの性質がたがいに打ち消される反応を何といいますか。", answer:"中和", accept:["中和反応"], explain:"中和反応によって、元の溶質とは別の塩とよばれる物質と水ができる。"},
+  {pillar:2, q:"酸性水溶液とアルカリ性水溶液がちょうど中性を示したときを何といいますか。", answer:"完全中和", explain:"完全中和では、酸とアルカリが過不足なく反応している。"},
+  {pillar:2, q:"中和反応によってできる、元の溶質とは別の物質を何といいますか。", answer:"塩", explain:"塩酸と水酸化ナトリウム水溶液が中和すると塩化ナトリウム（食塩）ができる。"},
+  {pillar:2, q:"塩酸と水酸化ナトリウム水溶液が中和してできる塩は何ですか。", answer:"塩化ナトリウム", accept:["食塩"], explain:"塩酸と水酸化ナトリウム水溶液の中和で塩化ナトリウム（食塩）と水ができる。"},
+  {pillar:2, q:"塩酸とアンモニア水が中和してできる塩は何ですか。", answer:"塩化アンモニウム", explain:"この塩の水溶液は酸性を示す。"},
+  {pillar:2, q:"塩酸と石灰水（水酸化カルシウム水溶液）が中和してできる塩は何ですか。", answer:"塩化カルシウム", explain:"石灰水は水酸化カルシウム水溶液のことである。"},
+  {pillar:2, q:"硫酸と水酸化ナトリウム水溶液が中和してできる塩は何ですか。", answer:"硫酸ナトリウム", explain:"硫酸と水酸化ナトリウム水溶液の中和でできる。"},
+  {pillar:2, q:"中和反応が起きると熱が発生します。このことを何といいますか。", answer:"発熱", explain:"反応が起きている間は温度が上がり続け、完全中和後は熱が発生しなくなる。"},
+  {pillar:3, q:"塩酸30cm³と水酸化ナトリウム水溶液20cm³がちょうど完全中和するとき、塩酸18cm³を完全中和させるのに必要な水酸化ナトリウム水溶液は何cm³ですか。（数字のみ）", answer:"12", explain:"30：20＝18：xより、x＝12（cm³）。"},
+  {pillar:3, q:"塩酸30cm³と水酸化ナトリウム水溶液20cm³がちょうど完全中和するとき、塩酸50cm³と水酸化ナトリウム水溶液40cm³を混ぜた水溶液は何性ですか。", answer:"アルカリ性", explain:"水酸化ナトリウム水溶液40cm³と完全中和する塩酸は60cm³必要だが、塩酸は50cm³しかないため水酸化ナトリウム水溶液があまり、アルカリ性になる。"},
+  {pillar:3, q:"残った固体の重さのグラフで、グラフが折れ曲がった点は何を表していますか。", answer:"完全中和点", accept:["完全中和した点"], explain:"折れ曲がった点より前後で、残る固体の種類や増え方が変わる。"},
+  {pillar:3, q:"塩酸に水酸化ナトリウム水溶液を加えていき完全中和する前の状態で、水分を蒸発させて残る固体は何ですか。", answer:"食塩", explain:"完全中和前は食塩のみが固体として残る。"},
+  {pillar:3, q:"塩酸に水酸化ナトリウム水溶液を加えていき完全中和したあとさらに水酸化ナトリウム水溶液を加えた状態で、水分を蒸発させて残る固体は何ですか。", answer:"食塩と水酸化ナトリウム", explain:"完全中和後にあまった水酸化ナトリウムがそのまま固体として残る。"},
+  {pillar:3, q:"酸とアルカリを混ぜて中和させるとき、計算に使う「足りない方の量」とできる塩の重さは、どのような関係にありますか。（2字で）", answer:"比例", explain:"足りない方（全部が中和反応に使われる方）の量とできる塩の重さが比例することを利用して計算する。"}
+];
+
+/* ===================== ①構造テスト：まとめ選択 ===================== */
+const kihonFinalRaw = [
+  {pillar:1, q:"水溶液の性質として正しいものはどれですか。", choices:["水溶液は透明で、溶かした物質はどこで調べても同じ濃さになっている","水溶液はすべて無色である","水溶液には必ずにおいがある","水溶液はすべて電流を通す"], answer:0, explain:"水溶液は透明で、濃さはどこで調べても同じになっている。色やにおいの有無、電流を通すかどうかは水溶液によって異なる。"},
+  {pillar:2, q:"塩酸に水酸化ナトリウム水溶液を少しずつ加えていったときの変化として正しいものはどれですか。", choices:["酸性がしだいに弱くなり、完全中和後はアルカリ性になる","酸性がしだいに強くなる","はじめからアルカリ性である","変化は起こらない"], answer:0, explain:"塩酸に水酸化ナトリウム水溶液を加えていくと、酸性はしだいに弱くなり、完全中和で中性になり、それを過ぎるとアルカリ性になる。"},
+  {pillar:3, q:"塩酸30cm³と水酸化ナトリウム水溶液20cm³がちょうど完全中和するとき、塩酸50cm³と水酸化ナトリウム水溶液30cm³を混ぜた水溶液の性質として正しいものはどれですか。", choices:["酸性","中性","アルカリ性","判断できない"], answer:0, explain:"水酸化ナトリウム水溶液30cm³と完全中和する塩酸の量は、30：20＝x：30より x＝45cm³。塩酸は50cm³加えているので塩酸があまり、酸性になる。"}
+];
+
+/* ===================== ②黒太字テスト ===================== */
+const kurojiBlocks = [
+  {pillar:1, sub:"水溶液の分類", items:[
+    {q:"気体や液体、固体などの溶質を水に溶かしたものを何といいますか。", choices:["水溶液","溶液","化合物","混合物"], answer:0},
+    {q:"水溶液に溶けているものを何といいますか。", choices:["溶質","溶媒","塩","指示薬"], answer:0},
+    {q:"塩化鉄水溶液や硫酸銅水溶液のように、色のついた水溶液に共通してふくまれているものは何ですか。", choices:["銅・コバルト・ニッケル・鉄・マンガンなどの金属","塩化水素","二酸化炭素","アルコール"], answer:0},
+    {q:"水溶液のにおいを調べるときの正しい方法はどれですか。", choices:["手であおぐようにしてかぐ","鼻を直接近づけてかぐ","目を近づけて確認する","味見をして確認する"], answer:0},
+    {q:"炭酸水に溶けている気体は何ですか。", choices:["二酸化炭素","アンモニア","塩化水素","酸素"], answer:0},
+    {q:"塩酸に溶けている気体は何ですか。", choices:["塩化水素","二酸化炭素","アンモニア","酸素"], answer:0},
+    {q:"アンモニア水に溶けている気体は何ですか。", choices:["アンモニア","塩化水素","二酸化炭素","酸素"], answer:0},
+    {q:"水酸化カルシウム水溶液のことを別名で何といいますか。", choices:["石灰水","重ソウ水","塩酸","塩化水素水"], answer:0},
+    {q:"炭酸水素ナトリウム水溶液のことを別名で何といいますか。", choices:["重ソウ水","石灰水","炭酸水","塩酸"], answer:0},
+    {q:"青色リトマス紙が赤色に変わるのは、何性の水溶液につけたときですか。", choices:["酸性","中性","アルカリ性","どれでもない"], answer:0},
+    {q:"赤色リトマス紙が青色に変わるのは、何性の水溶液につけたときですか。", choices:["アルカリ性","酸性","中性","どれでもない"], answer:0},
+    {q:"BTB液は、酸性のとき何色になりますか。", choices:["黄色","緑色","青色","赤色"], answer:0},
+    {q:"BTB液は、アルカリ性のとき何色になりますか。", choices:["青色","黄色","緑色","無色"], answer:0},
+    {q:"フェノールフタレイン液は、酸性・中性のとき何色になりますか。", choices:["無色","赤色","青色","黄色"], answer:0},
+    {q:"むらさきキャベツ液は、中性のとき何色になりますか。", choices:["むらさき色","赤色","緑色","黄色"], answer:0},
+    {q:"pHが7より小さいとき、水溶液は何性ですか。", choices:["酸性","中性","アルカリ性","判断できない"], answer:0},
+    {q:"pHが7より大きいとき、水溶液は何性ですか。", choices:["アルカリ性","酸性","中性","判断できない"], answer:0},
+    {q:"水溶液にしたとき、電流を通す物質を何といいますか。", choices:["電解質","非電解質","指示薬","溶媒"], answer:0},
+    {q:"水溶液にしたとき、電流を通さない物質を何といいますか。", choices:["非電解質","電解質","指示薬","溶質"], answer:0},
+    {q:"砂糖やアルコールは水溶液にしたとき電流を通しますか。", choices:["通さない（非電解質）","通す（電解質）","場合による","濃さによって変わる"], answer:0},
+    {q:"電解質水溶液に流れる電流の大きさは、水溶液の濃さが濃くなるほどどうなりますか。", choices:["大きくなる","小さくなる","変わらない","0になる"], answer:0},
+    {q:"水溶液に電流が流れるために液中に必要な、＋や－の電気をもった小さなつぶを何といいますか。", choices:["イオン","電子","原子","分子"], answer:0}
+  ]},
+  {pillar:2, sub:"酸・アルカリ水溶液の中和", items:[
+    {q:"酸とアルカリの性質がたがいに打ち消される反応を何といいますか。", choices:["中和反応","電離","蒸発","分解"], answer:0},
+    {q:"酸性水溶液とアルカリ性水溶液がちょうど中性を示したときを何といいますか。", choices:["完全中和","中和反応","電解","飽和"], answer:0},
+    {q:"中和反応によってできる、元の溶質とは別の物質を何といいますか。", choices:["塩","溶質","指示薬","電解質"], answer:0},
+    {q:"塩酸と水酸化ナトリウム水溶液が中和してできる塩は何ですか。", choices:["塩化ナトリウム","塩化アンモニウム","硫酸ナトリウム","塩化カルシウム"], answer:0},
+    {q:"塩酸とアンモニア水が中和してできる塩は何ですか。", choices:["塩化アンモニウム","塩化ナトリウム","硫酸ナトリウム","塩化カルシウム"], answer:0},
+    {q:"塩酸と石灰水（水酸化カルシウム水溶液）が中和してできる塩は何ですか。", choices:["塩化カルシウム","塩化ナトリウム","塩化アンモニウム","炭酸カルシウム"], answer:0},
+    {q:"硫酸と水酸化ナトリウム水溶液が中和してできる塩は何ですか。", choices:["硫酸ナトリウム","塩化ナトリウム","塩化カルシウム","炭酸ナトリウム"], answer:0},
+    {q:"炭酸水と石灰水（水酸化カルシウム水溶液）が中和してできる塩は何ですか。", choices:["炭酸カルシウム","塩化カルシウム","硫酸ナトリウム","炭酸ナトリウム"], answer:0},
+    {q:"塩酸に水酸化ナトリウム水溶液を加えていくと、BTB液の色はどのように変化しますか。", choices:["黄色→緑→青","青→緑→黄色","赤→青","変化しない"], answer:0},
+    {q:"塩酸に水酸化ナトリウム水溶液を加え、完全中和する前の状態で水分を蒸発させると、残る固体は何ですか。", choices:["食塩のみ","食塩と水酸化ナトリウム","水酸化ナトリウムのみ","何も残らない"], answer:0},
+    {q:"塩酸に水酸化ナトリウム水溶液を加え、完全中和したあとさらに水酸化ナトリウム水溶液を加えた状態で水分を蒸発させると、残る固体は何ですか。", choices:["食塩と水酸化ナトリウム","食塩のみ","水酸化ナトリウムのみ","何も残らない"], answer:0},
+    {q:"水酸化ナトリウム水溶液に塩酸を加えていき、完全中和したあとさらに塩酸を加えると、蒸発後の重さはどうなりますか。", choices:["変わらない","増え続ける","減っていく","0になる"], answer:0, explain:"完全中和後に加えた塩酸は蒸発させると気体になって出ていくため、固体の重さは増えない。"},
+    {q:"中和反応が起きると、温度はどうなりますか。", choices:["上がる（発熱する）","下がる（吸熱する）","変わらない","0℃になる"], answer:0},
+    {q:"完全中和したあと、さらに塩酸や水酸化ナトリウム水溶液を加えると、温度はどうなりますか。", choices:["下がる","上がり続ける","急に上がる","変化しない"], answer:0, explain:"完全中和後は熱を発生しないため、加えた液（低い液温）によって温度が下がる。"},
+    {q:"アリにかまれたときのはれの原因である酸性の液を何といいますか。", choices:["蟻酸","塩酸","硫酸","炭酸"], answer:0},
+    {q:"アリにかまれてすぐにアンモニア水をつけると、はれが少なくなるのはなぜですか。", choices:["酸性の蟻酸をアルカリ性のアンモニア水で中和させるから","アンモニア水が消毒作用をもつから","アンモニア水が冷却効果をもつから","アンモニア水がかゆみ止めの薬だから"], answer:0}
+  ]},
+  {pillar:3, sub:"中和の計算", items:[
+    {q:"塩酸30cm³と水酸化ナトリウム水溶液20cm³がちょうど完全中和するとき、塩酸18cm³を完全中和させるのに必要な水酸化ナトリウム水溶液は何cm³ですか。", choices:["12cm³","10cm³","15cm³","18cm³"], answer:0},
+    {q:"塩酸30cm³と水酸化ナトリウム水溶液20cm³がちょうど完全中和するとき、塩酸50cm³と水酸化ナトリウム水溶液40cm³を混ぜた水溶液にBTB液を入れると何色になりますか。", choices:["青色","黄色","緑色","無色"], answer:0},
+    {q:"塩酸50cm³ずつをとった蒸発皿A〜Eに、同じ水酸化ナトリウム水溶液を10cm³、20cm³、30cm³、40cm³、50cm³と加えて完全中和点がC（30cm³）だったとき、Aに残る固体は何ですか。", choices:["食塩のみ","食塩と水酸化ナトリウム","水酸化ナトリウムのみ","何も残らない"], answer:0},
+    {q:"同じ条件で、Dの蒸発皿（水酸化ナトリウム水溶液40cm³を加えたもの）に残る物質は何ですか。", choices:["食塩と水酸化ナトリウム","食塩のみ","水酸化ナトリウムのみ","何も残らない"], answer:0},
+    {q:"酸とアルカリを混ぜて中和させるとき、計算に使う「足りない方の量」とできる塩の重さは、どのような関係にありますか。", choices:["比例の関係","反比例の関係","2乗に比例する関係","関係はない"], answer:0},
+    {q:"残った固体の重さのグラフで、グラフが折れ曲がった点は何を表していますか。", choices:["完全中和点","反応開始点","酸性の限界点","アルカリ性の限界点"], answer:0},
+    {q:"塩酸に水酸化ナトリウム水溶液を加えて完全中和させるとき、加えた水酸化ナトリウム水溶液の体積と、できる食塩の重さの関係として正しいものはどれですか（完全中和するまで）。", choices:["比例する","反比例する","関係ない","一定である"], answer:0},
+    {q:"水酸化ナトリウム水溶液に塩酸を加えたときの、残った固体の量の変化を表すグラフで、完全中和前の固体の重さの変化として正しいものはどれですか。", choices:["水酸化ナトリウムが減り、食塩が増えるため、重さの変化はゆるやかになる","一定のまま変わらない","急激に増加する","急激に減少する"], answer:0},
+    {q:"中和の計算問題で、酸とアルカリの体積比がわかっているとき、どちらの量をもとに計算しますか。", choices:["全部が中和反応に使われる、足りない方の量","多い方の量","塩の色","水の量"], answer:0},
+    {q:"塩酸と水酸化ナトリウム水溶液を混ぜたとき、水酸化ナトリウム水溶液があまっている場合、水溶液の性質は何性になりますか。", choices:["アルカリ性","酸性","中性","判断できない"], answer:0}
+  ]}
+];
+
+/* ===================== ③ひとくちメモテスト ===================== */
+const mameQuizRaw = [
+  {q:"強い酸と弱いアルカリでできる塩の水溶液は、何性を示しますか。", choices:["酸性","アルカリ性","中性","判断できない"], answer:0},
+  {q:"弱い酸と強いアルカリでできる塩の水溶液は、何性を示しますか。", choices:["アルカリ性","酸性","中性","判断できない"], answer:0},
+  {q:"塩酸とアンモニア水を中和させてできる塩化アンモニウム水溶液は、何性を示しますか。", choices:["酸性","アルカリ性","中性","判断できない"], answer:0},
+  {q:"塩が水といっしょになると分解して、また元の酸やアルカリができてしまうことが原因で、塩の水溶液が中性を示すとは限らないのはなぜですか。", choices:["強い酸と弱いアルカリ、または弱い酸と強いアルカリの組み合わせだから","すべての塩は酸性を示すから","すべての塩はアルカリ性を示すから","水温が高いから"], answer:0},
+  {q:"水溶液に電流が流れるために必要な、＋や－の電気をもった小さなつぶを何といいますか。", choices:["イオン","電子","原子核","分子"], answer:0},
+  {q:"食塩のように中和によってできる塩は、水溶液中でどうなりますか。", choices:["イオンに分かれる","分解しない","気体になる","結晶のまま溶けない"], answer:0},
+  {q:"アルコールや砂糖などの非電解質が水に溶けても電流が流れないのはなぜですか。", choices:["水に溶けてもイオンに分かれないから","電気を吸収してしまうから","水と反応しないから","固体のまま溶けないから"], answer:0},
+  {q:"アリにかまれたときのはれを少なくするために使われる、アルカリ性の液は何ですか。", choices:["アンモニア水","塩酸","炭酸水","食塩水"], answer:0}
+];
+
+/* ===================== ④気をつけたいポイント（読みもの） ===================== */
+const sankoNotes = [
+  {
+    title:"塩の水溶液は中性？",
+    body:`酸とアルカリの中和で、水と塩ができるとき、酸とアルカリはおたがいの性質を打ち消し合って中性になるはずですが、強い酸と弱いアルカリでできる塩の水溶液は酸性を、弱い酸と強いアルカリでできる塩の水溶液はアルカリ性を示します。これは塩が水といっしょになると分解し、また元の酸やアルカリができてしまうからです。水溶液が中性を示す塩には塩化ナトリウム・塩化カリウムなど、酸性を示す塩には塩化アンモニウム・硫酸銅など、アルカリ性を示す塩には炭酸ナトリウムなどがあります。`,
+    src:"教科書 導入Q&A（p27）"
+  },
+  {
+    title:"水溶液に電流が流れる理由",
+    body:`水溶液に電流が流れるには、液中にイオンという＋や－の電気をもった小さなつぶがふくまれている必要があります。水に溶けて酸性やアルカリ性を示す物質全部と、食塩のように中和によってできる塩は、水溶液中でイオンに分かれるため電流が流れます。一方、アルコールや砂糖などの非電解質は、水に溶けてもイオンに分かれないので、電流が流れません。`,
+    src:"教科書コラム（p30）"
+  },
+  {
+    title:"身近な中和反応",
+    body:`わたしたちの身のまわりでも、中和を利用した例はたくさんあります。たとえばアリにかまれたとき、すぐにアンモニア水をつけると、はれは少なくなります。はれの原因は蟻酸という酸性の液で、これをアルカリ性のアンモニア水で中和させるのです。`,
+    src:"教科書コラム（p33）"
+  },
+  {
+    title:"気体が溶けた水溶液と固体が溶けた水溶液を区別する",
+    body:`塩酸・炭酸水・アンモニア水は、溶質が気体（塩化水素・二酸化炭素・アンモニア）であるため、熱して水分を蒸発させても何も残りません。一方、食塩水や水酸化ナトリウム水溶液は、溶質が固体であるため、蒸発させると固体が残ります。「気体が溶けている水溶液＝蒸発させても何も残らない」という点を整理して覚えましょう。`,
+    src:"入試でまちがえやすいポイント（一般知識）"
+  },
+  {
+    title:"3つの指示薬の色をセットで覚える",
+    body:`BTB液（酸性＝黄色、中性＝緑色、アルカリ性＝青色）、フェノールフタレイン液（酸性・中性＝無色、アルカリ性＝赤色）、むらさきキャベツ液（強い酸性＝赤色、弱い酸性＝ピンク色、中性＝むらさき色、弱いアルカリ性＝緑色、強いアルカリ性＝黄色）は混同しやすいので、指示薬ごとに色の変化をセットで覚えましょう。とくにBTB液とむらさきキャベツ液は、酸性とアルカリ性での色がほぼ逆になる点に注意が必要です。`,
+    src:"入試でまちがえやすいポイント（一般知識）"
+  },
+  {
+    title:"完全中和点はグラフの折れ曲がった点",
+    body:`中和の計算問題では、残った固体の重さのグラフが折れ曲がった点が完全中和点になります。折れ曲がる前は食塩の重さが増えていき、折れ曲がったあとは（塩酸に水酸化ナトリウム水溶液を加える場合）あまった水酸化ナトリウムの重さだけが増えていきます。グラフのどちら側にいるかで、残っている物質の種類が変わる点に注意しましょう。`,
+    src:"入試でまちがえやすいポイント（一般知識）"
+  },
+  {
+    title:"中和の計算は「足りない方」に注目する",
+    body:`酸とアルカリを混ぜて中和の計算をするときは、「全部が中和反応に使われる、足りない方の量」とできる塩の重さが比例することを利用します。多い方（あまる方）の量に注目してしまうと計算をまちがえやすいので、どちらが完全に反応に使われるのかを見きわめることが大切です。`,
+    src:"入試でまちがえやすいポイント（一般知識）"
+  }
+];
+
+/* ===================== 共通ビルド関数 ===================== */
+function shuffleArr(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+function finalize(q){
+  const correctText = q.choices[q.answer];
+  const order = shuffleArr(q.choices.map((c,i)=>i));
+  const newChoices = order.map(i=>q.choices[i]);
+  const newAnswer = newChoices.indexOf(correctText);
+  const out = Object.assign({}, q, {choices:newChoices, answer:newAnswer});
+  return out;
+}
+
+function normalizeAnswer(str){
+  if(str===undefined || str===null) return "";
+  let s = String(str).trim();
+  s = s.replace(/[０-９]/g, ch => String.fromCharCode(ch.charCodeAt(0)-0xFEE0));
+  s = s.replace(/\s+/g,"");
+  s = s.replace(/[『』「」]/g,"");
+  return s;
+}
+
+function checkFillAnswer(item, userInput){
+  const norm = normalizeAnswer(userInput);
+  if(norm==="") return false;
+  const candidates = [item.answer].concat(item.accept||[]);
+  return candidates.some(c => normalizeAnswer(c)===norm);
+}
+
+function shuffleArrKeepBlocks(){
+  const byPillar = {};
+  kihonFillRaw.forEach((r,idx)=>{
+    if(!byPillar[r.pillar]) byPillar[r.pillar]=[];
+    byPillar[r.pillar].push(idx);
+  });
+  let out = [];
+  [1,2,3].forEach(p=>{
+    const idxs = shuffleArr(byPillar[p]||[]);
+    idxs.forEach(idx=>{
+      const r = kihonFillRaw[idx];
+      out.push({
+        type:"fill", id:"kihonFill_"+idx, q:r.q, answer:r.answer, accept:r.accept,
+        explain:r.explain, lead:PILLARS[r.pillar].label, sub:PILLARS[r.pillar].full, pillar:r.pillar
+      });
+    });
+  });
+  return out;
+}
+
+function buildKihonFinalItems(){
+  return kihonFinalRaw.map((r,idx)=>{
+    const fq = finalize({q:r.q, choices:r.choices, answer:r.answer, explain:r.explain});
+    return Object.assign({type:"choice", id:"kihonFinal_"+idx, pillar:r.pillar, sub:PILLARS[r.pillar].full}, fq);
+  });
+}
+
+function buildKihonItems(){
+  const overview = kihonOverviewScreens.map((s,idx)=>Object.assign({id:"kihonOv_"+idx, type:"info", wide:true}, s));
+  const fills = shuffleArrKeepBlocks();
+  const finals = shuffleArr(buildKihonFinalItems());
+  return overview.concat(fills, finals);
+}
+
+function buildKurojiItems(){
+  let out = [];
+  kurojiBlocks.forEach((block,bi)=>{
+    const shuffledItems = shuffleArr(block.items);
+    shuffledItems.forEach((it,ii)=>{
+      const fq = finalize(it);
+      out.push(Object.assign({
+        type:"choice",
+        id:"kuroji_"+bi+"_"+ii,
+        pillar:block.pillar,
+        sub:block.sub
+      }, fq));
+    });
+  });
+  return out;
+}
+
+function buildMameItems(){
+  const shuffled = shuffleArr(mameQuizRaw);
+  return shuffled.map((r,idx)=>{
+    const fq = finalize(r);
+    return Object.assign({type:"choice", id:"mame_"+idx}, fq);
+  });
+}
+
+function buildSankoItems(){
+  return sankoNotes.map((n,idx)=>({
+    type:"info", id:"sanko_"+idx, title:n.title, body:n.body, src:n.src, wide:true
+  }));
+}
+
+const STAGES = [
+  {id:"kihon", name:"① 構造テスト", desc:"3本柱（水溶液の分類・酸・アルカリ水溶液の中和・中和の計算）の骨組みを確認。概要2画面＋穴埋め22問＋まとめ選択3問。", scored:true, ref:false, build:buildKihonItems},
+  {id:"kuroji", name:"② 黒太字テスト", desc:"各分野の重要語句・計算問題を4択で確認します。計48問。", scored:true, ref:false, build:buildKurojiItems},
+  {id:"mame", name:"③ ひとくちメモテスト", desc:"教科書の導入Q&Aとコラムから出題します。計8問。", scored:true, ref:false, build:buildMameItems},
+  {id:"sanko", name:"④ 気をつけたいポイント", desc:"教科書コラム＋入試でまちがえやすい注意点の読みもの。採点はありません。", scored:false, ref:true, build:buildSankoItems}
+];
+
+/* ===================== 状態管理／localStorage ===================== */
+const STORAGE_KEY = "chuwa3_missed_v1";
+
+function loadMissedStore(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : {};
+  }catch(e){ return {}; }
+}
+function saveMissedStore(store){
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(store)); }catch(e){ /* 保存できない環境は無視 */ }
+}
+
+const SPEAK_RATE_KEY = "quizapp_speak_rate_v1";
+function loadSpeakRate(){
+  try{
+    const v = parseFloat(localStorage.getItem(SPEAK_RATE_KEY));
+    if(!isNaN(v) && v>=0.7 && v<=1.8) return v;
+  }catch(e){}
+  return 1.1;
+}
+function saveSpeakRate(v){
+  try{ localStorage.setItem(SPEAK_RATE_KEY, String(v)); }catch(e){}
+}
+
+const state = {
+  screen:"home",
+  stageId:null,
+  isRetry:false,
+  items:[],
+  currentIndex:0,
+  scoreTotal:0,
+  scoreCorrect:0,
+  answerLog:[],
+  results:{},
+  missedStore: loadMissedStore(),
+  answered:false,
+  userInput:"",
+  userChoiceIdx:null,
+  speakRate: loadSpeakRate()
+};
+
+function startStage(stageId){
+  const stage = STAGES.find(s=>s.id===stageId);
+  state.stageId = stageId;
+  state.isRetry = false;
+  state.items = stage.build();
+  state.currentIndex = 0;
+  state.scoreTotal = state.items.filter(i=>i.type!=="info").length;
+  state.scoreCorrect = 0;
+  state.answerLog = [];
+  state.answered = false;
+  state.userInput = "";
+  state.userChoiceIdx = null;
+  state.screen = "play";
+  render();
+}
+
+function startRetry(stageId){
+  const missed = state.missedStore[stageId] || {};
+  const items = Object.values(missed);
+  if(items.length===0) return;
+  state.stageId = stageId;
+  state.isRetry = true;
+  state.items = shuffleArr(items);
+  state.currentIndex = 0;
+  state.scoreTotal = state.items.length;
+  state.scoreCorrect = 0;
+  state.answerLog = [];
+  state.answered = false;
+  state.userInput = "";
+  state.userChoiceIdx = null;
+  state.screen = "play";
+  render();
+}
+
+function currentItem(){ return state.items[state.currentIndex]; }
+
+function submitChoice(idx){
+  if(state.answered) return;
+  const item = currentItem();
+  const correct = idx === item.answer;
+  state.answered = true;
+  state.userChoiceIdx = idx;
+  if(correct) state.scoreCorrect++;
+  state.answerLog.push({item, wasCorrect:correct});
+}
+
+function submitFill(){
+  if(state.answered) return;
+  const item = currentItem();
+  const correct = checkFillAnswer(item, state.userInput);
+  state.answered = true;
+  if(correct) state.scoreCorrect++;
+  state.answerLog.push({item, wasCorrect:correct});
+}
+
+function nextItem(){
+  stopSpeak();
+  state.answered = false;
+  state.userInput = "";
+  state.userChoiceIdx = null;
+  if(state.currentIndex < state.items.length-1){
+    state.currentIndex++;
+    render();
+  }else{
+    finishStage();
+  }
+}
+
+function finishStage(){
+  const stage = STAGES.find(s=>s.id===state.stageId);
+  state.results[state.stageId] = {
+    correct: state.scoreCorrect,
+    total: state.scoreTotal,
+    at: Date.now()
+  };
+  if(stage.scored){
+    const missed = state.missedStore[state.stageId] || {};
+    state.answerLog.forEach(log=>{
+      const key = log.item.q;
+      if(!log.wasCorrect){
+        missed[key] = log.item;
+      }else{
+        if(missed[key]) delete missed[key];
+      }
+    });
+    state.missedStore[state.stageId] = missed;
+    saveMissedStore(state.missedStore);
+  }
+  state.screen = "result";
+  render();
+}
+
+function backHome(){
+  stopSpeak();
+  stopMic();
+  state.screen = "home";
+  render();
+}
+
+/* ===================== 音声読み上げ（Web Speech API：読み上げ） ===================== */
+let cachedVoices = [];
+
+function speakSupported(){
+  return typeof window!=="undefined" && "speechSynthesis" in window;
+}
+
+function refreshVoices(){
+  if(speakSupported()) cachedVoices = window.speechSynthesis.getVoices() || [];
+}
+if(speakSupported()){
+  refreshVoices();
+  window.speechSynthesis.onvoiceschanged = refreshVoices;
+}
+
+function getBestJaVoice(){
+  const jaVoices = cachedVoices.filter(v => v.lang && v.lang.toLowerCase().startsWith("ja"));
+  if(jaVoices.length===0) return null;
+  const preferred = jaVoices.find(v => /google/i.test(v.name))
+    || jaVoices.find(v => v.localService===false)
+    || jaVoices[0];
+  return preferred;
+}
+
+function speakText(text, btnId){
+  if(!speakSupported()) return;
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = "ja-JP";
+  u.rate = state.speakRate;
+  const voice = getBestJaVoice();
+  if(voice) u.voice = voice;
+  u.onend = ()=>{ setSpeakBtnState(btnId, false); };
+  u.onerror = ()=>{ setSpeakBtnState(btnId, false); };
+  window.speechSynthesis.speak(u);
+  setSpeakBtnState(btnId, true);
+}
+
+function stopSpeak(){
+  if(speakSupported()) window.speechSynthesis.cancel();
+}
+
+function toggleSpeak(text){
+  if(!speakSupported()) return;
+  if(window.speechSynthesis.speaking){
+    stopSpeak();
+    setSpeakBtnState("speakBtn", false);
+  }else{
+    speakText(text, "speakBtn");
+  }
+}
+
+function updateSpeakRate(v){
+  state.speakRate = parseFloat(v);
+  saveSpeakRate(state.speakRate);
+  const label = document.getElementById("speakRateLabel");
+  if(label) label.textContent = state.speakRate.toFixed(1)+"倍";
+}
+
+function setSpeakBtnState(btnId, playing){
+  const btn = document.getElementById(btnId);
+  if(!btn) return;
+  btn.classList.toggle("playing", playing);
+  btn.innerHTML = playing ? "⏸ 読み上げを止める" : "🔊 音声で聞く";
+}
+
+/* マイク機能は精度の問題により削除済み。他の関数からの呼び出しに備えて no-op で残す */
+function stopMic(){}
+
+/* ===================== レンダリング ===================== */
+const app = document.getElementById("app");
+
+function render(){
+  if(state.screen==="home") renderHome();
+  else if(state.screen==="play") renderPlay();
+  else if(state.screen==="result") renderResult();
+}
+
+function esc(s){
+  return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+
+function pillarBadge(p){
+  return (PILLARS[p] && PILLARS[p].label) || "";
+}
+
+function renderHome(){
+  let html = `
+    <div class="header">
+      <h1>水溶液の中和テスト</h1>
+      <div class="sub">予習シリーズ5年下　理科　第3回　水溶液の中和</div>
+    </div>
+    <div class="content">
+  `;
+  const scoredStages = STAGES.filter(s=>s.scored);
+  const refStages = STAGES.filter(s=>!s.scored);
+
+  html += `<div class="home-title">確認テスト</div>`;
+  scoredStages.forEach(stage=>{
+    const res = state.results[stage.id];
+    const missedCount = Object.keys(state.missedStore[stage.id]||{}).length;
+    html += `<div class="stage-card" onclick="startStage('${stage.id}')">
+      <div class="stage-top">
+        <div class="stage-name">${esc(stage.name)}</div>
+        <div class="stage-badge">${res ? res.correct+"/"+res.total : "未挑戦"}</div>
+      </div>
+      <div class="stage-desc">${esc(stage.desc)}</div>
+      ${res ? `<div class="progress-bar"><div class="progress-fill" style="width:${Math.round(res.correct/res.total*100)}%"></div></div>` : ""}
+      ${missedCount>0 ? `<div class="retry-btn" onclick="event.stopPropagation(); startRetry('${stage.id}')">🔁 苦手${missedCount}問を復習</div>` : ""}
+    </div>`;
+  });
+
+  html += `<div class="home-title">参考情報（読みもの）</div>`;
+  refStages.forEach(stage=>{
+    html += `<div class="stage-card ref" onclick="startStage('${stage.id}')">
+      <div class="stage-top">
+        <div class="stage-name">${esc(stage.name)}</div>
+        <div class="stage-badge">読みもの</div>
+      </div>
+      <div class="stage-desc">${esc(stage.desc)}</div>
+    </div>`;
+  });
+
+  const totalMissed = STAGES.filter(s=>s.scored).reduce((sum,s)=>sum+Object.keys(state.missedStore[s.id]||{}).length,0);
+  html += `<div class="footer-note">単一HTMLファイル・localStorageに端末内で保存されます</div>`;
+  if(totalMissed>0){
+    html += `<button class="reset-all-btn" id="resetAllBtn" onclick="doResetAll()">🗑️ 苦手リストをすべてリセット</button>`;
+  }
+  html += `</div>`;
+  app.innerHTML = html;
+}
+
+function renderPlay(){
+  const item = currentItem();
+  const stage = STAGES.find(s=>s.id===state.stageId);
+  const isInfo = item.type==="info";
+
+  let html = `
+    <div class="header">
+      <h1>${esc(stage.name)}${state.isRetry?"（復習）":""}</h1>
+      <div class="sub">${item.sub ? esc(item.sub) : esc(stage.desc)}</div>
+    </div>
+    <div class="content">
+      <div class="play-topbar">
+        <span>問題 ${state.currentIndex+1} / ${state.items.length}</span>
+        <span onclick="backHome()" style="text-decoration:underline; cursor:pointer;">中断してホームへ</span>
+      </div>
+  `;
+
+  if(isInfo){
+    html += `<div class="qcard info">
+      <div class="qtitle">${esc(item.title)}</div>
+      ${item.speak ? `
+      <div class="speak-row">
+        <button id="speakBtn" class="speak-btn" onclick='toggleSpeak(${JSON.stringify(item.speak)})'>🔊 音声で聞く</button>
+        <div class="speed-control">
+          <span>速さ</span>
+          <input type="range" min="0.7" max="1.8" step="0.1" value="${state.speakRate}" oninput="updateSpeakRate(this.value)">
+          <span id="speakRateLabel">${state.speakRate.toFixed(1)}倍</span>
+        </div>
+      </div>` : ""}
+      <div class="info-body ${item.wide?'wide':''}">${item.body}</div>
+      ${item.src ? `<div class="src-tag">出典：${esc(item.src)}</div>` : ""}
+      <button class="btn btn-ref" onclick="nextItem()">${state.currentIndex < state.items.length-1 ? "次へ" : "結果を見る"}</button>
+    </div>`;
+  } else if(item.type==="fill"){
+    html += `<div class="qcard">`;
+    if(item.lead) html += `<div class="lead-badge">${esc(item.lead)}</div>`;
+    html += `<div class="qtext">${esc(item.q)}</div>`;
+    const inputClass = state.answered ? (checkFillAnswer(item, state.userInput) ? "correct":"wrong") : "";
+    html += `<input type="text" id="fillInput" class="fill-input ${inputClass}" placeholder="答えを入力" value="${esc(state.userInput)}" ${state.answered?"disabled":""} onkeydown="if(event.key==='Enter'){state.userInput=this.value; submitFillUI();}">`;
+    if(!state.answered){
+      html += `<button class="btn btn-primary" onclick="submitFillUI()">こたえる</button>`;
+    }else{
+      const correct = checkFillAnswer(item, state.userInput);
+      html += `<div class="explain-box ${correct?'good':'bad'}">
+        <span class="mark-icon">${correct?"⭕":"❌"}</span><b>正解：${esc(item.answer)}</b><br>${esc(item.explain||"")}
+      </div>`;
+      html += `<button class="btn btn-primary" onclick="nextItem()">${state.currentIndex < state.items.length-1 ? "次の問題へ" : "結果を見る"}</button>`;
+    }
+    html += `</div>`;
+  } else if(item.type==="choice"){
+    html += `<div class="qcard">`;
+    if(item.pillar!==undefined && item.pillar!==null) html += `<div class="lead-badge">${esc(pillarBadge(item.pillar))}</div>`;
+    html += `<div class="qtext">${esc(item.q)}</div>`;
+    html += `<div class="choice-list">`;
+    item.choices.forEach((c,idx)=>{
+      let cls = "choice-btn";
+      if(state.answered){
+        if(idx===item.answer) cls += " correct";
+        else if(idx===state.userChoiceIdx) cls += " wrong";
+        else cls += " dim";
+      }
+      html += `<button class="${cls}" ${state.answered?"disabled":""} onclick="submitChoiceUI(${idx})">${esc(c)}</button>`;
+    });
+    html += `</div>`;
+    if(state.answered){
+      const correct = state.userChoiceIdx===item.answer;
+      html += `<div class="explain-box ${correct?'good':'bad'}">
+        <span class="mark-icon">${correct?"⭕":"❌"}</span>${esc(item.explain||"")}
+      </div>`;
+      html += `<button class="btn btn-primary" onclick="nextItem()">${state.currentIndex < state.items.length-1 ? "次の問題へ" : "結果を見る"}</button>`;
+    }
+    html += `</div>`;
+  }
+
+  html += `</div>`;
+  app.innerHTML = html;
+  if(item.type==="fill" && !state.answered){
+    const el = document.getElementById("fillInput");
+    if(el) el.focus();
+  }
+}
+
+function submitChoiceUI(idx){
+  submitChoice(idx);
+  renderPlay();
+}
+function submitFillUI(){
+  const el = document.getElementById("fillInput");
+  if(el) state.userInput = el.value;
+  submitFill();
+  renderPlay();
+}
+
+function renderResult(){
+  const stage = STAGES.find(s=>s.id===state.stageId);
+  const wrongItems = state.answerLog.filter(l=>!l.wasCorrect).map(l=>l.item);
+  const missedCount = Object.keys(state.missedStore[state.stageId]||{}).length;
+
+  let html = `
+    <div class="header">
+      <h1>結果</h1>
+      <div class="sub">${esc(stage.name)}${state.isRetry?"（復習）":""}</div>
+    </div>
+    <div class="content">
+      <div class="qcard result-box">
+        <div>できた問題</div>
+        <div class="result-score">${state.scoreCorrect} / ${state.scoreTotal}</div>
+        ${wrongItems.length>0 ? `
+        <div class="wrong-list">
+          <div class="wrong-list-label">まちがえた問題</div>
+          ${wrongItems.map(it=>`<div class="wrong-item">${esc(it.q)}</div>`).join("")}
+        </div>` : `<div class="perfect-msg">🎉 全問正解！</div>`}
+      </div>
+      <div class="result-actions">
+        <button class="btn btn-primary" onclick="${state.isRetry ? `startRetry('${state.stageId}')` : `startStage('${state.stageId}')`}">もう一度</button>
+        <button class="btn btn-outline" onclick="backHome()">ホームへ</button>
+      </div>
+      ${(!state.isRetry && missedCount>0) ? `<button class="btn btn-danger-outline" style="margin-top:10px;" onclick="startRetry('${state.stageId}')">🔁 苦手${missedCount}問を復習する</button>` : ""}
+    </div>
+  `;
+  app.innerHTML = html;
+}
+
+function doResetAll(){
+  state.missedStore = {};
+  saveMissedStore(state.missedStore);
+  const btn = document.getElementById("resetAllBtn");
+  if(btn){
+    btn.textContent = "✅ リセットしました";
+    setTimeout(()=>{ renderHome(); }, 1200);
+  }
+}
+
+render();
+</script>
+</body>
+</html>

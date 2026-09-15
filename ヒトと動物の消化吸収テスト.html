@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>ヒトと動物の消化・吸収テスト</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --accent:#3468a6;
+  --accent-light:#e8f0fa;
+  --ref:#7a5ea8;
+  --ref-light:#f1ecf8;
+  --good:#2f9e5b;
+  --good-light:#e6f6ec;
+  --bad:#d1453b;
+  --bad-light:#fbe9e8;
+  --ink:#22303f;
+  --sub:#5c6b7a;
+  --line:#dbe3ec;
+  --bg:#f5f7fa;
+  --card:#ffffff;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  font-family:"Zen Kaku Gothic New",sans-serif;
+  background:var(--bg);
+  color:var(--ink);
+  display:flex;
+  justify-content:center;
+}
+#app{
+  width:100%;
+  max-width:480px;
+  min-height:100vh;
+  background:var(--bg);
+  display:flex;
+  flex-direction:column;
+  position:relative;
+}
+.header{
+  padding:16px 18px 12px;
+  background:linear-gradient(135deg,var(--accent),#4d7dbf);
+  color:#fff;
+  position:sticky;
+  top:0;
+  z-index:5;
+}
+.header h1{
+  margin:0;
+  font-size:18px;
+  font-weight:900;
+  letter-spacing:.02em;
+}
+.header .sub{
+  margin-top:2px;
+  font-size:12px;
+  opacity:.9;
+}
+.content{
+  flex:1;
+  padding:14px 16px 90px;
+}
+.home-title{
+  font-size:14px;
+  font-weight:800;
+  color:var(--sub);
+  margin:18px 2px 10px;
+}
+.home-title:first-child{margin-top:2px;}
+.stage-card{
+  background:var(--card);
+  border-radius:14px;
+  box-shadow:0 2px 8px rgba(30,50,80,.08);
+  padding:16px;
+  margin-bottom:14px;
+  border:1px solid var(--line);
+  cursor:pointer;
+  transition:transform .1s;
+}
+.stage-card:active{transform:scale(.98);}
+.stage-card.ref{
+  border-color:var(--ref);
+  background:linear-gradient(180deg,#fff,var(--ref-light));
+}
+.stage-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+.stage-name{
+  font-size:16px;
+  font-weight:700;
+}
+.stage-badge{
+  font-size:11px;
+  background:var(--accent);
+  color:#fff;
+  padding:3px 8px;
+  border-radius:999px;
+  font-weight:700;
+  white-space:nowrap;
+  margin-left:8px;
+}
+.stage-card.ref .stage-badge{background:var(--ref);}
+.stage-desc{
+  font-size:12.5px;
+  color:var(--sub);
+  margin-top:6px;
+  line-height:1.5;
+}
+.progress-bar{
+  height:6px;
+  background:var(--line);
+  border-radius:99px;
+  margin-top:10px;
+  overflow:hidden;
+}
+.progress-fill{
+  height:100%;
+  background:linear-gradient(90deg,var(--accent),#4d7dbf);
+  border-radius:99px;
+  transition:width .3s;
+}
+.retry-btn{
+  margin-top:10px;
+  display:inline-block;
+  background:var(--bad-light);
+  color:var(--bad);
+  border:1px solid var(--bad);
+  border-radius:8px;
+  padding:6px 10px;
+  font-size:12.5px;
+  font-weight:700;
+  cursor:pointer;
+}
+.footer-note{
+  text-align:center;
+  font-size:11px;
+  color:var(--sub);
+  margin-top:22px;
+}
+.reset-all-btn{
+  width:100%;
+  margin-top:18px;
+  padding:11px;
+  border-radius:10px;
+  background:none;
+  border:1px solid var(--bad);
+  color:var(--bad);
+  font-size:12.5px;
+  font-weight:700;
+  cursor:pointer;
+  font-family:inherit;
+}
+.play-topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-size:12px;
+  color:var(--sub);
+  margin-bottom:12px;
+}
+.qcard{
+  background:var(--card);
+  border-radius:14px;
+  padding:18px;
+  box-shadow:0 2px 8px rgba(30,50,80,.08);
+  border:1px solid var(--line);
+  margin-bottom:16px;
+}
+.qcard.info{
+  background:linear-gradient(180deg,#fff,var(--ref-light));
+  border-color:var(--ref);
+}
+.qtitle{
+  font-size:16px;
+  font-weight:800;
+  margin-bottom:10px;
+  color:var(--ref);
+}
+.info-body{
+  font-size:14px;
+  line-height:1.9;
+  color:var(--ink);
+}
+.info-body p{margin:0 0 12px;}
+.info-body p:last-child{margin-bottom:0;}
+.src-tag{
+  margin-top:12px;
+  font-size:11.5px;
+  color:var(--sub);
+}
+.lead-badge{
+  display:inline-block;
+  font-size:11px;
+  font-weight:700;
+  color:var(--accent);
+  background:var(--accent-light);
+  padding:3px 10px;
+  border-radius:999px;
+  margin-bottom:10px;
+}
+.qtext{
+  font-size:15px;
+  font-weight:700;
+  line-height:1.7;
+  margin-bottom:16px;
+}
+.choice-list{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.choice-btn{
+  width:100%;
+  text-align:left;
+  padding:13px 14px;
+  border-radius:12px;
+  border:1.5px solid var(--line);
+  background:#fff;
+  color:var(--ink);
+  font-size:14px;
+  font-family:inherit;
+  font-weight:600;
+  cursor:pointer;
+}
+.choice-btn:disabled{cursor:default;}
+.choice-btn.correct{border-color:var(--good);background:var(--good-light);color:#1c6b3f;}
+.choice-btn.wrong{border-color:var(--bad);background:var(--bad-light);color:#9c3128;}
+.choice-btn.dim{opacity:.4;}
+.fill-input{
+  width:100%;
+  padding:13px 14px;
+  border-radius:12px;
+  border:1.5px solid var(--line);
+  font-size:15px;
+  font-family:inherit;
+  margin-bottom:14px;
+}
+.fill-input.correct{border-color:var(--good);background:var(--good-light);}
+.fill-input.wrong{border-color:var(--bad);background:var(--bad-light);}
+.explain-box{
+  border-radius:12px;
+  padding:14px;
+  font-size:13px;
+  line-height:1.8;
+  margin-bottom:14px;
+}
+.explain-box.good{background:var(--good-light);color:#1c6b3f;}
+.explain-box.bad{background:var(--bad-light);color:#9c3128;}
+.mark-icon{font-size:15px;margin-right:6px;}
+.btn{
+  width:100%;
+  padding:14px;
+  border-radius:12px;
+  border:none;
+  font-size:15px;
+  font-weight:800;
+  font-family:inherit;
+  cursor:pointer;
+}
+.btn-primary{background:linear-gradient(135deg,var(--accent),#4d7dbf);color:#fff;}
+.btn-ref{background:linear-gradient(135deg,var(--ref),#9678c2);color:#fff;}
+.btn-outline{background:#fff;border:1.5px solid var(--line);color:var(--ink);}
+.btn-danger-outline{background:var(--bad-light);border:1.5px solid var(--bad);color:var(--bad);}
+.result-actions{display:flex;gap:10px;margin-top:4px;}
+.result-actions .btn{flex:1;}
+.result-box{text-align:center;}
+.result-score{
+  font-size:44px;
+  font-weight:900;
+  color:var(--accent);
+  margin:8px 0;
+}
+.wrong-list{margin-top:14px;text-align:left;}
+.wrong-list-label{font-size:12px;color:var(--sub);margin-bottom:6px;}
+.wrong-item{
+  padding:10px 12px;
+  border-radius:10px;
+  background:var(--bad-light);
+  color:#9c3128;
+  margin-bottom:8px;
+  font-size:13px;
+  line-height:1.6;
+}
+.perfect-msg{color:var(--good);font-weight:800;margin-top:10px;font-size:14px;}
+.speak-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-bottom:14px;
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:10px 12px;
+}
+.speak-btn{
+  border:1.5px solid var(--ref);
+  background:#fff;
+  color:var(--ref);
+  border-radius:999px;
+  padding:8px 16px;
+  font-size:13px;
+  font-weight:700;
+  font-family:inherit;
+  cursor:pointer;
+  white-space:nowrap;
+}
+.speak-btn.playing{background:var(--ref);color:#fff;}
+.speed-control{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  font-size:12px;
+  color:var(--sub);
+}
+.speed-control input[type=range]{
+  width:92px;
+  accent-color:var(--ref);
+}
+.hidden{display:none!important;}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+/* ===================== 単元データ：柱の定義 ===================== */
+const PILLARS = {
+  1: {label:"① 食物と養分", full:"食物と養分"},
+  2: {label:"② 消化", full:"消化"},
+  3: {label:"③ 養分の吸収", full:"養分の吸収"},
+  4: {label:"④ 動物の消化器官", full:"動物の消化器官"}
+};
+
+/* ===================== ①構造テスト：概要画面 ===================== */
+const kihonOverviewScreens = [
+  {
+    title:"はじめに",
+    body:`<p>今回のテーマは「ヒトと動物の消化・吸収」です。動物は食物から、生きていくためのエネルギーやからだをつくる材料を取り入れています。しかし、食物にふくまれる養分は、そのままでは体内に吸収することができません。</p><p>養分を体内に吸収できる細かいつぶに変えるはたらきを消化といい、消化された養分は小腸の柔毛で吸収されます。動物の種類によって、えさに合わせた消化管や歯のつくりのちがいがあることも、この回で学ぶ大切なポイントです。</p><p>この回では、①食物と養分、②消化、③養分の吸収、④動物の消化器官、という4つの視点から学びます。</p>`,
+    speak:"今回のテーマは、ヒトと動物の消化・吸収です。動物は食物から、生きていくためのエネルギーやからだをつくる材料を取り入れています。しかし、食物にふくまれる養分は、そのままでは体内に吸収することができません。養分を体内に吸収できる細かいつぶに変えるはたらきを消化といい、消化された養分は小腸の柔毛で吸収されます。動物の種類によって、えさに合わせた消化管や歯のつくりのちがいがあることも、この回で学ぶ大切なポイントです。この回では、食物と養分、消化、養分の吸収、動物の消化器官という、4つの視点から学んでいきます。"
+  },
+  {
+    title:"4つの柱",
+    body:`<p><b>① 食物と養分</b><br>炭水化物・タンパク質・しぼう・ビタミン・ミネラルという5つの栄養素のはたらきと、多くふくむ食品について学びます。</p><p><b>② 消化</b><br>消化器官のつくりと、だ液・胃液・胆汁・すい液にふくまれる消化酵素のはたらき、消化の実験について学びます。</p><p><b>③ 養分の吸収</b><br>小腸の柔毛のつくりと、吸収された養分が肝臓や全身に運ばれるしくみについて学びます。</p><p><b>④ 動物の消化器官</b><br>フナなどの魚の消化器官と、肉食動物・草食動物・雑食動物の消化管や歯のちがいについて学びます。</p>`,
+    speak:"この回は、大きく4つの柱に分かれています。1つ目は、食物と養分です。炭水化物、タンパク質、しぼう、ビタミン、ミネラルという5つの栄養素のはたらきと、多くふくむ食品について学びます。2つ目は、消化です。消化器官のつくりと、だ液、胃液、胆汁、すい液にふくまれる消化酵素のはたらき、消化の実験について学びます。3つ目は、養分の吸収です。小腸の柔毛のつくりと、吸収された養分が肝臓や全身に運ばれるしくみについて学びます。4つ目は、動物の消化器官です。フナなどの魚の消化器官と、肉食動物、草食動物、雑食動物の消化管や歯のちがいについて学びます。それでは、順番に見ていきましょう。"
+  }
+];
+
+/* ===================== ①構造テスト：穴埋め ===================== */
+const kihonFillRaw = [
+  {pillar:1, q:"おもにデンプンや糖で、生きていくために必要なエネルギー源になる栄養素を何といいますか。", answer:"炭水化物", explain:"米・ムギなどの穀物やいも類、豆類などに多くふくまれる。"},
+  {pillar:1, q:"おもに筋肉・皮ふ・内臓などのからだをつくる材料になる栄養素を何といいますか。", answer:"タンパク質", explain:"肉・魚・牛乳・卵白・ダイズなどに多くふくまれる。"},
+  {pillar:1, q:"バター・肉のあぶら身などに多くふくまれ、生きていくために必要なエネルギー源になる栄養素を何といいますか。", answer:"しぼう", explain:"卵黄・ラッカセイ・クルミなどにも多くふくまれる。"},
+  {pillar:1, q:"からだの調子をととのえたり、成長を助けたりする栄養素を何といいますか。", answer:"ビタミン", explain:"水に溶けやすいものと油に溶けやすいものがある。"},
+  {pillar:1, q:"骨・歯・血液などの成分となり、からだの成長を助ける栄養素を何といいますか。", answer:"ミネラル", accept:["灰分"], explain:"鉄・カルシウム・リン・ナトリウム・カリウムなどがある。"},
+  {pillar:1, q:"ビタミンCの不足によって起こる、皮ふの下や歯ぐきからの出血をともなう病気を何といいますか。", answer:"壊血病", explain:"長距離を移動する昔の船乗りに多くみられた。"},
+  {pillar:2, q:"食物にふくまれる養分を、体内に吸収できる細かいつぶに変えるはたらきを何といいますか。", answer:"消化", explain:"消化液にふくまれる消化酵素のはたらきによって進む。"},
+  {pillar:2, q:"口から肛門まで、食物が通る1本の管を何といいますか。", answer:"消化管", explain:"食道→胃→小腸→大腸とつながっている。"},
+  {pillar:2, q:"消化管と、肝臓・胆のう・すい臓などをすべて合わせて何といいますか。", answer:"消化器官", explain:"肝臓・胆のう・すい臓は食物の通り道ではないが消化液をつくったりたくわえたりする。"},
+  {pillar:2, q:"だ液にふくまれ、デンプンを糖に変える消化酵素を何といいますか。", answer:"だ液アミラーゼ", accept:["プチアリン"], explain:"デンプンのブドウ糖のつながりを切り、麦芽糖などの糖に変える。"},
+  {pillar:2, q:"胃液にふくまれ、タンパク質をペプトンに変える消化酵素を何といいますか。", answer:"ペプシン", explain:"胃液には0.4〜0.5%の塩酸もふくまれ、食物の殺菌をする。"},
+  {pillar:2, q:"肝臓でつくられ、胆のうにたくわえられる、しぼうを細かいつぶにするはたらきをもつ液を何といいますか。", answer:"胆汁", explain:"胆汁には消化酵素はふくまれないが、乳化作用で消化を助ける。"},
+  {pillar:2, q:"すい臓でつくられ、しぼうをしぼう酸とモノグリセリドに変える消化酵素を何といいますか。", answer:"リパーゼ", explain:"すい液には他にすい液アミラーゼやトリプシンもふくまれる。"},
+  {pillar:2, q:"消化酵素の主な成分は何ですか。", answer:"タンパク質", explain:"加熱するとタンパク質の性質が変わり、はたらかなくなる。"},
+  {pillar:3, q:"小腸の内側のかべにある、たくさんのひだの表面にある1mmくらいの小さなとっ起を何といいますか。", answer:"柔毛", explain:"表面積を大きくし、養分を効率的に吸収するのに役立つ。"},
+  {pillar:3, q:"柔毛で吸収されたブドウ糖やアミノ酸は、毛細血管に入ったあと何という血管を通って肝臓に運ばれますか。", answer:"門脈", explain:"ビタミンCなど水に溶けやすいものも同じ経路で運ばれる。"},
+  {pillar:3, q:"しぼう酸とモノグリセリドは、柔毛の中で再びしぼうにもどったあと何という管に吸収されますか。", answer:"リンパ管", explain:"リンパ管は心臓の近くで静脈につながっている。"},
+  {pillar:3, q:"肝臓でブドウ糖の一部が変えられ、たくわえられる物質を何といいますか。", answer:"グリコーゲン", explain:"アミノ酸の一部からはからだに必要なタンパク質がつくられる。"},
+  {pillar:3, q:"肝臓のはたらきとして、ブドウ糖をグリコーゲンにたくわえるほかにあるのは、有毒な物質をどうすることですか。", answer:"無毒にする", accept:["無毒化する"], explain:"肝臓は熱を発生させて体温を保つはたらきもある。"},
+  {pillar:4, q:"動物だけをえさにする動物を何といいますか。", answer:"肉食動物", explain:"消化管が短めで、門歯や犬歯が発達している。"},
+  {pillar:4, q:"植物だけをえさにする動物を何といいますか。", answer:"草食動物", explain:"消化管が長く、門歯と臼歯が発達している。"},
+  {pillar:4, q:"植物と動物の両方をえさにする動物を何といいますか。", answer:"雑食動物", explain:"サルやヒトが代表例で、ヒトの消化管は体長の約5倍。"},
+  {pillar:4, q:"ライオンなどの肉食動物の消化管の長さは、体長の約何倍ですか。（数字のみ）", answer:"2", explain:"消化管が短いのは、肉が消化しやすいためである。"},
+  {pillar:4, q:"ウシなどの草食動物の消化管が長いのは、せんい質を多くふくむ何を消化するのに時間がかかるためですか。", answer:"草", explain:"ウシの消化管は体長の約20倍もある。"}
+];
+
+/* ===================== ①構造テスト：まとめ選択 ===================== */
+const kihonFinalRaw = [
+  {pillar:1, q:"5大栄養素の組み合わせとして正しいものはどれですか。", choices:["炭水化物・タンパク質・しぼう・ビタミン・ミネラル","炭水化物・タンパク質・水・酸素・二酸化炭素","デンプン・糖・アミノ酸・脂肪酸・ビタミン","タンパク質・しぼう・水・ミネラル・食塩"], answer:0, explain:"食物には炭水化物・タンパク質・しぼう・ビタミン・ミネラルなどがふくまれ、ヒトのからだはこれらの物質でできている。"},
+  {pillar:2, q:"デンプンが消化されて最終的に吸収される形として正しいものはどれですか。", choices:["ブドウ糖","麦芽糖","ペプトン","しぼう酸"], answer:0, explain:"デンプンはだ液・すい液・小腸のかべの消化酵素によって最終的にブドウ糖にまで分解されて吸収される。"},
+  {pillar:3, q:"小腸で吸収されたブドウ糖とアミノ酸が最初に運ばれる先として正しいものはどれですか。", choices:["毛細血管→門脈→肝臓","リンパ管→左さ骨下静脈","胃にもどる","大腸に送られる"], answer:0, explain:"ブドウ糖とアミノ酸は柔毛の毛細血管に吸収され、門脈という血管を通って肝臓に運ばれる。"},
+  {pillar:4, q:"肉食動物と草食動物の消化管の長さのちがいとして正しいものはどれですか。", choices:["肉食動物は短く、草食動物は長い","肉食動物は長く、草食動物は短い","どちらも同じ長さである","えさの種類に関係なく体長で決まる"], answer:0, explain:"草食動物はせんい質を多くふくむ草を消化するのに時間がかかるため、消化管が長くなっている。"}
+];
+
+/* ===================== ②黒太字テスト ===================== */
+const kurojiBlocks = [
+  {pillar:1, sub:"食物と養分", items:[
+    {q:"動物が食物から取り入れているものは何ですか。", choices:["生きていくためのエネルギーやからだをつくる材料","水のみ","酸素のみ","日光のみ"], answer:0},
+    {q:"おもにデンプンや糖で、生きていくために必要なエネルギー源になる栄養素を何といいますか。", choices:["炭水化物","タンパク質","しぼう","ミネラル"], answer:0},
+    {q:"炭水化物を多くふくむ食品はどれですか。", choices:["米・ムギなどの穀物","肉・魚","バター","牛乳"], answer:0},
+    {q:"おもに筋肉・皮ふ・内臓などのからだをつくる材料になる栄養素を何といいますか。", choices:["タンパク質","炭水化物","しぼう","ビタミン"], answer:0},
+    {q:"タンパク質を多くふくむ食品はどれですか。", choices:["肉・魚・牛乳・ダイズ","米・ムギ","バター","サツマイモ"], answer:0},
+    {q:"生きていくために必要なエネルギー源になり、バターや肉のあぶら身に多くふくまれる栄養素を何といいますか。", choices:["しぼう","炭水化物","タンパク質","ミネラル"], answer:0},
+    {q:"からだの調子をととのえたり、成長を助けたりする栄養素を何といいますか。", choices:["ビタミン","ミネラル","炭水化物","タンパク質"], answer:0},
+    {q:"水に溶けやすいビタミンはどれですか。", choices:["ビタミンB1・B2・C","ビタミンA","ビタミンD","ビタミンE"], answer:0},
+    {q:"骨・歯・血液などの成分となる栄養素を何といいますか。", choices:["ミネラル","ビタミン","炭水化物","タンパク質"], answer:0},
+    {q:"体重50kgのヒトのからだをつくる物質のうち、最も重さの割合が大きいものは何ですか。", choices:["水","タンパク質","しぼう","ミネラル"], answer:0},
+    {q:"ビタミンCの不足によって起こる病気を何といいますか。", choices:["壊血病","脚気","くる病","夜盲症"], answer:0},
+    {q:"壊血病は、昔どのような人々の間で多くみられましたか。", choices:["長距離を移動する船乗り","農民","兵士","貴族"], answer:0}
+  ]},
+  {pillar:2, sub:"消化", items:[
+    {q:"食物にふくまれる養分を、体内に吸収できる細かいつぶに変えるはたらきを何といいますか。", choices:["消化","呼吸","吸収","排出"], answer:0},
+    {q:"口から肛門まで、食物が通る1本の管を何といいますか。", choices:["消化管","血管","気管","リンパ管"], answer:0},
+    {q:"消化管と、肝臓・胆のう・すい臓などをすべて合わせて何といいますか。", choices:["消化器官","循環器官","呼吸器官","排出器官"], answer:0},
+    {q:"食物をかみ切ったり、すりつぶしたりする歯のうち、門歯・犬歯・小臼歯とならぶもう1つは何ですか。", choices:["大臼歯","切歯","犬歯根","歯槽"], answer:0},
+    {q:"だ液をつくるだ液せんは何種類ありますか。", choices:["3種類","1種類","2種類","4種類"], answer:0},
+    {q:"25cmほどの筋肉の管で、消化のはたらきをもたず口から胃に食物を送る器官は何ですか。", choices:["食道","気管","胃","十二指腸"], answer:0},
+    {q:"胃液にふくまれ、食物の殺菌をする酸は何ですか。", choices:["塩酸","硫酸","酢酸","炭酸"], answer:0},
+    {q:"小腸のうち、胆のう・すい臓とつながっている部分を何といいますか。", choices:["十二指腸","空腸","回腸","結腸"], answer:0},
+    {q:"食物の消化はどこで終了しますか。", choices:["小腸","胃","大腸","食道"], answer:0},
+    {q:"小腸で吸収されたあとの残りかすから水分を吸収する器官はどこですか。", choices:["大腸","小腸","胃","食道"], answer:0},
+    {q:"だ液にふくまれ、デンプンを糖に変える消化酵素を何といいますか。", choices:["だ液アミラーゼ","ペプシン","トリプシン","リパーゼ"], answer:0},
+    {q:"デンプンが多数つながってできている糖は何ですか。", choices:["ブドウ糖","アミノ酸","しぼう酸","ペプトン"], answer:0},
+    {q:"胃液にふくまれ、タンパク質をペプトンに変える消化酵素を何といいますか。", choices:["ペプシン","だ液アミラーゼ","トリプシン","リパーゼ"], answer:0},
+    {q:"肝臓でつくられ、胆のうにたくわえられる液を何といいますか。", choices:["胆汁","すい液","胃液","だ液"], answer:0},
+    {q:"胆汁が、しぼうを細かいつぶにして消化液と混ざりやすくするはたらきを何といいますか。", choices:["乳化作用","消化作用","吸収作用","分解作用"], answer:0},
+    {q:"すい液にふくまれ、糖の消化を進める消化酵素を何といいますか。", choices:["すい液アミラーゼ（アミロプシン）","ペプシン","だ液アミラーゼ","リパーゼ"], answer:0},
+    {q:"すい液にふくまれ、ペプトンの消化を進める消化酵素を何といいますか。", choices:["トリプシン","ペプシン","リパーゼ","アミラーゼ"], answer:0},
+    {q:"すい液にふくまれ、しぼうをしぼう酸とモノグリセリドに変える消化酵素を何といいますか。", choices:["リパーゼ","トリプシン","ペプシン","アミラーゼ"], answer:0},
+    {q:"デンプンの消化実験で、だ液を加えて37℃に保った試験管でのみ起こった反応は何ですか。", choices:["ヨウ素液の反応が起こらず、フェーリング液が反応した","ヨウ素液が反応し、フェーリング液は反応しなかった","どちらも反応しなかった","どちらも反応した"], answer:0},
+    {q:"消化酵素は主に何でできているため、高温にすると性質が変わってはたらかなくなりますか。", choices:["タンパク質","炭水化物","しぼう","ミネラル"], answer:0},
+    {q:"肝臓のはたらきとして、ブドウ糖をグリコーゲンにたくわえるほかにあるものはどれですか。", choices:["有毒な物質を無毒にする","消化酵素をつくらない","胆汁を分解する","デンプンをつくる"], answer:0}
+  ]},
+  {pillar:3, sub:"養分の吸収", items:[
+    {q:"小腸の内側のかべにある、たくさんのひだの表面にある1mmくらいの小さなとっ起を何といいますか。", choices:["柔毛","絨毛突起","消化管","リンパ節"], answer:0},
+    {q:"柔毛は1mm²あたりにいくつくらいありますか。", choices:["18〜40個","1〜5個","100〜200個","1000個以上"], answer:0},
+    {q:"ひだや柔毛が小腸の内側の表面積を大きくする目的は何ですか。", choices:["養分を効率的に吸収するため","消化液を多く出すため","食物を早く送るため","水分を排出するため"], answer:0},
+    {q:"柔毛で吸収されたブドウ糖やアミノ酸は、まず何に吸収されますか。", choices:["毛細血管","リンパ管","筋肉","粘膜"], answer:0},
+    {q:"毛細血管に吸収されたブドウ糖やアミノ酸は、何という血管を通って肝臓に運ばれますか。", choices:["門脈","動脈","静脈","リンパ管"], answer:0},
+    {q:"しぼう酸とモノグリセリドは、柔毛の中でどうなったあとリンパ管に吸収されますか。", choices:["再びしぼうにもどる","そのまま吸収される","ブドウ糖に変わる","アミノ酸に変わる"], answer:0},
+    {q:"リンパ管は心臓の近くで何につながっていますか。", choices:["静脈","動脈","門脈","消化管"], answer:0},
+    {q:"肝臓に運ばれたブドウ糖の一部は、何という物質に変えられてたくわえられますか。", choices:["グリコーゲン","アミノ酸","脂肪","ペプトン"], answer:0},
+    {q:"肝臓は、アミノ酸の一部から何をつくりますか。", choices:["からだに必要なタンパク質","デンプン","しぼう","ビタミン"], answer:0},
+    {q:"肝臓のはたらきとして正しくないものはどれですか。", choices:["デンプンを直接吸収する","有毒な物質を無毒にする","熱を発生させて体温を保つ","ブドウ糖をグリコーゲンにたくわえる"], answer:0}
+  ]},
+  {pillar:4, sub:"動物の消化器官", items:[
+    {q:"フナの消化管は、のどから肛門までどのようになっていますか。", choices:["1本の長い管","胃・小腸・大腸に分かれている","枝分かれしている","2本ある"], answer:0},
+    {q:"魚類は何で呼吸しますか。", choices:["えら","肺","皮ふ","気管"], answer:0},
+    {q:"フナのうきぶくろのはたらきは何ですか。", choices:["浮きしずみの調節","消化","呼吸","排出"], answer:0},
+    {q:"動物だけをえさにする動物を何といいますか。", choices:["肉食動物","草食動物","雑食動物","菌食動物"], answer:0},
+    {q:"植物だけをえさにする動物を何といいますか。", choices:["草食動物","肉食動物","雑食動物","水生動物"], answer:0},
+    {q:"植物と動物の両方をえさにする動物を何といいますか。", choices:["雑食動物","肉食動物","草食動物","単食動物"], answer:0},
+    {q:"ライオンなどの肉食動物の消化管の長さは、体長の約何倍ですか。", choices:["約2倍","約5倍","約12倍","約20倍"], answer:0},
+    {q:"肉食動物で、肉をかみ切ったりひきさいたりする発達した歯は何ですか。", choices:["門歯や犬歯","臼歯のみ","門歯のみ","犬歯のみ"], answer:0},
+    {q:"ウシなどの草食動物の消化管が長いのは何を消化するのに時間がかかるためですか。", choices:["せんい質を多くふくむ草","肉","脂肪","タンパク質"], answer:0},
+    {q:"ウシの消化管の長さは、体長の約何倍ですか。", choices:["約20倍","約2倍","約5倍","約12倍"], answer:0},
+    {q:"草食動物で発達している歯は何ですか。", choices:["草をかみちぎる門歯とすりつぶす臼歯","犬歯のみ","門歯のみ","臼歯のみ"], answer:0},
+    {q:"サルやヒトなどの雑食性の動物の消化管の長さは、ヒトの場合体長の約何倍ですか。", choices:["約5倍","約2倍","約12倍","約20倍"], answer:0}
+  ]}
+];
+
+/* ===================== ③ひとくちメモテスト ===================== */
+const mameQuizRaw = [
+  {q:"ゾウが草だけで生きていける理由として正しいものはどれですか。", choices:["からだが大きく消化管の容積も大きいので、少しずつエネルギーに変えられるから","ゾウは草を食べずに水だけで生きているから","ゾウの消化管は非常に短いから","ゾウは冬眠するから"], answer:0},
+  {q:"同じ体重あたりで比べると、からだの大きい動物ほど生きていくために必要なエネルギーはどうなりますか。", choices:["少なくてよい","多く必要になる","変わらない","ゼロになる"], answer:0},
+  {q:"体重が5gほどしかないトガリネズミに必要なエネルギーは、同じ体重あたりで比べるとゾウの何倍以上にもなりますか。", choices:["100倍以上","10倍","1000倍以上","2倍"], answer:0},
+  {q:"壊血病はビタミンの不足によって起こりますが、具体的に何というビタミンの不足が原因ですか。", choices:["ビタミンC","ビタミンA","ビタミンD","ビタミンB1"], answer:0},
+  {q:"牛には胃がいくつありますか。", choices:["4つ","1つ","2つ","3つ"], answer:0},
+  {q:"牛が一度胃に入れたものを再び口にもどしてかみくだき、また飲みこむことを何といいますか。", choices:["反すう","消化","吸収","排出"], answer:0},
+  {q:"牛の胃の中には多くの何が生活していて、消化に役立っていますか。", choices:["微生物","寄生虫","細胞","酵素のみ"], answer:0},
+  {q:"フナの解ぼうで、はさみを入れる最初の位置はどこですか。", choices:["肛門の少し前","えらぶたの前","口の中","背びれの下"], answer:0}
+];
+
+/* ===================== ④気をつけたいポイント（読みもの） ===================== */
+const sankoNotes = [
+  {
+    title:"ゾウはどうして草だけで生きていけるの？",
+    body:`草はせんいが多くて、消化にとても時間がかかる食べ物です。しかし、からだが大きくて消化管の容積も大きい動物ならば、からだの中にたくさんたくわえておいて、少しずつエネルギーに変えていくことができます。同じ体重あたりで比べると、からだの大きい動物ほど、生きていくために必要なエネルギーが少なくてよいのです。体重が5gほどしかないトガリネズミに必要なエネルギーは、同じ体重あたりで比べると、ゾウの100倍以上にもなり、起きている間中、食べっぱなしだそうです。`,
+    src:"教科書 導入Q&A（p37）"
+  },
+  {
+    title:"壊血病",
+    body:`ビタミンの不足が病気を引き起こすことがあります。長距離を移動する昔の船乗りの間で、皮ふの下での出血や、鼻血や歯ぐきからの出血が起こり、最悪の場合は死に至る病気が多くみられました。この病気を壊血病といい、ビタミンCの不足によって起こることが後になってわかりました。ビタミンCは果物・野菜などに多くふくまれていますが、長距離を移動する昔の船乗りにとって、新鮮な果物や野菜は手に入りにくい食材でした。`,
+    src:"教科書コラム（p38）"
+  },
+  {
+    title:"牛の胃は4つ",
+    body:`消化しにくい食物せんいを消化して養分にするために、牛には4つの胃があります。また、一度胃の中に入れたものを再び口にもどしてかみくだき、また飲みこむ「反すう」を行います。さらに胃の中には多くの微生物が生活していて、この微生物のはたらきも消化に役立っています。このようにすることで、牛はより多くの養分を手に入れることができます。`,
+    src:"教科書コラム（p44）"
+  },
+  {
+    title:"5大栄養素とはたらきの対応を整理する",
+    body:`「炭水化物・しぼう＝エネルギー源」「タンパク質＝からだをつくる材料」「ビタミン・ミネラル＝からだの調子をととのえる」という、栄養素とそのはたらきの対応を整理して覚えましょう。とくに炭水化物としぼうはどちらもエネルギー源になる点で共通していますが、タンパク質はからだをつくる材料である点が異なります。`,
+    src:"入試でまちがえやすいポイント（一般知識）"
+  },
+  {
+    title:"消化酵素とその材料・はたらきをセットで覚える",
+    body:`「だ液アミラーゼ＝デンプンを糖に」「ペプシン＝タンパク質をペプトンに」「トリプシン＝ペプトンをさらに消化」「リパーゼ＝しぼうをしぼう酸とモノグリセリドに」という、消化酵素とその材料・はたらきの対応を混同しやすいので、どの器官のどの消化液にふくまれるかとあわせてセットで覚えましょう。胆汁には消化酵素がふくまれない点にも注意が必要です。`,
+    src:"入試でまちがえやすいポイント（一般知識）"
+  },
+  {
+    title:"ブドウ糖・アミノ酸の行き先としぼうの行き先はちがう",
+    body:`柔毛で吸収された養分のうち、ブドウ糖やアミノ酸は毛細血管から門脈を通って肝臓へ運ばれますが、しぼう酸とモノグリセリドは柔毛の中で再びしぼうにもどり、リンパ管を通って心臓の近くで血管に入ります。「糖・アミノ酸＝血管（門脈）経由」「しぼう＝リンパ管経由」という行き先のちがいを区別して覚えましょう。`,
+    src:"入試でまちがえやすいポイント（一般知識）"
+  },
+  {
+    title:"肉食動物と草食動物の消化管の長さの対比",
+    body:`肉食動物（ライオンなど）は消化管が体長の約2倍と短めで、犬歯や門歯が発達しています。一方、草食動物（ウシなど）は消化管が体長の約20倍と長く、草をかみちぎる門歯とすりつぶす臼歯が発達しています。「短い消化管＝肉食」「長い消化管＝草食」という対応を逆に覚えないようにしましょう。`,
+    src:"入試でまちがえやすいポイント（一般知識）"
+  }
+];
+
+/* ===================== 共通ビルド関数 ===================== */
+function shuffleArr(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+function finalize(q){
+  const correctText = q.choices[q.answer];
+  const order = shuffleArr(q.choices.map((c,i)=>i));
+  const newChoices = order.map(i=>q.choices[i]);
+  const newAnswer = newChoices.indexOf(correctText);
+  const out = Object.assign({}, q, {choices:newChoices, answer:newAnswer});
+  return out;
+}
+
+function normalizeAnswer(str){
+  if(str===undefined || str===null) return "";
+  let s = String(str).trim();
+  s = s.replace(/[０-９]/g, ch => String.fromCharCode(ch.charCodeAt(0)-0xFEE0));
+  s = s.replace(/\s+/g,"");
+  s = s.replace(/[『』「」]/g,"");
+  return s;
+}
+
+function checkFillAnswer(item, userInput){
+  const norm = normalizeAnswer(userInput);
+  if(norm==="") return false;
+  const candidates = [item.answer].concat(item.accept||[]);
+  return candidates.some(c => normalizeAnswer(c)===norm);
+}
+
+function shuffleArrKeepBlocks(){
+  const byPillar = {};
+  kihonFillRaw.forEach((r,idx)=>{
+    if(!byPillar[r.pillar]) byPillar[r.pillar]=[];
+    byPillar[r.pillar].push(idx);
+  });
+  let out = [];
+  [1,2,3,4].forEach(p=>{
+    const idxs = shuffleArr(byPillar[p]||[]);
+    idxs.forEach(idx=>{
+      const r = kihonFillRaw[idx];
+      out.push({
+        type:"fill", id:"kihonFill_"+idx, q:r.q, answer:r.answer, accept:r.accept,
+        explain:r.explain, lead:PILLARS[r.pillar].label, sub:PILLARS[r.pillar].full, pillar:r.pillar
+      });
+    });
+  });
+  return out;
+}
+
+function buildKihonFinalItems(){
+  return kihonFinalRaw.map((r,idx)=>{
+    const fq = finalize({q:r.q, choices:r.choices, answer:r.answer, explain:r.explain});
+    return Object.assign({type:"choice", id:"kihonFinal_"+idx, pillar:r.pillar, sub:PILLARS[r.pillar].full}, fq);
+  });
+}
+
+function buildKihonItems(){
+  const overview = kihonOverviewScreens.map((s,idx)=>Object.assign({id:"kihonOv_"+idx, type:"info", wide:true}, s));
+  const fills = shuffleArrKeepBlocks();
+  const finals = shuffleArr(buildKihonFinalItems());
+  return overview.concat(fills, finals);
+}
+
+function buildKurojiItems(){
+  let out = [];
+  kurojiBlocks.forEach((block,bi)=>{
+    const shuffledItems = shuffleArr(block.items);
+    shuffledItems.forEach((it,ii)=>{
+      const fq = finalize(it);
+      out.push(Object.assign({
+        type:"choice",
+        id:"kuroji_"+bi+"_"+ii,
+        pillar:block.pillar,
+        sub:block.sub
+      }, fq));
+    });
+  });
+  return out;
+}
+
+function buildMameItems(){
+  const shuffled = shuffleArr(mameQuizRaw);
+  return shuffled.map((r,idx)=>{
+    const fq = finalize(r);
+    return Object.assign({type:"choice", id:"mame_"+idx}, fq);
+  });
+}
+
+function buildSankoItems(){
+  return sankoNotes.map((n,idx)=>({
+    type:"info", id:"sanko_"+idx, title:n.title, body:n.body, src:n.src, wide:true
+  }));
+}
+
+const STAGES = [
+  {id:"kihon", name:"① 構造テスト", desc:"4本柱（食物と養分・消化・養分の吸収・動物の消化器官）の骨組みを確認。概要2画面＋穴埋め24問＋まとめ選択4問。", scored:true, ref:false, build:buildKihonItems},
+  {id:"kuroji", name:"② 黒太字テスト", desc:"各分野の重要語句を4択で確認します。計55問。", scored:true, ref:false, build:buildKurojiItems},
+  {id:"mame", name:"③ ひとくちメモテスト", desc:"教科書の導入Q&Aとコラムから出題します。計8問。", scored:true, ref:false, build:buildMameItems},
+  {id:"sanko", name:"④ 気をつけたいポイント", desc:"教科書コラム＋入試でまちがえやすい注意点の読みもの。採点はありません。", scored:false, ref:true, build:buildSankoItems}
+];
+
+/* ===================== 状態管理／localStorage ===================== */
+const STORAGE_KEY = "shoukakyuushuu4_missed_v1";
+
+function loadMissedStore(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : {};
+  }catch(e){ return {}; }
+}
+function saveMissedStore(store){
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(store)); }catch(e){ /* 保存できない環境は無視 */ }
+}
+
+const SPEAK_RATE_KEY = "quizapp_speak_rate_v1";
+function loadSpeakRate(){
+  try{
+    const v = parseFloat(localStorage.getItem(SPEAK_RATE_KEY));
+    if(!isNaN(v) && v>=0.7 && v<=1.8) return v;
+  }catch(e){}
+  return 1.1;
+}
+function saveSpeakRate(v){
+  try{ localStorage.setItem(SPEAK_RATE_KEY, String(v)); }catch(e){}
+}
+
+const state = {
+  screen:"home",
+  stageId:null,
+  isRetry:false,
+  items:[],
+  currentIndex:0,
+  scoreTotal:0,
+  scoreCorrect:0,
+  answerLog:[],
+  results:{},
+  missedStore: loadMissedStore(),
+  answered:false,
+  userInput:"",
+  userChoiceIdx:null,
+  speakRate: loadSpeakRate()
+};
+
+function startStage(stageId){
+  const stage = STAGES.find(s=>s.id===stageId);
+  state.stageId = stageId;
+  state.isRetry = false;
+  state.items = stage.build();
+  state.currentIndex = 0;
+  state.scoreTotal = state.items.filter(i=>i.type!=="info").length;
+  state.scoreCorrect = 0;
+  state.answerLog = [];
+  state.answered = false;
+  state.userInput = "";
+  state.userChoiceIdx = null;
+  state.screen = "play";
+  render();
+}
+
+function startRetry(stageId){
+  const missed = state.missedStore[stageId] || {};
+  const items = Object.values(missed);
+  if(items.length===0) return;
+  state.stageId = stageId;
+  state.isRetry = true;
+  state.items = shuffleArr(items);
+  state.currentIndex = 0;
+  state.scoreTotal = state.items.length;
+  state.scoreCorrect = 0;
+  state.answerLog = [];
+  state.answered = false;
+  state.userInput = "";
+  state.userChoiceIdx = null;
+  state.screen = "play";
+  render();
+}
+
+function currentItem(){ return state.items[state.currentIndex]; }
+
+function submitChoice(idx){
+  if(state.answered) return;
+  const item = currentItem();
+  const correct = idx === item.answer;
+  state.answered = true;
+  state.userChoiceIdx = idx;
+  if(correct) state.scoreCorrect++;
+  state.answerLog.push({item, wasCorrect:correct});
+}
+
+function submitFill(){
+  if(state.answered) return;
+  const item = currentItem();
+  const correct = checkFillAnswer(item, state.userInput);
+  state.answered = true;
+  if(correct) state.scoreCorrect++;
+  state.answerLog.push({item, wasCorrect:correct});
+}
+
+function nextItem(){
+  stopSpeak();
+  state.answered = false;
+  state.userInput = "";
+  state.userChoiceIdx = null;
+  if(state.currentIndex < state.items.length-1){
+    state.currentIndex++;
+    render();
+  }else{
+    finishStage();
+  }
+}
+
+function finishStage(){
+  const stage = STAGES.find(s=>s.id===state.stageId);
+  state.results[state.stageId] = {
+    correct: state.scoreCorrect,
+    total: state.scoreTotal,
+    at: Date.now()
+  };
+  if(stage.scored){
+    const missed = state.missedStore[state.stageId] || {};
+    state.answerLog.forEach(log=>{
+      const key = log.item.q;
+      if(!log.wasCorrect){
+        missed[key] = log.item;
+      }else{
+        if(missed[key]) delete missed[key];
+      }
+    });
+    state.missedStore[state.stageId] = missed;
+    saveMissedStore(state.missedStore);
+  }
+  state.screen = "result";
+  render();
+}
+
+function backHome(){
+  stopSpeak();
+  stopMic();
+  state.screen = "home";
+  render();
+}
+
+/* ===================== 音声読み上げ（Web Speech API：読み上げ） ===================== */
+let cachedVoices = [];
+
+function speakSupported(){
+  return typeof window!=="undefined" && "speechSynthesis" in window;
+}
+
+function refreshVoices(){
+  if(speakSupported()) cachedVoices = window.speechSynthesis.getVoices() || [];
+}
+if(speakSupported()){
+  refreshVoices();
+  window.speechSynthesis.onvoiceschanged = refreshVoices;
+}
+
+function getBestJaVoice(){
+  const jaVoices = cachedVoices.filter(v => v.lang && v.lang.toLowerCase().startsWith("ja"));
+  if(jaVoices.length===0) return null;
+  const preferred = jaVoices.find(v => /google/i.test(v.name))
+    || jaVoices.find(v => v.localService===false)
+    || jaVoices[0];
+  return preferred;
+}
+
+function speakText(text, btnId){
+  if(!speakSupported()) return;
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = "ja-JP";
+  u.rate = state.speakRate;
+  const voice = getBestJaVoice();
+  if(voice) u.voice = voice;
+  u.onend = ()=>{ setSpeakBtnState(btnId, false); };
+  u.onerror = ()=>{ setSpeakBtnState(btnId, false); };
+  window.speechSynthesis.speak(u);
+  setSpeakBtnState(btnId, true);
+}
+
+function stopSpeak(){
+  if(speakSupported()) window.speechSynthesis.cancel();
+}
+
+function toggleSpeak(text){
+  if(!speakSupported()) return;
+  if(window.speechSynthesis.speaking){
+    stopSpeak();
+    setSpeakBtnState("speakBtn", false);
+  }else{
+    speakText(text, "speakBtn");
+  }
+}
+
+function updateSpeakRate(v){
+  state.speakRate = parseFloat(v);
+  saveSpeakRate(state.speakRate);
+  const label = document.getElementById("speakRateLabel");
+  if(label) label.textContent = state.speakRate.toFixed(1)+"倍";
+}
+
+function setSpeakBtnState(btnId, playing){
+  const btn = document.getElementById(btnId);
+  if(!btn) return;
+  btn.classList.toggle("playing", playing);
+  btn.innerHTML = playing ? "⏸ 読み上げを止める" : "🔊 音声で聞く";
+}
+
+/* マイク機能は精度の問題により削除済み。他の関数からの呼び出しに備えて no-op で残す */
+function stopMic(){}
+
+/* ===================== レンダリング ===================== */
+const app = document.getElementById("app");
+
+function render(){
+  if(state.screen==="home") renderHome();
+  else if(state.screen==="play") renderPlay();
+  else if(state.screen==="result") renderResult();
+}
+
+function esc(s){
+  return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+
+function pillarBadge(p){
+  return (PILLARS[p] && PILLARS[p].label) || "";
+}
+
+function renderHome(){
+  let html = `
+    <div class="header">
+      <h1>ヒトと動物の消化・吸収テスト</h1>
+      <div class="sub">予習シリーズ5年下　理科　第4回　ヒトと動物の消化・吸収</div>
+    </div>
+    <div class="content">
+  `;
+  const scoredStages = STAGES.filter(s=>s.scored);
+  const refStages = STAGES.filter(s=>!s.scored);
+
+  html += `<div class="home-title">確認テスト</div>`;
+  scoredStages.forEach(stage=>{
+    const res = state.results[stage.id];
+    const missedCount = Object.keys(state.missedStore[stage.id]||{}).length;
+    html += `<div class="stage-card" onclick="startStage('${stage.id}')">
+      <div class="stage-top">
+        <div class="stage-name">${esc(stage.name)}</div>
+        <div class="stage-badge">${res ? res.correct+"/"+res.total : "未挑戦"}</div>
+      </div>
+      <div class="stage-desc">${esc(stage.desc)}</div>
+      ${res ? `<div class="progress-bar"><div class="progress-fill" style="width:${Math.round(res.correct/res.total*100)}%"></div></div>` : ""}
+      ${missedCount>0 ? `<div class="retry-btn" onclick="event.stopPropagation(); startRetry('${stage.id}')">🔁 苦手${missedCount}問を復習</div>` : ""}
+    </div>`;
+  });
+
+  html += `<div class="home-title">参考情報（読みもの）</div>`;
+  refStages.forEach(stage=>{
+    html += `<div class="stage-card ref" onclick="startStage('${stage.id}')">
+      <div class="stage-top">
+        <div class="stage-name">${esc(stage.name)}</div>
+        <div class="stage-badge">読みもの</div>
+      </div>
+      <div class="stage-desc">${esc(stage.desc)}</div>
+    </div>`;
+  });
+
+  const totalMissed = STAGES.filter(s=>s.scored).reduce((sum,s)=>sum+Object.keys(state.missedStore[s.id]||{}).length,0);
+  html += `<div class="footer-note">単一HTMLファイル・localStorageに端末内で保存されます</div>`;
+  if(totalMissed>0){
+    html += `<button class="reset-all-btn" id="resetAllBtn" onclick="doResetAll()">🗑️ 苦手リストをすべてリセット</button>`;
+  }
+  html += `</div>`;
+  app.innerHTML = html;
+}
+
+function renderPlay(){
+  const item = currentItem();
+  const stage = STAGES.find(s=>s.id===state.stageId);
+  const isInfo = item.type==="info";
+
+  let html = `
+    <div class="header">
+      <h1>${esc(stage.name)}${state.isRetry?"（復習）":""}</h1>
+      <div class="sub">${item.sub ? esc(item.sub) : esc(stage.desc)}</div>
+    </div>
+    <div class="content">
+      <div class="play-topbar">
+        <span>問題 ${state.currentIndex+1} / ${state.items.length}</span>
+        <span onclick="backHome()" style="text-decoration:underline; cursor:pointer;">中断してホームへ</span>
+      </div>
+  `;
+
+  if(isInfo){
+    html += `<div class="qcard info">
+      <div class="qtitle">${esc(item.title)}</div>
+      ${item.speak ? `
+      <div class="speak-row">
+        <button id="speakBtn" class="speak-btn" onclick='toggleSpeak(${JSON.stringify(item.speak)})'>🔊 音声で聞く</button>
+        <div class="speed-control">
+          <span>速さ</span>
+          <input type="range" min="0.7" max="1.8" step="0.1" value="${state.speakRate}" oninput="updateSpeakRate(this.value)">
+          <span id="speakRateLabel">${state.speakRate.toFixed(1)}倍</span>
+        </div>
+      </div>` : ""}
+      <div class="info-body ${item.wide?'wide':''}">${item.body}</div>
+      ${item.src ? `<div class="src-tag">出典：${esc(item.src)}</div>` : ""}
+      <button class="btn btn-ref" onclick="nextItem()">${state.currentIndex < state.items.length-1 ? "次へ" : "結果を見る"}</button>
+    </div>`;
+  } else if(item.type==="fill"){
+    html += `<div class="qcard">`;
+    if(item.lead) html += `<div class="lead-badge">${esc(item.lead)}</div>`;
+    html += `<div class="qtext">${esc(item.q)}</div>`;
+    const inputClass = state.answered ? (checkFillAnswer(item, state.userInput) ? "correct":"wrong") : "";
+    html += `<input type="text" id="fillInput" class="fill-input ${inputClass}" placeholder="答えを入力" value="${esc(state.userInput)}" ${state.answered?"disabled":""} onkeydown="if(event.key==='Enter'){state.userInput=this.value; submitFillUI();}">`;
+    if(!state.answered){
+      html += `<button class="btn btn-primary" onclick="submitFillUI()">こたえる</button>`;
+    }else{
+      const correct = checkFillAnswer(item, state.userInput);
+      html += `<div class="explain-box ${correct?'good':'bad'}">
+        <span class="mark-icon">${correct?"⭕":"❌"}</span><b>正解：${esc(item.answer)}</b><br>${esc(item.explain||"")}
+      </div>`;
+      html += `<button class="btn btn-primary" onclick="nextItem()">${state.currentIndex < state.items.length-1 ? "次の問題へ" : "結果を見る"}</button>`;
+    }
+    html += `</div>`;
+  } else if(item.type==="choice"){
+    html += `<div class="qcard">`;
+    if(item.pillar!==undefined && item.pillar!==null) html += `<div class="lead-badge">${esc(pillarBadge(item.pillar))}</div>`;
+    html += `<div class="qtext">${esc(item.q)}</div>`;
+    html += `<div class="choice-list">`;
+    item.choices.forEach((c,idx)=>{
+      let cls = "choice-btn";
+      if(state.answered){
+        if(idx===item.answer) cls += " correct";
+        else if(idx===state.userChoiceIdx) cls += " wrong";
+        else cls += " dim";
+      }
+      html += `<button class="${cls}" ${state.answered?"disabled":""} onclick="submitChoiceUI(${idx})">${esc(c)}</button>`;
+    });
+    html += `</div>`;
+    if(state.answered){
+      const correct = state.userChoiceIdx===item.answer;
+      html += `<div class="explain-box ${correct?'good':'bad'}">
+        <span class="mark-icon">${correct?"⭕":"❌"}</span>${esc(item.explain||"")}
+      </div>`;
+      html += `<button class="btn btn-primary" onclick="nextItem()">${state.currentIndex < state.items.length-1 ? "次の問題へ" : "結果を見る"}</button>`;
+    }
+    html += `</div>`;
+  }
+
+  html += `</div>`;
+  app.innerHTML = html;
+  if(item.type==="fill" && !state.answered){
+    const el = document.getElementById("fillInput");
+    if(el) el.focus();
+  }
+}
+
+function submitChoiceUI(idx){
+  submitChoice(idx);
+  renderPlay();
+}
+function submitFillUI(){
+  const el = document.getElementById("fillInput");
+  if(el) state.userInput = el.value;
+  submitFill();
+  renderPlay();
+}
+
+function renderResult(){
+  const stage = STAGES.find(s=>s.id===state.stageId);
+  const wrongItems = state.answerLog.filter(l=>!l.wasCorrect).map(l=>l.item);
+  const missedCount = Object.keys(state.missedStore[state.stageId]||{}).length;
+
+  let html = `
+    <div class="header">
+      <h1>結果</h1>
+      <div class="sub">${esc(stage.name)}${state.isRetry?"（復習）":""}</div>
+    </div>
+    <div class="content">
+      <div class="qcard result-box">
+        <div>できた問題</div>
+        <div class="result-score">${state.scoreCorrect} / ${state.scoreTotal}</div>
+        ${wrongItems.length>0 ? `
+        <div class="wrong-list">
+          <div class="wrong-list-label">まちがえた問題</div>
+          ${wrongItems.map(it=>`<div class="wrong-item">${esc(it.q)}</div>`).join("")}
+        </div>` : `<div class="perfect-msg">🎉 全問正解！</div>`}
+      </div>
+      <div class="result-actions">
+        <button class="btn btn-primary" onclick="${state.isRetry ? `startRetry('${state.stageId}')` : `startStage('${state.stageId}')`}">もう一度</button>
+        <button class="btn btn-outline" onclick="backHome()">ホームへ</button>
+      </div>
+      ${(!state.isRetry && missedCount>0) ? `<button class="btn btn-danger-outline" style="margin-top:10px;" onclick="startRetry('${state.stageId}')">🔁 苦手${missedCount}問を復習する</button>` : ""}
+    </div>
+  `;
+  app.innerHTML = html;
+}
+
+function doResetAll(){
+  state.missedStore = {};
+  saveMissedStore(state.missedStore);
+  const btn = document.getElementById("resetAllBtn");
+  if(btn){
+    btn.textContent = "✅ リセットしました";
+    setTimeout(()=>{ renderHome(); }, 1200);
+  }
+}
+
+render();
+</script>
+</body>
+</html>

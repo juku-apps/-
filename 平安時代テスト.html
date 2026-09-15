@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>平安時代テスト</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --accent:#3468a6;
+  --accent-light:#e8f0fa;
+  --ref:#7a5ea8;
+  --ref-light:#f1ecf8;
+  --good:#2f9e5b;
+  --good-light:#e6f6ec;
+  --bad:#d1453b;
+  --bad-light:#fbe9e8;
+  --ink:#22303f;
+  --sub:#5c6b7a;
+  --line:#dbe3ec;
+  --bg:#f5f7fa;
+  --card:#ffffff;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  font-family:"Zen Kaku Gothic New",sans-serif;
+  background:var(--bg);
+  color:var(--ink);
+  display:flex;
+  justify-content:center;
+}
+#app{
+  width:100%;
+  max-width:480px;
+  min-height:100vh;
+  background:var(--bg);
+  display:flex;
+  flex-direction:column;
+  position:relative;
+}
+.header{
+  padding:16px 18px 12px;
+  background:linear-gradient(135deg,var(--accent),#4d7dbf);
+  color:#fff;
+  position:sticky;
+  top:0;
+  z-index:5;
+}
+.header h1{
+  margin:0;
+  font-size:18px;
+  font-weight:900;
+  letter-spacing:.02em;
+}
+.header .sub{
+  margin-top:2px;
+  font-size:12px;
+  opacity:.9;
+}
+.content{
+  flex:1;
+  padding:14px 16px 90px;
+}
+.home-title{
+  font-size:14px;
+  font-weight:800;
+  color:var(--sub);
+  margin:18px 2px 10px;
+}
+.home-title:first-child{margin-top:2px;}
+.stage-card{
+  background:var(--card);
+  border-radius:14px;
+  box-shadow:0 2px 8px rgba(30,50,80,.08);
+  padding:16px;
+  margin-bottom:14px;
+  border:1px solid var(--line);
+  cursor:pointer;
+  transition:transform .1s;
+}
+.stage-card:active{transform:scale(.98);}
+.stage-card.ref{
+  border-color:var(--ref);
+  background:linear-gradient(180deg,#fff,var(--ref-light));
+}
+.stage-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+.stage-name{
+  font-size:16px;
+  font-weight:700;
+}
+.stage-badge{
+  font-size:11px;
+  background:var(--accent);
+  color:#fff;
+  padding:3px 8px;
+  border-radius:999px;
+  font-weight:700;
+  white-space:nowrap;
+  margin-left:8px;
+}
+.stage-card.ref .stage-badge{background:var(--ref);}
+.stage-desc{
+  font-size:12.5px;
+  color:var(--sub);
+  margin-top:6px;
+  line-height:1.5;
+}
+.progress-bar{
+  height:6px;
+  background:var(--line);
+  border-radius:99px;
+  margin-top:10px;
+  overflow:hidden;
+}
+.progress-fill{
+  height:100%;
+  background:linear-gradient(90deg,var(--accent),#4d7dbf);
+  border-radius:99px;
+  transition:width .3s;
+}
+.retry-btn{
+  margin-top:10px;
+  display:inline-block;
+  background:var(--bad-light);
+  color:var(--bad);
+  border:1px solid var(--bad);
+  border-radius:8px;
+  padding:6px 10px;
+  font-size:12.5px;
+  font-weight:700;
+  cursor:pointer;
+}
+.footer-note{
+  text-align:center;
+  font-size:11px;
+  color:var(--sub);
+  margin-top:22px;
+}
+.reset-all-btn{
+  width:100%;
+  margin-top:18px;
+  padding:11px;
+  border-radius:10px;
+  background:none;
+  border:1px solid var(--bad);
+  color:var(--bad);
+  font-size:12.5px;
+  font-weight:700;
+  cursor:pointer;
+  font-family:inherit;
+}
+.play-topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-size:12px;
+  color:var(--sub);
+  margin-bottom:12px;
+}
+.qcard{
+  background:var(--card);
+  border-radius:14px;
+  padding:18px;
+  box-shadow:0 2px 8px rgba(30,50,80,.08);
+  border:1px solid var(--line);
+  margin-bottom:16px;
+}
+.qcard.info{
+  background:linear-gradient(180deg,#fff,var(--ref-light));
+  border-color:var(--ref);
+}
+.qtitle{
+  font-size:16px;
+  font-weight:800;
+  margin-bottom:10px;
+  color:var(--ref);
+}
+.info-body{
+  font-size:14px;
+  line-height:1.9;
+  color:var(--ink);
+}
+.info-body p{margin:0 0 12px;}
+.info-body p:last-child{margin-bottom:0;}
+.src-tag{
+  margin-top:12px;
+  font-size:11.5px;
+  color:var(--sub);
+}
+.lead-badge{
+  display:inline-block;
+  font-size:11px;
+  font-weight:700;
+  color:var(--accent);
+  background:var(--accent-light);
+  padding:3px 10px;
+  border-radius:999px;
+  margin-bottom:10px;
+}
+.qtext{
+  font-size:15px;
+  font-weight:700;
+  line-height:1.7;
+  margin-bottom:16px;
+}
+.choice-list{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.choice-btn{
+  width:100%;
+  text-align:left;
+  padding:13px 14px;
+  border-radius:12px;
+  border:1.5px solid var(--line);
+  background:#fff;
+  color:var(--ink);
+  font-size:14px;
+  font-family:inherit;
+  font-weight:600;
+  cursor:pointer;
+}
+.choice-btn:disabled{cursor:default;}
+.choice-btn.correct{border-color:var(--good);background:var(--good-light);color:#1c6b3f;}
+.choice-btn.wrong{border-color:var(--bad);background:var(--bad-light);color:#9c3128;}
+.choice-btn.dim{opacity:.4;}
+.fill-input{
+  width:100%;
+  padding:13px 14px;
+  border-radius:12px;
+  border:1.5px solid var(--line);
+  font-size:15px;
+  font-family:inherit;
+  margin-bottom:14px;
+}
+.fill-input.correct{border-color:var(--good);background:var(--good-light);}
+.fill-input.wrong{border-color:var(--bad);background:var(--bad-light);}
+.explain-box{
+  border-radius:12px;
+  padding:14px;
+  font-size:13px;
+  line-height:1.8;
+  margin-bottom:14px;
+}
+.explain-box.good{background:var(--good-light);color:#1c6b3f;}
+.explain-box.bad{background:var(--bad-light);color:#9c3128;}
+.mark-icon{font-size:15px;margin-right:6px;}
+.btn{
+  width:100%;
+  padding:14px;
+  border-radius:12px;
+  border:none;
+  font-size:15px;
+  font-weight:800;
+  font-family:inherit;
+  cursor:pointer;
+}
+.btn-primary{background:linear-gradient(135deg,var(--accent),#4d7dbf);color:#fff;}
+.btn-ref{background:linear-gradient(135deg,var(--ref),#9678c2);color:#fff;}
+.btn-outline{background:#fff;border:1.5px solid var(--line);color:var(--ink);}
+.btn-danger-outline{background:var(--bad-light);border:1.5px solid var(--bad);color:var(--bad);}
+.result-actions{display:flex;gap:10px;margin-top:4px;}
+.result-actions .btn{flex:1;}
+.result-box{text-align:center;}
+.result-score{
+  font-size:44px;
+  font-weight:900;
+  color:var(--accent);
+  margin:8px 0;
+}
+.wrong-list{margin-top:14px;text-align:left;}
+.wrong-list-label{font-size:12px;color:var(--sub);margin-bottom:6px;}
+.wrong-item{
+  padding:10px 12px;
+  border-radius:10px;
+  background:var(--bad-light);
+  color:#9c3128;
+  margin-bottom:8px;
+  font-size:13px;
+  line-height:1.6;
+}
+.perfect-msg{color:var(--good);font-weight:800;margin-top:10px;font-size:14px;}
+.speak-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-bottom:14px;
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:10px 12px;
+}
+.speak-btn{
+  border:1.5px solid var(--ref);
+  background:#fff;
+  color:var(--ref);
+  border-radius:999px;
+  padding:8px 16px;
+  font-size:13px;
+  font-weight:700;
+  font-family:inherit;
+  cursor:pointer;
+  white-space:nowrap;
+}
+.speak-btn.playing{background:var(--ref);color:#fff;}
+.speed-control{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  font-size:12px;
+  color:var(--sub);
+}
+.speed-control input[type=range]{
+  width:92px;
+  accent-color:var(--ref);
+}
+.hidden{display:none!important;}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+/* ===================== 単元データ：柱の定義 ===================== */
+const PILLARS = {
+  1: {label:"① 平安京と律令政治の立て直し", full:"平安京と律令政治の立て直し"},
+  2: {label:"② 藤原氏の政治", full:"藤原氏の政治"},
+  3: {label:"③ 武士のおこりと成長", full:"武士のおこりと成長"},
+  4: {label:"④ 上皇の政治", full:"上皇の政治"},
+  5: {label:"⑤ 平氏の政治", full:"平氏の政治"},
+  6: {label:"⑥ 新しい仏教と国風文化", full:"新しい仏教と国風文化"}
+};
+
+/* ===================== ①構造テスト：概要画面 ===================== */
+const kihonOverviewScreens = [
+  {
+    title:"はじめに",
+    body:`<p>今回のテーマは「平安時代」です。794年に桓武天皇が平安京に都を移してから、源頼朝が鎌倉に幕府を開くまでの約400年間を平安時代といいます。</p><p>平安時代の前半は藤原氏が摂政・関白として政治の実権をにぎる摂関政治が行われ、後半には上皇が政治を行う院政や、武士が力をのばす動きが見られるようになりました。</p><p>この回では、平安京と律令政治の立て直し、藤原氏の政治、武士のおこりと成長、上皇の政治、平氏の政治、新しい仏教と国風文化という、6つの視点から平安時代を学びます。</p>`,
+    speak:"今回のテーマは、平安時代です。794年に桓武天皇が平安京に都を移してから、源頼朝が鎌倉に幕府を開くまでの約400年間を、平安時代といいます。平安時代の前半は、藤原氏が摂政・関白として政治の実権をにぎる摂関政治が行われ、後半には上皇が政治を行う院政や、武士が力をのばす動きが見られるようになりました。この回では、平安京と律令政治の立て直し、藤原氏の政治、武士のおこりと成長、上皇の政治、平氏の政治、新しい仏教と国風文化という、6つの視点から平安時代を学んでいきます。"
+  },
+  {
+    title:"6つの柱",
+    body:`<p><b>① 平安京と律令政治の立て直し</b><br>桓武天皇が平安京に都を移した理由と、蝦夷との戦いについて学びます。</p><p><b>② 藤原氏の政治</b><br>摂政・関白による摂関政治と、藤原道長・頼通の全盛期について学びます。</p><p><b>③ 武士のおこりと成長</b><br>武士の登場と成長、平将門の乱・藤原純友の乱、東北地方の争いについて学びます。</p><p><b>④ 上皇の政治</b><br>白河上皇が始めた院政のしくみと、上皇と天皇の対立について学びます。</p><p><b>⑤ 平氏の政治</b><br>保元の乱・平治の乱と、平清盛による政治、日宋貿易について学びます。</p><p><b>⑥ 新しい仏教と国風文化</b><br>最澄・空海が伝えた新しい仏教と、かな文字を中心とする国風文化について学びます。</p>`,
+    speak:"この回は、大きく6つの柱に分かれています。1つ目は、平安京と律令政治の立て直しです。桓武天皇が平安京に都を移した理由と、蝦夷との戦いについて学びます。2つ目は、藤原氏の政治です。摂政・関白による摂関政治と、藤原道長、頼通の全盛期について学びます。3つ目は、武士のおこりと成長です。武士の登場と成長、平将門の乱、藤原純友の乱、東北地方の争いについて学びます。4つ目は、上皇の政治です。白河上皇が始めた院政のしくみと、上皇と天皇の対立について学びます。5つ目は、平氏の政治です。保元の乱、平治の乱と、平清盛による政治、日宋貿易について学びます。6つ目は、新しい仏教と国風文化です。最澄、空海が伝えた新しい仏教と、かな文字を中心とする国風文化について学びます。それでは、順番に見ていきましょう。"
+  }
+];
+
+/* ===================== ①構造テスト：穴埋め ===================== */
+const kihonFillRaw = [
+  {pillar:1, q:"794年、平城京から都を移した天皇は誰ですか。", answer:"桓武天皇", explain:"桓武天皇は寺院の勢力が強い平城京をはなれ、律令政治を立て直そうとした。"},
+  {pillar:1, q:"794年に京都に置かれた、以後1100年ほど日本の都であり続けた都を何といいますか。", answer:"平安京", explain:"794年から源頼朝が鎌倉に幕府を開くまでの約400年間を平安時代という。"},
+  {pillar:1, q:"桓武天皇が東北地方の蝦夷を討つために征夷大将軍に任命した人物は誰ですか。", answer:"坂上田村麻呂", explain:"坂上田村麻呂は、蝦夷の首長であるアテルイを降伏させた。"},
+  {pillar:1, q:"朝廷が支配していなかった東北地方に住む人々を、朝廷は何とよんでいましたか。", answer:"蝦夷", explain:"朝廷の勢力拡大によって北に追いやられた蝦夷は、しばしば朝廷の軍と戦った。"},
+  {pillar:2, q:"天皇が幼いときに藤原氏がついた役職を何といいますか。", answer:"摂政", explain:"天皇が成人した後は関白として政治の実権をにぎった。"},
+  {pillar:2, q:"天皇が成人した後に藤原氏がついた役職を何といいますか。", answer:"関白", explain:"摂政と関白による藤原氏の政治を摂関政治という。"},
+  {pillar:2, q:"894年、遣唐使の停止を提案した人物は誰ですか。", answer:"菅原道真", explain:"道真はのちに藤原氏によって大宰府に送られ、その地で亡くなった。"},
+  {pillar:2, q:"藤原氏が最も栄えた11世紀前半に政治の実権をにぎっていた、道長とその子は誰ですか。", answer:"頼通", explain:"道長と頼通のころ、朝廷の重要な役職は藤原氏一族によってしめられた。"},
+  {pillar:3, q:"一族や家来を従えるほどに成長した武士の集団を何といいますか。", answer:"武士団", explain:"有力な武士団は皇族から分かれた清和源氏と桓武平氏だった。"},
+  {pillar:3, q:"939年、関東で自ら新皇と名のった人物は誰ですか。", answer:"平将門", explain:"平将門の乱は、朝廷に対して武士が起こした最初の大きな反乱だった。"},
+  {pillar:3, q:"939年、瀬戸内海の海賊を率いて西国を荒らし回った人物は誰ですか。", answer:"藤原純友", explain:"平将門の乱とほぼ同時期に起こった反乱である。"},
+  {pillar:3, q:"11世紀後半、東北地方の争いをしずめ、源氏が東国で勢力をもつきっかけをつくった人物は誰ですか。", answer:"源義家", explain:"この結果、源氏は東国で勢力をもつようになった。"},
+  {pillar:4, q:"1086年、位を8歳の皇子にゆずって上皇となった天皇は誰ですか。", answer:"白河天皇", explain:"白河上皇は屋敷（院）で政治を行い、院政を始めた。"},
+  {pillar:4, q:"上皇が屋敷（院）で行った政治を何といいますか。", answer:"院政", explain:"院政が始まると藤原氏の力は急速におとろえ、多くの荘園が上皇に集中した。"},
+  {pillar:4, q:"白河上皇らが仏教をあつく信仰したため強まった、寺院からおしかけて要求をつきつけた武装した僧を何といいますか。", answer:"僧兵", explain:"院や朝廷は武士を使ってこれを防いだ。"},
+  {pillar:4, q:"11世紀後半、藤原氏と関わりのうすい立場で自ら政治を行った天皇は誰ですか。", answer:"後三条天皇", explain:"後三条天皇は藤原氏をおさえて自ら政治を行った。"},
+  {pillar:5, q:"1159年、平清盛と源義朝が対立して起こった戦いを何といいますか。", answer:"平治の乱", explain:"この戦いで平清盛が勝利し、政治の実権をにぎった。"},
+  {pillar:5, q:"平清盛が1167年になった、武士として最初の役職は何ですか。", answer:"太政大臣", explain:"平氏一族は朝廷の重要な役職を独占した。"},
+  {pillar:5, q:"平清盛が整えた、現在の神戸港の一部にあたる港を何といいますか。", answer:"大輪田泊", explain:"瀬戸内海の航路とあわせて整備された。"},
+  {pillar:5, q:"平清盛が大輪田泊を整えてさかんにした、宋との貿易を何といいますか。", answer:"日宋貿易", explain:"日本からは硫黄や刀剣、宋からは宋銭や陶磁器が取り引きされた。"},
+  {pillar:6, q:"唐に留学し、天台宗を伝え、比叡山に延暦寺を建てた僧は誰ですか。", answer:"最澄", explain:"最澄は死後、伝教大師とよばれるようになった。"},
+  {pillar:6, q:"唐に留学し、真言宗を開き、高野山に金剛峯寺を建てた僧は誰ですか。", answer:"空海", explain:"空海は死後、弘法大師とよばれるようになった。"},
+  {pillar:6, q:"9世紀後半から生まれた、日本の自然や生活にあった文化を何といいますか。", answer:"国風文化", explain:"摂関政治のころに最も栄えた。"},
+  {pillar:6, q:"紫式部が書いた、貴族の生活や感情をたくみにえがいた物語を何といいますか。", answer:"源氏物語", explain:"同時代に清少納言が随筆『枕草子』を書いた。"}
+];
+
+/* ===================== ①構造テスト：まとめ選択 ===================== */
+const kihonFinalRaw = [
+  {pillar:1, q:"桓武天皇の政治として正しいものはどれですか。", choices:["国司の監督をきびしくし、坂上田村麻呂に蝦夷を討たせた","農民の兵役の負担を重くした","仏教勢力を平安京に呼び寄せた","遣唐使を停止した"], answer:0, explain:"桓武天皇は国司の監督をきびしくする一方、農民から兵役をはずして負担を軽くした。また坂上田村麻呂を征夷大将軍に任命し、蝦夷を討たせた。"},
+  {pillar:2, q:"藤原氏が勢力をのばした方法として正しいものはどれですか。", choices:["自分の娘を天皇の后にし、生まれた子を天皇にした","武力で朝廷を倒した","唐から兵を借りた","農民の税をすべて免除した"], answer:0, explain:"藤原氏は、自分の娘を天皇の后にして、生まれた子ども（孫）を天皇にすることで勢力をのばした。また荘園の寄進を受けたり、有力な貴族を朝廷から追放したりもした。"},
+  {pillar:3, q:"平将門の乱と藤原純友の乱について正しいものはどれですか。", choices:["どちらも10世紀前半に起こり、武士が勢力を強めるきっかけとなった","どちらも平安時代の終わりに起こった","朝廷が武士をおさえるために起こした反乱だった","2つの乱は同じ人物が起こした"], answer:0, explain:"平将門の乱と藤原純友の乱は、どちらも10世紀前半（939年ごろ）に起こり、武士の力が認められるきっかけとなった。"},
+  {pillar:4, q:"院政について正しいものはどれですか。", choices:["上皇が自分の屋敷（院）で行った政治で、藤原氏の力はおとろえた","天皇が自ら行った政治で、藤原氏の力がさらに強まった","武士が中心になって行った政治である","僧が中心になって行った政治である"], answer:0, explain:"白河上皇が始めた院政では、上皇が屋敷（院）で政治を行い、藤原氏の力は急速におとろえ、多くの荘園が上皇に集中していった。"},
+  {pillar:5, q:"平清盛の政治について正しいものはどれですか。", choices:["武士として最初の太政大臣となり、日宋貿易で大きな利益をあげた","武士として最初の征夷大将軍となり、鎌倉に幕府を開いた","朝廷の役職からしりぞき、東北地方に移った","唐との貿易で利益をあげた"], answer:0, explain:"平清盛は1167年、武士として最初の太政大臣となった。また大輪田泊を整えて日宋貿易をさかんにし、大きな利益をあげた。"},
+  {pillar:6, q:"国風文化について正しいものはどれですか。", choices:["唐の文化を土台にして、日本の自然や生活にあった文化が生まれ、摂関政治のころ最も栄えた","唐の文化をそのまま受け入れた文化である","武士を中心とした質素な文化である","仏教の影響をまったく受けていない文化である"], answer:0, explain:"国風文化は、唐の文化を土台にしながら日本独自に発展した文化で、かな文字を使った文学などが発達し、摂関政治のころに最も栄えた。"}
+];
+
+/* ===================== ②黒太字テスト ===================== */
+const kurojiBlocks = [
+  {pillar:1, sub:"平安京と律令政治の立て直し", items:[
+    {q:"794年、平城京から都を移した天皇は誰ですか。", choices:["桓武天皇","聖武天皇","元明天皇","白河天皇"], answer:0},
+    {q:"784年、平城京から最初に移された都を何といいますか。", choices:["長岡京","平安京","難波京","藤原京"], answer:0},
+    {q:"794年に京都に置かれた都を何といいますか。", choices:["平安京","長岡京","平城京","難波京"], answer:0},
+    {q:"平安京から鎌倉幕府が開かれるまでの約400年間を何といいますか。", choices:["平安時代","奈良時代","鎌倉時代","飛鳥時代"], answer:0},
+    {q:"桓武天皇が平城京をはなれて新しい都をつくった理由は何ですか。", choices:["寺院の勢力を政治から切りはなすため","唐の侵略を防ぐため","貴族の反乱をおさえるため","農民の負担を減らすため"], answer:0},
+    {q:"桓武天皇が東北地方の蝦夷を討つために征夷大将軍に任命した人物は誰ですか。", choices:["坂上田村麻呂","藤原道長","菅原道真","平清盛"], answer:0},
+    {q:"坂上田村麻呂が降伏させた、蝦夷の首長は誰ですか。", choices:["アテルイ","将門","純友","道鏡"], answer:0},
+    {q:"蝦夷を討つために臨時にもうけられ、後に武士で政権をとった者にあたえられた役職を何といいますか。", choices:["征夷大将軍","太政大臣","摂政","関白"], answer:0},
+    {q:"朝廷が東北地方に住む人々をよんださげすんだ呼び名は何ですか。", choices:["蝦夷","武士","国司","豪族"], answer:0},
+    {q:"桓武天皇が地方の政治をひきしめるために厳しくしたのは何の監督ですか。", choices:["国司","郡司","里長","荘園領主"], answer:0},
+    {q:"桓武天皇が農民の負担を軽くするためにはずしたものは何ですか。", choices:["兵役","租","調","庸"], answer:0},
+    {q:"大化の改新で活躍した中臣鎌足の子孫である一族を何といいますか。", choices:["藤原氏","源氏","平氏","橘氏"], answer:0}
+  ]},
+  {pillar:2, sub:"藤原氏の政治", items:[
+    {q:"天皇が幼いときに藤原氏がついた役職を何といいますか。", choices:["摂政","関白","太政大臣","征夷大将軍"], answer:0},
+    {q:"天皇が成人した後に藤原氏がついた役職を何といいますか。", choices:["関白","摂政","太政大臣","征夷大将軍"], answer:0},
+    {q:"藤原氏が摂政・関白として政治の実権をにぎった政治を何といいますか。", choices:["摂関政治","院政","律令政治","武家政治"], answer:0},
+    {q:"藤原氏が最も栄えた11世紀前半、政治の実権をにぎっていた親子は誰と誰ですか。", choices:["道長と頼通","道長と純友","頼通と将門","道真と道長"], answer:0},
+    {q:"894年、遣唐使の停止を提案した人物は誰ですか。", choices:["菅原道真","藤原道長","坂上田村麻呂","紀貫之"], answer:0},
+    {q:"菅原道真は藤原氏によってどこに送られましたか。", choices:["大宰府","平泉","比叡山","高野山"], answer:0},
+    {q:"菅原道真は死後、何の神様としてまつられましたか。", choices:["学問の神様","戦いの神様","商売の神様","航海の神様"], answer:0},
+    {q:"藤原氏が勢力をのばした方法として、自分の娘を天皇の后にすることのほかにあげられているのは何ですか。", choices:["地方の豪族から荘園の寄進を受けること","武力で朝廷を制圧すること","唐と同盟を結ぶこと","農民の税をすべて免除すること"], answer:0},
+    {q:"藤原道長が「この世をば わが世とぞ思ふ 望月の」とよんだ歌は、何が満ち足りたことを表していますか。", choices:["3人目の娘が天皇の后になったこと","唐に渡ったこと","征夷大将軍になったこと","院政を始めたこと"], answer:0},
+    {q:"10世紀、朝廷が税の制度を改め、何に応じて米を納めさせるようにしましたか。", choices:["実際に耕している田の面積","戸籍の登録人数","身分の高さ","家族の人数"], answer:0},
+    {q:"10世紀の新しい税のしくみで、後に何とよばれるようになりましたか。", choices:["年貢","租","調","庸"], answer:0},
+    {q:"地方の政治が国司にまかせられたきりになると、増えたものは何ですか。", choices:["不正をはたらく国司","蝦夷の反乱","荘園の寄進","遣唐使の派遣"], answer:0},
+    {q:"尾張国の国司として3年間で31か条もの悪政を行い、農民に訴えられた人物は誰ですか。", choices:["藤原元命","藤原道長","藤原頼通","菅原道真"], answer:0},
+    {q:"荘園が税を納めなくてもよい権利を何といいますか。", choices:["不輸の権","不入の権","院政","摂関政治"], answer:0}
+  ]},
+  {pillar:3, sub:"武士のおこりと成長", items:[
+    {q:"武士は、もともとどのような人々でしたか。", choices:["弓矢や乗馬の技術にすぐれた都の役人や地方の豪族とその家来","農業を営む一般の農民","仏教を広めた僧","朝廷に仕える貴族のみ"], answer:0},
+    {q:"一族や家来を従えるほどに成長した武士の集団を何といいますか。", choices:["武士団","国司","荘園","藤原氏"], answer:0},
+    {q:"武士団のうち、皇族から分かれた有力な2つの一族は何ですか。", choices:["清和源氏と桓武平氏","藤原氏と橘氏","蝦夷と豪族","国司と郡司"], answer:0},
+    {q:"939年、関東で自ら新皇と名のり、新しい政府をつくろうとした人物は誰ですか。", choices:["平将門","藤原純友","源義家","平清盛"], answer:0},
+    {q:"平将門は何氏の一族ですか。", choices:["桓武平氏","清和源氏","藤原氏","橘氏"], answer:0},
+    {q:"939年、瀬戸内海の海賊を率いて西国を荒らし回った人物は誰ですか。", choices:["藤原純友","平将門","源義家","平清盛"], answer:0},
+    {q:"平将門の乱について正しいものはどれですか。", choices:["朝廷に対して武士が起こした大きな反乱としては最初のものだった","朝廷が武士を使って起こした反乱だった","藤原氏が起こした反乱だった","平安京を都に定めるきっかけとなった"], answer:0},
+    {q:"平将門の乱と藤原純友の乱の結果、武士についてどうなりましたか。", choices:["武士の力が認められるようになった","武士は解散させられた","武士は都から追放された","武士は農民に戻された"], answer:0},
+    {q:"11世紀後半、東北地方の争いをしずめ、源氏が東国で勢力をもつきっかけをつくった人物は誰ですか。", choices:["源義家","平清盛","菅原道真","坂上田村麻呂"], answer:0},
+    {q:"瀬戸内海の海賊を減ぼすなどして、上皇との結びつきを強め、西国で勢力をもつようになった一族は何ですか。", choices:["平氏","源氏","藤原氏","奥州藤原氏"], answer:0},
+    {q:"11世紀末ごろから奥州で勢力を強め、平泉を中心に3代にわたって栄えた一族を何といいますか。", choices:["奥州藤原氏","清和源氏","桓武平氏","橘氏"], answer:0},
+    {q:"奥州藤原氏が栄えた、岩手県にある都市はどこですか。", choices:["平泉","平城京","太宰府","比叡山"], answer:0},
+    {q:"国司の荘園への立ち入りを断る権利を何といいますか。", choices:["不入の権","不輸の権","院政","武士団"], answer:0},
+    {q:"武士のことを、もともと天皇家や貴族にさぶらう（仕える）者であったことから何とよびますか。", choices:["侍","武士団","国司","郎党"], answer:0}
+  ]},
+  {pillar:4, sub:"上皇の政治", items:[
+    {q:"11世紀後半、藤原氏と関わりのうすい立場で自ら政治を行い、藤原氏をおさえた天皇は誰ですか。", choices:["後三条天皇","白河天皇","桓武天皇","聖武天皇"], answer:0},
+    {q:"1086年、位を8歳の皇子にゆずって上皇となった天皇は誰ですか。", choices:["白河天皇","後三条天皇","桓武天皇","元明天皇"], answer:0},
+    {q:"上皇が屋敷（院）で行った政治を何といいますか。", choices:["院政","摂関政治","律令政治","武家政治"], answer:0},
+    {q:"院政が始まると、藤原氏の力はどうなりましたか。", choices:["急速におとろえた","さらに強まった","変わらなかった","朝廷から追放された"], answer:0},
+    {q:"院政が始まると、多くの荘園はどこに集中していきましたか。", choices:["上皇","天皇","藤原氏","国司"], answer:0},
+    {q:"院政が始まってしばらくすると、政治の実権をめぐって誰と誰が対立するようになりましたか。", choices:["上皇と天皇","藤原氏と源氏","平氏と源氏","国司と農民"], answer:0},
+    {q:"白河上皇らが仏教をあつく信仰したため強まった、寺院からおしかけて要求をつきつけた武装した僧を何といいますか。", choices:["僧兵","武士団","国司","防人"], answer:0},
+    {q:"興福寺や延暦寺などの大寺院から僧兵がおしかける事態に対し、院や朝廷は何を使ってこれを防ぎましたか。", choices:["武士","僧兵","国司","貴族の私兵"], answer:0}
+  ]},
+  {pillar:5, sub:"平氏の政治", items:[
+    {q:"1156年、都で起こり、天皇方が上皇方を破って勝利した戦いを何といいますか。", choices:["保元の乱","平治の乱","平将門の乱","承久の乱"], answer:0},
+    {q:"1159年、天皇方であった平清盛と源義朝が対立して起こった戦いを何といいますか。", choices:["平治の乱","保元の乱","平将門の乱","治承・寿永の乱"], answer:0},
+    {q:"平治の乱に勝利し、政治の実権をにぎった人物は誰ですか。", choices:["平清盛","源義朝","源義家","藤原純友"], answer:0},
+    {q:"平清盛が1167年になった、武士として最初の役職は何ですか。", choices:["太政大臣","征夷大将軍","摂政","関白"], answer:0},
+    {q:"平氏一族は、朝廷の重要な役職を独占し、どこを中心に多くの荘園をもつようになりましたか。", choices:["西日本","東日本","東北地方","北海道"], answer:0},
+    {q:"平清盛が瀬戸内海の航路とともに整えた、現在の神戸港の一部にあたる港を何といいますか。", choices:["大輪田泊","博多","難波津","坊津"], answer:0},
+    {q:"平清盛が大輪田泊を整えてさかんにした、宋との貿易を何といいますか。", choices:["日宋貿易","勘合貿易","南蛮貿易","朱印船貿易"], answer:0},
+    {q:"日宋貿易で日本から輸出されたものは何ですか（2つのうち1つ）。", choices:["硫黄","絹","米","銅"], answer:0},
+    {q:"日宋貿易で宋から輸入されたものは何ですか（2つのうち1つ）。", choices:["陶磁器","硫黄","刀剣","木材"], answer:0},
+    {q:"平氏一族の中には「平氏でない者は○○」という者さえ現れました。○○にあてはまる言葉は何ですか。", choices:["人ではない","武士ではない","貴族ではない","日本人ではない"], answer:0}
+  ]},
+  {pillar:6, sub:"新しい仏教と国風文化", items:[
+    {q:"唐に留学し、天台宗を伝えた僧は誰ですか。", choices:["最澄","空海","行基","鑑真"], answer:0},
+    {q:"最澄が比叡山に建てた寺を何といいますか。", choices:["延暦寺","金剛峯寺","唐招提寺","東大寺"], answer:0},
+    {q:"唐に留学し、真言宗を開いた僧は誰ですか。", choices:["空海","最澄","行基","鑑真"], answer:0},
+    {q:"空海が高野山に建てた寺を何といいますか。", choices:["金剛峯寺","延暦寺","唐招提寺","国分寺"], answer:0},
+    {q:"最澄と空海がもたらした、病気やわざわいを取りのぞく祈りやまじないを重んじる仏教を何といいますか。", choices:["密教","浄土教","禅宗","真宗"], answer:0},
+    {q:"最澄は死後、何という名前でよばれるようになりましたか。", choices:["伝教大師","弘法大師","聖徳太子","行基菩薩"], answer:0},
+    {q:"空海は死後、何という名前でよばれるようになりましたか。", choices:["弘法大師","伝教大師","聖徳太子","行基菩薩"], answer:0},
+    {q:"9世紀後半から、唐の文化を土台にして生まれた、日本の自然や生活にあった文化を何といいますか。", choices:["国風文化","天平文化","飛鳥文化","桃山文化"], answer:0},
+    {q:"漢字をもとにつくり出された文字を何といいますか。", choices:["かな文字","万葉がな","篆書","隷書"], answer:0},
+    {q:"紀貫之らが編集した和歌集を何といいますか。", choices:["古今和歌集","万葉集","新古今和歌集","風土記"], answer:0},
+    {q:"かぐや姫の伝説をもとにした物語を何といいますか。", choices:["竹取物語","源氏物語","枕草子","土佐日記"], answer:0},
+    {q:"紫式部が書いた、貴族の生活や感情をたくみにえがいた物語を何といいますか。", choices:["源氏物語","竹取物語","枕草子","土佐日記"], answer:0},
+    {q:"清少納言が書いた随筆を何といいますか。", choices:["枕草子","源氏物語","竹取物語","土佐日記"], answer:0},
+    {q:"紀貫之が書いた、かな文字で書かれた最初の日記とされる作品を何といいますか。", choices:["土佐日記","枕草子","源氏物語","竹取物語"], answer:0},
+    {q:"貴族の住まいのつくりを何といいますか。", choices:["寝殿造","書院造","校倉造","数寄屋造"], answer:0},
+    {q:"寝殿造のふすまやびょうぶに見られる、やわらかな線で日本の風物を描いた絵を何といいますか。", choices:["大和絵","水墨画","浮世絵","仏画"], answer:0}
+  ]}
+];
+
+/* ===================== ③ひとくちメモテスト ===================== */
+const mameQuizRaw = [
+  {q:"征夷大将軍とは、もともと何のためにもうけられた役職ですか。", choices:["蝦夷を討つため","天皇を補佐するため","税を集めるため","荘園を管理するため"], answer:0},
+  {q:"征夷大将軍は、後にはどのような人物にあたえられましたか。", choices:["武士で政権をとった者","藤原氏の一族","僧","国司"], answer:0},
+  {q:"菅原道真をまつった神社を何といいますか。", choices:["天神・天満宮","延暦寺","金剛峯寺","厳島神社"], answer:0},
+  {q:"道真が亡くなったあと京都で落雷が続いたため、人々は各地に何を建てましたか。", choices:["天神や天満宮","阿弥陀堂","国分寺","武家屋敷"], answer:0},
+  {q:"荘園が税を納めなくてもよい権利を何といいますか。", choices:["不輸の権","不入の権","院政","摂関政治"], answer:0},
+  {q:"国司の荘園への立ち入りを断る権利を何といいますか。", choices:["不入の権","不輸の権","院政","国風文化"], answer:0},
+  {q:"武士のことを、もともと天皇家や貴族に仕える者であったことから何とよびますか。", choices:["侍","武士団","郎党","豪族"], answer:0},
+  {q:"最澄と空海は、死後それぞれ何とよばれるようになりましたか。正しい組み合わせはどれですか。", choices:["最澄＝伝教大師、空海＝弘法大師","最澄＝弘法大師、空海＝伝教大師","最澄＝聖徳太子、空海＝行基","どちらも同じ名前でよばれた"], answer:0},
+  {q:"絵巻物とは、どのような作品ですか。", choices:["横に長くつなげた紙に、絵と物語を組み合わせてえがいた作品","縦に長い掛け軸の作品","屏風に描かれた絵のみの作品","仏像とともに納められた経典"], answer:0},
+  {q:"貴族が阿弥陀仏にすがって願ったことは何ですか。", choices:["死後に極楽浄土に生まれ変わること","この世で長生きすること","戦いに勝つこと","出世して高い位につくこと"], answer:0},
+  {q:"「南無阿弥陀仏」という念仏をとなえ、阿弥陀仏を信じれば救われるとする教えを何といいますか。", choices:["浄土教","密教","禅宗","国風文化"], answer:0},
+  {q:"京都の町などで人々に念仏を広めた僧は誰ですか。", choices:["空也","最澄","空海","行基"], answer:0}
+];
+
+/* ===================== ④気をつけたいポイント（読みもの） ===================== */
+const sankoNotes = [
+  {
+    title:"蝦夷の抵抗",
+    body:`奈良時代、朝廷が支配していたのは、東北地方の一部まででした。朝廷は、東北地方に住む人々を蝦夷とよんで、さげすんでいました。朝廷の勢力の拡大によって北に追いやられた蝦夷は、生活を守るため、しばしば朝廷の軍と戦いました。`,
+    src:"教科書コラム（p38）"
+  },
+  {
+    title:"遣唐使の停止と菅原道真",
+    body:`唐の船がたびたび日本に来るようになると、多くの費用を使い危険をおかしてまで遣唐使を送る必要がなくなりました。894年には菅原道真の提案もあって、遣唐使が停止されました。その後、道真は、藤原氏によって九州の大宰府に送られ、その地で亡くなりました。後には「学問の神様」としてまつられました。`,
+    src:"教科書コラム（p39）"
+  },
+  {
+    title:"藤原氏の力の源は？",
+    body:`藤原氏は、自分の娘を天皇の后にし、天皇との間に生まれた男子を天皇にすることによって、勢力をのばしていきました。そのために、紫式部や清少納言などの才能ある女性を、家庭教師のように娘に仕えさせました。また、地方の豪族たちが荘園を国司やほかの豪族から守ろうと、藤原氏に荘園を寄進したことでも、大きな富を得ました。`,
+    src:"教科書「ちょっとくわしく」（p44）"
+  },
+  {
+    title:"平氏の場合は？",
+    body:`平清盛は、藤原氏と同じように娘を天皇と結婚させ、生まれた子を天皇（安徳天皇）にして朝廷との関係を深め、政治の実権を得ました。また、多くの荘園も支配しました。日宋貿易でも大きな富を得た平氏は、厳島神社を瀬戸内海の航海の守り神としてあつく信仰し、社殿を美しく整えました。`,
+    src:"教科書コラム（p44）"
+  },
+  {
+    title:"国司の悪政についての農民の訴え",
+    body:`尾張国（愛知県）の農民たちは、国司である藤原元命が3年間行った悪政31か条について、朝廷に裁きを求めました。「朝廷が定めているよりも多くの税を取り立てている」「元命が役所の仕事をしないので、農民たちの訴えが通じない」といった内容で、このような訴えによって国司をやめさせられる者もいました。`,
+    src:"教科書コラム（p40）"
+  },
+  {
+    title:"摂政と関白のちがいに注意",
+    body:`「摂政」は天皇が幼いときに政治を代行する役職、「関白」は天皇が成人した後に補佐する役職です。藤原氏はこの両方を独占して政治の実権をにぎりました。「幼い＝摂政」「成人後＝関白」という対応を逆に覚えないようにしましょう。`,
+    src:"入試でまちがえやすいポイント（一般知識）"
+  },
+  {
+    title:"保元の乱と平治の乱の順序と結果",
+    body:`保元の乱（1156年）では天皇方が上皇方を破りました。その後、天皇方どうしであった平清盛と源義朝が対立し、平治の乱（1159年）が起こり、平清盛が勝利しました。2つの乱の順番と、最終的に平清盛が実権をにぎった流れを整理しておきましょう。`,
+    src:"入試でまちがえやすいポイント（一般知識）"
+  },
+  {
+    title:"最澄・天台宗・延暦寺と空海・真言宗・金剛峯寺の対応",
+    body:`「最澄＝天台宗＝比叡山延暦寺（滋賀県）」「空海＝真言宗＝高野山金剛峯寺（和歌山県）」という組み合わせを混同しやすいので、セットで正確に覚えましょう。`,
+    src:"入試でまちがえやすいポイント（一般知識）"
+  },
+  {
+    title:"国風文化の作者と作品の対応",
+    body:`「紀貫之＝『古今和歌集』『土佐日記』」「紫式部＝『源氏物語』」「清少納言＝『枕草子』」という作者と作品の組み合わせは入試でよく問われます。とくに紫式部と清少納言は同時代のライバル関係にあった女性であることもあわせて覚えておきましょう。`,
+    src:"入試でまちがえやすいポイント（一般知識）"
+  }
+];
+
+/* ===================== 共通ビルド関数 ===================== */
+function shuffleArr(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+function finalize(q){
+  const correctText = q.choices[q.answer];
+  const order = shuffleArr(q.choices.map((c,i)=>i));
+  const newChoices = order.map(i=>q.choices[i]);
+  const newAnswer = newChoices.indexOf(correctText);
+  const out = Object.assign({}, q, {choices:newChoices, answer:newAnswer});
+  return out;
+}
+
+function normalizeAnswer(str){
+  if(str===undefined || str===null) return "";
+  let s = String(str).trim();
+  s = s.replace(/[０-９]/g, ch => String.fromCharCode(ch.charCodeAt(0)-0xFEE0));
+  s = s.replace(/\s+/g,"");
+  s = s.replace(/[『』「」]/g,"");
+  return s;
+}
+
+function checkFillAnswer(item, userInput){
+  const norm = normalizeAnswer(userInput);
+  if(norm==="") return false;
+  const candidates = [item.answer].concat(item.accept||[]);
+  return candidates.some(c => normalizeAnswer(c)===norm);
+}
+
+function shuffleArrKeepBlocks(){
+  const byPillar = {};
+  kihonFillRaw.forEach((r,idx)=>{
+    if(!byPillar[r.pillar]) byPillar[r.pillar]=[];
+    byPillar[r.pillar].push(idx);
+  });
+  let out = [];
+  [1,2,3,4,5,6].forEach(p=>{
+    const idxs = shuffleArr(byPillar[p]||[]);
+    idxs.forEach(idx=>{
+      const r = kihonFillRaw[idx];
+      out.push({
+        type:"fill", id:"kihonFill_"+idx, q:r.q, answer:r.answer, accept:r.accept,
+        explain:r.explain, lead:PILLARS[r.pillar].label, sub:PILLARS[r.pillar].full, pillar:r.pillar
+      });
+    });
+  });
+  return out;
+}
+
+function buildKihonFinalItems(){
+  return kihonFinalRaw.map((r,idx)=>{
+    const fq = finalize({q:r.q, choices:r.choices, answer:r.answer, explain:r.explain});
+    return Object.assign({type:"choice", id:"kihonFinal_"+idx, pillar:r.pillar, sub:PILLARS[r.pillar].full}, fq);
+  });
+}
+
+function buildKihonItems(){
+  const overview = kihonOverviewScreens.map((s,idx)=>Object.assign({id:"kihonOv_"+idx, type:"info", wide:true}, s));
+  const fills = shuffleArrKeepBlocks();
+  const finals = shuffleArr(buildKihonFinalItems());
+  return overview.concat(fills, finals);
+}
+
+function buildKurojiItems(){
+  let out = [];
+  kurojiBlocks.forEach((block,bi)=>{
+    const shuffledItems = shuffleArr(block.items);
+    shuffledItems.forEach((it,ii)=>{
+      const fq = finalize(it);
+      out.push(Object.assign({
+        type:"choice",
+        id:"kuroji_"+bi+"_"+ii,
+        pillar:block.pillar,
+        sub:block.sub
+      }, fq));
+    });
+  });
+  return out;
+}
+
+function buildMameItems(){
+  const shuffled = shuffleArr(mameQuizRaw);
+  return shuffled.map((r,idx)=>{
+    const fq = finalize(r);
+    return Object.assign({type:"choice", id:"mame_"+idx}, fq);
+  });
+}
+
+function buildSankoItems(){
+  return sankoNotes.map((n,idx)=>({
+    type:"info", id:"sanko_"+idx, title:n.title, body:n.body, src:n.src, wide:true
+  }));
+}
+
+const STAGES = [
+  {id:"kihon", name:"① 構造テスト", desc:"6本柱（平安京と律令政治の立て直し・藤原氏の政治・武士のおこりと成長・上皇の政治・平氏の政治・新しい仏教と国風文化）の骨組みを確認。概要2画面＋穴埋め24問＋まとめ選択6問。", scored:true, ref:false, build:buildKihonItems},
+  {id:"kuroji", name:"② 黒太字テスト", desc:"各分野の重要語句を4択で確認します。計74問。", scored:true, ref:false, build:buildKurojiItems},
+  {id:"mame", name:"③ ひとくちメモテスト", desc:"教科書のひとくちメモ・Q&Aから出題します。計12問。", scored:true, ref:false, build:buildMameItems},
+  {id:"sanko", name:"④ 気をつけたいポイント", desc:"教科書コラム＋入試でまちがえやすい注意点の読みもの。採点はありません。", scored:false, ref:true, build:buildSankoItems}
+];
+
+/* ===================== 状態管理／localStorage ===================== */
+const STORAGE_KEY = "heianjidai_missed_v1";
+
+function loadMissedStore(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : {};
+  }catch(e){ return {}; }
+}
+function saveMissedStore(store){
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(store)); }catch(e){ /* 保存できない環境は無視 */ }
+}
+
+const SPEAK_RATE_KEY = "quizapp_speak_rate_v1";
+function loadSpeakRate(){
+  try{
+    const v = parseFloat(localStorage.getItem(SPEAK_RATE_KEY));
+    if(!isNaN(v) && v>=0.7 && v<=1.8) return v;
+  }catch(e){}
+  return 1.1;
+}
+function saveSpeakRate(v){
+  try{ localStorage.setItem(SPEAK_RATE_KEY, String(v)); }catch(e){}
+}
+
+const state = {
+  screen:"home",
+  stageId:null,
+  isRetry:false,
+  items:[],
+  currentIndex:0,
+  scoreTotal:0,
+  scoreCorrect:0,
+  answerLog:[],
+  results:{},
+  missedStore: loadMissedStore(),
+  answered:false,
+  userInput:"",
+  userChoiceIdx:null,
+  speakRate: loadSpeakRate()
+};
+
+function startStage(stageId){
+  const stage = STAGES.find(s=>s.id===stageId);
+  state.stageId = stageId;
+  state.isRetry = false;
+  state.items = stage.build();
+  state.currentIndex = 0;
+  state.scoreTotal = state.items.filter(i=>i.type!=="info").length;
+  state.scoreCorrect = 0;
+  state.answerLog = [];
+  state.answered = false;
+  state.userInput = "";
+  state.userChoiceIdx = null;
+  state.screen = "play";
+  render();
+}
+
+function startRetry(stageId){
+  const missed = state.missedStore[stageId] || {};
+  const items = Object.values(missed);
+  if(items.length===0) return;
+  state.stageId = stageId;
+  state.isRetry = true;
+  state.items = shuffleArr(items);
+  state.currentIndex = 0;
+  state.scoreTotal = state.items.length;
+  state.scoreCorrect = 0;
+  state.answerLog = [];
+  state.answered = false;
+  state.userInput = "";
+  state.userChoiceIdx = null;
+  state.screen = "play";
+  render();
+}
+
+function currentItem(){ return state.items[state.currentIndex]; }
+
+function submitChoice(idx){
+  if(state.answered) return;
+  const item = currentItem();
+  const correct = idx === item.answer;
+  state.answered = true;
+  state.userChoiceIdx = idx;
+  if(correct) state.scoreCorrect++;
+  state.answerLog.push({item, wasCorrect:correct});
+}
+
+function submitFill(){
+  if(state.answered) return;
+  const item = currentItem();
+  const correct = checkFillAnswer(item, state.userInput);
+  state.answered = true;
+  if(correct) state.scoreCorrect++;
+  state.answerLog.push({item, wasCorrect:correct});
+}
+
+function nextItem(){
+  stopSpeak();
+  state.answered = false;
+  state.userInput = "";
+  state.userChoiceIdx = null;
+  if(state.currentIndex < state.items.length-1){
+    state.currentIndex++;
+    render();
+  }else{
+    finishStage();
+  }
+}
+
+function finishStage(){
+  const stage = STAGES.find(s=>s.id===state.stageId);
+  state.results[state.stageId] = {
+    correct: state.scoreCorrect,
+    total: state.scoreTotal,
+    at: Date.now()
+  };
+  if(stage.scored){
+    const missed = state.missedStore[state.stageId] || {};
+    state.answerLog.forEach(log=>{
+      const key = log.item.q;
+      if(!log.wasCorrect){
+        missed[key] = log.item;
+      }else{
+        if(missed[key]) delete missed[key];
+      }
+    });
+    state.missedStore[state.stageId] = missed;
+    saveMissedStore(state.missedStore);
+  }
+  state.screen = "result";
+  render();
+}
+
+function backHome(){
+  stopSpeak();
+  stopMic();
+  state.screen = "home";
+  render();
+}
+
+/* ===================== 音声読み上げ（Web Speech API：読み上げ） ===================== */
+let cachedVoices = [];
+
+function speakSupported(){
+  return typeof window!=="undefined" && "speechSynthesis" in window;
+}
+
+function refreshVoices(){
+  if(speakSupported()) cachedVoices = window.speechSynthesis.getVoices() || [];
+}
+if(speakSupported()){
+  refreshVoices();
+  window.speechSynthesis.onvoiceschanged = refreshVoices;
+}
+
+function getBestJaVoice(){
+  const jaVoices = cachedVoices.filter(v => v.lang && v.lang.toLowerCase().startsWith("ja"));
+  if(jaVoices.length===0) return null;
+  const preferred = jaVoices.find(v => /google/i.test(v.name))
+    || jaVoices.find(v => v.localService===false)
+    || jaVoices[0];
+  return preferred;
+}
+
+function speakText(text, btnId){
+  if(!speakSupported()) return;
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = "ja-JP";
+  u.rate = state.speakRate;
+  const voice = getBestJaVoice();
+  if(voice) u.voice = voice;
+  u.onend = ()=>{ setSpeakBtnState(btnId, false); };
+  u.onerror = ()=>{ setSpeakBtnState(btnId, false); };
+  window.speechSynthesis.speak(u);
+  setSpeakBtnState(btnId, true);
+}
+
+function stopSpeak(){
+  if(speakSupported()) window.speechSynthesis.cancel();
+}
+
+function toggleSpeak(text){
+  if(!speakSupported()) return;
+  if(window.speechSynthesis.speaking){
+    stopSpeak();
+    setSpeakBtnState("speakBtn", false);
+  }else{
+    speakText(text, "speakBtn");
+  }
+}
+
+function updateSpeakRate(v){
+  state.speakRate = parseFloat(v);
+  saveSpeakRate(state.speakRate);
+  const label = document.getElementById("speakRateLabel");
+  if(label) label.textContent = state.speakRate.toFixed(1)+"倍";
+}
+
+function setSpeakBtnState(btnId, playing){
+  const btn = document.getElementById(btnId);
+  if(!btn) return;
+  btn.classList.toggle("playing", playing);
+  btn.innerHTML = playing ? "⏸ 読み上げを止める" : "🔊 音声で聞く";
+}
+
+/* マイク機能は精度の問題により削除済み。他の関数からの呼び出しに備えて no-op で残す */
+function stopMic(){}
+
+/* ===================== レンダリング ===================== */
+const app = document.getElementById("app");
+
+function render(){
+  if(state.screen==="home") renderHome();
+  else if(state.screen==="play") renderPlay();
+  else if(state.screen==="result") renderResult();
+}
+
+function esc(s){
+  return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+
+function pillarBadge(p){
+  return (PILLARS[p] && PILLARS[p].label) || "";
+}
+
+function renderHome(){
+  let html = `
+    <div class="header">
+      <h1>平安時代テスト</h1>
+      <div class="sub">予習シリーズ5年下　社会　第4回　平安時代</div>
+    </div>
+    <div class="content">
+  `;
+  const scoredStages = STAGES.filter(s=>s.scored);
+  const refStages = STAGES.filter(s=>!s.scored);
+
+  html += `<div class="home-title">確認テスト</div>`;
+  scoredStages.forEach(stage=>{
+    const res = state.results[stage.id];
+    const missedCount = Object.keys(state.missedStore[stage.id]||{}).length;
+    html += `<div class="stage-card" onclick="startStage('${stage.id}')">
+      <div class="stage-top">
+        <div class="stage-name">${esc(stage.name)}</div>
+        <div class="stage-badge">${res ? res.correct+"/"+res.total : "未挑戦"}</div>
+      </div>
+      <div class="stage-desc">${esc(stage.desc)}</div>
+      ${res ? `<div class="progress-bar"><div class="progress-fill" style="width:${Math.round(res.correct/res.total*100)}%"></div></div>` : ""}
+      ${missedCount>0 ? `<div class="retry-btn" onclick="event.stopPropagation(); startRetry('${stage.id}')">🔁 苦手${missedCount}問を復習</div>` : ""}
+    </div>`;
+  });
+
+  html += `<div class="home-title">参考情報（読みもの）</div>`;
+  refStages.forEach(stage=>{
+    html += `<div class="stage-card ref" onclick="startStage('${stage.id}')">
+      <div class="stage-top">
+        <div class="stage-name">${esc(stage.name)}</div>
+        <div class="stage-badge">読みもの</div>
+      </div>
+      <div class="stage-desc">${esc(stage.desc)}</div>
+    </div>`;
+  });
+
+  const totalMissed = STAGES.filter(s=>s.scored).reduce((sum,s)=>sum+Object.keys(state.missedStore[s.id]||{}).length,0);
+  html += `<div class="footer-note">単一HTMLファイル・localStorageに端末内で保存されます</div>`;
+  if(totalMissed>0){
+    html += `<button class="reset-all-btn" id="resetAllBtn" onclick="doResetAll()">🗑️ 苦手リストをすべてリセット</button>`;
+  }
+  html += `</div>`;
+  app.innerHTML = html;
+}
+
+function renderPlay(){
+  const item = currentItem();
+  const stage = STAGES.find(s=>s.id===state.stageId);
+  const isInfo = item.type==="info";
+
+  let html = `
+    <div class="header">
+      <h1>${esc(stage.name)}${state.isRetry?"（復習）":""}</h1>
+      <div class="sub">${item.sub ? esc(item.sub) : esc(stage.desc)}</div>
+    </div>
+    <div class="content">
+      <div class="play-topbar">
+        <span>問題 ${state.currentIndex+1} / ${state.items.length}</span>
+        <span onclick="backHome()" style="text-decoration:underline; cursor:pointer;">中断してホームへ</span>
+      </div>
+  `;
+
+  if(isInfo){
+    html += `<div class="qcard info">
+      <div class="qtitle">${esc(item.title)}</div>
+      ${item.speak ? `
+      <div class="speak-row">
+        <button id="speakBtn" class="speak-btn" onclick='toggleSpeak(${JSON.stringify(item.speak)})'>🔊 音声で聞く</button>
+        <div class="speed-control">
+          <span>速さ</span>
+          <input type="range" min="0.7" max="1.8" step="0.1" value="${state.speakRate}" oninput="updateSpeakRate(this.value)">
+          <span id="speakRateLabel">${state.speakRate.toFixed(1)}倍</span>
+        </div>
+      </div>` : ""}
+      <div class="info-body ${item.wide?'wide':''}">${item.body}</div>
+      ${item.src ? `<div class="src-tag">出典：${esc(item.src)}</div>` : ""}
+      <button class="btn btn-ref" onclick="nextItem()">${state.currentIndex < state.items.length-1 ? "次へ" : "結果を見る"}</button>
+    </div>`;
+  } else if(item.type==="fill"){
+    html += `<div class="qcard">`;
+    if(item.lead) html += `<div class="lead-badge">${esc(item.lead)}</div>`;
+    html += `<div class="qtext">${esc(item.q)}</div>`;
+    const inputClass = state.answered ? (checkFillAnswer(item, state.userInput) ? "correct":"wrong") : "";
+    html += `<input type="text" id="fillInput" class="fill-input ${inputClass}" placeholder="答えを入力" value="${esc(state.userInput)}" ${state.answered?"disabled":""} onkeydown="if(event.key==='Enter'){state.userInput=this.value; submitFillUI();}">`;
+    if(!state.answered){
+      html += `<button class="btn btn-primary" onclick="submitFillUI()">こたえる</button>`;
+    }else{
+      const correct = checkFillAnswer(item, state.userInput);
+      html += `<div class="explain-box ${correct?'good':'bad'}">
+        <span class="mark-icon">${correct?"⭕":"❌"}</span><b>正解：${esc(item.answer)}</b><br>${esc(item.explain||"")}
+      </div>`;
+      html += `<button class="btn btn-primary" onclick="nextItem()">${state.currentIndex < state.items.length-1 ? "次の問題へ" : "結果を見る"}</button>`;
+    }
+    html += `</div>`;
+  } else if(item.type==="choice"){
+    html += `<div class="qcard">`;
+    if(item.pillar!==undefined && item.pillar!==null) html += `<div class="lead-badge">${esc(pillarBadge(item.pillar))}</div>`;
+    html += `<div class="qtext">${esc(item.q)}</div>`;
+    html += `<div class="choice-list">`;
+    item.choices.forEach((c,idx)=>{
+      let cls = "choice-btn";
+      if(state.answered){
+        if(idx===item.answer) cls += " correct";
+        else if(idx===state.userChoiceIdx) cls += " wrong";
+        else cls += " dim";
+      }
+      html += `<button class="${cls}" ${state.answered?"disabled":""} onclick="submitChoiceUI(${idx})">${esc(c)}</button>`;
+    });
+    html += `</div>`;
+    if(state.answered){
+      const correct = state.userChoiceIdx===item.answer;
+      html += `<div class="explain-box ${correct?'good':'bad'}">
+        <span class="mark-icon">${correct?"⭕":"❌"}</span>${esc(item.explain||"")}
+      </div>`;
+      html += `<button class="btn btn-primary" onclick="nextItem()">${state.currentIndex < state.items.length-1 ? "次の問題へ" : "結果を見る"}</button>`;
+    }
+    html += `</div>`;
+  }
+
+  html += `</div>`;
+  app.innerHTML = html;
+  if(item.type==="fill" && !state.answered){
+    const el = document.getElementById("fillInput");
+    if(el) el.focus();
+  }
+}
+
+function submitChoiceUI(idx){
+  submitChoice(idx);
+  renderPlay();
+}
+function submitFillUI(){
+  const el = document.getElementById("fillInput");
+  if(el) state.userInput = el.value;
+  submitFill();
+  renderPlay();
+}
+
+function renderResult(){
+  const stage = STAGES.find(s=>s.id===state.stageId);
+  const wrongItems = state.answerLog.filter(l=>!l.wasCorrect).map(l=>l.item);
+  const missedCount = Object.keys(state.missedStore[state.stageId]||{}).length;
+
+  let html = `
+    <div class="header">
+      <h1>結果</h1>
+      <div class="sub">${esc(stage.name)}${state.isRetry?"（復習）":""}</div>
+    </div>
+    <div class="content">
+      <div class="qcard result-box">
+        <div>できた問題</div>
+        <div class="result-score">${state.scoreCorrect} / ${state.scoreTotal}</div>
+        ${wrongItems.length>0 ? `
+        <div class="wrong-list">
+          <div class="wrong-list-label">まちがえた問題</div>
+          ${wrongItems.map(it=>`<div class="wrong-item">${esc(it.q)}</div>`).join("")}
+        </div>` : `<div class="perfect-msg">🎉 全問正解！</div>`}
+      </div>
+      <div class="result-actions">
+        <button class="btn btn-primary" onclick="${state.isRetry ? `startRetry('${state.stageId}')` : `startStage('${state.stageId}')`}">もう一度</button>
+        <button class="btn btn-outline" onclick="backHome()">ホームへ</button>
+      </div>
+      ${(!state.isRetry && missedCount>0) ? `<button class="btn btn-danger-outline" style="margin-top:10px;" onclick="startRetry('${state.stageId}')">🔁 苦手${missedCount}問を復習する</button>` : ""}
+    </div>
+  `;
+  app.innerHTML = html;
+}
+
+function doResetAll(){
+  state.missedStore = {};
+  saveMissedStore(state.missedStore);
+  const btn = document.getElementById("resetAllBtn");
+  if(btn){
+    btn.textContent = "✅ リセットしました";
+    setTimeout(()=>{ renderHome(); }, 1200);
+  }
+}
+
+render();
+</script>
+</body>
+</html>
