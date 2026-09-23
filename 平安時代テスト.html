@@ -6,7 +6,7 @@
 <title>平安時代テスト</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=Noto+Serif+JP:wght@700;900&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 :root{
   --accent:#3468a6;
@@ -325,6 +325,152 @@ body{
   accent-color:var(--ref);
 }
 .hidden{display:none!important;}
+
+/* ===== ざっくり流れ 導入ブロック ===== */
+.heian-intro{
+  --hi-ink:#2B2622; --hi-soft:#6B6255; --hi-line:#D9CDB4; --hi-paper:#FFFFFF;
+  --hi-sei:#8778A8; --hi-sei-bg:#F0ECF7;   /* 政治=藤色 */
+  --hi-sha:#C77B4E; --hi-sha-bg:#FBEDE3;   /* 社会=赤茶 */
+  --hi-bun:#4E9B8F; --hi-bun-bg:#E7F3F0;   /* 文化=青緑 */
+  margin: 0 0 18px;
+  padding: 18px 16px 20px;
+  background: var(--hi-paper);
+  border: 1px solid var(--hi-line);
+  border-radius: 14px;
+  box-sizing: border-box;
+  color: var(--hi-ink);
+  font-family: "Noto Sans JP", sans-serif;
+  line-height: 1.65;
+}
+.heian-intro *{ box-sizing: border-box; }
+.heian-intro h2{
+  font-family: "Noto Serif JP", serif;
+  font-weight: 900;
+  font-size: clamp(18px, 5vw, 21px);
+  margin: 0 0 4px;
+}
+.heian-intro .hi-lead{
+  font-size: 12.5px;
+  color: var(--hi-soft);
+  margin: 0 0 16px;
+}
+.hi-group{ margin-bottom: 16px; }
+.hi-group:last-of-type{ margin-bottom: 4px; }
+.hi-tag{
+  display:inline-block;
+  font-family: "Noto Serif JP", serif;
+  font-weight: 700;
+  font-size: 12.5px;
+  padding: 3px 12px;
+  border-radius: 999px;
+  color: #fff;
+  background: var(--hi-c);
+  margin-bottom: 8px;
+}
+.hi-group.sei{ --hi-c: var(--hi-sei); }
+.hi-group.sha{ --hi-c: var(--hi-sha); }
+.hi-group.bun{ --hi-c: var(--hi-bun); }
+.hi-chain{ display:flex; flex-direction: column; }
+.hi-step{
+  background: var(--hi-bg);
+  border-left: 4px solid var(--hi-c);
+  border-radius: 8px;
+  padding: 9px 12px;
+  font-size: 13px;
+}
+.hi-group.sei .hi-step{ --hi-bg: var(--hi-sei-bg); }
+.hi-group.sha .hi-step{ --hi-bg: var(--hi-sha-bg); }
+.hi-group.bun .hi-step{ --hi-bg: var(--hi-bun-bg); }
+.hi-arrow{
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--hi-soft);
+  margin: 4px 0 4px 10px;
+}
+.hi-arrow b{ color: var(--hi-c); font-size: 14px; }
+.hi-sum{
+  margin-top: 14px;
+  padding: 10px 13px;
+  background: #F1E9D8;
+  border-radius: 8px;
+  font-size: 12.5px;
+  color: var(--hi-soft);
+}
+.hi-sum b{ color: var(--hi-ink); }
+.hi-speak-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:10px;
+  margin:0 0 18px;
+  padding:10px 12px;
+  background:#F6F1E4;
+  border:1px solid var(--hi-line);
+  border-radius:10px;
+}
+.hi-speak-row .hi-speak-note{font-size:12px;color:var(--hi-soft);}
+.hi-tag-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-bottom:8px;
+}
+.hi-tag-row .hi-tag{margin-bottom:0;}
+.speak-btn.small{padding:5px 12px;font-size:11.5px;}
+
+/* ===== 並べ替えクイズ ===== */
+.order-cat-tag{
+  display:inline-block;
+  font-family:"Noto Serif JP",serif;
+  font-weight:700;
+  font-size:12px;
+  padding:3px 12px;
+  border-radius:999px;
+  color:#fff;
+  margin-bottom:10px;
+}
+.order-cat-tag.sei{background:#8778A8;}
+.order-cat-tag.sha{background:#C77B4E;}
+.order-cat-tag.bun{background:#4E9B8F;}
+.order-instructions{font-size:12.5px;color:var(--sub);margin-bottom:14px;line-height:1.6;}
+.order-placed{display:flex;flex-direction:column;gap:8px;margin-bottom:14px;min-height:20px;}
+.order-placed-item{
+  display:flex;
+  align-items:flex-start;
+  gap:8px;
+  padding:10px 12px;
+  border-radius:10px;
+  border:1.5px solid var(--line);
+  background:#fff;
+  font-size:13px;
+  line-height:1.6;
+  cursor:pointer;
+}
+.order-placed-item.locked{cursor:default;}
+.order-placed-item .order-num{flex:0 0 auto;font-weight:800;color:var(--accent);}
+.order-placed-item.correct{border-color:var(--good);background:var(--good-light);}
+.order-placed-item.correct .order-num{color:var(--good);}
+.order-placed-item.wrong{border-color:var(--bad);background:var(--bad-light);}
+.order-placed-item.wrong .order-num{color:var(--bad);}
+.order-pool{display:flex;flex-direction:column;gap:8px;}
+.order-pool-item{
+  width:100%;
+  text-align:left;
+  padding:10px 12px;
+  border-radius:10px;
+  border:1.5px dashed var(--line);
+  background:var(--bg);
+  font-size:13px;
+  line-height:1.6;
+  font-family:inherit;
+  color:var(--ink);
+  cursor:pointer;
+}
+.order-pool-item:active{transform:scale(.98);}
+.order-empty-hint{font-size:12px;color:var(--sub);text-align:center;padding:10px;border:1.5px dashed var(--line);border-radius:10px;}
 </style>
 </head>
 <body>
@@ -344,13 +490,11 @@ const PILLARS = {
 const kihonOverviewScreens = [
   {
     title:"はじめに",
-    body:`<p>今回のテーマは「平安時代」です。794年に桓武天皇が平安京に都を移してから、源頼朝が鎌倉に幕府を開くまでの約400年間を平安時代といいます。</p><p>平安時代の前半は藤原氏が摂政・関白として政治の実権をにぎる摂関政治が行われ、後半には上皇が政治を行う院政や、武士が力をのばす動きが見られるようになりました。</p><p>この回では、平安京と律令政治の立て直し、藤原氏の政治、武士のおこりと成長、上皇の政治、平氏の政治、新しい仏教と国風文化という、6つの視点から平安時代を学びます。</p>`,
-    speak:"今回のテーマは、平安時代です。794年に桓武天皇が平安京に都を移してから、源頼朝が鎌倉に幕府を開くまでの約400年間を、平安時代といいます。平安時代の前半は、藤原氏が摂政・関白として政治の実権をにぎる摂関政治が行われ、後半には上皇が政治を行う院政や、武士が力をのばす動きが見られるようになりました。この回では、平安京と律令政治の立て直し、藤原氏の政治、武士のおこりと成長、上皇の政治、平氏の政治、新しい仏教と国風文化という、6つの視点から平安時代を学んでいきます。"
+    body:`<p>今回のテーマは「平安時代」です。794年に桓武天皇が平安京に都を移してから、源頼朝が鎌倉に幕府を開くまでの約400年間を平安時代といいます。</p><p>平安時代の前半は藤原氏が摂政・関白として政治の実権をにぎる摂関政治が行われ、後半には上皇が政治を行う院政や、武士が力をのばす動きが見られるようになりました。</p><p>この回では、平安京と律令政治の立て直し、藤原氏の政治、武士のおこりと成長、上皇の政治、平氏の政治、新しい仏教と国風文化という、6つの視点から平安時代を学びます。</p>`
   },
   {
     title:"6つの柱",
-    body:`<p><b>① 平安京と律令政治の立て直し</b><br>桓武天皇が平安京に都を移した理由と、蝦夷との戦いについて学びます。</p><p><b>② 藤原氏の政治</b><br>摂政・関白による摂関政治と、藤原道長・頼通の全盛期について学びます。</p><p><b>③ 武士のおこりと成長</b><br>武士の登場と成長、平将門の乱・藤原純友の乱、東北地方の争いについて学びます。</p><p><b>④ 上皇の政治</b><br>白河上皇が始めた院政のしくみと、上皇と天皇の対立について学びます。</p><p><b>⑤ 平氏の政治</b><br>保元の乱・平治の乱と、平清盛による政治、日宋貿易について学びます。</p><p><b>⑥ 新しい仏教と国風文化</b><br>最澄・空海が伝えた新しい仏教と、かな文字を中心とする国風文化について学びます。</p>`,
-    speak:"この回は、大きく6つの柱に分かれています。1つ目は、平安京と律令政治の立て直しです。桓武天皇が平安京に都を移した理由と、蝦夷との戦いについて学びます。2つ目は、藤原氏の政治です。摂政・関白による摂関政治と、藤原道長、頼通の全盛期について学びます。3つ目は、武士のおこりと成長です。武士の登場と成長、平将門の乱、藤原純友の乱、東北地方の争いについて学びます。4つ目は、上皇の政治です。白河上皇が始めた院政のしくみと、上皇と天皇の対立について学びます。5つ目は、平氏の政治です。保元の乱、平治の乱と、平清盛による政治、日宋貿易について学びます。6つ目は、新しい仏教と国風文化です。最澄、空海が伝えた新しい仏教と、かな文字を中心とする国風文化について学びます。それでは、順番に見ていきましょう。"
+    body:`<p><b>① 平安京と律令政治の立て直し</b><br>桓武天皇が平安京に都を移した理由と、蝦夷との戦いについて学びます。</p><p><b>② 藤原氏の政治</b><br>摂政・関白による摂関政治と、藤原道長・頼通の全盛期について学びます。</p><p><b>③ 武士のおこりと成長</b><br>武士の登場と成長、平将門の乱・藤原純友の乱、東北地方の争いについて学びます。</p><p><b>④ 上皇の政治</b><br>白河上皇が始めた院政のしくみと、上皇と天皇の対立について学びます。</p><p><b>⑤ 平氏の政治</b><br>保元の乱・平治の乱と、平清盛による政治、日宋貿易について学びます。</p><p><b>⑥ 新しい仏教と国風文化</b><br>最澄・空海が伝えた新しい仏教と、かな文字を中心とする国風文化について学びます。</p>`
   }
 ];
 
@@ -610,11 +754,48 @@ function buildKihonFinalItems(){
 }
 
 function buildKihonItems(){
+  const orderItems = buildOrderQuizItems();
   const overview = kihonOverviewScreens.map((s,idx)=>Object.assign({id:"kihonOv_"+idx, type:"info", wide:true}, s));
   const fills = shuffleArrKeepBlocks();
   const finals = shuffleArr(buildKihonFinalItems());
-  return overview.concat(fills, finals);
+  return orderItems.concat(overview, fills, finals);
 }
+
+/* ===================== 並べ替えクイズ（流れの理解を確認） ===================== */
+const orderQuizRaw = [
+  {category:"政治", title:"「政治」の流れを正しい順に並べかえよう", steps:[
+    "桓武天皇「奈良の坊さんたちうるさいし、都、引っ越すぞ!」→ 平安京へ。最初はまだ天皇にそこそこ力があった",
+    "だんだん天皇の力が弱まっていく中、藤原氏「娘を天皇と結婚させとけば、俺、天皇のじいさんじゃん」→ そのポジションを使ってじわじわ政治に食い込む",
+    "やがて藤原氏の全盛期に(特に藤原道長のころ)。政治はほぼ藤原家の独占状態、天皇は実質お飾りポジションに(摂関政治)",
+    "さすがに天皇側も黙っておらず、白河天皇「もう藤原に譲らねぇ」→ 自分は引退して上皇になり、裏から口出しする裏ワザを編み出す(院政)",
+    "今度は上皇・天皇・貴族どうしの対立が激しくなる → そのケンカの「実力行使」担当として武士が呼ばれまくる",
+    "武士がどんどん力と発言力をつけていき、平清盛「もう俺が政治やるわ」→ 武士として初めて政治のトップに立つ"
+  ]},
+  {category:"社会", title:"「社会」の流れを正しい順に並べかえよう", steps:[
+    "地方の豪族「国司にごちゃごちゃ言われるのめんどいし、税金も高い」→ 都の偉い貴族(藤原氏とか)に土地をあげて(寄進)守ってもらう作戦に。もらった土地は税金免除になることが多く、これが荘園",
+    "荘園がどんどん増える → 国に入るはずの税金がガタ落ち",
+    "朝廷はお金がなくてピンチ、地方の政治は国司に丸投げ状態。中にはサボったり悪さする国司も → 地方の治安もグダグダに",
+    "地方の人たち「お役人あてにならないし、土地も命も自分で守るしかないわ」→ 弓矢や馬が得意な人たちで自衛団を結成。これが武士のはじまり"
+  ]},
+  {category:"文化", title:"「文化」の流れを正しい順に並べかえよう", steps:[
+    "貴族「政治より、和歌・絵・おしゃれでマウント取り合うわ」の空気に",
+    "かな文字が流行って、自分の気持ちそのまま書けるように → 『源氏物語』『枕草子』誕生(国風文化)"
+  ]}
+];
+
+function buildOrderQuizItems(){
+  return orderQuizRaw.map((r,idx)=>{
+    const steps = r.steps.map((s,i)=>({text:s, correctIndex:i}));
+    return {type:"order", id:"orderQuiz_"+idx, title:r.title, q:r.title, category:r.category, steps:steps};
+  });
+}
+
+/* ===================== ホーム画面「ざっくり流れ」の読み上げ用テキスト ===================== */
+const heianFlowSpeakTexts = {
+  sei: "まず政治の流れです。桓武天皇は、奈良のお坊さんたちの力が強すぎることをきらって、都を平安京に移しました。最初は天皇にもそこそこ力がありましたが、だんだん弱まっていきます。そんな中、藤原氏は自分の娘を天皇と結婚させることで、天皇のおじいさんという立場を手に入れ、じわじわと政治に食いこんでいきました。そして藤原道長のころ、藤原氏の全盛期がやってきます。政治はほぼ藤原家の独占状態になり、天皇は実質お飾りのような立場になりました。これを摂関政治といいます。しかし白河天皇は、もう藤原氏に政治をゆずらないと決意し、自分は天皇の位をゆずって上皇となり、裏から政治に口出しする院政という裏ワザを編み出しました。すると今度は、上皇と天皇、貴族どうしの対立が激しくなり、そのけんかの実力行使担当として武士が呼ばれるようになります。こうして武士はどんどん力と発言力をつけていき、ついに平清盛が、武士として初めて政治のトップに立ちました。",
+  sha: "次に社会の流れです。地方の豪族は、国司にあれこれ口出しされるのを避け、重い税からものがれるために、都の有力な貴族、たとえば藤原氏などに土地をあげて守ってもらうようになりました。これを寄進といいます。もらった土地は税を免除されることが多く、これが荘園です。こうして荘園がどんどん増えていくと、国に入るはずの税金がガタ落ちしていきます。朝廷はお金に困る一方、地方の政治は国司にまかせっきりで、中にはさぼったり悪いことをしたりする国司も出てきて、地方の治安もぐだぐだになっていきました。そこで地方の人たちは、お役人があてにならないなら、自分の土地と命は自分で守るしかないと考えるようになり、弓矢や乗馬が得意な人たちが、身を守るための集団をつくるようになりました。これが武士のはじまりです。",
+  bun: "最後に文化の流れです。貴族たちの間では、政治よりも和歌や絵、おしゃれで競い合う空気が広まっていきました。そんな中でかな文字が流行し、自分の気持ちをそのまま書けるようになったことで、源氏物語や枕草子といった作品が生まれました。これを国風文化といいます。"
+};
 
 function buildKurojiItems(){
   let out = [];
@@ -648,7 +829,7 @@ function buildSankoItems(){
 }
 
 const STAGES = [
-  {id:"kihon", name:"① 構造テスト", desc:"6本柱（平安京と律令政治の立て直し・藤原氏の政治・武士のおこりと成長・上皇の政治・平氏の政治・新しい仏教と国風文化）の骨組みを確認。概要2画面＋穴埋め24問＋まとめ選択6問。", scored:true, ref:false, build:buildKihonItems},
+  {id:"kihon", name:"① 構造テスト", desc:"6本柱（平安京と律令政治の立て直し・藤原氏の政治・武士のおこりと成長・上皇の政治・平氏の政治・新しい仏教と国風文化）の骨組みを確認。並べ替えクイズ3問＋概要2画面＋穴埋め24問＋まとめ選択6問。", scored:true, ref:false, build:buildKihonItems},
   {id:"kuroji", name:"② 黒太字テスト", desc:"各分野の重要語句を4択で確認します。計74問。", scored:true, ref:false, build:buildKurojiItems},
   {id:"mame", name:"③ ひとくちメモテスト", desc:"教科書のひとくちメモ・Q&Aから出題します。計12問。", scored:true, ref:false, build:buildMameItems},
   {id:"sanko", name:"④ 気をつけたいポイント", desc:"教科書コラム＋入試でまちがえやすい注意点の読みもの。採点はありません。", scored:false, ref:true, build:buildSankoItems}
@@ -693,10 +874,14 @@ const state = {
   answered:false,
   userInput:"",
   userChoiceIdx:null,
+  orderItemId:null,
+  orderPool:[],
+  orderPlaced:[],
   speakRate: loadSpeakRate()
 };
 
 function startStage(stageId){
+  stopSpeak();
   const stage = STAGES.find(s=>s.id===stageId);
   state.stageId = stageId;
   state.isRetry = false;
@@ -708,6 +893,9 @@ function startStage(stageId){
   state.answered = false;
   state.userInput = "";
   state.userChoiceIdx = null;
+  state.orderItemId = null;
+  state.orderPool = [];
+  state.orderPlaced = [];
   state.screen = "play";
   render();
 }
@@ -726,6 +914,9 @@ function startRetry(stageId){
   state.answered = false;
   state.userInput = "";
   state.userChoiceIdx = null;
+  state.orderItemId = null;
+  state.orderPool = [];
+  state.orderPlaced = [];
   state.screen = "play";
   render();
 }
@@ -751,11 +942,42 @@ function submitFill(){
   state.answerLog.push({item, wasCorrect:correct});
 }
 
+function initOrderIfNeeded(item){
+  if(state.orderItemId === item.id) return;
+  state.orderItemId = item.id;
+  state.orderPool = shuffleArr(item.steps.map(s=>({text:s.text, correctIndex:s.correctIndex})));
+  state.orderPlaced = [];
+}
+
+function tapOrderStep(poolIdx){
+  if(state.answered) return;
+  const step = state.orderPool.splice(poolIdx,1)[0];
+  state.orderPlaced.push(step);
+  if(state.orderPool.length===0){
+    const item = currentItem();
+    const allCorrect = state.orderPlaced.every((s,i)=>s.correctIndex===i);
+    state.answered = true;
+    if(allCorrect) state.scoreCorrect++;
+    state.answerLog.push({item, wasCorrect:allCorrect});
+  }
+  renderPlay();
+}
+
+function removeOrderStep(placedIdx){
+  if(state.answered) return;
+  const step = state.orderPlaced.splice(placedIdx,1)[0];
+  state.orderPool.push(step);
+  renderPlay();
+}
+
 function nextItem(){
   stopSpeak();
   state.answered = false;
   state.userInput = "";
   state.userChoiceIdx = null;
+  state.orderItemId = null;
+  state.orderPool = [];
+  state.orderPlaced = [];
   if(state.currentIndex < state.items.length-1){
     state.currentIndex++;
     render();
@@ -797,6 +1019,8 @@ function backHome(){
 
 /* ===================== 音声読み上げ（Web Speech API：読み上げ） ===================== */
 let cachedVoices = [];
+let activeSpeakBtnId = null;
+let currentUtterance = null; /* Safari対策：参照を保持しないと発話がGCで途中停止することがある */
 
 function speakSupported(){
   return typeof window!=="undefined" && "speechSynthesis" in window;
@@ -821,44 +1045,57 @@ function getBestJaVoice(){
 
 function speakText(text, btnId){
   if(!speakSupported()) return;
-  window.speechSynthesis.cancel();
-  const u = new SpeechSynthesisUtterance(text);
-  u.lang = "ja-JP";
-  u.rate = state.speakRate;
-  const voice = getBestJaVoice();
-  if(voice) u.voice = voice;
-  u.onend = ()=>{ setSpeakBtnState(btnId, false); };
-  u.onerror = ()=>{ setSpeakBtnState(btnId, false); };
-  window.speechSynthesis.speak(u);
-  setSpeakBtnState(btnId, true);
+  const doSpeak = ()=>{
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = "ja-JP";
+    u.rate = state.speakRate;
+    const voice = getBestJaVoice();
+    if(voice) u.voice = voice;
+    u.onend = ()=>{ setSpeakBtnState(btnId, false); if(activeSpeakBtnId===btnId) activeSpeakBtnId=null; };
+    u.onerror = ()=>{ setSpeakBtnState(btnId, false); if(activeSpeakBtnId===btnId) activeSpeakBtnId=null; };
+    currentUtterance = u;
+    window.speechSynthesis.speak(u);
+    setSpeakBtnState(btnId, true);
+  };
+  if(window.speechSynthesis.speaking){
+    /* Safari対策：cancel直後にspeakすると発話が無音のまま失敗することがあるため少し間を置く */
+    window.speechSynthesis.cancel();
+    setTimeout(doSpeak, 150);
+  }else{
+    doSpeak();
+  }
 }
 
 function stopSpeak(){
   if(speakSupported()) window.speechSynthesis.cancel();
+  if(activeSpeakBtnId){ setSpeakBtnState(activeSpeakBtnId, false); activeSpeakBtnId = null; }
 }
 
-function toggleSpeak(text){
+function toggleSpeak(text, btnId){
+  btnId = btnId || "speakBtn";
   if(!speakSupported()) return;
-  if(window.speechSynthesis.speaking){
+  if(window.speechSynthesis.speaking && activeSpeakBtnId===btnId){
     stopSpeak();
-    setSpeakBtnState("speakBtn", false);
   }else{
-    speakText(text, "speakBtn");
+    if(activeSpeakBtnId && activeSpeakBtnId!==btnId) setSpeakBtnState(activeSpeakBtnId, false);
+    activeSpeakBtnId = btnId;
+    speakText(text, btnId);
   }
 }
 
 function updateSpeakRate(v){
   state.speakRate = parseFloat(v);
   saveSpeakRate(state.speakRate);
-  const label = document.getElementById("speakRateLabel");
-  if(label) label.textContent = state.speakRate.toFixed(1)+"倍";
+  document.querySelectorAll(".speak-rate-label").forEach(label=>{
+    label.textContent = state.speakRate.toFixed(1)+"倍";
+  });
 }
 
 function setSpeakBtnState(btnId, playing){
   const btn = document.getElementById(btnId);
   if(!btn) return;
   btn.classList.toggle("playing", playing);
-  btn.innerHTML = playing ? "⏸ 読み上げを止める" : "🔊 音声で聞く";
+  btn.innerHTML = playing ? "⏸ 止める" : "🔊 音声で聞く";
 }
 
 /* マイク機能は精度の問題により削除済み。他の関数からの呼び出しに備えて no-op で残す */
@@ -888,6 +1125,71 @@ function renderHome(){
       <div class="sub">予習シリーズ5年下　社会　第4回　平安時代</div>
     </div>
     <div class="content">
+  `;
+  html += `
+<section class="heian-intro">
+  <h2>平安時代ってどんな時代?</h2>
+  <p class="hi-lead">クイズに行く前に、まず流れだけサクッとつかんでおこう。</p>
+
+  <div class="hi-speak-row">
+    <span class="hi-speak-note">🔊 各テーマのボタンで読み上げられます</span>
+    <div class="speed-control">
+      <span>速さ</span>
+      <input type="range" min="0.7" max="1.8" step="0.1" value="${state.speakRate}" oninput="updateSpeakRate(this.value)">
+      <span class="speak-rate-label">${state.speakRate.toFixed(1)}倍</span>
+    </div>
+  </div>
+
+  <div class="hi-group sei">
+    <div class="hi-tag-row">
+      <span class="hi-tag">政治</span>
+      <button id="speakBtnSei" class="speak-btn small" onclick='toggleSpeak(${JSON.stringify(heianFlowSpeakTexts.sei)}, "speakBtnSei")'>🔊 音声で聞く</button>
+    </div>
+    <div class="hi-chain">
+      <div class="hi-step">桓武天皇「奈良の坊さんたちうるさいし、都、引っ越すぞ!」→ 平安京へ。最初はまだ天皇にそこそこ力があった</div>
+      <div class="hi-arrow"><b>↓</b> でも</div>
+      <div class="hi-step">だんだん天皇の力が弱まっていく中、藤原氏「娘を天皇と結婚させとけば、俺、天皇のじいさんじゃん」→ そのポジションを使ってじわじわ政治に食い込む</div>
+      <div class="hi-arrow"><b>↓</b> だから</div>
+      <div class="hi-step">やがて藤原氏の全盛期に(特に藤原道長のころ)。政治はほぼ藤原家の独占状態、天皇は実質お飾りポジションに(摂関政治)</div>
+      <div class="hi-arrow"><b>↓</b> でも</div>
+      <div class="hi-step">さすがに天皇側も黙っておらず、白河天皇「もう藤原に譲らねぇ」→ 自分は引退して上皇になり、裏から口出しする裏ワザを編み出す(院政)</div>
+      <div class="hi-arrow"><b>↓</b> だから</div>
+      <div class="hi-step">今度は上皇・天皇・貴族どうしの対立が激しくなる → そのケンカの「実力行使」担当として武士が呼ばれまくる</div>
+      <div class="hi-arrow"><b>↓</b> だから</div>
+      <div class="hi-step">武士がどんどん力と発言力をつけていき、平清盛「もう俺が政治やるわ」→ 武士として初めて政治のトップに立つ</div>
+    </div>
+  </div>
+
+  <div class="hi-group sha">
+    <div class="hi-tag-row">
+      <span class="hi-tag">社会</span>
+      <button id="speakBtnSha" class="speak-btn small" onclick='toggleSpeak(${JSON.stringify(heianFlowSpeakTexts.sha)}, "speakBtnSha")'>🔊 音声で聞く</button>
+    </div>
+    <div class="hi-chain">
+      <div class="hi-step">地方の豪族「国司にごちゃごちゃ言われるのめんどいし、税金も高い」→ 都の偉い貴族(藤原氏とか)に土地をあげて(寄進)守ってもらう作戦に。もらった土地は税金免除になることが多く、これが荘園</div>
+      <div class="hi-arrow"><b>↓</b> だから</div>
+      <div class="hi-step">荘園がどんどん増える → 国に入るはずの税金がガタ落ち</div>
+      <div class="hi-arrow"><b>↓</b> だから</div>
+      <div class="hi-step">朝廷はお金がなくてピンチ、地方の政治は国司に丸投げ状態。中にはサボったり悪さする国司も → 地方の治安もグダグダに</div>
+      <div class="hi-arrow"><b>↓</b> だから</div>
+      <div class="hi-step">地方の人たち「お役人あてにならないし、土地も命も自分で守るしかないわ」→ 弓矢や馬が得意な人たちで自衛団を結成。これが武士のはじまり</div>
+    </div>
+  </div>
+
+  <div class="hi-group bun">
+    <div class="hi-tag-row">
+      <span class="hi-tag">文化</span>
+      <button id="speakBtnBun" class="speak-btn small" onclick='toggleSpeak(${JSON.stringify(heianFlowSpeakTexts.bun)}, "speakBtnBun")'>🔊 音声で聞く</button>
+    </div>
+    <div class="hi-chain">
+      <div class="hi-step">貴族「政治より、和歌・絵・おしゃれでマウント取り合うわ」の空気に</div>
+      <div class="hi-arrow"><b>↓</b> だから</div>
+      <div class="hi-step">かな文字が流行って、自分の気持ちそのまま書けるように → 『源氏物語』『枕草子』誕生(国風文化)</div>
+    </div>
+  </div>
+
+  <div class="hi-sum">ひとことでいうと:<b>藤原氏が政治を独占 → 荘園で国がスカスカに → その裏でずっと用心棒だった武士がついに主役に</b>、っていう流れなんだ。</div>
+</section>
   `;
   const scoredStages = STAGES.filter(s=>s.scored);
   const refStages = STAGES.filter(s=>!s.scored);
@@ -995,6 +1297,42 @@ function renderPlay(){
       const correct = state.userChoiceIdx===item.answer;
       html += `<div class="explain-box ${correct?'good':'bad'}">
         <span class="mark-icon">${correct?"⭕":"❌"}</span>${esc(item.explain||"")}
+      </div>`;
+      html += `<button class="btn btn-primary" onclick="nextItem()">${state.currentIndex < state.items.length-1 ? "次の問題へ" : "結果を見る"}</button>`;
+    }
+    html += `</div>`;
+  } else if(item.type==="order"){
+    initOrderIfNeeded(item);
+    const catClass = item.category==="政治" ? "sei" : (item.category==="社会" ? "sha" : "bun");
+    html += `<div class="qcard">`;
+    html += `<div class="order-cat-tag ${catClass}">${esc(item.category)}</div>`;
+    html += `<div class="qtext">${esc(item.title)}</div>`;
+    html += `<div class="order-instructions">下のことばを、正しい順番になるようにタップしてね。まちがえたら、並んだ文をもう一度タップすると戻せます。</div>`;
+    html += `<div class="order-placed">`;
+    if(state.orderPlaced.length===0){
+      html += `<div class="order-empty-hint">ここに順番に並んでいきます</div>`;
+    }else{
+      state.orderPlaced.forEach((s,i)=>{
+        let cls = "order-placed-item";
+        if(state.answered) cls += (s.correctIndex===i) ? " correct locked" : " wrong locked";
+        html += `<div class="${cls}" ${state.answered?"":`onclick="removeOrderStep(${i})"`}>
+          <span class="order-num">${i+1}.</span><span>${esc(s.text)}</span>
+        </div>`;
+      });
+    }
+    html += `</div>`;
+    if(!state.answered && state.orderPool.length>0){
+      html += `<div class="order-pool">`;
+      state.orderPool.forEach((s,poolIdx)=>{
+        html += `<button class="order-pool-item" onclick="tapOrderStep(${poolIdx})">${esc(s.text)}</button>`;
+      });
+      html += `</div>`;
+    }
+    if(state.answered){
+      const correct = state.orderPlaced.every((s,i)=>s.correctIndex===i);
+      html += `<div class="explain-box ${correct?'good':'bad'}" style="margin-top:14px;">
+        <span class="mark-icon">${correct?"⭕":"❌"}</span>${correct?"正解！流れを理解できているね。":"正しい順番を確認しよう。"}
+        ${!correct ? `<div style="margin-top:8px;">${item.steps.map((s,i)=>`<div style="margin-bottom:4px;">${i+1}. ${esc(s.text)}</div>`).join("")}</div>` : ""}
       </div>`;
       html += `<button class="btn btn-primary" onclick="nextItem()">${state.currentIndex < state.items.length-1 ? "次の問題へ" : "結果を見る"}</button>`;
     }
