@@ -6,7 +6,7 @@
 <title>奈良時代テスト</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=Noto+Serif+JP:wght@700;900&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 :root{
   --accent:#3468a6;
@@ -325,6 +325,152 @@ body{
   accent-color:var(--ref);
 }
 .hidden{display:none!important;}
+
+/* ===== ざっくり流れ 導入ブロック ===== */
+.flow-intro{
+  --hi-ink:#2B2622; --hi-soft:#6B6255; --hi-line:#D9CDB4; --hi-paper:#FFFFFF;
+  --hi-sei:#8778A8; --hi-sei-bg:#F0ECF7;   /* 政治=藤色 */
+  --hi-sha:#C77B4E; --hi-sha-bg:#FBEDE3;   /* 社会=赤茶 */
+  --hi-bun:#4E9B8F; --hi-bun-bg:#E7F3F0;   /* 文化=青緑 */
+  margin: 0 0 18px;
+  padding: 18px 16px 20px;
+  background: var(--hi-paper);
+  border: 1px solid var(--hi-line);
+  border-radius: 14px;
+  box-sizing: border-box;
+  color: var(--hi-ink);
+  font-family: "Noto Sans JP", sans-serif;
+  line-height: 1.65;
+}
+.flow-intro *{ box-sizing: border-box; }
+.flow-intro h2{
+  font-family: "Noto Serif JP", serif;
+  font-weight: 900;
+  font-size: clamp(18px, 5vw, 21px);
+  margin: 0 0 4px;
+}
+.flow-intro .hi-lead{
+  font-size: 12.5px;
+  color: var(--hi-soft);
+  margin: 0 0 16px;
+}
+.hi-group{ margin-bottom: 16px; }
+.hi-group:last-of-type{ margin-bottom: 4px; }
+.hi-tag{
+  display:inline-block;
+  font-family: "Noto Serif JP", serif;
+  font-weight: 700;
+  font-size: 12.5px;
+  padding: 3px 12px;
+  border-radius: 999px;
+  color: #fff;
+  background: var(--hi-c);
+  margin-bottom: 8px;
+}
+.hi-group.sei{ --hi-c: var(--hi-sei); }
+.hi-group.sha{ --hi-c: var(--hi-sha); }
+.hi-group.bun{ --hi-c: var(--hi-bun); }
+.hi-chain{ display:flex; flex-direction: column; }
+.hi-step{
+  background: var(--hi-bg);
+  border-left: 4px solid var(--hi-c);
+  border-radius: 8px;
+  padding: 9px 12px;
+  font-size: 13px;
+}
+.hi-group.sei .hi-step{ --hi-bg: var(--hi-sei-bg); }
+.hi-group.sha .hi-step{ --hi-bg: var(--hi-sha-bg); }
+.hi-group.bun .hi-step{ --hi-bg: var(--hi-bun-bg); }
+.hi-arrow{
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--hi-soft);
+  margin: 4px 0 4px 10px;
+}
+.hi-arrow b{ color: var(--hi-c); font-size: 14px; }
+.hi-sum{
+  margin-top: 14px;
+  padding: 10px 13px;
+  background: #F1E9D8;
+  border-radius: 8px;
+  font-size: 12.5px;
+  color: var(--hi-soft);
+}
+.hi-sum b{ color: var(--hi-ink); }
+.hi-speak-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:10px;
+  margin:0 0 18px;
+  padding:10px 12px;
+  background:#F6F1E4;
+  border:1px solid var(--hi-line);
+  border-radius:10px;
+}
+.hi-speak-row .hi-speak-note{font-size:12px;color:var(--hi-soft);}
+.hi-tag-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-bottom:8px;
+}
+.hi-tag-row .hi-tag{margin-bottom:0;}
+.speak-btn.small{padding:5px 12px;font-size:11.5px;}
+
+/* ===== 並べ替えクイズ ===== */
+.order-cat-tag{
+  display:inline-block;
+  font-family:"Noto Serif JP",serif;
+  font-weight:700;
+  font-size:12px;
+  padding:3px 12px;
+  border-radius:999px;
+  color:#fff;
+  margin-bottom:10px;
+}
+.order-cat-tag.sei{background:#8778A8;}
+.order-cat-tag.sha{background:#C77B4E;}
+.order-cat-tag.bun{background:#4E9B8F;}
+.order-instructions{font-size:12.5px;color:var(--sub);margin-bottom:14px;line-height:1.6;}
+.order-placed{display:flex;flex-direction:column;gap:8px;margin-bottom:14px;min-height:20px;}
+.order-placed-item{
+  display:flex;
+  align-items:flex-start;
+  gap:8px;
+  padding:10px 12px;
+  border-radius:10px;
+  border:1.5px solid var(--line);
+  background:#fff;
+  font-size:13px;
+  line-height:1.6;
+  cursor:pointer;
+}
+.order-placed-item.locked{cursor:default;}
+.order-placed-item .order-num{flex:0 0 auto;font-weight:800;color:var(--accent);}
+.order-placed-item.correct{border-color:var(--good);background:var(--good-light);}
+.order-placed-item.correct .order-num{color:var(--good);}
+.order-placed-item.wrong{border-color:var(--bad);background:var(--bad-light);}
+.order-placed-item.wrong .order-num{color:var(--bad);}
+.order-pool{display:flex;flex-direction:column;gap:8px;}
+.order-pool-item{
+  width:100%;
+  text-align:left;
+  padding:10px 12px;
+  border-radius:10px;
+  border:1.5px dashed var(--line);
+  background:var(--bg);
+  font-size:13px;
+  line-height:1.6;
+  font-family:inherit;
+  color:var(--ink);
+  cursor:pointer;
+}
+.order-pool-item:active{transform:scale(.98);}
+.order-empty-hint{font-size:12px;color:var(--sub);text-align:center;padding:10px;border:1.5px dashed var(--line);border-radius:10px;}
 </style>
 </head>
 <body>
@@ -344,13 +490,11 @@ const PILLARS = {
 const kihonOverviewScreens = [
   {
     title:"はじめに",
-    body:`<p>今回のテーマは「奈良時代」です。710年に奈良の平城京に都が移されてから、794年に平安京に都が移されるまでの約80年間を奈良時代といいます。</p><p>聖武天皇のころには、災害やききん、伝染病、貴族の反乱が相次ぎ、世の中に不安が広がっていました。聖武天皇は、仏教の力で国を治めようと、743年に東大寺の大仏をつくる命令を出しました。</p><p>この回では、律令政治のしくみ、都の移り変わり、聖武天皇と仏教、農民の生活と土地政策、海をわたった人々、天平文化という、6つの視点から奈良時代を学びます。</p>`,
-    speak:"今回のテーマは、奈良時代です。710年に奈良の平城京に都が移されてから、794年に平安京に都が移されるまでの約80年間を、奈良時代といいます。聖武天皇のころには、災害やききん、伝染病、貴族の反乱が相次ぎ、世の中に不安が広がっていました。聖武天皇は、仏教の力で国を治めようと、743年に東大寺の大仏をつくる命令を出しました。この回では、律令政治のしくみ、都の移り変わり、聖武天皇と仏教、農民の生活と土地政策、海をわたった人々、天平文化という、6つの視点から奈良時代を学んでいきます。"
+    body:`<p>今回のテーマは「奈良時代」です。710年に奈良の平城京に都が移されてから、794年に平安京に都が移されるまでの約80年間を奈良時代といいます。</p><p>聖武天皇のころには、災害やききん、伝染病、貴族の反乱が相次ぎ、世の中に不安が広がっていました。聖武天皇は、仏教の力で国を治めようと、743年に東大寺の大仏をつくる命令を出しました。</p><p>この回では、律令政治のしくみ、都の移り変わり、聖武天皇と仏教、農民の生活と土地政策、海をわたった人々、天平文化という、6つの視点から奈良時代を学びます。</p>`
   },
   {
     title:"6つの柱",
-    body:`<p><b>① 律令政治</b><br>大宝律令の制定、二官八省のしくみ、地方の政治、租・調・庸などの税や兵役について学びます。</p><p><b>② 移された都</b><br>710年に平城京へ都が移されたことと、都と国府を結ぶ道について学びます。</p><p><b>③ 聖武天皇と仏教</b><br>国分寺・国分尼寺、東大寺の大仏、行基や道鏡など、仏教を中心とした政治について学びます。</p><p><b>④ 農民の生活と新しい土地政策</b><br>農民の苦しい生活と、三世一身の法・墾田永年私財法による土地政策の変化を学びます。</p><p><b>⑤ 海をわたった人々</b><br>遣唐使の航路や、阿倍仲麻呂・鑑真など、海をわたった人々について学びます。</p><p><b>⑥ 天平文化</b><br>『古事記』『日本書紀』『万葉集』などの書物や、正倉院の宝物など、天平文化について学びます。</p>`,
-    speak:"この回は、大きく6つの柱に分かれています。1つ目は、律令政治です。大宝律令の制定や、二官八省のしくみ、地方の政治、租・調・庸などの税や兵役について学びます。2つ目は、移された都です。710年に平城京へ都が移されたことと、都と国府を結ぶ道について学びます。3つ目は、聖武天皇と仏教です。国分寺・国分尼寺、東大寺の大仏、行基や道鏡など、仏教を中心とした政治について学びます。4つ目は、農民の生活と新しい土地政策です。農民の苦しい生活と、三世一身の法、墾田永年私財法による土地政策の変化を学びます。5つ目は、海をわたった人々です。遣唐使の航路や、阿倍仲麻呂、鑑真など、海をわたった人々について学びます。6つ目は、天平文化です。古事記、日本書紀、万葉集などの書物や、正倉院の宝物など、天平文化について学びます。それでは、順番に見ていきましょう。"
+    body:`<p><b>① 律令政治</b><br>大宝律令の制定、二官八省のしくみ、地方の政治、租・調・庸などの税や兵役について学びます。</p><p><b>② 移された都</b><br>710年に平城京へ都が移されたことと、都と国府を結ぶ道について学びます。</p><p><b>③ 聖武天皇と仏教</b><br>国分寺・国分尼寺、東大寺の大仏、行基や道鏡など、仏教を中心とした政治について学びます。</p><p><b>④ 農民の生活と新しい土地政策</b><br>農民の苦しい生活と、三世一身の法・墾田永年私財法による土地政策の変化を学びます。</p><p><b>⑤ 海をわたった人々</b><br>遣唐使の航路や、阿倍仲麻呂・鑑真など、海をわたった人々について学びます。</p><p><b>⑥ 天平文化</b><br>『古事記』『日本書紀』『万葉集』などの書物や、正倉院の宝物など、天平文化について学びます。</p>`
   }
 ];
 
@@ -608,11 +752,51 @@ function buildKihonFinalItems(){
 }
 
 function buildKihonItems(){
+  const orderItems = buildOrderQuizItems();
   const overview = kihonOverviewScreens.map((s,idx)=>Object.assign({id:"kihonOv_"+idx, type:"info", wide:true}, s));
   const fills = shuffleArrKeepBlocks();
   const finals = shuffleArr(buildKihonFinalItems());
-  return overview.concat(fills, finals);
+  return orderItems.concat(overview, fills, finals);
 }
+
+/* ===================== 並べ替えクイズ（流れの理解を確認） ===================== */
+const orderQuizRaw = [
+  {category:"政治", title:"「政治」の流れを正しい順に並べかえよう", steps:[
+    "645年の大化の改新からずっと「天皇中心の国づくり」を目指してきた",
+    "701年、大宝律令が完成。「これで国のルールばっちり整った!」って感じで天皇中心の政治のしくみがついに完成",
+    "710年、元明天皇「律令国家にふさわしい、唐みたいなちゃんとした都をつくるで」って都を藤原京から平城京へお引っ越し。ここから奈良時代スタート",
+    "聖武天皇のころ、災害・ききん・伝染病・貴族の反乱が次々起きて世の中パニック",
+    "聖武天皇「もう仏教にすがるしかない、国分寺・国分尼寺つくるぞ、大仏もつくるぞ」って号令かける",
+    "大仏づくりは国あげての大事業だったのに、逆に農民をさらに苦しめる結果に",
+    "そんな中、道鏡みたいに「オレも政治に口出しするで」ってタイプの僧も出てきて、律令政治はどんどんグダグダに"
+  ]},
+  {category:"社会", title:"「社会」の流れを正しい順に並べかえよう", steps:[
+    "農民は「金（米や特産物）は出せ、働け、戦にも行け」（→租・調・庸の税、労役・兵役）って四重苦。「もう無理、キツすぎ」って自分の田んぼ（口分田）を捨てて逃げるやつが続出。田んぼはどんどん荒れて足りなくなっていく",
+    "朝廷「よし、新しく土地を切り開いたら（→開墾）、3代までは自分のものにしていいことにするわ」って723年に三世一身の法を出す",
+    "でも期限つきだと結局取り上げられるから、みんな本気で土地を切り開く気になれない",
+    "743年、墾田永年私財法にチェンジ。「切り開いた土地はもう一生自分のものでOK」ってルールに。これで貴族やお寺が農民を使ってガンガン土地を独り占めしはじめて、荘園がどんどん増えていく"
+  ]},
+  {category:"文化", title:"「文化」の流れを正しい順に並べかえよう", steps:[
+    "遣唐使が命がけで唐に渡って、「唐の文化、めっちゃええやん!」って、制度やら仏教美術やら工芸品やらをガンガン持ち帰ってくる → 唐の影響バリバリ受けた、仏教中心の貴族文化が花開く。これが天平文化",
+    "天皇が「うちの国を治めてきた歴史、ちゃんとまとめとくか」って、712年に『古事記』、720年に『日本書紀』をつくらせる",
+    "天皇から農民まで、いろんな身分の人がよんだ歌、約4500首も集めた『万葉集』も誕生",
+    "東大寺の正倉院には、「これは大事にしまっとこう」ってくらい、シルクロード経由で唐やインド、西アジアから届いた宝物までどっさり収められることに"
+  ]}
+];
+
+function buildOrderQuizItems(){
+  return orderQuizRaw.map((r,idx)=>{
+    const steps = r.steps.map((s,i)=>({text:s, correctIndex:i}));
+    return {type:"order", id:"orderQuiz_"+idx, title:r.title, q:r.title, category:r.category, steps:steps};
+  });
+}
+
+/* ===================== ホーム画面「ざっくり流れ」の読み上げ用テキスト ===================== */
+const naraFlowSpeakTexts = {
+  sei: "まず政治の流れです。645年の大化の改新から、天皇を中心とする国づくりがずっと目指されてきました。701年に大宝律令が定められ、その政治のしくみが完成します。710年には、律令国家にふさわしい、唐の都にならった本格的な都をつくろうと、元明天皇によって都が藤原京から平城京に移り、奈良時代が始まります。しかし聖武天皇のころには、災害やききん、伝染病、貴族の反乱が次々に起こり、世の中は大きく乱れました。そこで聖武天皇は、仏教の力で不安をしずめて国を治めようと、国ごとに国分寺と国分尼寺を、さらに東大寺に大仏をつくる命令を出しました。ところがこの大仏づくりは、国をあげての大事業であったにもかかわらず、かえって農民の生活を苦しめる結果になってしまいます。また、道鏡のように政治に口出しする僧もあらわれ、律令政治はしだいに乱れていきました。",
+  sha: "次に社会の流れです。農民は租・調・庸などの重い税や、兵役・労役の負担に苦しみ、口分田を捨てて逃げ出す人も相次ぎました。そのため口分田はどんどん荒れて不足していきます。そこで朝廷は723年に三世一身の法を出し、新しく開墾すれば3代まで土地を自分のものにできるようにしました。しかし期限つきでは開墾はあまりすすまず、743年には墾田永年私財法が出され、開墾した土地を永久に自分のものにできるように変わります。これによって、力のある貴族や寺社が農民を使ってどんどん土地を開墾し、独り占めしていきました。これが荘園のはじまりです。",
+  bun: "最後に文化の流れです。遣唐使が命がけで唐に渡り、進んだ制度や仏教美術、めずらしい工芸品などを持ち帰ったことで、唐の影響を強く受けた、仏教中心の貴族文化が花開きました。これが天平文化です。天皇が国を治めてきたいわれをまとめようと、712年には古事記、720年には日本書紀という歴史書がつくられました。同じころ、天皇から一般の人々まで、さまざまな身分の人がよんだおよそ4500首の和歌を集めた万葉集も誕生します。さらに東大寺の正倉院には、シルクロードを通って唐やインド、西アジアから伝わった宝物が大切に数多く収められました。"
+};
 
 function buildKurojiItems(){
   let out = [];
@@ -646,7 +830,7 @@ function buildSankoItems(){
 }
 
 const STAGES = [
-  {id:"kihon", name:"① 構造テスト", desc:"6本柱（律令政治・移された都・聖武天皇と仏教・農民の生活と新しい土地政策・海をわたった人々・天平文化）の骨組みを確認。概要2画面＋穴埋め24問＋まとめ選択6問。", scored:true, ref:false, build:buildKihonItems},
+  {id:"kihon", name:"① 構造テスト", desc:"6本柱（律令政治・移された都・聖武天皇と仏教・農民の生活と新しい土地政策・海をわたった人々・天平文化）の骨組みを確認。並べ替えクイズ3問＋概要2画面＋穴埋め24問＋まとめ選択6問。", scored:true, ref:false, build:buildKihonItems},
   {id:"kuroji", name:"② 黒太字テスト", desc:"各分野の重要語句を4択で確認します。計72問。", scored:true, ref:false, build:buildKurojiItems},
   {id:"mame", name:"③ ひとくちメモテスト", desc:"教科書のひとくちメモ・Q&Aから出題します。計12問。", scored:true, ref:false, build:buildMameItems},
   {id:"sanko", name:"④ 気をつけたいポイント", desc:"教科書コラム＋入試でまちがえやすい注意点の読みもの。採点はありません。", scored:false, ref:true, build:buildSankoItems}
@@ -691,10 +875,14 @@ const state = {
   answered:false,
   userInput:"",
   userChoiceIdx:null,
+  orderItemId:null,
+  orderPool:[],
+  orderPlaced:[],
   speakRate: loadSpeakRate()
 };
 
 function startStage(stageId){
+  stopSpeak();
   const stage = STAGES.find(s=>s.id===stageId);
   state.stageId = stageId;
   state.isRetry = false;
@@ -706,6 +894,9 @@ function startStage(stageId){
   state.answered = false;
   state.userInput = "";
   state.userChoiceIdx = null;
+  state.orderItemId = null;
+  state.orderPool = [];
+  state.orderPlaced = [];
   state.screen = "play";
   render();
 }
@@ -724,6 +915,9 @@ function startRetry(stageId){
   state.answered = false;
   state.userInput = "";
   state.userChoiceIdx = null;
+  state.orderItemId = null;
+  state.orderPool = [];
+  state.orderPlaced = [];
   state.screen = "play";
   render();
 }
@@ -749,11 +943,42 @@ function submitFill(){
   state.answerLog.push({item, wasCorrect:correct});
 }
 
+function initOrderIfNeeded(item){
+  if(state.orderItemId === item.id) return;
+  state.orderItemId = item.id;
+  state.orderPool = shuffleArr(item.steps.map(s=>({text:s.text, correctIndex:s.correctIndex})));
+  state.orderPlaced = [];
+}
+
+function tapOrderStep(poolIdx){
+  if(state.answered) return;
+  const step = state.orderPool.splice(poolIdx,1)[0];
+  state.orderPlaced.push(step);
+  if(state.orderPool.length===0){
+    const item = currentItem();
+    const allCorrect = state.orderPlaced.every((s,i)=>s.correctIndex===i);
+    state.answered = true;
+    if(allCorrect) state.scoreCorrect++;
+    state.answerLog.push({item, wasCorrect:allCorrect});
+  }
+  renderPlay();
+}
+
+function removeOrderStep(placedIdx){
+  if(state.answered) return;
+  const step = state.orderPlaced.splice(placedIdx,1)[0];
+  state.orderPool.push(step);
+  renderPlay();
+}
+
 function nextItem(){
   stopSpeak();
   state.answered = false;
   state.userInput = "";
   state.userChoiceIdx = null;
+  state.orderItemId = null;
+  state.orderPool = [];
+  state.orderPlaced = [];
   if(state.currentIndex < state.items.length-1){
     state.currentIndex++;
     render();
@@ -795,6 +1020,9 @@ function backHome(){
 
 /* ===================== 音声読み上げ（Web Speech API：読み上げ） ===================== */
 let cachedVoices = [];
+let activeSpeakBtnId = null;
+let activeSpeakText = null;
+let currentUtterance = null; /* Safari対策：参照を保持しないと発話がGCで途中停止することがある */
 
 function speakSupported(){
   return typeof window!=="undefined" && "speechSynthesis" in window;
@@ -819,44 +1047,66 @@ function getBestJaVoice(){
 
 function speakText(text, btnId){
   if(!speakSupported()) return;
-  window.speechSynthesis.cancel();
-  const u = new SpeechSynthesisUtterance(text);
-  u.lang = "ja-JP";
-  u.rate = state.speakRate;
-  const voice = getBestJaVoice();
-  if(voice) u.voice = voice;
-  u.onend = ()=>{ setSpeakBtnState(btnId, false); };
-  u.onerror = ()=>{ setSpeakBtnState(btnId, false); };
-  window.speechSynthesis.speak(u);
-  setSpeakBtnState(btnId, true);
+  const doSpeak = ()=>{
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = "ja-JP";
+    u.rate = state.speakRate;
+    const voice = getBestJaVoice();
+    if(voice) u.voice = voice;
+    u.onend = ()=>{ setSpeakBtnState(btnId, false); if(activeSpeakBtnId===btnId) activeSpeakBtnId=null; };
+    u.onerror = ()=>{ setSpeakBtnState(btnId, false); if(activeSpeakBtnId===btnId) activeSpeakBtnId=null; };
+    currentUtterance = u;
+    window.speechSynthesis.speak(u);
+    setSpeakBtnState(btnId, true);
+  };
+  if(window.speechSynthesis.speaking){
+    /* Safari対策：cancel直後にspeakすると発話が無音のまま失敗することがあるため少し間を置く */
+    window.speechSynthesis.cancel();
+    setTimeout(doSpeak, 150);
+  }else{
+    doSpeak();
+  }
 }
 
 function stopSpeak(){
   if(speakSupported()) window.speechSynthesis.cancel();
+  if(activeSpeakBtnId){ setSpeakBtnState(activeSpeakBtnId, false); activeSpeakBtnId = null; }
+  activeSpeakText = null;
 }
 
-function toggleSpeak(text){
+function toggleSpeak(text, btnId){
+  btnId = btnId || "speakBtn";
   if(!speakSupported()) return;
-  if(window.speechSynthesis.speaking){
+  if(window.speechSynthesis.speaking && activeSpeakBtnId===btnId){
     stopSpeak();
-    setSpeakBtnState("speakBtn", false);
   }else{
-    speakText(text, "speakBtn");
+    if(activeSpeakBtnId && activeSpeakBtnId!==btnId) setSpeakBtnState(activeSpeakBtnId, false);
+    activeSpeakBtnId = btnId;
+    activeSpeakText = text;
+    speakText(text, btnId);
   }
 }
 
 function updateSpeakRate(v){
   state.speakRate = parseFloat(v);
   saveSpeakRate(state.speakRate);
-  const label = document.getElementById("speakRateLabel");
-  if(label) label.textContent = state.speakRate.toFixed(1)+"倍";
+  document.querySelectorAll(".speak-rate-label").forEach(label=>{
+    label.textContent = state.speakRate.toFixed(1)+"倍";
+  });
+}
+
+function restartSpeakIfPlaying(){
+  /* スライダーを離したとき、再生中のものがあれば新しい速さで読み直す */
+  if(activeSpeakBtnId && activeSpeakText){
+    speakText(activeSpeakText, activeSpeakBtnId);
+  }
 }
 
 function setSpeakBtnState(btnId, playing){
   const btn = document.getElementById(btnId);
   if(!btn) return;
   btn.classList.toggle("playing", playing);
-  btn.innerHTML = playing ? "⏸ 読み上げを止める" : "🔊 音声で聞く";
+  btn.innerHTML = playing ? "⏸ 止める" : "🔊 音声で聞く";
 }
 
 /* マイク機能は精度の問題により削除済み。他の関数からの呼び出しに備えて no-op で残す */
@@ -886,6 +1136,77 @@ function renderHome(){
       <div class="sub">予習シリーズ5年下　社会　第3回　奈良時代</div>
     </div>
     <div class="content">
+  `;
+  html += `
+<section class="flow-intro">
+  <h2>奈良時代ってどんな時代?</h2>
+  <p class="hi-lead">クイズに行く前に、まず流れだけサクッとつかんでおこう。</p>
+
+  <div class="hi-speak-row">
+    <span class="hi-speak-note">🔊 各テーマのボタンで読み上げられます</span>
+    <div class="speed-control">
+      <span>速さ</span>
+      <input type="range" min="0.7" max="1.8" step="0.1" value="${state.speakRate}" oninput="updateSpeakRate(this.value)" onchange="restartSpeakIfPlaying()">
+      <span class="speak-rate-label">${state.speakRate.toFixed(1)}倍</span>
+    </div>
+  </div>
+
+  <div class="hi-group sei">
+    <div class="hi-tag-row">
+      <span class="hi-tag">政治</span>
+      <button id="speakBtnSei" class="speak-btn small" onclick='toggleSpeak(${JSON.stringify(naraFlowSpeakTexts.sei)}, "speakBtnSei")'>🔊 音声で聞く</button>
+    </div>
+    <div class="hi-chain">
+      <div class="hi-step">645年の大化の改新からずっと「天皇中心の国づくり」を目指してきた</div>
+      <div class="hi-arrow"><b>↓</b> だから</div>
+      <div class="hi-step">701年、大宝律令が完成。「これで国のルールばっちり整った!」って感じで天皇中心の政治のしくみがついに完成</div>
+      <div class="hi-arrow"><b>↓</b> だから</div>
+      <div class="hi-step">710年、元明天皇「律令国家にふさわしい、唐みたいなちゃんとした都をつくるで」って都を藤原京から平城京へお引っ越し。ここから奈良時代スタート</div>
+      <div class="hi-arrow"><b>↓</b> でも</div>
+      <div class="hi-step">聖武天皇のころ、災害・ききん・伝染病・貴族の反乱が次々起きて世の中パニック</div>
+      <div class="hi-arrow"><b>↓</b> だから</div>
+      <div class="hi-step">聖武天皇「もう仏教にすがるしかない、国分寺・国分尼寺つくるぞ、大仏もつくるぞ」って号令かける</div>
+      <div class="hi-arrow"><b>↓</b> でも</div>
+      <div class="hi-step">大仏づくりは国あげての大事業だったのに、逆に農民をさらに苦しめる結果に</div>
+      <div class="hi-arrow"><b>↓</b> だから</div>
+      <div class="hi-step">そんな中、道鏡みたいに「オレも政治に口出しするで」ってタイプの僧も出てきて、律令政治はどんどんグダグダに</div>
+    </div>
+  </div>
+
+  <div class="hi-group sha">
+    <div class="hi-tag-row">
+      <span class="hi-tag">社会</span>
+      <button id="speakBtnSha" class="speak-btn small" onclick='toggleSpeak(${JSON.stringify(naraFlowSpeakTexts.sha)}, "speakBtnSha")'>🔊 音声で聞く</button>
+    </div>
+    <div class="hi-chain">
+      <div class="hi-step">農民は「金（米や特産物）は出せ、働け、戦にも行け」（→租・調・庸の税、労役・兵役）って四重苦。「もう無理、キツすぎ」って自分の田んぼ（口分田）を捨てて逃げるやつが続出。田んぼはどんどん荒れて足りなくなっていく</div>
+      <div class="hi-arrow"><b>↓</b> だから</div>
+      <div class="hi-step">朝廷「よし、新しく土地を切り開いたら（→開墾）、3代までは自分のものにしていいことにするわ」って723年に三世一身の法を出す</div>
+      <div class="hi-arrow"><b>↓</b> でも</div>
+      <div class="hi-step">でも期限つきだと結局取り上げられるから、みんな本気で土地を切り開く気になれない</div>
+      <div class="hi-arrow"><b>↓</b> だから</div>
+      <div class="hi-step">743年、墾田永年私財法にチェンジ。「切り開いた土地はもう一生自分のものでOK」ってルールに。これで貴族やお寺が農民を使ってガンガン土地を独り占めしはじめて、荘園がどんどん増えていく</div>
+    </div>
+  </div>
+
+  <div class="hi-group bun">
+    <div class="hi-tag-row">
+      <span class="hi-tag">文化</span>
+      <button id="speakBtnBun" class="speak-btn small" onclick='toggleSpeak(${JSON.stringify(naraFlowSpeakTexts.bun)}, "speakBtnBun")'>🔊 音声で聞く</button>
+    </div>
+    <div class="hi-chain">
+      <div class="hi-step">遣唐使が命がけで唐に渡って、「唐の文化、めっちゃええやん!」って、制度やら仏教美術やら工芸品やらをガンガン持ち帰ってくる → 唐の影響バリバリ受けた、仏教中心の貴族文化が花開く。これが天平文化</div>
+      <div class="hi-arrow"><b>↓</b> だから</div>
+      <div class="hi-step">天皇が「うちの国を治めてきた歴史、ちゃんとまとめとくか」って、712年に『古事記』、720年に『日本書紀』をつくらせる</div>
+      <div class="hi-arrow"><b>↓</b> だから</div>
+      <div class="hi-step">天皇から農民まで、いろんな身分の人がよんだ歌、約4500首も集めた『万葉集』も誕生</div>
+      <div class="hi-arrow"><b>↓</b> だから</div>
+      <div class="hi-step">東大寺の正倉院には、「これは大事にしまっとこう」ってくらい、シルクロード経由で唐やインド、西アジアから届いた宝物までどっさり収められることに</div>
+    </div>
+  </div>
+
+  <div class="hi-sum">ひとことでいうと:<b>聖武天皇が仏教にすがるも農民はますます苦しみ → 貴族が土地を独り占めして荘園が誕生 → その裏で国際色バリバリの天平文化が花開いた</b>、って時代なんだ。</div>
+</section>
   `;
   const scoredStages = STAGES.filter(s=>s.scored);
   const refStages = STAGES.filter(s=>!s.scored);
@@ -993,6 +1314,42 @@ function renderPlay(){
       const correct = state.userChoiceIdx===item.answer;
       html += `<div class="explain-box ${correct?'good':'bad'}">
         <span class="mark-icon">${correct?"⭕":"❌"}</span>${esc(item.explain||"")}
+      </div>`;
+      html += `<button class="btn btn-primary" onclick="nextItem()">${state.currentIndex < state.items.length-1 ? "次の問題へ" : "結果を見る"}</button>`;
+    }
+    html += `</div>`;
+  } else if(item.type==="order"){
+    initOrderIfNeeded(item);
+    const catClass = item.category==="政治" ? "sei" : (item.category==="社会" ? "sha" : "bun");
+    html += `<div class="qcard">`;
+    html += `<div class="order-cat-tag ${catClass}">${esc(item.category)}</div>`;
+    html += `<div class="qtext">${esc(item.title)}</div>`;
+    html += `<div class="order-instructions">下のことばを、正しい順番になるようにタップしてね。まちがえたら、並んだ文をもう一度タップすると戻せます。</div>`;
+    html += `<div class="order-placed">`;
+    if(state.orderPlaced.length===0){
+      html += `<div class="order-empty-hint">ここに順番に並んでいきます</div>`;
+    }else{
+      state.orderPlaced.forEach((s,i)=>{
+        let cls = "order-placed-item";
+        if(state.answered) cls += (s.correctIndex===i) ? " correct locked" : " wrong locked";
+        html += `<div class="${cls}" ${state.answered?"":`onclick="removeOrderStep(${i})"`}>
+          <span class="order-num">${i+1}.</span><span>${esc(s.text)}</span>
+        </div>`;
+      });
+    }
+    html += `</div>`;
+    if(!state.answered && state.orderPool.length>0){
+      html += `<div class="order-pool">`;
+      state.orderPool.forEach((s,poolIdx)=>{
+        html += `<button class="order-pool-item" onclick="tapOrderStep(${poolIdx})">${esc(s.text)}</button>`;
+      });
+      html += `</div>`;
+    }
+    if(state.answered){
+      const correct = state.orderPlaced.every((s,i)=>s.correctIndex===i);
+      html += `<div class="explain-box ${correct?'good':'bad'}" style="margin-top:14px;">
+        <span class="mark-icon">${correct?"⭕":"❌"}</span>${correct?"正解！流れを理解できているね。":"正しい順番を確認しよう。"}
+        ${!correct ? `<div style="margin-top:8px;">${item.steps.map((s,i)=>`<div style="margin-bottom:4px;">${i+1}. ${esc(s.text)}</div>`).join("")}</div>` : ""}
       </div>`;
       html += `<button class="btn btn-primary" onclick="nextItem()">${state.currentIndex < state.items.length-1 ? "次の問題へ" : "結果を見る"}</button>`;
     }

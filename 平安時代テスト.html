@@ -1020,6 +1020,7 @@ function backHome(){
 /* ===================== 音声読み上げ（Web Speech API：読み上げ） ===================== */
 let cachedVoices = [];
 let activeSpeakBtnId = null;
+let activeSpeakText = null;
 let currentUtterance = null; /* Safari対策：参照を保持しないと発話がGCで途中停止することがある */
 
 function speakSupported(){
@@ -1069,6 +1070,7 @@ function speakText(text, btnId){
 function stopSpeak(){
   if(speakSupported()) window.speechSynthesis.cancel();
   if(activeSpeakBtnId){ setSpeakBtnState(activeSpeakBtnId, false); activeSpeakBtnId = null; }
+  activeSpeakText = null;
 }
 
 function toggleSpeak(text, btnId){
@@ -1079,6 +1081,7 @@ function toggleSpeak(text, btnId){
   }else{
     if(activeSpeakBtnId && activeSpeakBtnId!==btnId) setSpeakBtnState(activeSpeakBtnId, false);
     activeSpeakBtnId = btnId;
+    activeSpeakText = text;
     speakText(text, btnId);
   }
 }
@@ -1089,6 +1092,13 @@ function updateSpeakRate(v){
   document.querySelectorAll(".speak-rate-label").forEach(label=>{
     label.textContent = state.speakRate.toFixed(1)+"倍";
   });
+}
+
+function restartSpeakIfPlaying(){
+  /* スライダーを離したとき、再生中のものがあれば新しい速さで読み直す */
+  if(activeSpeakBtnId && activeSpeakText){
+    speakText(activeSpeakText, activeSpeakBtnId);
+  }
 }
 
 function setSpeakBtnState(btnId, playing){
@@ -1135,7 +1145,7 @@ function renderHome(){
     <span class="hi-speak-note">🔊 各テーマのボタンで読み上げられます</span>
     <div class="speed-control">
       <span>速さ</span>
-      <input type="range" min="0.7" max="1.8" step="0.1" value="${state.speakRate}" oninput="updateSpeakRate(this.value)">
+      <input type="range" min="0.7" max="1.8" step="0.1" value="${state.speakRate}" oninput="updateSpeakRate(this.value)" onchange="restartSpeakIfPlaying()">
       <span class="speak-rate-label">${state.speakRate.toFixed(1)}倍</span>
     </div>
   </div>
