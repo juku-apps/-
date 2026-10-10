@@ -1,0 +1,790 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>鎌倉時代の紙芝居</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap">
+<style>
+/* Layout concept: 16:9 stage (3:4.6 on phones) that auto-plays 7 scenes; sumi ink on cool paper, indigo for structure, vermilion only for emphasis. */
+:root {
+  --bg: #E7EDF0;
+  --stage: #F5F8F9;
+  --ink: #14212B;
+  --muted: #52626D;
+  --ai: #1D4E7A;
+  --shu: #C2412D;
+  --line: #C5D1D7;
+  --chip: #E3ECF0;
+  --hill1: #DEE8ED;
+  --hill2: #CEDCE4;
+  --flag: #FFFFFF;
+  --kw: #F6DC83;
+  --f-disp: 'Shippori Mincho B1', 'Hiragino Mincho ProN', 'Yu Mincho', 'Noto Serif JP', serif;
+  --f-body: 'Zen Kaku Gothic New', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', 'Noto Sans JP', sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0A1319; --stage: #0F1B23; --ink: #E8EFF3; --muted: #9DAEB9;
+    --ai: #7DB4E0; --shu: #E8705A; --line: #2A3C48; --chip: #172A35;
+    --hill1: #14242D; --hill2: #1A303C; --flag: #F2F5F7; --kw: #6A5A22;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0A1319; --stage: #0F1B23; --ink: #E8EFF3; --muted: #9DAEB9;
+  --ai: #7DB4E0; --shu: #E8705A; --line: #2A3C48; --chip: #172A35;
+  --hill1: #14242D; --hill2: #1A303C; --flag: #F2F5F7; --kw: #6A5A22;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--f-body);
+  line-height: 1.7;
+  padding-inline: 16px;
+  padding-block: 20px 32px;
+}
+.player { max-width: 960px; margin-inline: auto; display: flex; flex-direction: column; gap: 10px; }
+
+/* ---------- stage ---------- */
+.stage {
+  position: relative;
+  container-type: inline-size;
+  aspect-ratio: 3 / 4.6;
+  background: var(--stage);
+  border: 4px solid var(--ink);
+  border-radius: 3px;
+  overflow: hidden;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+@media (min-width: 660px) { .stage { aspect-ratio: 16 / 9; } }
+
+.scene {
+  position: absolute; inset: 0;
+  padding: 6cqw 6cqw 5cqw;
+  display: flex; flex-direction: column; gap: 3cqw;
+  font-size: 3.9cqw; line-height: 1.7;
+  background: var(--stage);
+  opacity: 0; visibility: hidden; z-index: 0;
+}
+.scene.active { opacity: 1; visibility: visible; z-index: 1; }
+/* kamishibai: the front card is pulled out sideways and the next picture is already waiting underneath */
+.scene.out { z-index: 3; box-shadow: 0 0 4cqw rgba(0, 0, 0, .3); animation: pullOut .8s cubic-bezier(.55, 0, .8, .4) forwards; }
+@keyframes pullOut { to { transform: translateX(-108%) rotate(-2.5deg); } }
+.scene.in { z-index: 3; box-shadow: 0 0 4cqw rgba(0, 0, 0, .3); animation: pullIn .8s cubic-bezier(.2, .7, .2, 1) both; }
+@keyframes pullIn { from { transform: translateX(-108%) rotate(-2.5deg); } to { transform: none; } }
+@container (min-width: 600px) {
+  .scene { padding: 4.2cqw 5.2cqw 4cqw; gap: 2cqw; font-size: 1.7cqw; }
+}
+
+.tag { display: flex; gap: .9em; align-items: baseline; font-size: .86em; color: var(--muted); letter-spacing: .12em; }
+.tag .conn { margin-left: auto; font-style: normal; font-weight: 700; font-size: 1.1em; letter-spacing: .04em; color: var(--ai); }
+.scene.active .conn { animation: connIn .7s ease both; }
+@keyframes connIn { from { opacity: 0; transform: translateY(-1.2cqw); } to { opacity: 1; transform: none; } }
+.tag b { font-family: var(--f-disp); font-weight: 800; color: var(--shu); font-size: 1.2em; letter-spacing: .06em; font-variant-numeric: tabular-nums; }
+
+.scene h2 { font-family: var(--f-disp); font-weight: 800; font-size: 1.75em; line-height: 1.35; margin: 0; letter-spacing: .02em; text-wrap: balance; }
+.scene p { margin: 0; }
+.gloss { font-size: .82em; color: var(--muted); border-top: 1px solid var(--line); padding-top: .6em; }
+
+.cols { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 3cqw; }
+.copy { display: flex; flex-direction: column; gap: .9em; min-width: 0; }
+.art { flex: 1; min-height: 0; min-width: 0; display: flex; align-items: center; justify-content: center; }
+.art.svg { position: relative; }
+.art.svg > svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+@container (min-width: 600px) {
+  .cols { flex-direction: row; align-items: center; gap: 4cqw; }
+  .copy { flex: 1.05; max-width: 30em; }
+  .art { flex: 1; align-self: stretch; }
+}
+
+.pair { display: grid; grid-template-columns: auto 1fr; gap: .35em .9em; align-items: baseline; margin: 0; }
+.pair dt { font-family: var(--f-disp); font-weight: 800; color: var(--ai); }
+.pair dt.shu { color: var(--shu); }
+.pair dd { margin: 0; }
+
+/* ---------- scene 1 ---------- */
+.s1 > :not(.hills) { position: relative; z-index: 1; }
+.hills { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: 36%; z-index: 0; pointer-events: none; }
+.top { flex: 1; min-height: 0; display: flex; gap: 4cqw; justify-content: space-between; align-items: stretch; }
+.lead { flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center; gap: .9em; max-width: 17em; }
+.lead-main { font-family: var(--f-disp); font-weight: 800; font-size: 1.55em; line-height: 1.55; text-wrap: balance; }
+.lead-sub { color: var(--muted); font-size: .92em; }
+.vtitle { writing-mode: vertical-rl; font-family: var(--f-disp); font-weight: 800; font-size: 15cqw; line-height: 1; letter-spacing: .08em; margin: 0; align-self: center; color: var(--ink); }
+@container (min-width: 600px) { .vtitle { font-size: 10.5cqw; } }
+.tl svg { width: 100%; height: auto; display: block; }
+
+/* ---------- scene 4 ---------- */
+.ev-list { flex-direction: column; justify-content: center; align-items: stretch; }
+.ev { display: grid; grid-template-columns: 3.4em 1fr; gap: .9em; align-items: baseline; padding: .75em 0; border-top: 1px solid var(--line); }
+.ev:last-child { border-bottom: 1px solid var(--line); }
+.ev time { font-family: var(--f-disp); font-weight: 800; font-size: 1.3em; color: var(--ai); font-variant-numeric: tabular-nums; }
+.ev strong { display: block; font-weight: 700; }
+.ev span { display: block; color: var(--muted); font-size: .92em; }
+
+/* ---------- scene 7 ---------- */
+.sum { gap: 1em; align-items: center; justify-content: space-between; border-top: 1px solid var(--line); padding-top: 1em; }
+.big { font-family: var(--f-disp); font-weight: 800; font-size: 1.5em; line-height: 1.6; text-wrap: balance; }
+.big em { font-style: normal; color: var(--ai); }
+.seal { writing-mode: vertical-rl; background: var(--shu); color: var(--stage); font-family: var(--f-disp); font-weight: 800; font-size: 1.5em; line-height: 1.15; letter-spacing: .1em; padding: .55em .4em; transform: rotate(-3deg); flex: none; }
+@container (min-width: 600px) { .sum { border-top: 0; padding-top: 0; flex-direction: column; align-items: flex-start; justify-content: center; } .big { font-size: 1.7em; } }
+
+/* ---------- svg text ---------- */
+svg text { font-family: var(--f-body); }
+.t-disp { font-family: var(--f-disp); font-weight: 800; }
+
+/* ---------- animation ---------- */
+.scene.active .a { animation: rise .8s cubic-bezier(.2, .7, .2, 1) both; animation-delay: var(--d, 0s); }
+@keyframes rise { from { opacity: 0; transform: translateY(1.6cqw); } to { opacity: 1; transform: none; } }
+.scene.active .clip { animation: clip 1.1s cubic-bezier(.6, 0, .2, 1) both; }
+@keyframes clip { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0 0 0 0); } }
+.scene.active .fade { animation: fade .7s ease both; animation-delay: var(--d, 0s); }
+@keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+.pop { transform-box: fill-box; transform-origin: center; }
+.scene.active .pop { animation: pop .5s cubic-bezier(.3, 1.6, .5, 1) both; animation-delay: var(--d, 0s); }
+@keyframes pop { from { opacity: 0; transform: scale(.3); } to { opacity: 1; transform: none; } }
+.scene.active .draw { stroke-dasharray: 1; animation: draw var(--t, 1.6s) ease-in-out both; animation-delay: var(--d, 0s); }
+@keyframes draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+
+/* scene 2 */
+.scene.active .flag-w { animation: raise 1s cubic-bezier(.2, .8, .2, 1) .3s both; }
+@keyframes raise { from { transform: translateY(70px); } to { transform: none; } }
+.scene.active .flag-r { animation: lower 1.1s ease-in 2.4s both; }
+@keyframes lower { to { transform: translateY(100px); opacity: .25; } }
+.scene.active .lbl-r { animation: dim 1s ease 2.4s both; }
+@keyframes dim { to { opacity: .35; } }
+.scene.active .cap1 { animation: capA 3.4s ease .3s both; }
+@keyframes capA { 0% { opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } 100% { opacity: 0; } }
+
+/* scene 3 */
+.scene.active .tok-a { animation: slideR 2.6s ease-in-out 1.2s infinite both; }
+@keyframes slideR { 0% { transform: translateX(0); opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } 100% { transform: translateX(82px); opacity: 0; } }
+.scene.active .tok-b { animation: slideL 2.6s ease-in-out 2s infinite both; }
+@keyframes slideL { 0% { transform: translateX(0); opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } 100% { transform: translateX(-82px); opacity: 0; } }
+
+/* scene 5 */
+.scene.active .wave { animation: drift 3.2s linear infinite; }
+@keyframes drift { from { transform: translateX(0); } to { transform: translateX(-100px); } }
+.scene.active .ship-m { animation: sail 2.6s cubic-bezier(.2, .7, .3, 1) both; animation-delay: var(--d, .2s); }
+@keyframes sail { from { transform: translateX(190px); } to { transform: none; } }
+.ship-w { transform-box: fill-box; transform-origin: 50% 100%; }
+.scene.active .ship-w { animation: wreck 1.1s ease-in 3.4s both; }
+@keyframes wreck { to { transform: rotate(38deg) translateY(10px); opacity: .15; } }
+.bar-fill { transform-box: fill-box; transform-origin: left center; }
+.scene.active .m-reward { animation: shrink 2.6s ease-in-out 4.8s both; }
+@keyframes shrink { from { transform: scaleX(1); } to { transform: scaleX(.14); } }
+.scene.active .m-anger { animation: grow 2.6s ease-in-out 4.8s both; }
+@keyframes grow { from { transform: scaleX(.1); } to { transform: scaleX(.92); } }
+
+/* scene 6 */
+.ring { transform-box: fill-box; transform-origin: center; opacity: 0; }
+.scene.active .ring { animation: ring 1.8s ease-out 3s infinite; }
+@keyframes ring { from { transform: scale(1); opacity: .7; } to { transform: scale(3); opacity: 0; } }
+
+/* scene 7 */
+.scene.active .seal { animation: stamp .55s cubic-bezier(.3, 1.5, .5, 1) 3.2s both; }
+@keyframes stamp { from { opacity: 0; transform: scale(1.9) rotate(-3deg); } to { opacity: 1; transform: rotate(-3deg); } }
+
+/* scene "いざ鎌倉" */
+.scene.active .runner { animation: runIn 3.4s cubic-bezier(.4, 0, .6, 1) infinite both; animation-delay: var(--d, 0s); }
+@keyframes runIn { 0% { transform: translate(var(--x), var(--y)); opacity: 0; } 12% { opacity: 1; } 82% { opacity: 1; } 100% { transform: translate(0, 0); opacity: 0; } }
+.scene.active .ring2 { animation: ring 1.8s ease-out 1.4s infinite; }
+.ring2 { transform-box: fill-box; transform-origin: center; opacity: 0; }
+
+/* new scenes */
+.scene.active .fromL { animation: fromL .9s cubic-bezier(.2, .7, .2, 1) both; animation-delay: var(--d, 0s); }
+.scene.active .fromR { animation: fromR .9s cubic-bezier(.2, .7, .2, 1) both; animation-delay: var(--d, 0s); }
+@keyframes fromL { from { opacity: 0; transform: translateX(-70px); } to { opacity: 1; transform: none; } }
+@keyframes fromR { from { opacity: 0; transform: translateX(70px); } to { opacity: 1; transform: none; } }
+.scene.active .dimA { animation: dimA 1s ease 3.6s both; }
+@keyframes dimA { to { opacity: .4; } }
+.scene.active .shake { animation: shake .5s ease-in-out 3.2s 3; }
+.shake { transform-box: fill-box; transform-origin: center; }
+@keyframes shake { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(-6deg); } 75% { transform: rotate(6deg); } }
+
+/* keywords: highlighter pen */
+.kw { font-weight: 700; color: inherit; padding-inline: .06em; background: linear-gradient(var(--kw), var(--kw)) 0 90% / 0% 58% no-repeat; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+.scene.active .kw { animation: hl .8s ease forwards; animation-delay: var(--kd, 1.4s); }
+@keyframes hl { to { background-size: 100% 58%; } }
+@media (prefers-reduced-motion: reduce) { .kw { background-size: 100% 58% !important; } }
+
+/* pause */
+.stage.paused .scene * { animation-play-state: paused !important; }
+
+@media (prefers-reduced-motion: reduce) {
+  .scene, .scene * { animation: none !important; transition: none !important; }
+  .cap1 { display: none; }
+  .flag-r { opacity: .3; }
+  .lbl-r { opacity: .35; }
+  .m-reward { transform: scaleX(.14); }
+  .m-anger { transform: scaleX(.92); }
+  .ship-w { transform: rotate(38deg) translateY(10px); opacity: .15; }
+}
+
+/* ---------- controls ---------- */
+.segs { display: grid; grid-template-columns: repeat(12, 1fr); gap: 4px; margin: 0; padding: 0; list-style: none; }
+.seg { appearance: none; border: 0; background: transparent; padding: 10px 0; width: 100%; cursor: pointer; }
+.seg span { display: block; height: 4px; background: var(--line); position: relative; overflow: hidden; }
+.seg i { position: absolute; inset: 0; background: var(--ai); transform-origin: left; transform: scaleX(0); }
+.bar { display: flex; align-items: center; gap: 8px; }
+.bar button { appearance: none; width: 44px; height: 44px; display: grid; place-items: center; background: var(--stage); color: var(--ink); border: 1px solid var(--line); border-radius: 4px; cursor: pointer; }
+.bar button:hover { border-color: var(--ai); }
+.bar svg { width: 20px; height: 20px; fill: currentColor; display: block; }
+.seg:focus-visible, .bar button:focus-visible { outline: 2px solid var(--ai); outline-offset: 2px; }
+.now { margin-left: auto; font-size: 13px; color: var(--muted); text-align: right; font-variant-numeric: tabular-nums; }
+.hint { margin: 0; font-size: 12px; color: var(--muted); }
+.bar button.narr { width: auto; padding: 0 12px; gap: 6px; grid-auto-flow: column; font: inherit; font-size: 13px; }
+.bar button[aria-pressed="true"] { border-color: var(--ai); color: var(--ai); }
+.now { min-width: 0; }
+</style>
+
+</head>
+<body>
+<main class="player">
+  <div class="stage" id="stage">
+
+    <!-- 1 intro -->
+    <section class="scene s1 active" data-dur="9" data-name="イントロ" aria-label="イントロ">
+      <svg class="hills" viewBox="0 0 800 200" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0 110 C 70 50, 140 95, 220 62 S 380 28, 470 80 S 640 52, 800 96 L800 200 L0 200 Z" fill="var(--hill1)"/>
+        <path d="M0 150 C 110 108, 200 140, 310 118 S 520 98, 620 130 S 740 120, 800 138 L800 200 L0 200 Z" fill="var(--hill2)"/>
+      </svg>
+      <div class="tag a" style="--d:.1s"><span>1185ごろ → 1333</span></div>
+      <div class="top">
+        <div class="lead">
+          <p class="lead-main a" style="--d:.25s">ついに<mark class="kw" style="--kd:1s">武士</mark>の時代、キター！</p>
+          <p class="lead-sub a" style="--d:.55s">それまでは貴族がイキってたけど、ここから武士が「俺らが政治やるわ」ってなる約150年。</p>
+        </div>
+        <h1 class="vtitle clip">鎌倉時代</h1>
+      </div>
+      <div class="tl a" style="--d:.7s">
+        <svg viewBox="0 0 400 64" role="img" aria-label="1185年ごろから1333年までの年表">
+          <line class="draw" style="--d:.8s;--t:1.8s" pathLength="1" x1="24" y1="28" x2="376" y2="28" stroke="var(--ink)" stroke-width="2"/>
+          <circle cx="24" cy="28" r="6" fill="var(--ai)"/>
+          <circle class="pop" style="--d:2.4s" cx="376" cy="28" r="6" fill="var(--shu)"/>
+          <text x="18" y="56" font-size="15" fill="var(--ink)">1185ごろ</text>
+          <text x="382" y="56" font-size="15" text-anchor="end" fill="var(--ink)">1333</text>
+          <text class="t-disp fade" style="--d:1.6s" x="200" y="18" font-size="16" text-anchor="middle" fill="var(--ai)">約150年</text>
+        </svg>
+      </div>
+    </section>
+
+    <!-- 1b 頼朝と北条氏 -->
+    <section class="scene" data-dur="14" data-name="頼朝と北条氏" aria-label="01 頼朝と北条氏">
+      <div class="tag a" style="--d:.05s"><b>01</b><span>頼朝と北条氏</span><em class="conn">↓ まず</em></div>
+      <div class="cols">
+        <div class="copy">
+          <h2 class="a" style="--d:.15s">頼朝「平氏、ゆるさん！」</h2>
+          <p class="a" style="--d:.35s">平氏との戦いに負けた<mark class="kw" style="--kd:1.6s">源頼朝</mark>は、伊豆に流された。そこで世話してくれたのが<mark class="kw" style="--kd:1.6s">北条氏</mark>。頼朝は<mark class="kw" style="--kd:1.6s">北条政子</mark>と結婚して、1180年、ついに<mark class="kw" style="--kd:1.6s">挙兵</mark>！</p>
+          <p class="gloss a" style="--d:.55s">挙兵＝戦いをはじめること</p>
+        </div>
+        <div class="art svg">
+          <svg viewBox="0 0 400 250" role="img" aria-label="伊豆に流された頼朝が、北条氏の娘の政子と結婚し、1180年に挙兵する流れ">
+            <g class="fade" style="--d:.5s">
+              <rect x="20" y="30" width="130" height="90" fill="var(--chip)" stroke="var(--ink)" stroke-width="2"/>
+              <text class="t-disp" x="85" y="72" font-size="26" text-anchor="middle" fill="var(--ink)">頼朝</text>
+              <text x="85" y="102" font-size="14" text-anchor="middle" fill="var(--muted)">伊豆に流された</text>
+            </g>
+            <g class="fade" style="--d:2s">
+              <rect x="250" y="30" width="130" height="90" fill="var(--chip)" stroke="var(--ink)" stroke-width="2"/>
+              <text class="t-disp" x="315" y="72" font-size="26" text-anchor="middle" fill="var(--ink)">北条氏</text>
+              <text x="315" y="102" font-size="14" text-anchor="middle" fill="var(--muted)">世話してくれた</text>
+            </g>
+            <g class="fade" style="--d:3.6s">
+              <line x1="158" y1="75" x2="242" y2="75" stroke="var(--shu)" stroke-width="3"/>
+              <text class="t-disp" x="200" y="62" font-size="17" text-anchor="middle" fill="var(--shu)">政子と結婚</text>
+            </g>
+            <line class="draw" style="--d:5.4s;--t:1s" pathLength="1" x1="200" y1="132" x2="200" y2="172" stroke="var(--ink)" stroke-width="2.5"/>
+            <g class="pop" style="--d:6.6s">
+              <rect x="70" y="178" width="260" height="54" fill="var(--shu)"/>
+              <text class="t-disp" x="200" y="214" font-size="24" text-anchor="middle" fill="var(--stage)">1180　挙兵！</text>
+            </g>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2 成立 -->
+    <section class="scene" data-dur="13" data-name="幕府のはじまり" aria-label="02 幕府のはじまり">
+      <div class="tag a" style="--d:.05s"><b>02</b><span>幕府のはじまり</span><em class="conn">↓ そして</em></div>
+      <div class="cols">
+        <div class="copy">
+          <h2 class="a" style="--d:.15s">頼朝「俺ら武士で、政府つくるわ」</h2>
+          <p class="a" style="--d:.35s"><mark class="kw">1185年</mark>、源氏が平氏をたおす → 源頼朝、鎌倉に本拠地をつくって、各地に見張り役と取り立て役を置く。この武士の政府が「<mark class="kw">幕府</mark>」。</p>
+          <p class="gloss a" style="--d:.55s"><mark class="kw" style="--kd:2s">守護</mark>＝治安の見張り役　<mark class="kw" style="--kd:2s">地頭</mark>＝年貢の取り立て役</p>
+        </div>
+        <div class="art svg">
+          <svg viewBox="0 0 400 250" role="img" aria-label="白旗の源氏が掲げられ、赤旗の平氏が下ろされる">
+            <line x1="40" y1="222" x2="360" y2="222" stroke="var(--line)" stroke-width="2"/>
+            <line x1="120" y1="40" x2="120" y2="222" stroke="var(--ink)" stroke-width="3"/>
+            <line x1="280" y1="40" x2="280" y2="222" stroke="var(--ink)" stroke-width="3"/>
+            <g class="flag-w"><path d="M124 54 H214 L204 80 L214 106 H124 Z" fill="var(--flag)" stroke="var(--ink)" stroke-width="2"/></g>
+            <g class="flag-r"><path d="M284 54 H374 L364 80 L374 106 H284 Z" fill="var(--shu)"/></g>
+            <text class="t-disp" x="120" y="246" font-size="20" text-anchor="middle" fill="var(--ink)">源氏</text>
+            <text class="t-disp lbl-r" x="280" y="246" font-size="20" text-anchor="middle" fill="var(--ink)">平氏</text>
+            <text class="t-disp cap1" x="200" y="26" font-size="19" text-anchor="middle" fill="var(--ai)">1185　壇ノ浦の戦い</text>
+            <text class="t-disp fade" style="--d:3.9s" x="200" y="26" font-size="19" text-anchor="middle" fill="var(--ai)">1192　頼朝、征夷大将軍に</text>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3 御恩と奉公 -->
+    <section class="scene" data-dur="14" data-name="御恩と奉公" aria-label="03 御恩と奉公">
+      <div class="tag a" style="--d:.05s"><b>03</b><span>御恩と奉公</span><em class="conn">↓ だから</em></div>
+      <div class="cols">
+        <div class="copy">
+          <h2 class="a" style="--d:.15s">将軍「土地やるから、ちゃんと働けよ？」</h2>
+          <p class="a" style="--d:.35s">将軍と家来（<mark class="kw">御家人</mark>）は、ギブ・アンド・テイクの関係。</p>
+          <dl class="pair a" style="--d:.6s">
+            <dt>御恩</dt><dd>将軍「土地は守ってやるし、手柄を立てたら新しい土地もやるわ」</dd>
+            <dt class="shu">奉公</dt><dd>家来「了解っす！戦なら命がけで行くし、ふだんの警備もやります」</dd>
+          </dl>
+        </div>
+        <div class="art svg">
+          <svg viewBox="0 0 400 200" role="img" aria-label="将軍が御恩を与え、御家人が奉公で返す図">
+            <defs>
+              <marker id="ah-ai" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="var(--ai)"/></marker>
+              <marker id="ah-shu" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="var(--shu)"/></marker>
+            </defs>
+            <g class="fade" style="--d:.3s">
+              <rect x="20" y="56" width="110" height="84" fill="var(--chip)" stroke="var(--ink)" stroke-width="2"/>
+              <text class="t-disp" x="75" y="107" font-size="26" text-anchor="middle" fill="var(--ink)">将軍</text>
+              <text x="75" y="166" font-size="14" text-anchor="middle" fill="var(--muted)">鎌倉のリーダー</text>
+              <rect x="270" y="56" width="110" height="84" fill="var(--chip)" stroke="var(--ink)" stroke-width="2"/>
+              <text class="t-disp" x="325" y="107" font-size="26" text-anchor="middle" fill="var(--ink)">御家人</text>
+              <text x="325" y="166" font-size="14" text-anchor="middle" fill="var(--muted)">将軍に仕える武士</text>
+            </g>
+            <g class="fade" style="--d:.9s">
+              <line x1="140" y1="84" x2="258" y2="84" stroke="var(--ai)" stroke-width="3" marker-end="url(#ah-ai)"/>
+              <text class="t-disp" x="200" y="68" font-size="20" text-anchor="middle" fill="var(--ai)">御恩</text>
+            </g>
+            <g class="fade" style="--d:1.5s">
+              <line x1="260" y1="118" x2="142" y2="118" stroke="var(--shu)" stroke-width="3" marker-end="url(#ah-shu)"/>
+              <text class="t-disp" x="200" y="148" font-size="20" text-anchor="middle" fill="var(--shu)">奉公</text>
+            </g>
+            <g class="tok-a"><rect x="150" y="73" width="22" height="22" fill="var(--ai)"/><text x="161" y="89" font-size="14" text-anchor="middle" fill="var(--stage)">土</text></g>
+            <g class="tok-b"><rect x="238" y="107" width="22" height="22" fill="var(--shu)"/><text x="249" y="123" font-size="14" text-anchor="middle" fill="var(--stage)">兵</text></g>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3b いざ鎌倉 -->
+    <section class="scene" data-dur="12" data-name="いざ鎌倉" aria-label="04 いざ鎌倉">
+      <div class="tag a" style="--d:.05s"><b>04</b><span>いざ鎌倉</span><em class="conn">↓ たとえば</em></div>
+      <div class="cols">
+        <div class="copy">
+          <h2 class="a" style="--d:.15s">「<mark class="kw" style="--kd:1s">いざ鎌倉</mark>！」で全員ダッシュ</h2>
+          <p class="a" style="--d:.35s">鎌倉で大事件が起きたら、将軍「みんな集まれ！」→ 御家人は全国から鎌倉へ全力ダッシュ。</p>
+          <p class="a" style="--d:.9s">ふだんは京都や鎌倉の警備当番もある。土地をもらうのも、けっこうハード。</p>
+        </div>
+        <div class="art svg">
+          <svg viewBox="0 0 400 250" role="img" aria-label="全国の御家人が、いざ鎌倉の合図で鎌倉に集まる図">
+            <g stroke="var(--line)" stroke-width="2">
+              <line class="draw" style="--d:.4s;--t:1.2s" pathLength="1" x1="30" y1="35" x2="200" y2="125"/>
+              <line class="draw" style="--d:.5s;--t:1.2s" pathLength="1" x1="360" y1="25" x2="200" y2="125"/>
+              <line class="draw" style="--d:.6s;--t:1.2s" pathLength="1" x1="40" y1="205" x2="200" y2="125"/>
+              <line class="draw" style="--d:.7s;--t:1.2s" pathLength="1" x1="370" y1="215" x2="200" y2="125"/>
+              <line class="draw" style="--d:.8s;--t:1.2s" pathLength="1" x1="200" y1="10" x2="200" y2="125"/>
+            </g>
+            <circle class="runner" style="--x:-170px;--y:-90px;--d:1.6s" cx="200" cy="125" r="8" fill="var(--ai)"/>
+            <circle class="runner" style="--x:160px;--y:-100px;--d:2s" cx="200" cy="125" r="8" fill="var(--ai)"/>
+            <circle class="runner" style="--x:-160px;--y:80px;--d:2.4s" cx="200" cy="125" r="8" fill="var(--ai)"/>
+            <circle class="runner" style="--x:170px;--y:90px;--d:2.8s" cx="200" cy="125" r="8" fill="var(--ai)"/>
+            <circle class="runner" style="--x:0px;--y:-115px;--d:3.2s" cx="200" cy="125" r="8" fill="var(--ai)"/>
+            <circle class="ring2" cx="200" cy="125" r="28" fill="none" stroke="var(--shu)" stroke-width="2"/>
+            <g class="pop" style="--d:.3s">
+              <circle cx="200" cy="125" r="28" fill="var(--shu)"/>
+              <text class="t-disp" x="200" y="132" font-size="20" text-anchor="middle" fill="var(--stage)">鎌倉</text>
+            </g>
+            <text class="t-disp fade" style="--d:1.2s" x="200" y="244" font-size="20" text-anchor="middle" fill="var(--ink)">いざ鎌倉！</text>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4 北条氏が仕切る -->
+    <section class="scene" data-dur="16" data-name="北条氏が仕切る" aria-label="05 北条氏が仕切る">
+      <div class="tag a" style="--d:.05s"><b>05</b><span>北条氏が仕切る</span><em class="conn">↓ でも</em></div>
+      <div class="cols">
+        <div class="copy">
+          <h2 class="a" style="--d:.15s">ほんとの権力者は、北条氏</h2>
+          <p class="a" style="--d:.35s">頼朝が死ぬ（1199）→ あとを継いだ息子の将軍は、まだ若くて頼りない。</p>
+          <p class="a" style="--d:.9s">北条氏「将軍の代わりに、俺らが仕切るわ」→ この係を「<mark class="kw" style="--kd:2s">執権</mark>」という。クラス委員長は名前だけ、副委員長が全部仕切ってる状態。</p>
+          <p class="gloss a" style="--d:1.4s"><mark class="kw" style="--kd:2.4s">執権</mark>＝将軍の代わりに政治を仕切る係</p>
+        </div>
+        <div class="art svg">
+          <svg viewBox="0 0 400 250" role="img" aria-label="将軍は名ばかりで、執権の北条氏が御家人たちを動かす図">
+            <g class="fade dimA" style="--d:.4s">
+              <rect x="130" y="14" width="140" height="56" fill="var(--chip)" stroke="var(--ink)" stroke-width="2"/>
+              <text class="t-disp" x="200" y="40" font-size="22" text-anchor="middle" fill="var(--ink)">将軍</text>
+              <text x="200" y="60" font-size="13" text-anchor="middle" fill="var(--muted)">名ばかり</text>
+            </g>
+            <g class="pop" style="--d:1.8s">
+              <rect x="100" y="94" width="200" height="64" fill="var(--shu)"/>
+              <text class="t-disp" x="200" y="124" font-size="24" text-anchor="middle" fill="var(--stage)">執権・北条氏</text>
+              <text x="200" y="146" font-size="13" text-anchor="middle" fill="var(--stage)">ほんとに決めてる人</text>
+            </g>
+            <line class="draw" style="--d:3s;--t:.9s" pathLength="1" x1="200" y1="162" x2="200" y2="190" stroke="var(--ink)" stroke-width="3"/>
+            <g class="fade" style="--d:3.4s">
+              <rect x="100" y="194" width="200" height="44" fill="var(--chip)" stroke="var(--ink)" stroke-width="2"/>
+              <text class="t-disp" x="200" y="223" font-size="20" text-anchor="middle" fill="var(--ink)">御家人たち</text>
+            </g>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4b 承久の乱 -->
+    <section class="scene" data-dur="18" data-name="承久の乱" aria-label="06 承久の乱">
+      <div class="tag a" style="--d:.05s"><b>06</b><span>承久の乱</span><em class="conn">↓ すると</em></div>
+      <div class="cols">
+        <div class="copy">
+          <h2 class="a" style="--d:.15s">上皇「幕府、ナメすぎ。倒したろ」</h2>
+          <p class="a" style="--d:.35s"><mark class="kw" style="--kd:1.4s">上皇</mark>ってだれ？ → 引退した天皇のこと。引退しても、裏から政治に口出ししてた人たち。</p>
+          <p class="a" style="--d:1s"><mark class="kw" style="--kd:2.2s">後鳥羽上皇</mark>「武士が政治を仕切るとか、ムカつく。北条、倒したろ！」→ <mark class="kw" style="--kd:2.2s">1221年</mark>、<mark class="kw" style="--kd:2.2s">承久の乱</mark>。</p>
+        </div>
+        <div class="art svg">
+          <svg viewBox="0 0 400 250" role="img" aria-label="朝廷の上皇と、幕府の北条氏の対決">
+            <g class="fromL" style="--d:.5s">
+              <rect x="16" y="70" width="140" height="96" fill="var(--chip)" stroke="var(--ink)" stroke-width="2"/>
+              <text class="t-disp" x="86" y="112" font-size="28" text-anchor="middle" fill="var(--ink)">上皇</text>
+              <text x="86" y="142" font-size="14" text-anchor="middle" fill="var(--muted)">朝廷</text>
+            </g>
+            <g class="fromR" style="--d:1.2s">
+              <rect x="244" y="70" width="140" height="96" fill="var(--chip)" stroke="var(--ink)" stroke-width="2"/>
+              <text class="t-disp" x="314" y="112" font-size="28" text-anchor="middle" fill="var(--ink)">北条氏</text>
+              <text x="314" y="142" font-size="14" text-anchor="middle" fill="var(--muted)">幕府</text>
+            </g>
+            <g class="pop" style="--d:2.4s">
+              <circle cx="200" cy="118" r="28" fill="var(--shu)"/>
+              <text class="t-disp shake" x="200" y="127" font-size="24" text-anchor="middle" fill="var(--stage)">VS</text>
+            </g>
+            <text class="t-disp fade" style="--d:3.6s" x="200" y="214" font-size="22" text-anchor="middle" fill="var(--ink)">1221　承久の乱</text>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4c 乱のあと -->
+    <section class="scene" data-dur="16" data-name="幕府の圧勝" aria-label="07 幕府の圧勝">
+      <div class="tag a" style="--d:.05s"><b>07</b><span>幕府の圧勝</span><em class="conn">↓ 結果</em></div>
+      <div class="cols">
+        <div class="copy">
+          <h2 class="a" style="--d:.15s">政子「頼朝さまのご恩を思い出して！」</h2>
+          <p class="a" style="--d:.35s">頼朝の奥さん・<mark class="kw" style="--kd:1.4s">政子</mark>が御家人に大演説 → みんな団結して、幕府の大勝利。</p>
+          <p class="a" style="--d:.9s">天皇側より、武士のほうが強い。それがハッキリした。</p>
+        </div>
+        <div class="art ev-list">
+          <div class="ev a" style="--d:1.6s;grid-template-columns:4.6em 1fr"><time>演説</time><div><strong>政子の一言で団結</strong><span>「ご恩を忘れたの？」</span></div></div>
+          <div class="ev a" style="--d:4.6s;grid-template-columns:4.6em 1fr"><time>結果</time><div><strong>幕府の圧勝</strong><span>上皇は島流し</span></div></div>
+          <div class="ev a" style="--d:7.6s;grid-template-columns:4.6em 1fr"><time>その後</time><div><strong>京都に見張り役を置く</strong><span><mark class="kw" style="--kd:8.4s">六波羅探題</mark>。西日本も幕府がにぎる</span></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4d 御成敗式目 -->
+    <section class="scene" data-dur="14" data-name="御成敗式目" aria-label="08 御成敗式目">
+      <div class="tag a" style="--d:.05s"><b>08</b><span>御成敗式目</span><em class="conn">↓ そこで</em></div>
+      <div class="cols">
+        <div class="copy">
+          <h2 class="a" style="--d:.15s">泰時「武士用のルール、作っとくか」</h2>
+          <p class="a" style="--d:.35s">武士の世の中なのに、ルールは貴族用のまま。もめごとだらけだった。</p>
+          <p class="a" style="--d:.9s"><mark class="kw" style="--kd:2s">1232年</mark>、<mark class="kw" style="--kd:2s">北条泰時</mark>が「<mark class="kw" style="--kd:2s">御成敗式目</mark>」を作る。土地のもめごとや犯罪の裁き方を、はっきり決めた。身分が高くても、ルールはルール。</p>
+        </div>
+        <div class="art svg">
+          <svg viewBox="0 0 400 250" role="img" aria-label="51か条の御成敗式目の巻物">
+            <g class="fade" style="--d:.5s">
+              <rect x="86" y="40" width="228" height="156" fill="var(--chip)" stroke="var(--ink)" stroke-width="2"/>
+              <rect x="76" y="26" width="248" height="14" fill="var(--ink)"/>
+              <rect x="76" y="196" width="248" height="14" fill="var(--ink)"/>
+            </g>
+            <text class="t-disp fade" style="--d:1s" x="200" y="76" font-size="26" text-anchor="middle" fill="var(--ink)">御成敗式目</text>
+            <g stroke="var(--muted)" stroke-width="2.5" opacity=".6">
+              <line class="draw" style="--d:1.8s;--t:.9s" pathLength="1" x1="112" y1="102" x2="288" y2="102"/>
+              <line class="draw" style="--d:2.4s;--t:.9s" pathLength="1" x1="112" y1="122" x2="288" y2="122"/>
+              <line class="draw" style="--d:3s;--t:.9s" pathLength="1" x1="112" y1="142" x2="250" y2="142"/>
+            </g>
+            <g class="pop" style="--d:4s">
+              <text class="t-disp" x="200" y="182" font-size="26" text-anchor="middle" fill="var(--shu)">51か条</text>
+            </g>
+            <text class="fade" style="--d:4.6s" x="200" y="238" font-size="15" text-anchor="middle" fill="var(--muted)">1232　北条泰時</text>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5 元寇 -->
+    <section class="scene" data-dur="18" data-name="元寇" aria-label="09 元寇">
+      <div class="tag a" style="--d:.05s"><b>09</b><span>元寇</span><em class="conn">↓ そんなとき</em></div>
+      <div class="cols">
+        <div class="copy">
+          <h2 class="a" style="--d:.15s">モンゴル「攻めるわ」→ 勝ったのに大赤字</h2>
+          <p class="a" style="--d:.35s"><mark class="kw" style="--kd:1.6s">1274年</mark>と<mark class="kw" style="--kd:1.6s">1281年</mark>、モンゴル（元）「日本、もらうわ」→ 執権・<mark class="kw" style="--kd:1.6s">北条時宗</mark>「断る！」→ 御家人が九州で必死に戦って、台風にも助けられて撃退！でも守っただけだから、新しい土地はゼロ。幕府「ごほうび…ない…」</p>
+        </div>
+        <div class="art svg">
+          <svg viewBox="0 0 400 250" role="img" aria-label="元の船団が嵐で撃退され、御恩の余力が減り不満が増える図">
+            <defs>
+              <g id="ship">
+                <path d="M2 28 H58 L50 40 H10 Z" fill="var(--ink)"/>
+                <line x1="30" y1="28" x2="30" y2="2" stroke="var(--ink)" stroke-width="2"/>
+                <path d="M32 4 L54 24 H32 Z" fill="var(--flag)" stroke="var(--ink)" stroke-width="1.5"/>
+              </g>
+            </defs>
+            <g class="ship-m" style="--d:.2s"><g class="ship-w"><use href="#ship" x="250" y="26"/></g></g>
+            <g class="ship-m" style="--d:.5s"><g class="ship-w"><use href="#ship" x="170" y="52"/></g></g>
+            <g class="ship-m" style="--d:.8s"><g class="ship-w"><use href="#ship" x="300" y="64"/></g></g>
+            <path class="wave" d="M-100 98 q25 -12 50 0 t50 0 t50 0 t50 0 t50 0 t50 0 t50 0 t50 0 t50 0 t50 0 t50 0 t50 0" fill="none" stroke="var(--ai)" stroke-width="2.5" opacity=".55"/>
+            <path class="wave" d="M-60 112 q25 -12 50 0 t50 0 t50 0 t50 0 t50 0 t50 0 t50 0 t50 0 t50 0 t50 0 t50 0 t50 0" fill="none" stroke="var(--ai)" stroke-width="2" opacity=".35"/>
+            <text class="t-disp fade" style="--d:4.2s" x="200" y="60" font-size="24" text-anchor="middle" fill="var(--shu)">暴風雨で撃退</text>
+            <g class="fade" style="--d:3.8s">
+              <text x="20" y="150" font-size="16" fill="var(--ink)">ご褒美にできる土地</text>
+              <rect x="20" y="158" width="360" height="12" fill="var(--line)"/>
+              <rect class="bar-fill m-reward" x="20" y="158" width="360" height="12" fill="var(--ai)"/>
+              <text x="20" y="206" font-size="16" fill="var(--ink)">御家人の不満</text>
+              <rect x="20" y="214" width="360" height="12" fill="var(--line)"/>
+              <rect class="bar-fill m-anger" x="20" y="214" width="360" height="12" fill="var(--shu)"/>
+            </g>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6 滅亡 -->
+    <section class="scene" data-dur="16" data-name="幕府の終わり" aria-label="10 幕府の終わり">
+      <div class="tag a" style="--d:.05s"><b>10</b><span>幕府の終わり</span><em class="conn">↓ だから</em></div>
+      <div class="cols">
+        <div class="copy">
+          <h2 class="a" style="--d:.15s">御家人「もう、ついてけないわ」</h2>
+          <p class="a" style="--d:.35s">ごほうびなしで戦わされて、借金まみれ。さらに土地をきょうだいで分けるから、どんどん貧乏に。借金チャラ令（<mark class="kw" style="--kd:1.8s">徳政令</mark>・1297年）を出しても焼け石に水。<mark class="kw" style="--kd:1.8s">1333年</mark>、<mark class="kw" style="--kd:1.8s">後醍醐天皇</mark>「幕府、倒すぞ！」→ <mark class="kw" style="--kd:1.8s">足利尊氏</mark>や<mark class="kw" style="--kd:1.8s">新田義貞</mark>「乗った！」→ 幕府、滅亡。</p>
+        </div>
+        <div class="art svg">
+          <svg viewBox="0 0 400 200" role="img" aria-label="1185年の成立から1333年の滅亡までの年表">
+            <line class="draw" style="--d:.2s;--t:2.6s" pathLength="1" x1="30" y1="100" x2="370" y2="100" stroke="var(--ink)" stroke-width="2.5"/>
+            <circle class="ring" cx="370" cy="100" r="7" fill="none" stroke="var(--shu)" stroke-width="2"/>
+            <g>
+              <circle class="pop" style="--d:.3s" cx="30" cy="100" r="7" fill="var(--ai)"/>
+              <text class="fade" style="--d:.4s" x="30" y="70" font-size="16" fill="var(--ink)" text-anchor="start">1185 成立</text>
+            </g>
+            <g>
+              <circle class="pop" style="--d:.95s" cx="113" cy="100" r="7" fill="var(--ai)"/>
+              <text class="fade" style="--d:1.05s" x="113" y="136" font-size="16" fill="var(--ink)" text-anchor="middle">1221 承久の乱</text>
+            </g>
+            <g>
+              <circle class="pop" style="--d:1.9s" cx="234" cy="100" r="7" fill="var(--ai)"/>
+              <circle class="pop" style="--d:2.05s" cx="250" cy="100" r="7" fill="var(--ai)"/>
+              <text class="fade" style="--d:2s" x="242" y="70" font-size="16" fill="var(--ink)" text-anchor="middle">1274・1281 元寇</text>
+            </g>
+            <g>
+              <circle class="pop" style="--d:2.7s" cx="370" cy="100" r="8" fill="var(--shu)"/>
+              <text class="t-disp fade" style="--d:2.8s" x="370" y="136" font-size="18" fill="var(--shu)" text-anchor="end">1333 滅亡</text>
+            </g>
+            <text class="t-disp fade" style="--d:3.2s" x="200" y="172" font-size="18" fill="var(--ai)" text-anchor="middle">約150年</text>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7 文化とまとめ -->
+    <section class="scene" data-dur="18" data-name="文化とまとめ" aria-label="11 文化とまとめ">
+      <div class="tag a" style="--d:.05s"><b>11</b><span>文化とまとめ</span><em class="conn">↓ ちなみに</em></div>
+      <div class="cols">
+        <div class="copy">
+          <h2 class="a" style="--d:.15s">文化も、武士ノリに</h2>
+          <dl class="pair">
+            <dt class="a" style="--d:.6s">仏教</dt><dd class="a" style="--d:.6s">「むずかしい修行とか、ムリ」→ <mark class="kw" style="--kd:1.4s">念仏</mark>をとなえるだけでOKな新しい仏教や、座<mark class="kw" style="--kd:1.4s">禅</mark>の禅が大人気。</dd>
+            <dt class="a" style="--d:1s">彫刻</dt><dd class="a" style="--d:1s"><mark class="kw" style="--kd:1.8s">運慶・快慶</mark>の、ムキムキで強そうな仏像。</dd>
+            <dt class="a" style="--d:1.4s">文学</dt><dd class="a" style="--d:1.4s"><mark class="kw" style="--kd:2.2s">『平家物語』</mark>。平氏が調子に乗って滅ぶ話を、みんなで語り継ぐ。</dd>
+          </dl>
+        </div>
+        <div class="art sum a" style="--d:2s">
+          <p class="big">ひとことで言うと、<em>武士</em>が主役になった時代！</p>
+          <span class="seal" aria-hidden="true">鎌倉</span>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <ol class="segs" id="segs">
+    <li><button class="seg" type="button" aria-label="イントロへ"><span><i></i></span></button></li>
+    <li><button class="seg" type="button" aria-label="頼朝と北条氏へ"><span><i></i></span></button></li>
+    <li><button class="seg" type="button" aria-label="幕府のはじまりへ"><span><i></i></span></button></li>
+    <li><button class="seg" type="button" aria-label="御恩と奉公へ"><span><i></i></span></button></li>
+    <li><button class="seg" type="button" aria-label="いざ鎌倉へ"><span><i></i></span></button></li>
+    <li><button class="seg" type="button" aria-label="北条氏が仕切るへ"><span><i></i></span></button></li>
+    <li><button class="seg" type="button" aria-label="承久の乱へ"><span><i></i></span></button></li>
+    <li><button class="seg" type="button" aria-label="幕府の圧勝へ"><span><i></i></span></button></li>
+    <li><button class="seg" type="button" aria-label="御成敗式目へ"><span><i></i></span></button></li>
+    <li><button class="seg" type="button" aria-label="元寇へ"><span><i></i></span></button></li>
+    <li><button class="seg" type="button" aria-label="幕府の終わりへ"><span><i></i></span></button></li>
+    <li><button class="seg" type="button" aria-label="文化とまとめへ"><span><i></i></span></button></li>
+  </ol>
+
+  <div class="bar" role="group" aria-label="再生コントロール">
+    <button id="prev" type="button" aria-label="前の場面"><svg viewBox="0 0 24 24"><path d="M6 5h2v14H6zM20 5v14L9 12z"/></svg></button>
+    <button id="play" type="button" aria-label="一時停止">
+      <svg id="ico-pause" viewBox="0 0 24 24"><path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z"/></svg>
+      <svg id="ico-play" viewBox="0 0 24 24" hidden><path d="M8 5v14l11-7z"/></svg>
+    </button>
+    <button id="next" type="button" aria-label="次の場面"><svg viewBox="0 0 24 24"><path d="M16 5h2v14h-2zM4 5l11 7L4 19z"/></svg></button>
+    <button id="narr" class="narr" type="button" aria-pressed="false" aria-label="ナレーション"><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 4V5L7 9zM16.5 12a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4zM14 3.2v2.1a7 7 0 0 1 0 13.4v2.1a9 9 0 0 0 0-17.6z"/></svg><span>ナレーション</span></button>
+    <span class="now" id="now">1 / 7　イントロ</span>
+  </div>
+  <p class="hint">自動で進みます。画面をタップすると一時停止・再開できます。「ナレーション」を押すと音声で読み上げます。<mark class="kw" style="background-size:100% 58%">黄色のマーカー</mark>は、覚えておきたいことばです。</p>
+</main>
+
+<script>
+(function () {
+  var stage = document.getElementById('stage');
+  var scenes = Array.prototype.slice.call(stage.querySelectorAll('.scene'));
+  var fills = Array.prototype.slice.call(document.querySelectorAll('.seg i'));
+  var segBtns = Array.prototype.slice.call(document.querySelectorAll('.seg'));
+  var playBtn = document.getElementById('play');
+  var icoPause = document.getElementById('ico-pause');
+  var icoPlay = document.getElementById('ico-play');
+  var now = document.getElementById('now');
+  var reduce = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  var idx = 0, elapsed = 0, playing = !reduce, last = 0;
+
+  var NARR = [
+    "さあ、はじまりはじまり。ついに武士の時代、キター！それまでは貴族がイキってたけど、ここから武士が、俺らが政治やるわ、ってなる。約150年の鎌倉時代を、紙芝居みたいに見ていこう。",
+    "まず主人公は、源頼朝。平氏との戦いに負けて、伊豆に流された。そこで世話してくれたのが、北条氏。頼朝は、北条政子と結婚！北条氏、平氏をたおすの手伝うわ、で、1180年、ついに挙兵！",
+    "そして源氏は、平氏をたおした。頼朝、俺ら武士で政府つくるわ、って言いだす。鎌倉に本拠地をつくって、各地に見張り役と取り立て役を置いた。これが、幕府のはじまり。",
+    "でも、政府をつくっただけじゃ、人は動かない。だから将軍は、土地やるから、ちゃんと働けよ、って言った。家来は、了解っす！ってなる。土地を守ってもらうのが御恩。戦で命をかけるのが奉公。ギブ・アンド・テイクだね。",
+    "たとえば、鎌倉で大事件が起きたら、いざ鎌倉！って、御家人は全国からダッシュで集まる。ふだんは京都や鎌倉の警備当番もある。土地をもらうって、けっこうハードなんだよね。",
+    "でも、ここで話が変わる。頼朝が死んで、あとを継いだ息子の将軍は、まだ若くて頼りない。そこで北条氏、将軍の代わりに、俺らが仕切るわ、って言いだした。この係が、執権。クラス委員長は名前だけ、副委員長が全部仕切ってる状態。ほんとの権力者は、北条氏になった。",
+    "すると、ここで登場するのが、上皇。上皇って、引退した天皇のこと。引退しても、裏から政治に口出ししてた人たちだ。後鳥羽上皇、武士が政治を仕切るとか、ムカつく、北条を倒したろ！って言いだした。1221年、承久の乱。上皇 対 北条氏。さあ、どっちが勝つ？",
+    "結果は、幕府の圧勝。決め手は、頼朝の奥さん、政子の大演説。みんな、頼朝さまのご恩を思い出して！で、御家人が団結。負けた上皇は、島流し。京都には見張り役の六波羅探題を置いて、西日本も幕府がにぎった。天皇側より、武士のほうが強いって、ハッキリしたんだ。",
+    "そこで、北条泰時、武士用のルール、作っとくか、って言った。それまでは貴族のルールのままで、もめごとだらけ。1232年、御成敗式目、51か条。土地のもめごとや、犯罪の裁き方を、はっきり決めた。身分が高くても、ルールはルール。",
+    "そんなとき、モンゴルが、日本もらうわ、って攻めてきた。執権の北条時宗は、断る！って突っぱねる。御家人は九州で必死に戦って、台風にも助けられて、撃退！でも、守っただけだから、新しい土地はゼロ。幕府、ごほうび、ない。これが、大問題だった。",
+    "だから、御家人はごほうびなしで戦わされて、借金まみれ。土地をきょうだいで分けるから、どんどん貧乏にもなる。借金チャラ令を出しても、焼け石に水。もう、ついてけないわ、ってなる。そこへ後醍醐天皇が、幕府倒すぞ！って呼びかけて、足利尊氏たちが、乗った！で、1333年、幕府は滅亡。",
+    "ちなみに、文化も武士ノリになった。むずかしい修行はムリ、念仏をとなえるだけでOKの新しい仏教が大人気。ムキムキの仏像に、平家物語。ひとことで言うと、武士が主役になった時代！おしまい。"
+  ];
+  var narrBtn = document.getElementById('narr');
+  var synth = window.speechSynthesis || null;
+  var narrOn = false, speaking = false, voice = null, utter = null;
+
+  function pickVoice() {
+    if (!synth) return;
+    var vs = synth.getVoices();
+    for (var i = 0; i < vs.length; i++) {
+      if (/^ja/i.test(vs[i].lang)) { voice = vs[i]; break; }
+    }
+  }
+  if (synth) {
+    pickVoice();
+    if (synth.addEventListener) synth.addEventListener('voiceschanged', pickVoice);
+  } else {
+    narrBtn.hidden = true;
+  }
+
+  function stopSpeech() {
+    speaking = false;
+    utter = null;
+    if (synth) synth.cancel();
+  }
+
+  function speak() {
+    stopSpeech();
+    if (!narrOn || !synth) return;
+    var u = new SpeechSynthesisUtterance(NARR[idx]);
+    u.lang = 'ja-JP';
+    if (voice) u.voice = voice;
+    u.rate = 0.88;
+    var done = function () { if (utter === u) speaking = false; };
+    u.onend = done;
+    u.onerror = done;
+    utter = u;
+    speaking = true;
+    synth.speak(u);
+    if (!playing) synth.pause();
+  }
+
+  function dur() { return parseFloat(scenes[idx].getAttribute('data-dur')) || 8; }
+
+  function paint() {
+    for (var k = 0; k < fills.length; k++) {
+      var v = 0;
+      if (k < idx) v = 1;
+      else if (k === idx) v = reduce ? 1 : Math.min(elapsed / dur(), 1);
+      fills[k].style.transform = 'scaleX(' + v + ')';
+    }
+    now.textContent = (idx + 1) + ' / ' + scenes.length + '　' + scenes[idx].getAttribute('data-name');
+  }
+
+  function setPlaying(p) {
+    playing = p;
+    stage.classList.toggle('paused', !p);
+    icoPause.hidden = !p;
+    icoPlay.hidden = p;
+    playBtn.setAttribute('aria-label', p ? '一時停止' : '再生');
+    if (narrOn && synth) { if (p) synth.resume(); else synth.pause(); }
+  }
+
+  var outTimer = null;
+  function show(i, back) {
+    var prev = idx;
+    if (outTimer) { clearTimeout(outTimer); outTimer = null; }
+    idx = (i + scenes.length) % scenes.length;
+    elapsed = 0;
+    for (var k = 0; k < scenes.length; k++) {
+      scenes[k].classList.remove('out', 'in');
+      if (k !== idx && k !== prev) scenes[k].classList.remove('active');
+    }
+    if (prev === idx) scenes[idx].classList.remove('active');
+    void stage.offsetWidth;
+    if (prev !== idx && back) {
+      scenes[prev].classList.remove('active');
+      scenes[idx].classList.add('active', 'in');
+    } else {
+      if (prev !== idx) scenes[prev].classList.add('out');
+      scenes[idx].classList.add('active');
+    }
+    outTimer = setTimeout(function () {
+      outTimer = null;
+      for (var k = 0; k < scenes.length; k++) {
+        scenes[k].classList.remove('out', 'in');
+        if (k !== idx) scenes[k].classList.remove('active');
+      }
+    }, 850);
+    paint();
+    speak();
+  }
+
+  function frame(t) {
+    var dt = last ? Math.min((t - last) / 1000, 0.1) : 0;
+    last = t;
+    if (playing) {
+      elapsed += dt;
+      if (elapsed >= dur() && (!speaking || elapsed >= dur() + 25)) show(idx + 1); else paint();
+    }
+    requestAnimationFrame(frame);
+  }
+
+  playBtn.addEventListener('click', function (e) { e.stopPropagation(); setPlaying(!playing); });
+  document.getElementById('prev').addEventListener('click', function (e) { e.stopPropagation(); show(idx - 1, true); });
+  document.getElementById('next').addEventListener('click', function (e) { e.stopPropagation(); show(idx + 1); });
+  segBtns.forEach(function (b, i) { b.addEventListener('click', function () { show(i, i < idx); }); });
+  stage.addEventListener('click', function () { setPlaying(!playing); });
+  narrBtn.addEventListener('click', function (e) {
+    e.stopPropagation();
+    narrOn = !narrOn;
+    narrBtn.setAttribute('aria-pressed', String(narrOn));
+    if (narrOn) speak(); else stopSpeech();
+  });
+
+  setPlaying(playing);
+  paint();
+  requestAnimationFrame(frame);
+})();
+</script>
+
+</body>
+</html>
